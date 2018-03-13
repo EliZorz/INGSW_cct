@@ -1,6 +1,7 @@
 package application;
 
 
+import java.awt.*;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +24,9 @@ public class Main extends Application {
 		
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("LoginUser.fxml"));
-			Scene scene = new Scene(root);
+			
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			Scene scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 				
