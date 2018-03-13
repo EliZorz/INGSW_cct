@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,9 +7,18 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MenuInizialeController">
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MenuInizialeController">
   <children>
-    <MenuBar layoutX="0.0" layoutY="0.0" prefWidth="2000.0">
+    <AnchorPane id="AnchorPane" layoutX="14.0" layoutY="73.0">
+      <children>
+        <ImageView id="children_drawing_page2.jpg" fitHeight="365.0" fitWidth="472.0" layoutX="0.0" layoutY="0.0">
+          <image>
+            <Image url="@../../../../../../../../../../children_drawing_page2.jpg" preserveRatio="true" smooth="true" />
+          </image>
+        </ImageView>
+      </children>
+    </AnchorPane>
+    <MenuBar layoutX="0.0" layoutY="0.0" prefHeight="30.0" prefWidth="500.0">
       <menus>
         <Menu mnemonicParsing="false" text="Informazioni">
           <items>
@@ -33,10 +41,5 @@
         </Menu>
       </menus>
     </MenuBar>
-    <ImageView fitHeight="200.00007558823594" fitWidth="264.59153066406" layoutX="0.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-        <Image url="@../../../../760c01918e9c119ec7206b8c1c9d5d74.jpg" />
-      </image>
-    </ImageView>
   </children>
 </AnchorPane>
