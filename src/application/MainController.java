@@ -1,4 +1,4 @@
-package frames;
+package application;
 
 
 import java.sql.DriverManager;
@@ -68,6 +68,7 @@ public class MainController {
 			//extract data from dataSet
 			if( !result.next() ) {
 				lblStatus.setText("Login failed");
+
 				System.out.println("No user like that in your database");
 			} else {
 				result.beforeFirst();
