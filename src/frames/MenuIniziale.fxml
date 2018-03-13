@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MenuInizialeController">
+  <children>
+    <MenuBar layoutX="0.0" layoutY="0.0" prefWidth="2000.0">
+      <menus>
+        <Menu mnemonicParsing="false" text="Informazioni">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#fornitore" text="Fornitori" />
+            <MenuItem mnemonicParsing="false" onAction="#PersonaleInterno" text="Personale Interno" />
+            <MenuItem mnemonicParsing="false" onAction="#bambini" text="Bambini" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Mensa">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#MenuBase" text="Menù Base" />
+            <MenuItem mnemonicParsing="false" onAction="#MenusSpeciale" text="Menù Speciale" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Gita">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#GiteDisponibili" text="Gite disponibili" />
+            <MenuItem mnemonicParsing="false" onAction="#NuovaGita" text="Nuova Gita" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <ImageView fitHeight="200.00007558823594" fitWidth="264.59153066406" layoutX="0.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+        <Image url="@../../../../760c01918e9c119ec7206b8c1c9d5d74.jpg" />
+      </image>
+    </ImageView>
+  </children>
+</AnchorPane>
