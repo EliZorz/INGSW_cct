@@ -17,7 +17,7 @@ import javafx.scene.control.TextField;
 public class MainController {
 
 	@FXML
-	private TextField txtUsername;
+	private TextField txtUsername; //ciao
 
 	@FXML
 	private PasswordField txtPassword;
@@ -205,7 +205,7 @@ public class MainController {
 				}
 
 				boolean grantAccess = false;
-				//verifico che in db non esistano più di un usr+psw identici né nessun usr+psw corrispondenti all'inserimento
+				//verifico che in db non esistano piï¿½ di un usr+psw identici nï¿½ nessun usr+psw corrispondenti all'inserimento
 				if(count>1) {
 					lblStatus.setText("There are too many identical Users");
 				} else if (count == 0) {
@@ -234,7 +234,7 @@ public class MainController {
 			} else {
 				lblStatus.setText("Access denied.");
 			}
-				//una volta connesso, verifico dati login inseriti, se già presenti in database consento accesso a quell'usr+psw	
+				//una volta connesso, verifico dati login inseriti, se giï¿½ presenti in database consento accesso a quell'usr+psw	
 			
 
 				/*
