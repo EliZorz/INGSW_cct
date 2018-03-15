@@ -20,11 +20,6 @@
     <TextField fx:id="txtUsername" layoutX="899.0" layoutY="450.0" prefHeight="73.0" prefWidth="364.0" promptText="Username" />
     <Button id="btnLogin" layoutX="1109.0" layoutY="669.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="64.0" prefWidth="130.1015625" text="Login" />
     <PasswordField fx:id="txtPassword" layoutX="899.0" layoutY="556.0" prefHeight="73.0" prefWidth="364.0" promptText="Password" />
-    <ImageView fitHeight="220.0" fitWidth="285.0" layoutX="248.0" layoutY="426.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-        <Image url="@../../../../../../../../children-drawing_00003.jpg" />
-      </image>
-    </ImageView>
     <Label fx:id="lblStatus" layoutX="899.0" layoutY="740.0" prefHeight="120.0" prefWidth="166.0" text="Status" textAlignment="CENTER" textFill="#ff3333" textOverrun="ELLIPSIS" underline="true" wrapText="true">
       <font>
         <Font size="30.0" />
