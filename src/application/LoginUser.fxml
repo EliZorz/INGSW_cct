@@ -15,33 +15,28 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainController">
+<AnchorPane prefHeight="1149.0" prefWidth="1263.0" style="-fx-background-color: #FFFACD;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainController">
   <children>
-    <AnchorPane layoutX="3.0" layoutY="1.0" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #98fb98;">
+    <TextField fx:id="txtUsername" layoutX="899.0" layoutY="450.0" prefHeight="73.0" prefWidth="364.0" promptText="Username" />
+    <Button id="btnLogin" layoutX="1109.0" layoutY="669.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="64.0" prefWidth="130.1015625" text="Login" />
+    <PasswordField fx:id="txtPassword" layoutX="899.0" layoutY="556.0" prefHeight="73.0" prefWidth="364.0" promptText="Password" />
+    <Label fx:id="lblStatus" layoutX="899.0" layoutY="740.0" prefHeight="120.0" prefWidth="166.0" text="Status" textAlignment="CENTER" textFill="#ff3333" textOverrun="ELLIPSIS" underline="true" wrapText="true">
+      <font>
+        <Font size="30.0" />
+      </font>
+    </Label>
+    <Text fill="#0066ff" layoutX="565.0" layoutY="238.0" scaleX="2.163525243276674" scaleY="5.02001196888091" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ChildCareTech">
+      <font>
+        <Font name="Kristen ITC" size="30.0" />
+      </font>
+    </Text>
+    <AnchorPane id="AnchorPane" layoutX="154.0" layoutY="404.0" prefHeight="377.0" prefWidth="400.0">
       <children>
-        <TextField fx:id="txtUsername" layoutX="391.0" layoutY="212.0" promptText="Username" />
-        <PasswordField fx:id="txtPassword" layoutX="391.0" layoutY="259.0" promptText="Password" />
-        <Button id="btnLogin" layoutX="442.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
-        <ImageView fitHeight="220.0" fitWidth="285.0" layoutX="52.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView id="children-drawing_00003.jpg" fitHeight="377.0" fitWidth="400.0" layoutX="0.0" layoutY="0.0">
           <image>
-            <Image url="@../../../../../../../../../../../../children-drawing_00003.jpg" />
+            <Image url="@../../../../../../../children-drawing_00003.jpg" preserveRatio="true" smooth="true" />
           </image>
         </ImageView>
-        <Text layoutX="104.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ChildCareTech">
-          <font>
-            <Font name="Kristen ITC" size="30.0" />
-          </font>
-        </Text>
-        <Label fx:id="lblStatus" layoutX="391.0" layoutY="142.0" text="Status" textAlignment="CENTER" textFill="#ff3333" textOverrun="ELLIPSIS" underline="true" wrapText="true" />
-        <AnchorPane id="AnchorPane" layoutX="85.0" layoutY="142.0">
-          <children>
-            <ImageView id="children-drawing_00003.jpg" fitHeight="235.0" fitWidth="245.0" layoutX="0.0" layoutY="0.0">
-              <image>
-                <Image url="@../../../../../../../../../children-drawing_00003.jpg" preserveRatio="true" smooth="true" />
-              </image>
-            </ImageView>
-          </children>
-        </AnchorPane>
       </children>
     </AnchorPane>
   </children>
