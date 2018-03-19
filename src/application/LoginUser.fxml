@@ -15,26 +15,26 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="1149.0" prefWidth="1263.0" style="-fx-background-color: #FFFACD;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainController">
+<AnchorPane prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFFACD;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainController">
   <children>
-    <TextField fx:id="txtUsername" layoutX="899.0" layoutY="450.0" prefHeight="73.0" prefWidth="364.0" promptText="Username" />
-    <Button id="btnLogin" layoutX="1109.0" layoutY="669.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="64.0" prefWidth="130.1015625" text="Login" />
-    <PasswordField fx:id="txtPassword" layoutX="899.0" layoutY="556.0" prefHeight="73.0" prefWidth="364.0" promptText="Password" />
-    <Label fx:id="lblStatus" layoutX="899.0" layoutY="740.0" prefHeight="120.0" prefWidth="166.0" text="Status" textAlignment="CENTER" textFill="#ff3333" textOverrun="ELLIPSIS" underline="true" wrapText="true">
+    <TextField fx:id="txtUsername" layoutX="519.0" layoutY="272.0" prefHeight="73.0" prefWidth="364.0" promptText="Username" />
+    <Button id="btnLogin" layoutX="752.0" layoutY="502.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="64.0" prefWidth="130.1015625" text="Login" />
+    <PasswordField fx:id="txtPassword" layoutX="519.0" layoutY="401.0" prefHeight="73.0" prefWidth="364.0" promptText="Password" />
+    <Label fx:id="lblStatus" layoutX="519.0" layoutY="547.0" prefHeight="120.0" prefWidth="166.0" text="Status" textAlignment="CENTER" textFill="#ff3333" textOverrun="ELLIPSIS" underline="true" wrapText="true">
       <font>
         <Font size="30.0" />
       </font>
     </Label>
-    <Text fill="#0066ff" layoutX="565.0" layoutY="238.0" scaleX="2.163525243276674" scaleY="5.02001196888091" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ChildCareTech">
+    <Text fill="#0066ff" layoutX="253.0" layoutY="160.0" scaleX="1.740001442233701" scaleY="3.965984292962588" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ChildCareTech">
       <font>
         <Font name="Kristen ITC" size="30.0" />
       </font>
     </Text>
-    <AnchorPane id="AnchorPane" layoutX="154.0" layoutY="404.0" prefHeight="377.0" prefWidth="400.0">
+    <AnchorPane id="AnchorPane" layoutX="58.0" layoutY="230.0" prefHeight="377.0" prefWidth="400.0">
       <children>
         <ImageView id="children-drawing_00003.jpg" fitHeight="377.0" fitWidth="400.0" layoutX="0.0" layoutY="0.0">
           <image>
-            <Image url="@../../../../../../../children-drawing_00003.jpg" preserveRatio="true" smooth="true" />
+            <Image url="@../../../../children-drawing.jpg" preserveRatio="true" smooth="true" />
           </image>
         </ImageView>
       </children>
