@@ -6,38 +6,70 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFFACD;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainController">
+<AnchorPane minHeight="-1.0" prefHeight="608.0" prefWidth="944.1396484375" style="-fx-background-color: #e0ffff;&#10;-fx-background-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainController">
   <children>
-    <TextField fx:id="txtUsername" layoutX="519.0" layoutY="272.0" prefHeight="73.0" prefWidth="364.0" promptText="Username" />
-    <Button id="btnLogin" layoutX="752.0" layoutY="502.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="64.0" prefWidth="130.1015625" text="Login" />
-    <PasswordField fx:id="txtPassword" layoutX="519.0" layoutY="401.0" prefHeight="73.0" prefWidth="364.0" promptText="Password" />
-    <Label fx:id="lblStatus" layoutX="519.0" layoutY="547.0" prefHeight="120.0" prefWidth="166.0" text="Status" textAlignment="CENTER" textFill="#ff3333" textOverrun="ELLIPSIS" underline="true" wrapText="true">
+    <AnchorPane id="AnchorPane" layoutX="495.0" layoutY="132.0" mouseTransparent="false" prefHeight="417.0" prefWidth="395.0" style="-fx-background-color: #dc143c;&#10;-fx-background-radius: 10;">
+      <children>
+        <Button id="btnLogin" layoutX="143.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="47.0" prefWidth="109.0" text="Login">
+          <effect>
+            <SepiaTone />
+          </effect>
+          <font>
+            <Font name="Courier New" size="23.0" fx:id="x1" />
+          </font>
+        </Button>
+        <PasswordField fx:id="txtPassword" layoutX="32.0" layoutY="209.0" prefHeight="46.000099999997474" prefWidth="331.0" promptText="Password">
+          <effect>
+            <InnerShadow blurType="TWO_PASS_BOX" />
+          </effect>
+        </PasswordField>
+        <TextField fx:id="txtUsername" alignment="CENTER_LEFT" layoutX="32.0" layoutY="128.0" prefHeight="46.0" prefWidth="331.0" promptText="Username">
+          <effect>
+            <InnerShadow blurType="TWO_PASS_BOX" />
+          </effect>
+        </TextField>
+        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" font="$x1" labelFor="$lblStatus" layoutX="132.0" layoutY="347.0" prefHeight="64.0" prefWidth="131.0" text="Status" textAlignment="CENTER" textOverrun="ELLIPSIS" underline="false" wrapText="true">
+          <textFill>
+            <Color blue="0.200" green="0.968" red="1.000" fx:id="x2" />
+          </textFill>
+        </Label>
+        <Text fill="#74ff33" fontSmoothingType="GRAY" layoutX="124.0" layoutY="73.0" scaleX="1.1700402965599597" scaleY="1.4539901477832513" smooth="true" strikethrough="false" stroke="#33ffe7" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In" textAlignment="CENTER" underline="false">
+          <font>
+            <Font name="Courier New Bold" size="35.0" />
+          </font>
+        </Text>
+      </children>
+      <effect>
+        <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="69.57142857142857" radius="33.7797619047619" width="67.54761904761904">
+          <input>
+            <ColorAdjust brightness="-0.015267175572518998" contrast="0.06106870229007644" hue="0.09160305343511443" saturation="0.07633587786259532" />
+          </input>
+        </DropShadow>
+      </effect>
+    </AnchorPane>
+    <Text layoutX="117.0" layoutY="87.0" smooth="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Child Care Tech" textAlignment="CENTER">
+      <fill>
+        <Color blue="1.000" green="0.160" red="0.000" fx:id="x3" />
+      </fill>
       <font>
-        <Font size="30.0" />
-      </font>
-    </Label>
-    <Text fill="#0066ff" layoutX="253.0" layoutY="160.0" scaleX="1.740001442233701" scaleY="3.965984292962588" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ChildCareTech">
-      <font>
-        <Font name="Kristen ITC" size="30.0" />
+        <Font name="Courier New Bold" size="45.0" />
       </font>
     </Text>
-    <AnchorPane id="AnchorPane" layoutX="58.0" layoutY="230.0" prefHeight="377.0" prefWidth="400.0">
-      <children>
-        <ImageView id="children-drawing_00003.jpg" fitHeight="377.0" fitWidth="400.0" layoutX="0.0" layoutY="0.0">
-          <image>
-            <Image url="@../../../../children-drawing.jpg" preserveRatio="true" smooth="true" />
-          </image>
-        </ImageView>
-      </children>
-    </AnchorPane>
+    <ImageView id="children-drawing-transp.png" fitHeight="333.0" fitWidth="460.0" layoutX="24.0" layoutY="173.0">
+      <image>
+        <Image url="@../../children-drawing-transp.png" preserveRatio="true" smooth="true" />
+      </image>
+    </ImageView>
   </children>
 </AnchorPane>
