@@ -13,7 +13,7 @@
       <children>
         <ImageView id="children_drawing_page2.jpg" fitHeight="365.0" fitWidth="472.0" layoutX="0.0" layoutY="0.0">
           <image>
-            <Image url="@../../../../../../../../../../children_drawing_page2.jpg" preserveRatio="true" smooth="true" />
+            <Image url="@../../../../../../../../../../../children_drawing_page2.jpg" preserveRatio="true" smooth="true" />
           </image>
         </ImageView>
       </children>

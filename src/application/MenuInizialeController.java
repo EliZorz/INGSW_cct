@@ -1,25 +1,16 @@
 package application;
 
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 
-import javax.lang.model.AnnotatedConstruct;
-import javax.swing.*;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 
