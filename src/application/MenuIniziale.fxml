@@ -4,6 +4,7 @@
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
@@ -39,6 +40,18 @@
         <Button font="$x2" mnemonicParsing="false" onAction="#fornitore" prefHeight="125.9998779296875" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="SUPPLIERS" textFill="$x1" AnchorPane.leftAnchor="604.0" AnchorPane.rightAnchor="554.0" AnchorPane.topAnchor="88.0" />
         <Button font="$x2" mnemonicParsing="false" onAction="#PersonaleInterno" prefHeight="125.9998779296875" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="STAFF" textFill="$x1" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="88.0" />
         <Button font="$x2" mnemonicParsing="false" onAction="#bambini" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="CHILDREN" textFill="$x1" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="88.0" />
+        <Button layoutX="37.0" layoutY="9.0" mnemonicParsing="false" prefWidth="238.0" style="-fx-background-color:#FFFF00;" text="LOGOUT" textFill="#990000" underline="true">
+          <effect>
+            <Lighting diffuseConstant="2.0" specularConstant="0.0" specularExponent="40.0" surfaceScale="0.0">
+              <bumpInput>
+                <Shadow />
+              </bumpInput>
+              <light>
+                <javafx.scene.effect.Light.Distant />
+              </light>
+            </Lighting>
+          </effect>
+        </Button>
       </children>
     </AnchorPane>
     <AnchorPane layoutY="302.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#FC6C85;" AnchorPane.leftAnchor="-0.2" AnchorPane.rightAnchor="0.2">
