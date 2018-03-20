@@ -31,10 +31,11 @@ public class MainController {
 
 	private static final String usrname = "root";
 
-	private static final String pw = "Monali2009!";
+	private static final String pw = "123456";//"Monali2009!";
 
 	//JDBC driver name and DB URL
-	private static final String url = "jdbc:mysql://localhost:3306/Login";
+	private static final String url ="jdbc:mysql://127.0.0.1:3306/Login";    //"jdbc:mysql://localhost:3306/Login";
+
 	private static final String db = "com.mysql.jdbc.Driver";
 
 
@@ -47,12 +48,13 @@ public class MainController {
 		
 		String usr = txtUsername.getText().toString();
 		String pwd = txtPassword.getText().toString();
-		String query = "SELECT * FROM UserIn WHERE Username = ? AND Password = ? " ;
+		String query = "SELECT * FROM sys.login WHERE Username = ? AND Password = ? ";//"SELECT * FROM UserIn WHERE Username = ? AND Password = ? " ;
 		
 		
 		try {
 			//register JDBC driver
 			Class.forName(db);
+
 			
 			//establish connection
 			con = (Connection) DriverManager.getConnection(url, usrname, pw);

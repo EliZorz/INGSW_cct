@@ -10,6 +10,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
+<<<<<<< HEAD
+import java.awt.*;
+=======
+>>>>>>> origin/master
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,8 +25,9 @@ public class MenuInizialeController {
     void MenuBase(ActionEvent event)throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MenuBase.fxml"));
         Parent p = (Parent) fxmlLoader.load();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Stage stage = new Stage();
-        stage.setScene(new Scene(p));
+        stage.setScene(new Scene(p,screenSize.getWidth(),screenSize.getHeight()));
         stage.show();
     }
 
@@ -30,8 +35,9 @@ public class MenuInizialeController {
     void MenusSpeciale(ActionEvent event)throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MenuSpeciale.fxml"));
         Parent p = (Parent) fxmlLoader.load();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Stage stage = new Stage();
-        stage.setScene(new Scene(p));
+        stage.setScene(new Scene(p,screenSize.getWidth(),screenSize.getHeight()));
         stage.show();
     }
 

@@ -4,42 +4,62 @@
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MenuInizialeController">
+<AnchorPane minHeight="894.8359375" minWidth="1295.0" prefHeight="894.8359375" prefWidth="1489.0" style="-fx-background-color:#FEFEE9;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MenuInizialeController">
   <children>
-    <AnchorPane id="AnchorPane" layoutX="14.0" layoutY="73.0">
+    <AnchorPane layoutX="0.0" layoutY="604.0" prefHeight="290.8359375" prefWidth="1489.0" style="-fx-background-color:#00A86B;">
       <children>
-        <ImageView id="children_drawing_page2.jpg" fitHeight="365.0" fitWidth="472.0" layoutX="0.0" layoutY="0.0">
-          <image>
-            <Image url="@../../../../../../../../../../../children_drawing_page2.jpg" preserveRatio="true" smooth="true" />
-          </image>
-        </ImageView>
+        <Text fill="#00ff29" layoutX="705.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GITE">
+          <font>
+            <Font size="40.0" fx:id="x4" />
+          </font>
+        </Text>
+        <Button mnemonicParsing="false" onAction="#GiteDisponibili" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#98FF98;" text="GITE DISPONIBILI" AnchorPane.bottomAnchor="82.0" AnchorPane.rightAnchor="897.0">
+          <font>
+            <Font size="35.0" fx:id="x2" />
+          </font>
+          <textFill>
+            <Color blue="0.000" green="0.800" red="0.256" fx:id="x3" />
+          </textFill>
+        </Button>
+        <Button font="$x2" mnemonicParsing="false" onAction="#NuovaGita" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#98FF98;" text="INSERIRE GITA" textFill="$x3" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="961.0" />
       </children>
     </AnchorPane>
-    <MenuBar layoutX="0.0" layoutY="0.0" prefHeight="30.0" prefWidth="500.0">
-      <menus>
-        <Menu mnemonicParsing="false" text="Informazioni">
-          <items>
-            <MenuItem mnemonicParsing="false" onAction="#fornitore" text="Fornitori" />
-            <MenuItem mnemonicParsing="false" onAction="#PersonaleInterno" text="Personale Interno" />
-            <MenuItem mnemonicParsing="false" onAction="#bambini" text="Bambini" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Mensa">
-          <items>
-            <MenuItem mnemonicParsing="false" onAction="#MenuBase" text="Menù Base" />
-            <MenuItem mnemonicParsing="false" onAction="#MenusSpeciale" text="Menù Speciale" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Gita">
-          <items>
-            <MenuItem mnemonicParsing="false" onAction="#GiteDisponibili" text="Gite disponibili" />
-            <MenuItem mnemonicParsing="false" onAction="#NuovaGita" text="Nuova Gita" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
+    <AnchorPane layoutY="0.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#08E8DE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <children>
+        <Text font="$x4" layoutX="629.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INFORMATIONS">
+          <fill>
+            <Color blue="1.000" green="0.160" red="0.000" fx:id="x1" />
+          </fill>
+        </Text>
+        <Button font="$x2" mnemonicParsing="false" onAction="#fornitore" prefHeight="125.9998779296875" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="SUPPLIERS" textFill="$x1" AnchorPane.leftAnchor="604.0" AnchorPane.rightAnchor="554.0" AnchorPane.topAnchor="88.0" />
+        <Button font="$x2" mnemonicParsing="false" onAction="#PersonaleInterno" prefHeight="125.9998779296875" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="STAFF" textFill="$x1" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="88.0" />
+        <Button font="$x2" mnemonicParsing="false" onAction="#bambini" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="CHILDREN" textFill="$x1" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="88.0" />
+        <Button layoutX="37.0" layoutY="9.0" mnemonicParsing="false" prefWidth="238.0" style="-fx-background-color:#FFFF00;" text="LOGOUT" textFill="#990000" underline="true">
+          <effect>
+            <Lighting diffuseConstant="2.0" specularConstant="0.0" specularExponent="40.0" surfaceScale="0.0">
+              <bumpInput>
+                <Shadow />
+              </bumpInput>
+              <light>
+                <javafx.scene.effect.Light.Distant />
+              </light>
+            </Lighting>
+          </effect>
+        </Button>
+      </children>
+    </AnchorPane>
+    <AnchorPane layoutY="302.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#FC6C85;" AnchorPane.leftAnchor="-0.2" AnchorPane.rightAnchor="0.2">
+      <children>
+        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenusSpeciale" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#FFD1DC;" text="MENU SPECIALE" textFill="RED" AnchorPane.rightAnchor="900.0" />
+        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenuBase" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#FFD1DC;" text="MENU BASE" textFill="RED" AnchorPane.leftAnchor="961.0" />
+        <Text fill="#ffcce4" font="$x4" layoutX="615.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SERVIZIO MENSA" />
+      </children>
+    </AnchorPane>
   </children>
 </AnchorPane>
