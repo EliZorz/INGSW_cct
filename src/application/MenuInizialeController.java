@@ -10,7 +10,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
+<<<<<<< HEAD
 import java.awt.*;
+=======
+>>>>>>> origin/master
 import java.net.URL;
 import java.util.ResourceBundle;
 

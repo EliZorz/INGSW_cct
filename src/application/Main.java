@@ -24,10 +24,10 @@ public class Main extends Application {
 		
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("LoginUser.fxml"));
-
+			
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-			primaryStage.setScene(new Scene(root));
+			Scene scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+			primaryStage.setScene(scene);
 			primaryStage.show();
 				
 		} catch (IOException e) {
