@@ -12,14 +12,14 @@
 
 <AnchorPane minHeight="894.8359375" minWidth="1295.0" prefHeight="894.8359375" prefWidth="1489.0" style="-fx-background-color:#FEFEE9;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MenuInizialeController">
   <children>
-    <AnchorPane layoutX="0.0" layoutY="604.0" prefHeight="290.8359375" prefWidth="1489.0" style="-fx-background-color:#00A86B;">
+    <AnchorPane layoutX="0.0" layoutY="604.0" prefHeight="290.8359375" prefWidth="1489.0" style="-fx-background-color:#aef9bc;">
       <children>
-        <Text fill="#00ff29" layoutX="705.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GITE">
+        <Text fill="#3c964d" layoutX="700.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" style="   -fx-font-size: 40px;" text="DAY TRIP">
           <font>
             <Font size="40.0" fx:id="x4" />
           </font>
         </Text>
-        <Button mnemonicParsing="false" onAction="#GiteDisponibili" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#98FF98;" text="GITE DISPONIBILI" AnchorPane.bottomAnchor="82.0" AnchorPane.rightAnchor="897.0">
+        <Button mnemonicParsing="false" onAction="#GiteDisponibili" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#f0ff35, #a9ff00),&#10;        radial-gradient(center 50% -40%, radius 200%, #b8ee36 45%, #80c800 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: green;&#10;    -fx-font-size: 35px;" text="AVAILABLE TRIP" AnchorPane.bottomAnchor="82.0" AnchorPane.rightAnchor="897.0">
           <font>
             <Font size="35.0" fx:id="x2" />
           </font>
@@ -27,20 +27,20 @@
             <Color blue="0.000" green="0.800" red="0.256" fx:id="x3" />
           </textFill>
         </Button>
-        <Button font="$x2" mnemonicParsing="false" onAction="#NuovaGita" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#98FF98;" text="INSERIRE GITA" textFill="$x3" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="961.0" />
+        <Button font="$x2" mnemonicParsing="false" onAction="#NuovaGita" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#f0ff35, #a9ff00),&#10;        radial-gradient(center 50% -40%, radius 200%, #b8ee36 45%, #80c800 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: green;&#10;    -fx-font-size: 35px;" text="ADD TRIP" textFill="$x3" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="961.0" />
       </children>
     </AnchorPane>
-    <AnchorPane layoutY="0.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#08E8DE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <AnchorPane layoutY="0.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#a6f9fc;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
       <children>
-        <Text font="$x4" layoutX="629.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INFORMATIONS">
+        <Text font="$x4" layoutX="625.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" style="   -fx-font-size: 40px;" text="INFORMATIONS">
           <fill>
             <Color blue="1.000" green="0.160" red="0.000" fx:id="x1" />
           </fill>
         </Text>
-        <Button font="$x2" mnemonicParsing="false" onAction="#fornitore" prefHeight="125.9998779296875" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="SUPPLIERS" textFill="$x1" AnchorPane.leftAnchor="604.0" AnchorPane.rightAnchor="554.0" AnchorPane.topAnchor="88.0" />
-        <Button font="$x2" mnemonicParsing="false" onAction="#PersonaleInterno" prefHeight="125.9998779296875" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="STAFF" textFill="$x1" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="88.0" />
-        <Button font="$x2" mnemonicParsing="false" onAction="#bambini" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#E0FFFF;" text="CHILDREN" textFill="$x1" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="88.0" />
-        <Button layoutX="37.0" layoutY="9.0" mnemonicParsing="false" prefWidth="238.0" style="-fx-background-color:#FFFF00;" text="LOGOUT" textFill="#990000" underline="true">
+        <Button font="$x2" mnemonicParsing="false" onAction="#fornitore" prefHeight="125.9998779296875" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#02f2de, #0242f2),&#10;        radial-gradient(center 50% -40%, radius 200%, #14e5fc 45%, #07b9f9 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: blue;&#10;    -fx-font-size: 35px;" text="SUPPLIERS" textFill="$x1" AnchorPane.leftAnchor="604.0" AnchorPane.rightAnchor="554.0" AnchorPane.topAnchor="88.0" />
+        <Button font="$x2" mnemonicParsing="false" onAction="#PersonaleInterno" prefHeight="125.9998779296875" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#02f2de, #0242f2),&#10;        radial-gradient(center 50% -40%, radius 200%, #14e5fc 45%, #07b9f9 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: blue;&#10;    -fx-font-size: 35px;" text="STAFF" textFill="$x1" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="88.0" />
+        <Button font="$x2" mnemonicParsing="false" onAction="#bambini" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#02f2de, #0242f2),&#10;        radial-gradient(center 50% -40%, radius 200%, #14e5fc 45%, #07b9f9 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: blue;&#10;    -fx-font-size: 35px;" text="CHILDREN" textFill="$x1" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="88.0" />
+        <Button layoutX="37.0" layoutY="9.0" mnemonicParsing="false" prefWidth="238.0" style="-fx-background-color: linear-gradient(#ff5400, #be1d00);&#10;    -fx-background-radius: 30;&#10;    -fx-background-insets: 0;&#10;    -fx-text-fill: white;" text="LOGOUT" textFill="#990000" underline="true">
           <effect>
             <Lighting diffuseConstant="2.0" specularConstant="0.0" specularExponent="40.0" surfaceScale="0.0">
               <bumpInput>
@@ -54,11 +54,11 @@
         </Button>
       </children>
     </AnchorPane>
-    <AnchorPane layoutY="302.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#FC6C85;" AnchorPane.leftAnchor="-0.2" AnchorPane.rightAnchor="0.2">
+    <AnchorPane layoutY="302.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#ffe8f1;" AnchorPane.leftAnchor="-0.2" AnchorPane.rightAnchor="0.2">
       <children>
-        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenusSpeciale" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#FFD1DC;" text="MENU SPECIALE" textFill="RED" AnchorPane.rightAnchor="900.0" />
-        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenuBase" prefHeight="126.0" prefWidth="331.0" style="-fx-background-color:#FFD1DC;" text="MENU BASE" textFill="RED" AnchorPane.leftAnchor="961.0" />
-        <Text fill="#ffcce4" font="$x4" layoutX="615.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SERVIZIO MENSA" />
+        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenusSpeciale" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#e20b2b, #e008b1),&#10;        radial-gradient(center 50% -40%, radius 200%, #FADADD 45%, #FFC0CB 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: #f20e67;&#10;    -fx-font-size: 35px;" text="SPECIAL MENU" textFill="RED" AnchorPane.rightAnchor="900.0" />
+        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenuBase" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#e20b2b, #e008b1),&#10;        radial-gradient(center 50% -40%, radius 200%, #FADADD 45%, #FFC0CB 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: #f20e67;&#10;    -fx-font-size: 35px;" text="MAIN MENU" textFill="RED" AnchorPane.leftAnchor="961.0" />
+        <Text fill="#f20e67" font="$x4" layoutX="599.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" style="   -fx-font-size: 40px;&#10;&#10;&#10;" text="CAFETERIA SERVICES" />
       </children>
     </AnchorPane>
   </children>
