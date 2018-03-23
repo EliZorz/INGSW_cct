@@ -1,4 +1,4 @@
-package application;
+package application.contr;
 
 
 import java.sql.DriverManager;
@@ -89,7 +89,7 @@ public class MainController {
 				System.out.println("I found your user!");
 
 				try{
-					FXMLLoader fxmlLoader =  new FXMLLoader(getClass().getResource("/application/MenuIniziale.fxml"));
+					FXMLLoader fxmlLoader =  new FXMLLoader(getClass().getResource("/application/gui/MenuIniziale.fxml"));
 					//Pane mainPane = (Pane)FXMLLoader.load(getClass().getResource("/application/MenuIniziale.fxml"));
 					Parent p= (Parent) fxmlLoader.load();
 					Stage stage = new Stage();

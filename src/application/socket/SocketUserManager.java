@@ -7,7 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public class SocketUserManager implements UserRemote {
-    
+
     @Override
     public boolean logOut() throws RemoteException {
         return false;

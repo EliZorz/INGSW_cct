@@ -15,7 +15,7 @@ public class MenuIniziale extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-           Parent root = FXMLLoader.load(getClass().getResource("/application/MenuIniziale.fxml"));
+           Parent root = FXMLLoader.load(getClass().getResource("/application/gui/MenuIniziale.fxml"));
            //Pane mainPane = (Pane)FXMLLoader.load(getClass().getResource("/application/MenuIniziale.fxml"));
            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
            Scene scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());

@@ -23,7 +23,7 @@ public class ChoiceController {
     //costruttore
     public void choice (ActionEvent event) throws RemoteException { //passo alla funzione la scelta RMI/SOCKET
 
-        Button b = (Button) event.getSource();
+       /* Button b = (Button) event.getSource();
 
         if(b.getId().equals(btnRmi.getId())){
             System.out.println("You chose rmi");
@@ -34,7 +34,7 @@ public class ChoiceController {
         }
         else if(b.getId().equals(btnSocket.getId())){
             System.out.println("You chose socket");
-        }
+        }*/
     }
 
 }
