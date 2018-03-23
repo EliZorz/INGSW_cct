@@ -6,7 +6,7 @@ import java.net.Socket;
 public class SocketServer extends Thread {
     private ServerSocket server;
     public static void main(String args[])throws Exception {
-        new ServerSocketThread();
+        new SocketServer();
     }
     public SocketServer ()throws Exception{
         server = new ServerSocket(1055);
