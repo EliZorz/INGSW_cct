@@ -17,18 +17,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-1.0" minWidth="410.0" prefHeight="502.0" prefWidth="410.0" style="-fx-background-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.MainController">
+<AnchorPane fx:id="select" minHeight="-1.0" minWidth="410.0" prefHeight="502.0" prefWidth="410.0" style="-fx-background-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MainController">
   <children>
     <AnchorPane id="AnchorPane" mouseTransparent="false" prefHeight="502.0" prefWidth="410.0" style="-fx-background-color: #dc143c;&#10;-fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-        <Button id="btnLogin" layoutX="154.0" layoutY="337.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="47.0" prefWidth="109.0" text="Login">
-          <effect>
-            <SepiaTone />
-          </effect>
-          <font>
-            <Font name="Courier New" size="23.0" fx:id="x1" />
-          </font>
-        </Button>
         <PasswordField fx:id="txtPassword" layoutX="40.0" layoutY="261.0" prefHeight="46.000099999997474" prefWidth="331.0" promptText="Password">
           <effect>
             <InnerShadow blurType="TWO_PASS_BOX" />
@@ -39,7 +31,13 @@
             <InnerShadow blurType="TWO_PASS_BOX" />
           </effect>
         </TextField>
-        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" font="$x1" labelFor="$lblStatus" layoutX="143.0" layoutY="403.0" prefHeight="64.0" prefWidth="131.0" text="Status" textAlignment="CENTER" textOverrun="ELLIPSIS" underline="false" wrapText="true">
+        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" labelFor="$lblStatus" layoutX="54.0" layoutY="404.0" prefHeight="64.0" prefWidth="131.0" text="Status" textAlignment="CENTER" textOverrun="ELLIPSIS" underline="false" wrapText="true">
+          <effect>
+            <Glow level="0.09245283018867922" />
+          </effect>
+          <font>
+            <Font name="Courier New" size="23.0" fx:id="x1" />
+          </font>
           <textFill>
             <Color blue="0.200" green="0.968" red="1.000" fx:id="x2" />
           </textFill>
@@ -54,9 +52,18 @@
             <Image url="@no_user.png" preserveRatio="true" smooth="true" />
           </image>
         </ImageView>
+        <MenuButton id="select" fx:id="btnLogin" layoutX="248.0" layoutY="423.0" mnemonicParsing="false" onAction="#handleLogin" text="Login by:">
+          <effect>
+            <SepiaTone />
+          </effect>
+          <items>
+            <MenuItem mnemonicParsing="false" text="RMI" />
+            <MenuItem mnemonicParsing="false" text="SOCKET" />
+          </items>
+        </MenuButton>
       </children>
       <effect>
-        <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.67410714285714" radius="33.305431547619044" width="67.54761904761904">
+        <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.54959542410714" radius="33.274303617931544" width="67.54761904761904">
           <input>
             <ColorAdjust brightness="-0.015267175572518998" contrast="0.06106870229007644" hue="0.09160305343511443" saturation="0.07633587786259532" />
           </input>
