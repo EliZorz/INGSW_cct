@@ -2,8 +2,6 @@ package application.rmi.client;
 
 import application.Interfaces.UserRemote;
 import application.contr.GuiNew;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
