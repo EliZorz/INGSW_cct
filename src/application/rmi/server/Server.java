@@ -22,12 +22,14 @@ public class Server {
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("Inter", pippo );
             System.out.println("Server set up completely.");
-
-
-        } catch (RemoteException e){
+            /*
             Registry reg = LocateRegistry.getRegistry(1099);
             reg.rebind("ServerObject", (Remote) new Server());
             System.out.println("Server already installed.");
+            */
+
+        } catch (RemoteException e){
+
             e.printStackTrace();
         }
 
