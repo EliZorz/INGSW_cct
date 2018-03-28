@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
 
-public interface UserRemote extends Remote {
+public interface UserRemoteInt extends Remote {
 <<<<<<< HEAD
     ResultSet funzLog(String usr, String pwd) throws RemoteException; //questa funzione controllerà se username e password sono corretti
 =======

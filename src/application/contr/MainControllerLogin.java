@@ -1,14 +1,11 @@
 package application.contr;
 
 import application.Interfaces.ServicesManager;
-import application.Interfaces.UserRemote;
 import application.rmi.client.RmiManager;
-import application.rmi.server.ServerImpl;
-import com.mysql.jdbc.Connection;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

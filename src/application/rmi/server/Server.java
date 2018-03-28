@@ -1,8 +1,7 @@
 package application.rmi.server;
 
-import application.Interfaces.UserRemote;
+import application.Interfaces.UserRemoteInt;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,7 +16,7 @@ public class Server {
     public static void main(String[] args) throws RemoteException {
 
         try{
-            UserRemote pippo = new ServerImpl();  //pippo è server (impl)
+            UserRemoteInt pippo = new ServerImpl();  //pippo è server (impl)
 
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("Inter", pippo );

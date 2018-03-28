@@ -1,9 +1,8 @@
 package application.rmi.client;
 
 import application.Interfaces.ServicesManager;
-import application.Interfaces.UserRemote;
+import application.Interfaces.UserRemoteInt;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -28,8 +27,8 @@ public class RmiManager implements ServicesManager {
 
 
     @Override
-    public UserRemote getUserService() throws Exception {
+    public UserRemoteInt getUserService() throws Exception {
 
-            return (UserRemote) registry.lookup("UserRemote");
+            return (UserRemoteInt) registry.lookup("UserRemote");
     }
 }

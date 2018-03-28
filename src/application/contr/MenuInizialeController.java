@@ -21,7 +21,7 @@ public class MenuInizialeController {
 
     @FXML
     void MenuBase(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MenuBase.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MenuBasePlates.fxml"));
         Parent p = (Parent) fxmlLoader.load();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Stage stage = new Stage();

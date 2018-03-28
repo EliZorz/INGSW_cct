@@ -1,10 +1,10 @@
 package application.socket;
 
-import application.Interfaces.UserRemote;
+import application.Interfaces.UserRemoteInt;
 
 import java.rmi.RemoteException;
 
-public class SocketAdapter implements UserRemote {
+public class SocketAdapter implements UserRemoteInt {
     @Override
     public boolean logOut() throws RemoteException {
         return false;

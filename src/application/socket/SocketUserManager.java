@@ -1,12 +1,16 @@
 package application.socket;
 
-import application.Interfaces.UserRemote;
-import org.json.simple.JSONObject;
+import application.Interfaces.UserRemoteInt;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.ResultSet;
 
-public class SocketUserManager implements UserRemote {
+public class SocketUserManager implements UserRemoteInt {
+
+    @Override
+    public <HEAD> ResultSet funzLog(String usr, String pwd) throws RemoteException {
+        return null;
+    }
 
     @Override
     public boolean logOut() throws RemoteException {
