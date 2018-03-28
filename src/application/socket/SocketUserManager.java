@@ -36,4 +36,9 @@ public class SocketUserManager implements UserRemoteInt {
     public void update() throws RemoteException {
 
     }
+
+    @Override
+    public void funzLog() throws RemoteException {
+
+    }
 }

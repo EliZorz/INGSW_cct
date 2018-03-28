@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-
+//corretto
 public class ClientSocket {
     public static void main(String[] args)throws IOException{
         InetAddress address=InetAddress.getLocalHost();

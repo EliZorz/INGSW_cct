@@ -2,7 +2,7 @@ package application.socket;
 
 import java.io.IOException;
 import java.net.Socket;
-
+//quello corretto
 public class ServerSocket {
     public static void main(String args[]) {
 
