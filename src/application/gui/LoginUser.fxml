@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -17,18 +18,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-1.0" minWidth="410.0" prefHeight="502.0" prefWidth="410.0" style="-fx-background-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MainController">
+<<<<<<< HEAD
+<AnchorPane id="select" minHeight="-1.0" minWidth="410.0" prefHeight="502.0" prefWidth="410.0" style="-fx-background-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MainControllerLogin">
+=======
+<AnchorPane minHeight="-1.0" minWidth="410.0" prefHeight="502.0" prefWidth="410.0" style="-fx-background-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MainControllerLogin">
+>>>>>>> remotes/origin/master
   <children>
     <AnchorPane id="AnchorPane" mouseTransparent="false" prefHeight="502.0" prefWidth="410.0" style="-fx-background-color: #dc143c;&#10;-fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-        <Button id="btnLogin" layoutX="154.0" layoutY="337.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="47.0" prefWidth="109.0" text="Login">
-          <effect>
-            <SepiaTone />
-          </effect>
-          <font>
-            <Font name="Courier New" size="23.0" fx:id="x1" />
-          </font>
-        </Button>
         <PasswordField fx:id="txtPassword" layoutX="40.0" layoutY="261.0" prefHeight="46.000099999997474" prefWidth="331.0" promptText="Password">
           <effect>
             <InnerShadow blurType="TWO_PASS_BOX" />
@@ -39,7 +36,13 @@
             <InnerShadow blurType="TWO_PASS_BOX" />
           </effect>
         </TextField>
-        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" font="$x1" labelFor="$lblStatus" layoutX="143.0" layoutY="403.0" prefHeight="64.0" prefWidth="131.0" text="Status" textAlignment="CENTER" textOverrun="ELLIPSIS" underline="false" wrapText="true">
+        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" labelFor="$lblStatus" layoutX="40.0" layoutY="405.0" prefHeight="64.0" prefWidth="331.0" text="Status" textAlignment="CENTER" textOverrun="ELLIPSIS" underline="false" wrapText="true">
+          <effect>
+            <Glow level="0.09245283018867922" />
+          </effect>
+          <font>
+            <Font name="Courier New" size="20.0" />
+          </font>
           <textFill>
             <Color blue="0.200" green="0.968" red="1.000" fx:id="x2" />
           </textFill>
@@ -54,9 +57,18 @@
             <Image url="@no_user.png" preserveRatio="true" smooth="true" />
           </image>
         </ImageView>
+        <Button fx:id="btnLogin" layoutX="292.0" layoutY="355.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
+        <ChoiceBox fx:id="select" layoutX="40.0" layoutY="355.0">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:id="RMI" fx:value="RMI" />
+              <String fx:id="SOCKET" fx:value="SOCKET" />
+            </FXCollections>
+          </items>
+        </ChoiceBox>
       </children>
       <effect>
-        <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.67410714285714" radius="33.305431547619044" width="67.54761904761904">
+        <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.54768080938429" radius="33.273824964250835" width="67.54761904761904">
           <input>
             <ColorAdjust brightness="-0.015267175572518998" contrast="0.06106870229007644" hue="0.09160305343511443" saturation="0.07633587786259532" />
           </input>
