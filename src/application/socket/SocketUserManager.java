@@ -32,4 +32,9 @@ public class SocketUserManager implements UserRemote {
     public void update() throws RemoteException {
 
     }
+
+    @Override
+    public void funzLog() throws RemoteException {
+
+    }
 }
