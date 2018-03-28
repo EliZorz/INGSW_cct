@@ -15,7 +15,7 @@ import java.sql.SQLException;
 /**
  * Created by ELISA on 23/03/2018.
  */
-public class MainController {
+public class MainControllerLogin {
 
 
     @FXML
