@@ -5,8 +5,15 @@ import org.json.simple.JSONObject;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.ResultSet;
 
 public class SocketUserManager implements UserRemote {
+
+
+    @Override
+    public ResultSet funzLog(String usr, String pwd) throws RemoteException {
+        return null;
+    }
 
     @Override
     public boolean logOut() throws RemoteException {

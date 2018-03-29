@@ -15,7 +15,7 @@ import java.net.ServerSocket;
 public class SocketManager implements ServicesManager{
 
 
-    public  void SocketAccept(){
+    public  SocketManager(){
             Socket s = null;
           try {
                 s = new Socket("localhost", 1092);

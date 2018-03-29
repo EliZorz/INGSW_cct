@@ -56,7 +56,7 @@ public class Server {
         ServerSocket ss2 = null;
 
         try {
-            ss2 = new ServerSocket(1092); // creo un SocketThread con porta d'ascolto 4445
+            ss2 = new ServerSocket(1092);
             System.out.println("Server connection ready");
 
         } catch (IOException e) {

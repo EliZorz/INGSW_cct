@@ -90,6 +90,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {
         System.out.println("upd");
     }
 
+    @Override
+    public void funzLog() throws RemoteException {
+
+    }
+
     public String sendMessage(String clientMessage) {
         return "Client Message".equals(clientMessage) ? "Server Message" : null;
     }
