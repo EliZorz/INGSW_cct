@@ -85,7 +85,7 @@ public class MainControllerLogin {
 
 
             } else {
-                lblStatus.setText("rmi or SOCKET?");
+                lblStatus.setText("RMI or SOCKET?");
             }
 
 

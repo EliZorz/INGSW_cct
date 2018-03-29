@@ -1,8 +1,7 @@
 package application.rmi.server;
 
-import application.Interfaces.UserRemote;
+import application.Interfaces.UserRemoteInt;
 import application.contr.Database;
-import application.contr.GuiNew;
 import com.mysql.jdbc.Connection;
 
 import java.rmi.RemoteException;
@@ -15,7 +14,7 @@ import java.sql.SQLException;
 /**
  * Created by ELISA on 21/03/2018.
  */
-public class ServerImpl extends UnicastRemoteObject implements UserRemote {
+public class ServerImpl extends UnicastRemoteObject implements UserRemoteInt {
 
     private static final String usrname = "root";
 

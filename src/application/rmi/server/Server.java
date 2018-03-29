@@ -1,7 +1,7 @@
 package application.rmi.server;
 
 import application.Interfaces.UserRemote;
-import application.socket.SocketThread;
+
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -36,7 +36,6 @@ public class Server {
 
             e.printStackTrace();
         }
-
 
        /* IN UN ALTRO SERVER X SOCK
             try {
