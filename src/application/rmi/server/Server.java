@@ -1,7 +1,11 @@
 package application.rmi.server;
 
 import application.Interfaces.UserRemote;
+import application.socket.SocketThread;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -33,6 +37,7 @@ public class Server {
             e.printStackTrace();
         }
 
+
        /* IN UN ALTRO SERVER X SOCK
             try {
             ServerSocket sersock = new ServerSocket(1099);
@@ -48,6 +53,19 @@ public class Server {
             e.printStackTrace();
         }
         */
+        ServerSocket ss2 = null;
+
+        try {
+            ss2 = new ServerSocket(1092); // creo un SocketThread con porta d'ascolto 4445
+            System.out.println("Server connection ready");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Server error");
+
+        }
+
+
     }
 
 
