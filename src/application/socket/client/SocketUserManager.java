@@ -34,7 +34,7 @@ public class SocketUserManager implements UserRemote {
         String responce = null;
         System.out.println("sending : " + usr +" " + pwd);
         out.println(usr +" " + pwd);
-        //System.out.println(usr +" " + pwd);
+        System.out.println(usr +" " + pwd);
         out.flush();
         try{
             responce = in.readLine();  //il client si mette in ascolto aspettando che il server dica se sono loggato o meno
