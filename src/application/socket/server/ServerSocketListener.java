@@ -1,9 +1,11 @@
-package application.socket;
+package application.socket.server;
 
-import java.io.IOException;
+import application.rmi.server.ServerImpl;
+import application.socket.server.SocketThread;
+
 import java.net.ServerSocket;
 import java.net.Socket;
-//quello corretto
+//fondamentale!!! è il server che si occupa dell'accettare i diversi client 
 public class ServerSocketListener extends Thread{
 
     private final ServerSocket serverSocket;
@@ -21,8 +23,8 @@ public class ServerSocketListener extends Thread{
         while (true) {
             try {
                 s = serverSocket.accept();  //gestione i vari client
-                System.out.println("connection Established");
-                SocketThread st = new SocketThread(s); // crea un thread per la gestione dei vari client
+                System.out.println("Connection Established!!");
+                SocketThread st = new SocketThread(s, new ServerImpl()); // crea un thread per la gestione dei vari client
                 st.start();
 
             } catch (Exception e) {
@@ -32,6 +34,6 @@ public class ServerSocketListener extends Thread{
             }
         }
 
-        System.out.println("Putting down socket connection");
+        System.out.println("Putting down socket connection");  //quando termina la connessione col client per qualche motivo
     }
 }

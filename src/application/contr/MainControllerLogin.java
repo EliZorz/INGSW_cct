@@ -3,13 +3,11 @@ package application.contr;
 import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
 import application.rmi.client.RmiManager;
-import application.rmi.server.ServerImpl;
-import application.socket.SocketManager;
-import com.mysql.jdbc.Connection;
+import application.socket.client.SocketManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,6 +15,8 @@ import java.sql.SQLException;
  * Created by ELISA on 23/03/2018.
  */
 public class MainControllerLogin {
+
+    ServicesManager ch = null;
 
 
     @FXML
@@ -44,14 +44,14 @@ public class MainControllerLogin {
             //extract data from dataSet
             String selected = (String) select.getSelectionModel().getSelectedItem();
 
-            if(selected.equals("rmi")){
+            if(selected.equals("RMI")){
                 System.out.println("User chose rmi.\nProceed...");
 
                 //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
-                ServicesManager ch = new RmiManager();
+                ch = new RmiManager();
 
                 //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza
-                this.isLogged(ch.getUserService().funzLog(usr, pwd));
+                //this.isLogged(ch.getUserService().funzLog(usr, pwd));
 
 
                 /* da mettere nel logOut !!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -74,8 +74,19 @@ public class MainControllerLogin {
 
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
-                ServicesManager ch = new SocketManager();
-                this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
+                ch = new SocketManager();
+                UserRemote u = ch.getUserService();
+
+
+                boolean result = u.funzLog(usr, pwd);
+
+                if (result){
+                    this.renameLabel("Loggato");
+                }else{
+                    this.renameLabel("Credenziali sbagliate");
+                }
+
+               // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
 
 
 
@@ -123,6 +134,10 @@ public class MainControllerLogin {
             e.printStackTrace();
         }
 
+    }
+
+    public void renameLabel(String st){
+        lblStatus.setText(st);
     }
 
 }

@@ -1,12 +1,11 @@
 package application.rmi.server;
 
 import application.Interfaces.UserRemote;
+import application.socket.server.ServerSocketListener;
 
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -37,26 +36,17 @@ public class Server {
             e.printStackTrace();
         }
 
-       /* IN UN ALTRO SERVER X SOCK
-            try {
-            ServerSocket sersock = new ServerSocket(1099);
-            System.out.println("Server socket listening.");
 
-            while(true){
-                Socket sock = sersock.accept();
-                System.out.println("Server socket connected");
-                new Thread(new MultithServerSocket(sock)).start();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
         ServerSocket ss2 = null;
 
         try {
             ss2 = new ServerSocket(1092);
+
+            ServerSocketListener ss = new ServerSocketListener(ss2);  //creo il server listener che si occupa dell'accettare i client e del gestirli come thread
             System.out.println("Server connection ready");
+
+
+
 
         } catch (IOException e) {
             e.printStackTrace();
