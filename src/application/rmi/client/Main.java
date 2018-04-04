@@ -2,6 +2,7 @@ package application.rmi.client;
 
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -31,6 +32,7 @@ public class Main extends Application {
 			Parent root = FXMLLoader.load(getClass().getResource("../../gui/LoginUser.fxml"));
 			Scene scene = new Scene(root, 410, 502);
 			primaryStage.setResizable(false);
+			primaryStage.setTitle("Login");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 				
@@ -39,4 +41,6 @@ public class Main extends Application {
 		}
 		
 	}
+
+
 }

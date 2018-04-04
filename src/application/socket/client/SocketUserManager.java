@@ -33,7 +33,7 @@ public class SocketUserManager implements UserRemote {
 
         String responce = null;
         System.out.println("sending : " + usr +" " + pwd);
-        out.println(usr +" " + pwd);
+        out.println("login "+ usr +" " + pwd);
         System.out.println(usr +" " + pwd);
         out.flush();
         try{
@@ -75,4 +75,6 @@ public class SocketUserManager implements UserRemote {
     public void update() throws RemoteException {
 
     }
+
+
 }

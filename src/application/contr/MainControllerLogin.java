@@ -1,15 +1,20 @@
 package application.contr;
 
+import application.gui.GuiNew;
 import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
+
 import application.rmi.client.RmiManager;
 import application.socket.client.SocketManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
+
+
+
 
 /**
  * Created by ELISA on 23/03/2018.
@@ -17,6 +22,7 @@ import java.sql.SQLException;
 public class MainControllerLogin {
 
     ServicesManager ch = null;
+
 
 
     @FXML
@@ -30,6 +36,8 @@ public class MainControllerLogin {
 
     @FXML
     private Label lblStatus;
+
+
 
 
     public void handleLogin() throws SQLException {
@@ -49,6 +57,22 @@ public class MainControllerLogin {
 
                 //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
                 ch = new RmiManager();
+
+                UserRemote u = ch.getUserService();
+
+
+                boolean result = u.funzLog(usr, pwd);
+
+                if (result){
+
+                    this.renameLabel("Loggato");
+
+                    new GuiNew("MenuIniziale");
+
+
+                }else{
+                    this.renameLabel("Credenziali sbagliate");
+                }
 
                 //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza
                 //this.isLogged(ch.getUserService().funzLog(usr, pwd));
@@ -81,23 +105,29 @@ public class MainControllerLogin {
                 boolean result = u.funzLog(usr, pwd);
 
                 if (result){
+
                     this.renameLabel("Loggato");
+                    new GuiNew("MenuIniziale");
+
+
                 }else{
                     this.renameLabel("Credenziali sbagliate");
                 }
 
                // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
 
-
-
-
-
-
-
-
             } else {
                 lblStatus.setText("RMI or SOCKET?");
             }
+
+
+
+
+
+
+
+
+
 
 
         } catch (Exception se) {
@@ -106,7 +136,7 @@ public class MainControllerLogin {
 
     }
 
-
+/*
     public void isLogged(ResultSet result){
 
         try{
@@ -134,8 +164,9 @@ public class MainControllerLogin {
             e.printStackTrace();
         }
 
-    }
 
+    }
+*/
     public void renameLabel(String st){
         lblStatus.setText(st);
     }

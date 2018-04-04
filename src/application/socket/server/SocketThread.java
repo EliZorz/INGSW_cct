@@ -86,17 +86,26 @@ public class SocketThread extends Thread {
         }
     }
 
-    private String doAction(String line) {
+    private String doAction(String line) throws IOException {
 
         String[] credentials = line.split("\\s+");
 
-        System.out.println("Username: " + credentials[0]);
-        System.out.println("Password: " + credentials[1]);
+        if (credentials[0].equals("login")){
 
-        if (impl.funzLog(credentials[0], credentials[1])) {
-            return "ok";
-        } else {
-            return "no";
+            System.out.println("Username: " + credentials[1]);
+            System.out.println("Password: " + credentials[2]);
+
+            if (impl.funzLog(credentials[1], credentials[2])) {
+
+                return "ok";
+            } else {
+                System.out.println("non va bene");
+                return "no";
+            }
         }
+
+
+
+        return "no";
     }
 }

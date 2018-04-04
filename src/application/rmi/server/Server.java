@@ -20,16 +20,18 @@ public class Server {
     public static void main(String[] args) throws RemoteException {
 
         try{
-            UserRemote pippo = new ServerImpl();  //pippo è server (impl)
+
 
             Registry registry = LocateRegistry.createRegistry(1099);
-            registry.rebind("Inter", pippo );
+            registry.rebind("Inter", new ServerImpl() );
             System.out.println("Server set up completely.");
             /*
             Registry reg = LocateRegistry.getRegistry(1099);
             reg.rebind("ServerObject", (Remote) new Server());
             System.out.println("Server already installed.");
             */
+
+
 
         } catch (RemoteException e){
 

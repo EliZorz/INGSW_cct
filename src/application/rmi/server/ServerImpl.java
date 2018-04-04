@@ -47,6 +47,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
             result = st.executeQuery();
 
         } catch (SQLException e) {
+            System.out.println("problema nella ricerca del db");
             e.printStackTrace();
         }
 

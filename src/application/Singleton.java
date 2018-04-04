@@ -8,7 +8,7 @@ public class Singleton {
     }
 
     public static Singleton rmiSocketChoice(boolean rmiSocket){
-        if(rmiSocket == true){  //nel caso di RMI instanzia un RemoteObject RMI
+        if(rmiSocket == true){  //nel caso di rmi instanzia un RemoteObject rmi
             istanza = new Singleton(true);
         }
         else{
