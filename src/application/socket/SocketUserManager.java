@@ -12,6 +12,12 @@ public class SocketUserManager implements UserRemoteInt {
         return null;
     }
 
+
+    @Override
+    public ResultSet funzLog(String usr, String pwd) throws RemoteException {
+        return null;
+    }
+
     @Override
     public boolean logOut() throws RemoteException {
         return false;

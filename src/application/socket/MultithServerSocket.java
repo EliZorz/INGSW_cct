@@ -3,7 +3,7 @@ package application.socket;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-
+ //NON SERVE PIù
 /**
  * Created by ELISA on 20/03/2018.
  */

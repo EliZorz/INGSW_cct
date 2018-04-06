@@ -1,11 +1,15 @@
 package application.contr;
 
 import application.Interfaces.ServicesManager;
+import application.Interfaces.UserRemote;
 import application.rmi.client.RmiManager;
+import application.rmi.server.ServerImpl;
+import application.socket.SocketManager;
+import com.mysql.jdbc.Connection;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -40,8 +44,8 @@ public class MainControllerLogin {
             //extract data from dataSet
             String selected = (String) select.getSelectionModel().getSelectedItem();
 
-            if(selected.equals("RMI")){
-                System.out.println("User chose RMI.\nProceed...");
+            if(selected.equals("rmi")){
+                System.out.println("User chose rmi.\nProceed...");
 
                 //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
                 ServicesManager ch = new RmiManager();
@@ -70,7 +74,8 @@ public class MainControllerLogin {
 
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
-
+                ServicesManager ch = new SocketManager();
+                this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
 
 
 

@@ -1,7 +1,12 @@
 package application.rmi.server;
 
-import application.Interfaces.UserRemoteInt;
+import application.Interfaces.UserRemote;
 
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,7 +21,7 @@ public class Server {
     public static void main(String[] args) throws RemoteException {
 
         try{
-            UserRemoteInt pippo = new ServerImpl();  //pippo è server (impl)
+            UserRemote pippo = new ServerImpl();  //pippo è server (impl)
 
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("Inter", pippo );
@@ -47,6 +52,19 @@ public class Server {
             e.printStackTrace();
         }
         */
+        ServerSocket ss2 = null;
+
+        try {
+            ss2 = new ServerSocket(1092);
+            System.out.println("Server connection ready");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Server error");
+
+        }
+
+
     }
 
 
