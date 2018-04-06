@@ -57,14 +57,14 @@
         <ChoiceBox fx:id="select" layoutX="40.0" layoutY="355.0">
           <items>
             <FXCollections fx:factory="observableArrayList">
-              <String fx:id="RMI" fx:value="RMI" />
-              <String fx:id="SOCKET" fx:value="SOCKET" />
+              <String fx:value="RMI" fx:id="RMI" />
+              <String fx:value="SOCKET" fx:id="SOCKET" />
             </FXCollections>
           </items>
         </ChoiceBox>
       </children>
       <effect>
-        <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.54768080938429" radius="33.273824964250835" width="67.54761904761904">
+        <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.54763448806035" radius="33.273813383919844" width="67.54761904761904">
           <input>
             <ColorAdjust brightness="-0.015267175572518998" contrast="0.06106870229007644" hue="0.09160305343511443" saturation="0.07633587786259532" />
           </input>

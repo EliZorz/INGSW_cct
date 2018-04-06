@@ -1,17 +1,20 @@
 package application.contr;
 
 
+import application.gui.GuiNew;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
 
 
 import java.awt.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -19,81 +22,44 @@ import java.util.ResourceBundle;
 public class MenuInizialeController {
 
 
+
     @FXML
     void MenuBase(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MenuBasePlates.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p,screenSize.getWidth(),screenSize.getHeight()));
-        stage.show();
+        new GuiNew("MenuBasePlates");
     }
 
     @FXML
     void MenusSpeciale(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MenuSpeciale.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p,screenSize.getWidth(),screenSize.getHeight()));
-        stage.show();
+        new GuiNew("MenuSpeciale");
     }
 
     @FXML
     void GiteDisponibili(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/GiteDisponibili.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p));
-        stage.show();
+        new GuiNew("GiteDisponibili");
     }
 
     @FXML
     void NuovaGita(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/NuovaGita.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p));
-        stage.show();
+        new GuiNew("NuovaGita");
 
     }
 
 
     @FXML
     void fornitore(ActionEvent event)throws Exception{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/Fornitore.fxml"));
-
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene (root1));
-            stage.show();
+            new GuiNew("Fornitore");
 
     }
 @FXML
     void bambini(ActionEvent event) throws Exception{
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/Bambini.fxml"));
-
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene (root1));
-            stage.show();
-            //stage.close(); // in generale per chiudere una pagina
-            stage.setFullScreen(true);
-
+            new GuiNew("Bambini");
 
     }
     @FXML
 
     void PersonaleInterno(ActionEvent event)throws Exception{
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/PersonaleInterno.fxml"));
-
-        Parent root1 = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene (root1));
-        stage.show();
-           stage.isFullScreen();
+       new GuiNew("PersonaleInterno");
 
 
 

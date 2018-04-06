@@ -1,6 +1,7 @@
 package application.rmi.server;
 
-import application.Interfaces.UserRemoteInt;
+import application.Interfaces.UserRemote;
+
 import application.contr.Database;
 import com.mysql.jdbc.Connection;
 
@@ -14,23 +15,15 @@ import java.sql.SQLException;
 /**
  * Created by ELISA on 21/03/2018.
  */
-public class ServerImpl extends UnicastRemoteObject implements UserRemoteInt {
+public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l'idea è che socket e rmi usino entrambe questa implementazione
 
-    private static final String usrname = "root";
-
-    private static final String pw = "Monali2009!"; //123456
-
-    //JDBC driver name and DB URL
-    private static final String url = "jdbc:mysql://localhost:3306/Login";    //"jdbc:mysql://127.0.0.1:3306/Login";
-
-    private static final String db = "com.mysql.jdbc.Driver";
 
     public ServerImpl() throws RemoteException {
         super();
     }
 
 
-    public ResultSet funzLog (String usr, String pwd){
+    public boolean funzLog (String usr, String pwd){
 
         PreparedStatement st;
         ResultSet result = null;
@@ -54,10 +47,31 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemoteInt {
             result = st.executeQuery();
 
         } catch (SQLException e) {
+            System.out.println("problema nella ricerca del db");
             e.printStackTrace();
         }
 
-        return result;
+
+//controlla che username e password siano presenti nel db
+        try{
+            if( !result.next() ) {
+                System.out.println("No user like that in your database");
+                return false;
+            } else {
+                result.beforeFirst();
+                while (result.next()) {
+                    String usrFound = result.getString("Username");
+                    System.out.println("USER: " + usrFound);
+                    String pwdFound = result.getString("Password");
+                    System.out.println("PASSWORD: " + pwdFound);
+                }
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
 
 
     }
@@ -89,10 +103,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemoteInt {
         System.out.println("upd");
     }
 
-    @Override
-    public void funzLog() throws RemoteException {
 
-    }
 
     public String sendMessage(String clientMessage) {
         return "Client Message".equals(clientMessage) ? "Server Message" : null;

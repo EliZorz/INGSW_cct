@@ -14,14 +14,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//NON MI SEMBRA CHE LO USI!!!
+
 public class ServerSocketImpl extends UnicastRemoteObject {
 
     private static final String usrname = "root";
 
-    private static final String pw = "Monali2009!"; //123456
+    private static final String pw = "123456"; //"Monali2009!"; //123456
 
 
-    private static final String url = "jdbc:mysql://localhost:3306/Login";    //"jdbc:mysql://127.0.0.1:3306/Login";
+    private static final String url ="jdbc:mysql://127.0.0.1:3306/Login";  //"jdbc:mysql://localhost:3306/Login";
 
     private static final String db = "com.mysql.jdbc.Driver";
 
@@ -39,7 +41,7 @@ public class ServerSocketImpl extends UnicastRemoteObject {
             Database receivedCon = new Database();
             Connection connectionOK = receivedCon.databaseCon();
             if(connectionOK != null)
-                System.out.println("Connection successful");
+                System.out.println("Connection successful!!!!");
             else
                 System.out.println("Connection failed");
 
