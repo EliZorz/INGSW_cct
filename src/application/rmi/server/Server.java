@@ -25,11 +25,7 @@ public class Server {
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("Inter", new ServerImpl() );
             System.out.println("Server set up completely.");
-            /*
-            Registry reg = LocateRegistry.getRegistry(1099);
-            reg.rebind("ServerObject", (Remote) new Server());
-            System.out.println("Server already installed.");
-            */
+
 
 
 

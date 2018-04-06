@@ -1,13 +1,8 @@
 package application.socket;
 
-import application.Interfaces.UserRemote;
 import application.contr.Database;
 import com.mysql.jdbc.Connection;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.PreparedStatement;

@@ -3,7 +3,6 @@ package application.contr;
 import application.gui.GuiNew;
 import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
-
 import application.rmi.client.RmiManager;
 import application.socket.client.SocketManager;
 import javafx.fxml.FXML;
@@ -46,14 +45,16 @@ public class MainControllerLogin {
         String pwd = txtPassword.getText().toString();
 
 
+        String selected = (String) select.getSelectionModel().getSelectedItem();
 
         try {
+            if (selected.equals("")){
+                System.out.println("User did not choose.\nRetry...");
+                lblStatus.setText("RMI or SOCKET?");
+            }
 
-            //extract data from dataSet
-            String selected = (String) select.getSelectionModel().getSelectedItem();
-
-            if(selected.equals("RMI")){
-                System.out.println("User chose rmi.\nProceed...");
+            else if(selected.equals("RMI")){
+                System.out.println("User chose RMI.\nProceed...");
 
                 //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
                 ch = new RmiManager();
@@ -136,37 +137,6 @@ public class MainControllerLogin {
 
     }
 
-/*
-    public void isLogged(ResultSet result){
-
-        try{
-            if( !result.next() ) {
-                lblStatus.setText("Login failed");
-                System.out.println("No user like that in your database");
-            } else {
-                result.beforeFirst();
-                while (result.next()) {
-                    String usrFound = result.getString("Username");
-                    System.out.println("USER: " + usrFound);
-                    String pwdFound = result.getString("Password");
-                    System.out.println("PASSWORD: " + pwdFound);
-                }
-
-                try {
-                    new GuiNew().openFxml("../../gui/MenuIniziale.fxml");
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-*/
     public void renameLabel(String st){
         lblStatus.setText(st);
     }

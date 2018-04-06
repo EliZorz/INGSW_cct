@@ -28,8 +28,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
         PreparedStatement st;
         ResultSet result = null;
 
-        String queryLog = "SELECT * FROM sys.login WHERE Username = ? AND Password = ? ";//"SELECT * FROM UserIn WHERE Username = ? AND Password = ? " ;
+        String queryLog = "SELECT * FROM UserIn WHERE Username = ? AND Password = ? ";//"SELECT * FROM sys.login WHERE Username = ? AND Password = ? " ;
 
+        boolean res = false;
 
         try{
             Database receivedCon = new Database();
@@ -52,11 +53,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
         }
 
 
-//controlla che username e password siano presenti nel db
         try{
             if( !result.next() ) {
                 System.out.println("No user like that in your database");
-                return false;
+                res = false;
             } else {
                 result.beforeFirst();
                 while (result.next()) {
@@ -65,13 +65,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
                     String pwdFound = result.getString("Password");
                     System.out.println("PASSWORD: " + pwdFound);
                 }
-                return true;
+                res = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return res;
 
 
     }
@@ -103,11 +103,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
         System.out.println("upd");
     }
 
+    /*
 
 
     public String sendMessage(String clientMessage) {
         return "Client Message".equals(clientMessage) ? "Server Message" : null;
     }
+    */
 
 
 }
