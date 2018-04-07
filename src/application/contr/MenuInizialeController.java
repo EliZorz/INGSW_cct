@@ -1,6 +1,7 @@
 package application.contr;
 
 
+import application.Inter;
 import application.gui.GuiNew;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,49 +22,53 @@ import java.util.ResourceBundle;
 
 public class MenuInizialeController {
 
+    @FXML
+    void openInformation(ActionEvent event) throws Exception{
+        new GuiNew("Information");
+    }
+
+    @FXML
+    void openMenu(ActionEvent event) throws Exception{
+        new GuiNew("Menu");
+    }
+
+    @FXML
+    void openChildren(ActionEvent event) throws Exception{
+        new GuiNew("Children");
+    }
+
+    @FXML
+    void openStaff(ActionEvent event) throws Exception{
+        new GuiNew("Staff");
+    }
+
+
 
 
     @FXML
-    void MenuBase(ActionEvent event)throws Exception{
+    void openMenuBasePlates (ActionEvent event)throws Exception{
         new GuiNew("MenuBasePlates");
     }
 
     @FXML
-    void MenusSpeciale(ActionEvent event)throws Exception{
-        new GuiNew("MenuSpeciale");
-    }
-
-    @FXML
-    void GiteDisponibili(ActionEvent event)throws Exception{
-        new GuiNew("GiteDisponibili");
-    }
-
-    @FXML
-    void NuovaGita(ActionEvent event)throws Exception{
-        new GuiNew("NuovaGita");
-
+    void openSpecialMenu (ActionEvent event)throws Exception{
+        new GuiNew("SpecialMenu");
     }
 
 
     @FXML
-    void fornitore(ActionEvent event)throws Exception{
-            new GuiNew("Fornitore");
+    void openDayTrip(ActionEvent event)throws Exception{
+        new GuiNew("DayTrip");
 
     }
-@FXML
-    void bambini(ActionEvent event) throws Exception{
-            new GuiNew("Bambini");
 
-    }
+
+
     @FXML
 
-    void PersonaleInterno(ActionEvent event)throws Exception{
+    void openSuppliers (ActionEvent event)throws Exception{
 
-       new GuiNew("PersonaleInterno");
-
-
-
-
+       new GuiNew("Suppliers");
     }
 
 
