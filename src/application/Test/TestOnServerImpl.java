@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FirstTest  {
+public class TestOnServerImpl {
 
 
     //QUESTO TEST VERIFICA CHE NON RIESCA AD ACCEDERE AL DATABASE UN UTENTE CHE NON SCRIVE PASSWORD E USERNAME OPPURE NON NE SCRIVE UNO DEI DUE
@@ -20,6 +20,9 @@ public class FirstTest  {
         assertEquals(false, si.funzLog("ludo",null));
         assertEquals(false, si.funzLog(null,"ludo123"));
     }
+
+
+
 
 
 }

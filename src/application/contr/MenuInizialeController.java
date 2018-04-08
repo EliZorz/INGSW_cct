@@ -22,23 +22,29 @@ import java.util.ResourceBundle;
 
 public class MenuInizialeController {
 
+
+
     @FXML
     void openInformation(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("Information");
     }
 
     @FXML
     void openMenu(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("Menu");
     }
 
     @FXML
     void openChildren(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("Children");
     }
 
     @FXML
     void openStaff(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("Staff");
     }
 
@@ -47,17 +53,20 @@ public class MenuInizialeController {
 
     @FXML
     void openMenuBasePlates (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
     }
 
     @FXML
     void openSpecialMenu (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("SpecialMenu");
     }
 
 
     @FXML
     void openDayTrip(ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("DayTrip");
 
     }
@@ -67,18 +76,19 @@ public class MenuInizialeController {
     @FXML
 
     void openSuppliers (ActionEvent event)throws Exception{
-
+        ((Node)(event.getSource())).getScene().getWindow().hide();
        new GuiNew("Suppliers");
     }
 
 
     @FXML
-    public void ReturnToHomePage(ActionEvent event)throws Exception{
+    public void backHome(ActionEvent event)throws Exception{
         //.setOnAction(e -> Platform.exit());
 
         //System.exit(0);  //in questo modo chiudo tutto
        // Platform.exit(); altro modo per chiudere tutto
         ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("MenuIniziale");
 
     }
 

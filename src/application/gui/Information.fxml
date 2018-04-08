@@ -8,14 +8,23 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #fff0f5;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
     <children>
-    <AnchorPane layoutX="414.0" layoutY="31.0" prefHeight="255.0" prefWidth="197.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffd700;">
+    <AnchorPane layoutX="414.0" layoutY="31.0" prefHeight="292.0" prefWidth="197.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffd700;">
         <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="48.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@../../../../../dancer-1904467_960_720.png" />
+                    <Image url="@../../../../../Movie_Brainy.png" />
                 </image>
             </ImageView>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="42.0" layoutY="185.0" prefHeight="28.0" prefWidth="114.0" text="USERNAME" />
+            <Button layoutX="78.0" layoutY="228.0" mnemonicParsing="false" onAction="#backHome" AnchorPane.bottomAnchor="28.0" AnchorPane.rightAnchor="75.0">
+                <graphic>
+                    <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
         </children>
     </AnchorPane>
         <AnchorPane layoutX="55.0" layoutY="31.0" prefHeight="407.0" prefWidth="256.0" style="-fx-background-color: #e6e6fa; -fx-border-color: #9370db;">
