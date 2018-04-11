@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MenuInizialeController" />
+<AnchorPane prefHeight="569.0" prefWidth="738.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuController">
+   <children>
+      <TableView fx:id="table" layoutX="6.0" prefHeight="569.0" prefWidth="738.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columns>
+          <TableColumn fx:id="numero" prefWidth="93.66668701171875" text="Numero Menù" />
+          <TableColumn prefWidth="89.88885498046875" text="Primo piatto" />
+            <TableColumn prefWidth="111.22222900390625" text="Secondo Piatto" />
+            <TableColumn prefWidth="92.77777099609375" text="Contorno" />
+            <TableColumn prefWidth="84.22222900390625" text="Dessert" />
+            <TableColumn prefWidth="158.77777099609375" text="Ingredienti" />
+            <TableColumn prefWidth="113.6666259765625" text="Bevanda" />
+        </columns>
+      </TableView>
+
+   </children>
+</AnchorPane>
