@@ -1,5 +1,6 @@
 package application.contr;
 
+import application.Singleton;
 import application.gui.GuiNew;
 import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
@@ -45,20 +46,22 @@ public class MainControllerLogin {
         String usr = txtUsername.getText().toString();
         String pwd = txtPassword.getText().toString();
 
+        String selected = (String) select.getSelectionModel().getSelectedItem();
 
 
         try {
+            if(selected.equals("")){
+                System.out.println("User did not choose.\n Retry...");
+                lblStatus.setText("RMI o SOCKET?");
+            }
 
-            //extract data from dataSet
-            String selected = (String) select.getSelectionModel().getSelectedItem();
-
-            if(selected.equals("RMI")){
+            else if(selected.equals("RMI")){
                 System.out.println("User chose rmi.\nProceed...");
 
                 //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
-                ch = new RmiManager();
 
-                UserRemote u = ch.getUserService();
+
+                UserRemote u = Singleton.getInstance().methodRmi();
 
 
                 boolean result = u.funzLog(usr, pwd);
@@ -98,8 +101,9 @@ public class MainControllerLogin {
 
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
-                ch = new SocketManager();
-                UserRemote u = ch.getUserService();
+              //  ch = new SocketManager();
+               // UserRemote u = ch.getUserService();
+                UserRemote u = Singleton.getInstance().methodSocket();
 
 
                 boolean result = u.funzLog(usr, pwd);

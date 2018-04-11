@@ -1,6 +1,7 @@
 package application.socket.client;
 
 import application.Interfaces.UserRemote;
+import application.details.ChildDbDetails;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class SocketUserManager implements UserRemote {
     private final Socket socket;  //socket del client
@@ -29,7 +31,7 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public boolean funzLog(String usr, String pwd) throws IOException {
+    public boolean funzLog(String usr, String pwd) throws RemoteException {
 
         String responce = null;
         System.out.println("sending : " + usr +" " + pwd);
@@ -49,6 +51,11 @@ public class SocketUserManager implements UserRemote {
             return true;  //da capire a chi
         else
             return false;
+    }
+
+    @Override
+    public ArrayList<ChildDbDetails> loadData() throws RemoteException {
+        return null;
     }
 
     @Override

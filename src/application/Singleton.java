@@ -1,20 +1,49 @@
 package application;
 
+import application.Interfaces.ServicesManager;
+import application.Interfaces.UserRemote;
+import application.rmi.client.RmiManager;
+import application.socket.client.SocketManager;
+
 public class Singleton {
-    private static Singleton istanza;
-    private static boolean rmiSocket;
-    private Singleton(boolean t){
-        rmiSocket = t;
+    private static Singleton instance = null;
+
+    //private constructor, prevents other class from instantiating
+    private Singleton(){}
+
+    //static instance method
+    public static Singleton getInstance(){
+        if(instance == null){
+            instance = new Singleton();
+        }
+        return instance;
     }
 
-    public static Singleton rmiSocketChoice(boolean rmiSocket){
-        if(rmiSocket == true){  //nel caso di rmi instanzia un RemoteObject rmi
-            istanza = new Singleton(true);
-        }
-        else{
-            istanza = new Singleton(false);
+    public UserRemote methodRmi(){
+        ServicesManager chrmi;
+        chrmi = new RmiManager();
 
+        UserRemote u = null;
+        try {
+            u = chrmi.getUserService();
+            System.out.println("lookup done");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return istanza;
+        return u;
+    }
+
+    public UserRemote methodSocket(){
+        ServicesManager chsock;
+        chsock = new SocketManager();
+
+        UserRemote u = null;
+        try {
+            u = chsock.getUserService();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return u;
     }
 }
