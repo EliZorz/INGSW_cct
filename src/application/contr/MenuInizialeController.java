@@ -4,17 +4,7 @@ package application.contr;
 import application.gui.GuiNew;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.stage.Stage;
-
-
-import java.awt.*;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -22,47 +12,42 @@ import java.util.ResourceBundle;
 public class MenuInizialeController {
 
 
-
     @FXML
-    void MenuBase(ActionEvent event)throws Exception{
+    void MenuBase()throws Exception{
         new GuiNew("MenuBasePlates");
     }
 
     @FXML
-    void MenusSpeciale(ActionEvent event)throws Exception{
+    void MenusSpeciale()throws Exception{
         new GuiNew("MenuSpeciale");
     }
 
     @FXML
-    void GiteDisponibili(ActionEvent event)throws Exception{
+    void GiteDisponibili()throws Exception{
         new GuiNew("GiteDisponibili");
     }
 
     @FXML
-    void NuovaGita(ActionEvent event)throws Exception{
+    void NuovaGita()throws Exception{
         new GuiNew("NuovaGita");
 
     }
 
 
     @FXML
-    void fornitore(ActionEvent event)throws Exception{
-            new GuiNew("Fornitore");
-
-    }
-@FXML
-    void bambini(ActionEvent event) throws Exception{
-            new GuiNew("Bambini");
+    void fornitore()throws Exception{
+        new GuiNew("Fornitore");
 
     }
     @FXML
+    void bambini() throws Exception{
+        new GuiNew("Bambini");
 
-    void PersonaleInterno(ActionEvent event)throws Exception{
+    }
 
+    @FXML
+    void PersonaleInterno()throws Exception{
        new GuiNew("PersonaleInterno");
-
-
-
 
     }
 
@@ -83,9 +68,6 @@ public class MenuInizialeController {
 
     @FXML
     private URL location;
-
-
-
 
     @FXML
     void initialize() {
