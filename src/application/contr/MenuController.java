@@ -56,6 +56,9 @@ public class MenuController implements Initializable {
     public Button updateMenu;
 
     @FXML
+    public Button backHome;
+
+    @FXML
     public TableColumn<DishesDetails,String> colNumber;
 
     @FXML
@@ -76,8 +79,8 @@ public class MenuController implements Initializable {
 
 
 
-    public void openNewTable(ActionEvent event) {
-        TableView<Object> tablenewMenu = new TableView<>();
+    public void backHome(ActionEvent event){
+
     }
 
     @Override
