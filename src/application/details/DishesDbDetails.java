@@ -1,8 +1,9 @@
 package application.details;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
-public class DishesDbDetails implements Serializable {
+public class DishesDbDetails extends ArrayList<DishesDbDetails> implements Serializable {
 
     private String entree;
     private String drink;
@@ -26,6 +27,8 @@ public class DishesDbDetails implements Serializable {
         this.dessert = dessert;
         this.entree = entree;
     }
+
+
 
     public String getDessert() {
         return dessert;

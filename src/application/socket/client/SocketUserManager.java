@@ -3,6 +3,7 @@ package application.socket.client;
 import application.Interfaces.UserRemote;
 import application.details.ChildDbDetails;
 import application.details.DishesDbDetails;
+import javafx.beans.property.StringProperty;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,6 +56,33 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
+        ArrayList<DishesDbDetails> dish = new ArrayList<>(1);
+        String responce = null ;
+        DishesDbDetails dMenu;
+        System.out.println("sending a message to open menu");
+        out.println("loadmenu");
+        out.flush();
+
+        try{
+            responce = in.readLine();
+
+
+        }catch(Exception e){
+            System.out.println("Errore durante l'ascolto");
+            e.printStackTrace();
+        }
+
+        if(responce != null){
+            String[] date = responce.split("\\s");
+            dMenu = new DishesDbDetails(date[0], date[1], date[2], date[3], date[4]);
+            dish.add(dMenu);
+            return dish;
+        }
+        return null;
+    }
+
+    @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
         return null;
     }
@@ -84,10 +112,7 @@ public class SocketUserManager implements UserRemote {
 
     }
 
-    @Override
-    public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
-        return null;
-    }
+
 
 
 }

@@ -23,7 +23,7 @@ import java.sql.SQLException;
 public class MainControllerLogin {
 
     ServicesManager ch = null;
-
+    public static String selected = null;
 
 
     @FXML
@@ -46,7 +46,7 @@ public class MainControllerLogin {
         String usr = txtUsername.getText().toString();
         String pwd = txtPassword.getText().toString();
 
-        String selected = (String) select.getSelectionModel().getSelectedItem();
+        selected = (String) select.getSelectionModel().getSelectedItem();
 
 
         try {
