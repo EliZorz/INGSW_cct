@@ -4,6 +4,8 @@ import application.Interfaces.UserRemote;
 import application.contr.Database;
 import application.details.ChildDbDetails;
 import application.details.ChildGuiDetails;
+import application.details.DishesDbDetails;
+import application.details.DishesDetails;
 import com.mysql.jdbc.Connection;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -170,6 +172,57 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
         System.out.println("upd");
     }
 
+    @Override
+    public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
+        PreparedStatement st;
+        ResultSet result = null;
+        ArrayList<DishesDbDetails> dishes = new ArrayList<>(4);
+
+        String queryLoad1 = "SELECT * FROM login.menubase";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad1);
+            result = st.executeQuery(queryLoad1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try{
+            System.out.println("ok");
+            if( !result.next() ) {
+                System.out.println("No menu in Db");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        DishesDbDetails prova  = null;
+                        prova = new DishesDbDetails(result.getString(1),result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5));
+
+
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        dishes.add(prova);
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return dishes;
+
+    }
 
 
     public String sendMessage(String clientMessage) {

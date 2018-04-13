@@ -2,6 +2,7 @@ package application.socket.client;
 
 import application.Interfaces.UserRemote;
 import application.details.ChildDbDetails;
+import application.details.DishesDbDetails;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -81,6 +82,11 @@ public class SocketUserManager implements UserRemote {
     @Override
     public void update() throws RemoteException {
 
+    }
+
+    @Override
+    public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
+        return null;
     }
 
 
