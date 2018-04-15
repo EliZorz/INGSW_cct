@@ -88,8 +88,10 @@ public class MainControllerLogin {
 
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
-
+              //  ch = new SocketManager();
+               // UserRemote u = ch.getUserService();
                 UserRemote u = Singleton.getInstance().methodSocket();
+
 
                 boolean result = u.funzLog(usr, pwd);
 
@@ -126,7 +128,6 @@ public class MainControllerLogin {
     }
 
     public void renameLabel(String st){
-
         lblStatus.setText(st);
     }
 

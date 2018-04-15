@@ -13,52 +13,71 @@ public class MenuInizialeController {
 
 
     @FXML
-    void MenuBase()throws Exception{
+    void openInformation(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Information");
+    }
+
+    @FXML
+    void openMenu(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Menu");
+    }
+
+    @FXML
+    void openChildren(ActionEvent event) throws Exception{
+
+        new GuiNew("Children");
+    }
+
+    @FXML
+    void openStaff(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Staff");
+    }
+
+
+
+
+    @FXML
+    void openMenuBasePlates (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
     }
 
     @FXML
-    void MenusSpeciale()throws Exception{
-        new GuiNew("MenuSpeciale");
-    }
-
-    @FXML
-    void GiteDisponibili()throws Exception{
-        new GuiNew("GiteDisponibili");
-    }
-
-    @FXML
-    void NuovaGita()throws Exception{
-        new GuiNew("NuovaGita");
-
+    void openSpecialMenu (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("SpecialMenu");
     }
 
 
-    @FXML
-    void fornitore()throws Exception{
-        new GuiNew("Fornitore");
-
-    }
-    @FXML
-    void bambini() throws Exception{
-        new GuiNew("Bambini");
-
-    }
 
     @FXML
-    void PersonaleInterno()throws Exception{
-       new GuiNew("PersonaleInterno");
+    void openDayTrip(ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("DayTrip");
 
     }
 
 
+
     @FXML
-    public void ReturnToHomePage(ActionEvent event)throws Exception{
+
+    void openSuppliers (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+       new GuiNew("Suppliers");
+    }
+
+
+    @FXML
+    public void backHome(ActionEvent event)throws Exception{
         //.setOnAction(e -> Platform.exit());
 
         //System.exit(0);  //in questo modo chiudo tutto
        // Platform.exit(); altro modo per chiudere tutto
         ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("MenuIniziale");
 
     }
 

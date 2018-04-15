@@ -2,6 +2,7 @@ package application.Interfaces;
 
 import application.details.ChildDbDetails;
 import application.details.ChildGuiDetails;
+import application.details.DishesDbDetails;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -25,7 +26,5 @@ public interface UserRemote extends Remote {
     void update() throws RemoteException; //per modificare quello detto prima
 
 
-
-
-
+    ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
 }

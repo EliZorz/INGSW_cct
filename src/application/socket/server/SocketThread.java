@@ -1,5 +1,6 @@
 package application.socket.server;
 
+import application.details.DishesDbDetails;
 import application.rmi.server.ServerImpl;
 
 import java.io.BufferedReader;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 //quello corretto
 public class SocketThread extends Thread {
@@ -89,6 +91,7 @@ public class SocketThread extends Thread {
     private String doAction(String line) throws IOException {
 
         String[] credentials = line.split("\\s+");
+        String ret = null;
 
         if (credentials[0].equals("login")){
 
@@ -105,7 +108,12 @@ public class SocketThread extends Thread {
         }
 
 
-
+        else if(credentials[0].equals("loadmenu")){
+            System.out.println("Richiedo l'apertura del menu");
+            if(impl.loadMenu() != null)
+                ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getDrink();
+                return ret;
+        }
         return "no";
     }
 }
