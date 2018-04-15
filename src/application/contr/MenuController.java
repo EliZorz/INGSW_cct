@@ -87,9 +87,9 @@ public class MenuController implements Initializable {
         colNumber.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
     }
 
-    /*
+
     @FXML
-    public void handleLoad() {
+    public void handleLoad(ActionEvent event) {
         if (MainControllerLogin.selected.equals("RMI")) {
             System.out.println("oper RMI menu");
             try {
@@ -126,6 +126,6 @@ public class MenuController implements Initializable {
             }
         }
     }
-    */
+
 }
 

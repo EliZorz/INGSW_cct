@@ -191,17 +191,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
-    @Override
-    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
-        PreparedStatement st = null;
 
-        ResultSet result = null;
-
-        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia)";
-
-
-        return null;
-    }
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
