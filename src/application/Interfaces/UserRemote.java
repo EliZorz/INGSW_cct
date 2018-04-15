@@ -25,6 +25,5 @@ public interface UserRemote extends Remote {
     void delete() throws RemoteException; //per eliminare quello detto prima
     void update() throws RemoteException; //per modificare quello detto prima
 
-
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
 }

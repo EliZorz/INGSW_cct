@@ -15,6 +15,5 @@ public class IngredientsController {
     public void handleSelectIngredients(){
         //salva selezionati in lista e ritorna lista
 
-
     }
 }

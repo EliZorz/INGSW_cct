@@ -56,12 +56,12 @@ public class MainControllerLogin {
 
                 if (result){
 
-                    this.renameLabel("Loggato");
+                    this.renameLabel("Logged in.");
 
                     new GuiNew("MenuIniziale");
 
                 } else{
-                    this.renameLabel("Insert correct data");
+                    this.renameLabel("Insert correct data.");
                 }
 
                 //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza

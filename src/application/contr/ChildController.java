@@ -151,11 +151,10 @@ public class ChildController implements Initializable {
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday.trim().isEmpty()
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
                 || cap.trim().isEmpty() || province.trim().isEmpty()){
-            //verify there are no void fields
+            //this verifies there are no void fields
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 

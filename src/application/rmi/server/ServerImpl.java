@@ -189,6 +189,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         System.out.println("upd");
     }
 
+
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
         PreparedStatement st;
