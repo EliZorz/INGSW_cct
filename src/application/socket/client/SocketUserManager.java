@@ -61,6 +61,11 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+        return null;
+    }
+
+    @Override
     public boolean logOut() throws RemoteException {
         return false;
     }

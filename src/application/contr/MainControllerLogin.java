@@ -37,17 +37,16 @@ public class MainControllerLogin {
 
         String usr = txtUsername.getText().toString();
         String pwd = txtPassword.getText().toString();
-
-
         String selected = (String) select.getSelectionModel().getSelectedItem();
 
         try {
             if (selected.equals("")){
                 System.out.println("User did not choose.\nRetry...");
                 lblStatus.setText("RMI or SOCKET?");
-            }
+            } else if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
+                this.renameLabel("Insert username, password");
 
-            else if(selected.equals("RMI")){
+            } else if(selected.equals("RMI")){
                 System.out.println("User chose RMI.\nProceed...");
 
                 //... vd singleton
@@ -61,7 +60,7 @@ public class MainControllerLogin {
 
                     new GuiNew("MenuIniziale");
 
-                }else{
+                } else{
                     this.renameLabel("Insert correct data");
                 }
 

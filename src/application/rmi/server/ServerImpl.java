@@ -98,7 +98,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         ArrayList<ChildDbDetails> childDbArrayList = new ArrayList<>(9);
 
-        String queryLoad = "SELECT * FROM login.interni LEFT JOIN login.bambino ON login.interni.CF = login.bambino.Interni_CF";
+        String queryLoad = "SELECT Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia" +
+                " FROM interni INNER JOIN bambino" +
+                " ON interni.CF = bambino.Interni_CF";
 
         try{
             st = this.connHere().prepareStatement(queryLoad);
@@ -142,6 +144,18 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         //ritorna lista di bambini
         return childDbArrayList;
 
+    }
+
+
+    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+        PreparedStatement st = null;
+
+        ResultSet result = null;
+
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia)";
+
+
+        return null;
     }
 
     @Override
