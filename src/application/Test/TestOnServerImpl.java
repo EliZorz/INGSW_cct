@@ -1,5 +1,6 @@
 package application.Test;
 
+/*
 import application.rmi.server.ServerImpl;
 import org.junit.jupiter.api.Test;
 
@@ -26,3 +27,4 @@ public class TestOnServerImpl {
 
 
 }
+*/

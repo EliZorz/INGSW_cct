@@ -1,10 +1,18 @@
 package application.details;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.Serializable;
 
-public class ChildDbDetails implements Serializable {
+
+/**
+ * Created by ELISA on 11/04/2018.
+ */
+
+public class ChildDbDetails implements Serializable{
+
+
     private String name;
     private String surname;
     private String cf;

@@ -1,10 +1,15 @@
 package application.details;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.Serializable;
 
+/**
+ * Created by ELISA on 06/04/2018.
+ */
 public class ChildGuiDetails {
+
     private StringProperty name;
     private StringProperty surname;
     private StringProperty cf;

@@ -15,11 +15,10 @@ public class RmiManager implements ServicesManager {
     Registry registry = null;
 
     public RmiManager(){
-        //LOOKUP
+
         try {
             registry = LocateRegistry.getRegistry();
 
-            //String reply = pippo.sendMessage("Client hello");
         } catch (RemoteException e) {
             e.printStackTrace();
         }

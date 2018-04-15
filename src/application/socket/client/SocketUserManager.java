@@ -56,6 +56,17 @@ public class SocketUserManager implements UserRemote {
             return false;
     }
 
+
+    @Override
+    public ArrayList<ChildDbDetails> loadData() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+        return null;
+    }
+
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
         ArrayList<DishesDbDetails> dish = new ArrayList<>(1);
@@ -83,10 +94,6 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
-    @Override
-    public ArrayList<ChildDbDetails> loadData() throws RemoteException {
-        return null;
-    }
 
     @Override
     public boolean logOut() throws RemoteException {
@@ -113,10 +120,7 @@ public class SocketUserManager implements UserRemote {
 
     }
 
-    @Override
-    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
-        return null;
-    }
+
 
 
 }

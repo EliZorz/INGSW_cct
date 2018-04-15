@@ -50,14 +50,14 @@ public class MainControllerLogin {
 
 
         try {
-            if(selected.equals("")){
-                System.out.println("User did not choose.\n Retry...");
-                lblStatus.setText("RMI o SOCKET?");
+            if (selected.equals("")){
+                System.out.println("User did not choose.\nRetry...");
+                lblStatus.setText("RMI or SOCKET?");
             } else if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
                 this.renameLabel("Insert username, password");
 
-                } else if(selected.equals("RMI")){
-                System.out.println("User chose rmi.\nProceed...");
+            } else if(selected.equals("RMI")){
+                System.out.println("User chose RMI.\nProceed...");
 
                 //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
 
@@ -69,13 +69,12 @@ public class MainControllerLogin {
 
                 if (result){
 
-                    this.renameLabel("Loggato");
+                    this.renameLabel("Logged in.");
 
                     new GuiNew("MenuIniziale");
 
-
-                }else{
-                    this.renameLabel("Credenziali sbagliate");
+                } else{
+                    this.renameLabel("Insert correct data.");
                 }
 
                 //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza
@@ -141,37 +140,6 @@ public class MainControllerLogin {
 
     }
 
-/*
-    public void isLogged(ResultSet result){
-
-        try{
-            if( !result.next() ) {
-                lblStatus.setText("Login failed");
-                System.out.println("No user like that in your database");
-            } else {
-                result.beforeFirst();
-                while (result.next()) {
-                    String usrFound = result.getString("Username");
-                    System.out.println("USER: " + usrFound);
-                    String pwdFound = result.getString("Password");
-                    System.out.println("PASSWORD: " + pwdFound);
-                }
-
-                try {
-                    new GuiNew().openFxml("../../gui/MenuIniziale.fxml");
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-*/
     public void renameLabel(String st){
         lblStatus.setText(st);
     }

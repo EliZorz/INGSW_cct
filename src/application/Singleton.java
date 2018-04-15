@@ -6,6 +6,7 @@ import application.rmi.client.RmiManager;
 import application.socket.client.SocketManager;
 
 public class Singleton {
+
     private static Singleton instance = null;
 
     //private constructor, prevents other class from instantiating

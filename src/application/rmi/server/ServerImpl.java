@@ -4,6 +4,8 @@ import application.Interfaces.UserRemote;
 import application.contr.Database;
 import application.details.ChildDbDetails;
 import application.details.ChildGuiDetails;
+import application.details.ChildDbDetails;
+import application.details.ChildGuiDetails;
 import application.details.DishesDbDetails;
 import application.details.DishesDetails;
 import com.mysql.jdbc.Connection;
@@ -19,7 +21,7 @@ import java.util.List;
 /**
  * Created by ELISA on 21/03/2018.
  */
-public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l'idea è che socket e rmi usino entrambe questa implementazione
+public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //socket e rmi usano entrambe questa implementazione
 
 
     public ServerImpl() throws RemoteException {
@@ -30,9 +32,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
     public boolean funzLog (String usr, String pwd){
 
         PreparedStatement st = null;
+
         ResultSet result = null;
 
-        String queryLog = "SELECT * FROM sys.login WHERE Username = ? AND Password = ? ";//"SELECT * FROM UserIn WHERE Username = ? AND Password = ? " ;
+        String queryLog = "SELECT * FROM UserIn WHERE Username = ? AND Password = ? ";//"SELECT * FROM sys.login WHERE Username = ? AND Password = ? " ;
+
         boolean res = false;
 
         try{
@@ -50,12 +54,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
         }
 
 
-
-//controlla che username e password siano presenti nel db
         try{
             if( !result.next() ) {
                 System.out.println("No user like that in your database");
-                res =  false;
+                res = false;
             } else {
                 result.beforeFirst();
                 while (result.next()) {
@@ -64,12 +66,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
                     String pwdFound = result.getString("Password");
                     System.out.println("PASSWORD: " + pwdFound);
                 }
+
                 res = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 if (result != null)
                     result.close();
@@ -83,10 +85,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
                 e.printStackTrace();
             }
 
-        }
+         }
 
 
         return res;
+
 
     }
 
@@ -148,6 +151,18 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
 
     }
 
+
+    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+        PreparedStatement st = null;
+
+        ResultSet result = null;
+
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia)";
+
+
+        return null;
+    }
+
     @Override
     public boolean logOut() throws RemoteException {
         System.out.println("logout");
@@ -174,6 +189,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
     public void update() throws RemoteException {
         System.out.println("upd");
     }
+
 
     @Override
     public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
@@ -244,6 +260,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
         return "Client Message".equals(clientMessage) ? "Server Message" : null;
     }
 
+
     public Connection connHere (){
 
         Database receivedCon = new Database();
@@ -256,6 +273,5 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //l
         return connectionOK;
 
     }
-
 
 }

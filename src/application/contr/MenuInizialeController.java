@@ -1,27 +1,15 @@
 package application.contr;
 
 
-import application.Inter;
 import application.gui.GuiNew;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.stage.Stage;
-
-
-import java.awt.*;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class MenuInizialeController {
-
 
 
     @FXML
@@ -39,13 +27,13 @@ public class MenuInizialeController {
     @FXML
     void openChildren(ActionEvent event) throws Exception{
 
-        new GuiNew("Children");
+        new GuiNew("Bambini");
     }
 
     @FXML
     void openStaff(ActionEvent event) throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
-        new GuiNew("Staff");
+        new GuiNew("PersonaleInterno");
     }
 
 
@@ -62,6 +50,7 @@ public class MenuInizialeController {
         ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("SpecialMenu");
     }
+
 
 
     @FXML
@@ -98,9 +87,6 @@ public class MenuInizialeController {
 
     @FXML
     private URL location;
-
-
-
 
     @FXML
     void initialize() {
