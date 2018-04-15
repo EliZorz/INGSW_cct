@@ -1,6 +1,7 @@
 package application.Interfaces;
 
 import application.details.ChildDbDetails;
+import application.details.ChildGuiDetails;
 import application.details.DishesDbDetails;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ public interface UserRemote extends Remote {
     void add() throws RemoteException; //per aggiungere bambini, fornitori, gite, staff
     void delete() throws RemoteException; //per eliminare quello detto prima
     void update() throws RemoteException; //per modificare quello detto prima
+    ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException;
 
 
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;

@@ -2,6 +2,7 @@ package application.socket.client;
 
 import application.Interfaces.UserRemote;
 import application.details.ChildDbDetails;
+import application.details.ChildGuiDetails;
 import application.details.DishesDbDetails;
 import javafx.beans.property.StringProperty;
 
@@ -112,7 +113,10 @@ public class SocketUserManager implements UserRemote {
 
     }
 
-
+    @Override
+    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+        return null;
+    }
 
 
 }
