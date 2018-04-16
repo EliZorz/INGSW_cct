@@ -195,7 +195,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
-        PreparedStatement st;
+    /*    PreparedStatement st;
         ResultSet result = null;
         ArrayList<DishesDbDetails> dishes = new ArrayList<>(4);
 
@@ -241,7 +241,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
 
-        return dishes;
+        return dishes;*/
+        return null;
 
     }
 
