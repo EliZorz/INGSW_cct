@@ -17,11 +17,7 @@ import java.rmi.RemoteException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-/**
- * Created by ELISA on 06/04/2018.
- */
 public class ChildController implements Initializable {
-
     private ObservableList<ChildGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<ChildDbDetails> childObsList = FXCollections.observableArrayList();
     @FXML
@@ -235,5 +231,8 @@ public class ChildController implements Initializable {
 
         lblWarning.setText(st);
     }
+
+
+
 
 }

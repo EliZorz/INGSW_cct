@@ -89,7 +89,7 @@ public class MenuController implements Initializable {
 
 
     @FXML
-    public void handleLoad() {
+    public void handleLoad(ActionEvent event) {
         if (MainControllerLogin.selected.equals("RMI")) {
             System.out.println("oper RMI menu");
             try {

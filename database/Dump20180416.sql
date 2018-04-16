@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `proj` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `proj`;
+CREATE DATABASE  IF NOT EXISTS `project` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `project`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: proj
+-- Host: localhost    Database: project
 -- ------------------------------------------------------
 -- Server version	5.7.21-log
 
@@ -39,10 +39,9 @@ CREATE TABLE `adulto` (
   `Tutore` bit(1) NOT NULL,
   `Contatto` bit(1) NOT NULL,
   `Bambino_CodRif` int(6) unsigned NOT NULL,
-  `Bambino_Interni_CF` char(16) NOT NULL,
-  PRIMARY KEY (`CF`,`Bambino_CodRif`,`Bambino_Interni_CF`),
-  KEY `fk_Adulto_Bambino1_idx` (`Bambino_CodRif`,`Bambino_Interni_CF`),
-  CONSTRAINT `fk_Adulto_Bambino1` FOREIGN KEY (`Bambino_CodRif`, `Bambino_Interni_CF`) REFERENCES `bambino` (`CodRif`, `Interni_CF`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`CF`,`Bambino_CodRif`),
+  KEY `fk_Adulto_Bambino1_idx` (`Bambino_CodRif`),
+  CONSTRAINT `fk_Adulto_Bambino1` FOREIGN KEY (`Bambino_CodRif`) REFERENCES `bambino` (`CodRif`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -78,6 +77,7 @@ CREATE TABLE `bambino` (
 
 LOCK TABLES `bambino` WRITE;
 /*!40000 ALTER TABLE `bambino` DISABLE KEYS */;
+INSERT INTO `bambino` VALUES (1,'PRRLCU09H10F205M'),(2,'PRRVGN10P56F205T');
 /*!40000 ALTER TABLE `bambino` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,16 +208,10 @@ DROP TABLE IF EXISTS `ingredients`;
 CREATE TABLE `ingredients` (
   `ingredient` varchar(15) NOT NULL,
   `Fornitore_PIVA` int(30) NOT NULL,
-  `menu_special_NumPiatti` int(11) NOT NULL,
-  `menu_base_NumPiatti` int(11) NOT NULL,
   PRIMARY KEY (`ingredient`),
   UNIQUE KEY `ingredient_UNIQUE` (`ingredient`),
   KEY `fk_Ingredients_Fornitore1_idx` (`Fornitore_PIVA`),
-  KEY `fk_Ingredients_menu_special1_idx` (`menu_special_NumPiatti`),
-  KEY `fk_Ingredients_menu_base1_idx` (`menu_base_NumPiatti`),
-  CONSTRAINT `fk_Ingredients_Fornitore1` FOREIGN KEY (`Fornitore_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Ingredients_menu_base1` FOREIGN KEY (`menu_base_NumPiatti`) REFERENCES `menu_base` (`NumPiatti`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Ingredients_menu_special1` FOREIGN KEY (`menu_special_NumPiatti`) REFERENCES `menu_special` (`NumPiatti`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_Ingredients_Fornitore1` FOREIGN KEY (`Fornitore_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -247,14 +241,8 @@ CREATE TABLE `interni` (
   `Indirizzo` tinytext NOT NULL,
   `CAP` int(5) NOT NULL,
   `Provincia` char(2) NOT NULL,
-  `menu_special_NumPiatti` int(11) NOT NULL,
-  `menu_base_NumPiatti` int(11) NOT NULL,
-  PRIMARY KEY (`CF`,`menu_special_NumPiatti`,`menu_base_NumPiatti`),
-  UNIQUE KEY `CF_UNIQUE` (`CF`),
-  KEY `fk_Interni_menu_special1_idx` (`menu_special_NumPiatti`),
-  KEY `fk_Interni_menu_base1_idx` (`menu_base_NumPiatti`),
-  CONSTRAINT `fk_Interni_menu_base1` FOREIGN KEY (`menu_base_NumPiatti`) REFERENCES `menu_base` (`NumPiatti`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Interni_menu_special1` FOREIGN KEY (`menu_special_NumPiatti`) REFERENCES `menu_special` (`NumPiatti`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`CF`),
+  UNIQUE KEY `CF_UNIQUE` (`CF`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -264,6 +252,7 @@ CREATE TABLE `interni` (
 
 LOCK TABLES `interni` WRITE;
 /*!40000 ALTER TABLE `interni` DISABLE KEYS */;
+INSERT INTO `interni` VALUES ('Fieri','Mariapia','FRIMRP68C47D612B','1968-03-07','Firenze','Cremona','corso Garibaldi 51',26100,'CR'),('Perera','Luca','PRRLCU09H10F205M','2009-06-10','Milano','Milano Bovisa','via Gramsci 10',20140,'MI'),('Perera','Virginia','PRRVGN10P56F205T','2010-09-16','Milano','Milano Bovisa','via Gramsci 10',20140,'MI');
 /*!40000 ALTER TABLE `interni` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,7 +386,33 @@ CREATE TABLE `personaleint` (
 
 LOCK TABLES `personaleint` WRITE;
 /*!40000 ALTER TABLE `personaleint` DISABLE KEYS */;
+INSERT INTO `personaleint` VALUES ('fieri.mariapia@cct.mailunion.com',56140,'FRIMRP68C47D612B');
 /*!40000 ALTER TABLE `personaleint` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userin`
+--
+
+DROP TABLE IF EXISTS `userin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `userin` (
+  `username` varchar(15) NOT NULL,
+  `password` varchar(15) NOT NULL,
+  PRIMARY KEY (`username`,`password`),
+  UNIQUE KEY `userincol_UNIQUE` (`password`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userin`
+--
+
+LOCK TABLES `userin` WRITE;
+/*!40000 ALTER TABLE `userin` DISABLE KEYS */;
+INSERT INTO `userin` VALUES ('eli','eli123'),('ludo','ludo123'),('ron','ron123'),('ron','ronald123');
+/*!40000 ALTER TABLE `userin` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -409,4 +424,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-14 10:44:09
+-- Dump completed on 2018-04-16  9:24:15
