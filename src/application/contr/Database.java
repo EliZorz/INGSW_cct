@@ -16,7 +16,7 @@ public class Database {
     private static final String pw = "Monali2009!"; //123456
 
     //JDBC driver name and DB URL
-    private static final String url = "jdbc:mysql://localhost:3306/Login";
+    private static final String url = "jdbc:mysql://localhost:3306/Project";
 
     private static final String db = "com.mysql.jdbc.Driver";
 

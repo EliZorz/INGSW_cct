@@ -27,13 +27,13 @@ public class MenuInizialeController {
     @FXML
     void openChildren(ActionEvent event) throws Exception{
 
-        new GuiNew("Bambini");
+        new GuiNew("Children");
     }
 
     @FXML
     void openStaff(ActionEvent event) throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
-        new GuiNew("PersonaleInterno");
+        new GuiNew("Staff");
     }
 
 

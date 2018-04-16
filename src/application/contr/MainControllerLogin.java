@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * Created by ELISA on 23/03/2018.
  */
 public class MainControllerLogin {
-
+    public static String selected = null;
     @FXML
     private TextField txtUsername;
 
@@ -32,12 +32,12 @@ public class MainControllerLogin {
 
 
 
-
     public void handleLogin() throws SQLException {
+
+         selected = (String) select.getSelectionModel().getSelectedItem();
 
         String usr = txtUsername.getText().toString();
         String pwd = txtPassword.getText().toString();
-        String selected = (String) select.getSelectionModel().getSelectedItem();
 
         try {
             if (selected.equals("")){
