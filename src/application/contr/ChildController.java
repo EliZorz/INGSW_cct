@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -135,7 +136,7 @@ public class ChildController implements Initializable {
 
 
     @FXML
-    public void handleAddChild(){
+    public void handleAddChild() {
         System.out.println("Adding child to database...");
 
         String name = txtName.getText().toString();
@@ -150,7 +151,7 @@ public class ChildController implements Initializable {
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday.trim().isEmpty()
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
-                || cap.trim().isEmpty() || province.trim().isEmpty()){
+                || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
         } else {
@@ -158,7 +159,7 @@ public class ChildController implements Initializable {
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-                ArrayList<ChildGuiDetails> childGuiArrayList = u.addData(name, surname, cf, birthday, bornWhere, residence, address, cap, province);  //call method in Server Impl
+                ArrayList<ChildDbDetails> childGuiArrayList = u.addData(name, surname, cf, birthday, bornWhere, residence, address, cap, province);  //call method in Server Impl
 
                 //IN SERVERIMPL: pick every field content and save into list (1 list for child -> interni + 1 list for allergy)
         /*assign code number to new child :
@@ -170,13 +171,22 @@ public class ChildController implements Initializable {
                 //then return list
 
                 //HERE: add to database the returned list
-                //label -> "Please click Load table"
+                dataObsList.clear();
 
-            } catch (Exception e){
+                if (childGuiArrayList != null) {
+                    for (ChildDbDetails c : childGuiArrayList) {
+                        ChildGuiDetails tmp = new ChildGuiDetails(c);
+                        dataObsList.add(tmp);
+
+                    }
+
+                    this.renameLabel("Click Load table.");
+                    //label -> "Please click Load table"
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     @FXML
@@ -186,11 +196,10 @@ public class ChildController implements Initializable {
         stage.close();
     }
 
-
     @FXML
     public void handleShowIngredients() {
         try {
-            new GuiNew("Ingredienti");
+            new GuiNew("Ingredients");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,7 +208,7 @@ public class ChildController implements Initializable {
     @FXML
     public void handleContacts() {
         try {
-            new GuiNew("Contatti");
+            new GuiNew("Contacts");
         } catch (IOException e) {
             e.printStackTrace();
         }
