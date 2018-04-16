@@ -16,11 +16,7 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-/**
- * Created by ELISA on 06/04/2018.
- */
 public class ChildController implements Initializable {
-
     private ObservableList<ChildGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<ChildDbDetails> childObsList = FXCollections.observableArrayList();
     @FXML
@@ -151,11 +147,10 @@ public class ChildController implements Initializable {
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday.trim().isEmpty()
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
                 || cap.trim().isEmpty() || province.trim().isEmpty()){
-            //verify there are no void fields
+            //this verifies there are no void fields
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
@@ -227,5 +222,8 @@ public class ChildController implements Initializable {
 
         lblWarning.setText(st);
     }
+
+
+
 
 }

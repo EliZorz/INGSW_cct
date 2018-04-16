@@ -15,7 +15,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Text fill="#1221ed" fontSmoothingType="LCD" layoutX="47.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select one or more " textAlignment="CENTER">
+      <Text fill="#1221ed" fontSmoothingType="LCD" layoutX="47.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select one or more" textAlignment="CENTER">
          <font>
             <Font name="Century" size="20.0" />
          </font>

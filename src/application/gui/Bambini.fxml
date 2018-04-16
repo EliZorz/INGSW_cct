@@ -50,19 +50,19 @@
                 <Font name="Courier New" size="30.0" />
               </font>
             </Label>
-                  <DatePicker fx:id="dpBirthday" layoutX="48.0" layoutY="158.0" promptText="Birthday" />
-                  <Button fx:id="btnAllergy" layoutX="47.0" layoutY="359.0" mnemonicParsing="false" onAction="#handleShowIngredients" prefHeight="26.0" prefWidth="200.0" text="Allergic diseases">
-                     <effect>
-                        <SepiaTone />
-                     </effect>
-                  </Button>
-                  <Button fx:id="btnDelete" layoutX="317.0" layoutY="684.0" mnemonicParsing="false" onAction="#handleDelete" prefHeight="46.0" prefWidth="87.0" text="Delete" />
-                  <Button fx:id="btnUpdate" layoutX="183.0" layoutY="684.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="46.0" prefWidth="87.0" text="Update" />
-                  <Button fx:id="btnContacts" layoutX="47.0" layoutY="409.0" mnemonicParsing="false" onAction="#handleContacts" prefHeight="26.0" prefWidth="200.0" text="Contacts">
-                     <effect>
-                        <SepiaTone />
-                     </effect>
-                  </Button>
+            <DatePicker fx:id="dpBirthday" layoutX="48.0" layoutY="158.0" promptText="Birthday" />
+            <Button fx:id="btnAllergy" layoutX="47.0" layoutY="359.0" mnemonicParsing="false" onAction="#handleShowIngredients" prefHeight="26.0" prefWidth="200.0" text="Allergic diseases">
+              <effect>
+                <SepiaTone />
+              </effect>
+            </Button>
+            <Button fx:id="btnDelete" layoutX="317.0" layoutY="684.0" mnemonicParsing="false" onAction="#handleDelete" prefHeight="46.0" prefWidth="87.0" text="Delete" />
+            <Button fx:id="btnUpdate" layoutX="183.0" layoutY="684.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="46.0" prefWidth="87.0" text="Update" />
+            <Button fx:id="btnContacts" layoutX="47.0" layoutY="409.0" mnemonicParsing="false" onAction="#handleContacts" prefHeight="26.0" prefWidth="200.0" text="Contacts">
+              <effect>
+                <SepiaTone />
+              </effect>
+            </Button>
           </children>
         </AnchorPane>
       </items>

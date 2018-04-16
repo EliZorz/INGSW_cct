@@ -148,6 +148,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         //ritorna lista di bambini
         return childDbArrayList;
 
+
     }
 
 
@@ -188,6 +189,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public void update() throws RemoteException {
         System.out.println("upd");
     }
+
+
+
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {

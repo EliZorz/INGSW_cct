@@ -2,7 +2,11 @@ package application.contr;
 
 import application.Singleton;
 import application.gui.GuiNew;
+import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
+
+import application.rmi.client.RmiManager;
+import application.socket.client.SocketManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -17,6 +21,10 @@ import java.sql.SQLException;
  * Created by ELISA on 23/03/2018.
  */
 public class MainControllerLogin {
+
+    ServicesManager ch = null;
+    public static String selected = null;
+
 
     @FXML
     private TextField txtUsername;
@@ -37,31 +45,37 @@ public class MainControllerLogin {
 
         String usr = txtUsername.getText().toString();
         String pwd = txtPassword.getText().toString();
-        String selected = (String) select.getSelectionModel().getSelectedItem();
+
+        selected = (String) select.getSelectionModel().getSelectedItem();
+
 
         try {
-            if (selected.equals("")){
+          /*  if (selected.equals("")){
                 System.out.println("User did not choose.\nRetry...");
                 lblStatus.setText("RMI or SOCKET?");
-            } else if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
+            } else*/
+                if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
                 this.renameLabel("Insert username, password");
 
             } else if(selected.equals("RMI")){
                 System.out.println("User chose RMI.\nProceed...");
 
-                //... vd singleton
+                //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
+
+
                 UserRemote u = Singleton.getInstance().methodRmi();
+
 
                 boolean result = u.funzLog(usr, pwd);
 
                 if (result){
 
-                    this.renameLabel("Loggato");
+                    this.renameLabel("Logged in.");
 
                     new GuiNew("MenuIniziale");
 
                 } else{
-                    this.renameLabel("Insert correct data");
+                    this.renameLabel("Insert correct data.");
                 }
 
                 //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza
