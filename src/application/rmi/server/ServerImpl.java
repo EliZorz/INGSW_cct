@@ -96,7 +96,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
 
-        PreparedStatement st;
+        PreparedStatement st = null;
 
         ResultSet result = null;
 
@@ -143,6 +143,20 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         //ritorna lista di bambini
@@ -151,17 +165,82 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
-    public ArrayList<ChildGuiDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+    public ArrayList<ChildDbDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
         PreparedStatement st = null;
 
         ResultSet result = null;
 
-        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia)";
+        ArrayList<ChildDbDetails> childAddArrayList = new ArrayList<>(9);
 
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia)" +
+                            " VALUES (?,?,?,?,?,?,?,?,?)";
 
-        return null;
+        try {
+
+            st = this.connHere().prepareStatement(queryAdd);
+            st.setString(1, name);
+            st.setString(2, surname);
+            st.setString(3, cf);
+            st.setString(4, birthday);
+            st.setString(5, bornWhere);
+            st.setString(6, residence);
+            st.setString(7, address);
+            st.setString(8, cap);
+            st.setString(9, province);
+
+            result = st.executeQuery();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try{
+            if( !result.next() ) {
+                System.out.println("No data to add");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        //passo a costruttore ChildDbDetails(ChildGuiDetails childguiSp)
+                        ChildDbDetails prova = new ChildDbDetails(result.getString(1), result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5),
+                                result.getString(6),
+                                result.getString(7),
+                                result.getString(8),
+                                result.getString(9));
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        childAddArrayList.add(prova);
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return childAddArrayList;
     }
 
+    
     @Override
     public boolean logOut() throws RemoteException {
         System.out.println("logout");
