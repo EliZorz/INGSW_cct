@@ -1,10 +1,9 @@
 package application.socket.client;
 
 import application.Interfaces.UserRemote;
-import application.details.ChildDbDetails;
-import application.details.ChildGuiDetails;
-import application.details.DishesDbDetails;
+import application.details.*;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class SocketUserManager implements UserRemote {
@@ -63,9 +63,15 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public ArrayList<ChildDbDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+    public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+        return true;
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
         return null;
     }
+
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
@@ -93,34 +99,6 @@ public class SocketUserManager implements UserRemote {
         }
         return null;
     }
-
-
-    @Override
-    public boolean logOut() throws RemoteException {
-        return false;
-    }
-
-    @Override
-    public boolean save() throws RemoteException {
-        return false;
-    }
-
-    @Override
-    public void add() throws RemoteException {
-
-    }
-
-    @Override
-    public void delete() throws RemoteException {
-
-    }
-
-    @Override
-    public void update() throws RemoteException {
-
-    }
-
-
 
 
 }

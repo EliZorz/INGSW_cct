@@ -2,20 +2,22 @@ package application.rmi.server;
 
 import application.Interfaces.UserRemote;
 import application.contr.Database;
+import application.details.*;
 import application.details.ChildDbDetails;
 import application.details.ChildGuiDetails;
-import application.details.ChildDbDetails;
-import application.details.ChildGuiDetails;
-import application.details.DishesDbDetails;
-import application.details.DishesDetails;
 import com.mysql.jdbc.Connection;
+import javafx.collections.ObservableList;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -124,7 +126,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 System.out.println("Processing ResultSet");
                 try {
                     while (result.next()) {
-                        ChildDbDetails prova = new ChildDbDetails(result.getString(1),result.getString(2),
+                        ChildDbDetails prova = new ChildDbDetails(result.getString(1),
+                                result.getString(2),
                                 result.getString(3),
                                 result.getString(4),
                                 result.getString(5),
@@ -165,57 +168,40 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     }
 
-
-    public ArrayList<ChildDbDetails> addData(String name, String surname, String cf, String birthday, String bornWhere, String residence, String address, String cap, String province) throws RemoteException {
+    public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
         PreparedStatement st = null;
 
         ResultSet result = null;
 
-        ArrayList<ChildDbDetails> childAddArrayList = new ArrayList<>(9);
+        ArrayList<IngredientsDbDetails> ingrArrayList = new ArrayList<>(1);
 
-        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia)" +
-                            " VALUES (?,?,?,?,?,?,?,?,?)";
+        String queryLoad = "SELECT ingredient " +
+                            "FROM ingredients INNER JOIN fornitore " +
+                            "ON ingredients.Fornitore_PIVA = fornitore.PIVA";
 
-        try {
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
 
-            st = this.connHere().prepareStatement(queryAdd);
-            st.setString(1, name);
-            st.setString(2, surname);
-            st.setString(3, cf);
-            st.setString(4, birthday);
-            st.setString(5, bornWhere);
-            st.setString(6, residence);
-            st.setString(7, address);
-            st.setString(8, cap);
-            st.setString(9, province);
-
-            result = st.executeQuery();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
+
         try{
             if( !result.next() ) {
-                System.out.println("No data to add");
+                System.out.println("No ingredient in DB");
 
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
                 try {
                     while (result.next()) {
-                        //passo a costruttore ChildDbDetails(ChildGuiDetails childguiSp)
-                        ChildDbDetails prova = new ChildDbDetails(result.getString(1), result.getString(2),
-                                result.getString(3),
-                                result.getString(4),
-                                result.getString(5),
-                                result.getString(6),
-                                result.getString(7),
-                                result.getString(8),
-                                result.getString(9));
+                        IngredientsDbDetails prova = new IngredientsDbDetails(result.getString(1));
                         //get string from db, put into list of ChildGuiData, ready to put it into GUI
-                        childAddArrayList.add(prova);
-
+                        ingrArrayList.add(prova);
                     }
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -238,37 +224,129 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
 
         }
-        return childAddArrayList;
+
+        return ingrArrayList;
+
     }
 
-    
-    @Override
-    public boolean logOut() throws RemoteException {
-        System.out.println("logout");
+
+    public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+        PreparedStatement st = null;
+
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
+                            " VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String queryLastCodRif = "SELECT MAX(CodRif) FROM bambino";  //select last CodRif inserted
+        String queryAddCf = "INSERT INTO bambino(CodRif, Interni_CF) VALUES (?,?)";
+
+        ArrayList<CodRifChildDbDetails> codRifArrayList = new ArrayList<>(1);
+
+        ResultSet result = null;
+
+        //divide items from arraylist selectedAllergy into string to put into database
+        StringBuilder allAllergies = new StringBuilder();
+        if(! selectedAllergy.isEmpty()){
+            for(String s : selectedAllergy){
+                allAllergies.append(selectedAllergy.toString()+ ", ");
+            }
+            System.out.println(allAllergies.toString());
+        } else {
+            allAllergies.append("none");
+        }
+
+
+        try {
+            //add data new child into db
+            st = this.connHere().prepareStatement(queryAdd);
+            st.setString(1, surname);
+            st.setString(2, name);
+            st.setString(3, cf);
+            st.setDate(4, java.sql.Date.valueOf(birthday));
+            st.setString(5, bornWhere);
+            st.setString(6, residence);
+            st.setString(7, address);
+            st.setString(8, cap);
+            st.setString(9, province);
+            st.setString(10, allAllergies.toString());
+            st.executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            /*  assign code number to new child :
+            **    1) query to select bambino.CodRif from interni inner join bambino on CF
+            **    2) save CodRif in list
+            **    3) pick latest element list and ++
+            **    4) save new number in list, associate it with new child's CF
+            */
+            st = this.connHere().prepareStatement(queryLastCodRif);
+            result = st.executeQuery(queryLastCodRif);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No CodRif in DB");
+                //then new child's CodRif is 1
+                String newCod = "c1";
+
+                //add to DB
+                st = this.connHere().prepareStatement(queryAddCf);
+                st.setString(1, newCod);
+                st.setString(2, cf);
+                st.executeUpdate();
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+
+                try {
+                    while (result.next()) {
+                        CodRifChildDbDetails lastCod = new CodRifChildDbDetails(result.getString(1));
+                        codRifArrayList.add(lastCod);
+                    }
+
+                    String currentLast = codRifArrayList.get(0).getCodRif();
+                    String newCod = "c" + (Integer.parseInt(currentLast.substring(1, currentLast.length()))+1);
+                    st = this.connHere().prepareStatement(queryAddCf);
+                    st.setString(1, newCod);
+                    st.setString(2, cf);
+                    st.executeUpdate();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return true;
     }
-
-    @Override
-    public boolean save() throws RemoteException {
-        System.out.println("save");
-        return true;
-    }
-
-    @Override
-    public void add() throws RemoteException {
-        System.out.println("add");
-    }
-
-    @Override
-    public void delete() throws RemoteException {
-        System.out.println("del");
-    }
-
-    @Override
-    public void update() throws RemoteException {
-        System.out.println("upd");
-    }
-
 
 
 

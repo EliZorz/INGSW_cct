@@ -4,6 +4,8 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.ChildDbDetails;
 import application.details.ChildGuiDetails;
+import application.details.IngredientsDbDetails;
+import application.details.IngredientsGuiDetails;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,18 +16,20 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ChildController implements Initializable {
     private ObservableList<ChildGuiDetails> dataObsList = FXCollections.observableArrayList();
-    private ObservableList<ChildDbDetails> childObsList = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
+
+    ArrayList<String> selectedAllergy = new ArrayList<>();
+
     @FXML
     public Button btnBack;
     @FXML
     public Button btnLoad;
-    @FXML
-    public Button btnAllergy;
     @FXML
     public Button btnAdd;
     @FXML
@@ -76,6 +80,16 @@ public class ChildController implements Initializable {
     public TextField txtProvince;
 
 
+    @FXML
+    public Button btnLoadIngredients;
+    @FXML
+    public Button btnDeselect;
+    @FXML
+    public TableView<IngredientsGuiDetails> tableIngr;
+    @FXML
+    public TableColumn<IngredientsGuiDetails, String> colIngr;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -89,8 +103,23 @@ public class ChildController implements Initializable {
         colCap.setCellValueFactory(cellData -> cellData.getValue().capProperty());
         colProvince.setCellValueFactory(cellData -> cellData.getValue().provinceProperty());
 
-
         tableChild.getItems().clear();
+
+
+        colIngr.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
+
+        tableIngr.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableIngr.getSelectionModel().setCellSelectionEnabled(true);
+
+        tableIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectedAllergy.add(newSelection.getIngr());
+                System.out.println(newSelection.getIngr());
+            }
+        });
+
+        tableIngr.getItems().clear();
+
     }
 
 
@@ -133,57 +162,85 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleAddChild() {
-        System.out.println("Adding child to database...");
+        System.out.println("Adding new child to database...");
 
         String name = txtName.getText().toString();
         String surname = txtSurname.getText().toString();
         String cf = txtCf.getText().toString();
-        String birthday = dpBirthday.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate birthday = dpBirthday.getValue();
         String bornWhere = txtBornWhere.getText().toString();
         String residence = txtResidence.getText().toString();
         String address = txtAddress.getText().toString();
         String cap = txtCap.getText().toString();
         String province = txtProvince.getText().toString();
 
-        if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday.trim().isEmpty()
+        if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday == null
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
                 || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
+
+
+            //DA VERIFICARE : CONTACTS -> ha una handleAdd separata! (in database risulta separato..
+            // NON DIMENTICARE di collegare ogni nuovo contatto al corrispondente Bambino (CodRif NECESSARIO per associare)
+
+            //X ALLERGIES: IN MANUALE UTENTE -> "Se l'utente non seleziona nulla dal campo allergia,
+            //il sistema vede tale scelta come se non ci fossero allergie da segnalare. Modificare il campo in seguito se necessario (i.g. per dimenticanza)
+
         } else {
             System.out.println("Adding data to database...");
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-                ArrayList<ChildDbDetails> childGuiArrayList = u.addData(name, surname, cf, birthday, bornWhere, residence, address, cap, province);  //call method in Server Impl
+                boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
                 //IN SERVERIMPL: pick every field content and save into list (1 list for child -> interni + 1 list for allergy)
-        /*assign code number to new child :
-        1) query to select bambino.CodRif from interni inner join bambino on CF
-        2) save CodRif in list
-        3) pick latest element list and ++
-        4) save new number in list, associate it with new child's CF
-         */
-                //then return list
 
-                //HERE: add to database the returned list
-                dataObsList.clear();
-
-                if (childGuiArrayList != null) {
-                    for (ChildDbDetails c : childGuiArrayList) {
-                        ChildGuiDetails tmp = new ChildGuiDetails(c);
-                        dataObsList.add(tmp);
-
-                    }
-
-                    this.renameLabel("Click Load table.");
-                    //label -> "Please click Load table"
+                if (isAddOk) {
+                    lblWarning.setText("Congrats! Child added.");
                 }
-            } catch (Exception e) {
+            } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    public void handleLoadIngredients(){
+        System.out.println("Loading data...");
+
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+
+            ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
+
+            ingredientsObsList.clear();
+
+            if (ingrArrayList != null){
+                for(IngredientsDbDetails c : ingrArrayList){
+                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(c);
+                    ingredientsObsList.add(tmp);
+                }
+
+                tableIngr.setItems(null);
+                tableIngr.setItems(ingredientsObsList);
+
+
+            } else {
+                System.out.println("Error loading Ingredients");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void handleDeselect() {
+        tableIngr.getSelectionModel().clearSelection();
+    }
+
+
 
     @FXML
     public void handleBackHomepage() {
@@ -192,14 +249,6 @@ public class ChildController implements Initializable {
         stage.close();
     }
 
-    @FXML
-    public void handleShowIngredients() {
-        try {
-            new GuiNew("Ingredients");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     public void handleContacts() {
@@ -216,7 +265,6 @@ public class ChildController implements Initializable {
 
 
 
-
     }
 
     @FXML
@@ -228,7 +276,6 @@ public class ChildController implements Initializable {
     }
 
     public void renameLabel(String st){
-
         lblWarning.setText(st);
     }
 

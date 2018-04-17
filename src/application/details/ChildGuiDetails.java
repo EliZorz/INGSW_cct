@@ -74,11 +74,9 @@ public class ChildGuiDetails {
 
 
     //setters
-    public void setName(String value){
-        name.set(value);
-    }
+    public void setName(String value){ name.set(value); }
 
-    public void setSurame(String value){
+    public void setSurname(String value){
         surname.set(value);
     }
 
@@ -115,9 +113,7 @@ public class ChildGuiDetails {
         return name;
     }
 
-    public StringProperty surnameProperty(){
-        return surname;
-    }
+    public StringProperty surnameProperty(){ return surname; }
 
     public StringProperty cfProperty(){
         return cf;

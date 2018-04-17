@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -10,6 +11,7 @@
 <?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="774.0" prefWidth="1300.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.ChildController">
   <children>
@@ -34,8 +36,6 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="0.0">
           <children>
-            <Button fx:id="btnBack" layoutX="293.0" layoutY="613.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="46.0" prefWidth="110.0" style="-fx-cursor: hand" text="Go to HomePage" />
-            <Button fx:id="btnAdd" layoutX="49.0" layoutY="684.0" mnemonicParsing="false" onAction="#handleAddChild" prefHeight="46.0" prefWidth="87.0" text="Add child" />
             <TextField fx:id="txtName" layoutX="48.0" layoutY="57.0" prefWidth="152.0" promptText="First Name" />
             <TextField fx:id="txtSurname" layoutX="213.0" layoutY="57.0" prefWidth="190.0" promptText="Last name" />
             <TextField fx:id="txtCf" layoutX="48.0" layoutY="105.0" prefHeight="26.0" prefWidth="355.0" promptText="Fiscal Code" />
@@ -44,25 +44,44 @@
             <TextField fx:id="txtAddress" layoutX="47.0" layoutY="258.0" prefWidth="200.0" promptText="Address" />
             <TextField fx:id="txtCap" layoutX="270.0" layoutY="304.0" prefWidth="126.0" promptText="CAP" />
             <TextField fx:id="txtProvince" layoutX="47.0" layoutY="304.0" prefWidth="200.0" promptText="Province" />
-            <Button fx:id="btnLoad" layoutX="48.0" layoutY="614.0" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="45.0" prefWidth="110.0" text="Load table details" />
-            <Label fx:id="lblWarning" alignment="CENTER" layoutX="172.0" layoutY="548.0" prefHeight="26.0" prefWidth="109.0" text="Status" textFill="RED">
+            <Label fx:id="lblWarning" alignment="CENTER" layoutX="55.0" layoutY="607.0" prefHeight="35.0" prefWidth="355.0" text="Status" textAlignment="CENTER" textFill="RED">
               <font>
-                <Font name="Courier New" size="30.0" />
+                <Font name="Courier New" size="24.0" />
               </font>
             </Label>
                   <DatePicker fx:id="dpBirthday" layoutX="48.0" layoutY="158.0" promptText="Birthday" />
-                  <Button fx:id="btnAllergy" layoutX="47.0" layoutY="359.0" mnemonicParsing="false" onAction="#handleShowIngredients" prefHeight="26.0" prefWidth="200.0" text="Allergies">
+                  <Button fx:id="btnContacts" layoutX="47.0" layoutY="359.0" mnemonicParsing="false" onAction="#handleContacts" prefHeight="26.0" prefWidth="126.0" text="Contacts">
                      <effect>
                         <SepiaTone />
                      </effect>
                   </Button>
-                  <Button fx:id="btnDelete" layoutX="317.0" layoutY="684.0" mnemonicParsing="false" onAction="#handleDelete" prefHeight="46.0" prefWidth="87.0" text="Delete" />
-                  <Button fx:id="btnUpdate" layoutX="183.0" layoutY="684.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="46.0" prefWidth="87.0" text="Update" />
-                  <Button fx:id="btnContacts" layoutX="47.0" layoutY="409.0" mnemonicParsing="false" onAction="#handleContacts" prefHeight="26.0" prefWidth="200.0" text="Contacts">
+                  <ButtonBar layoutX="13.0" layoutY="676.0" prefHeight="40.0" prefWidth="200.0">
+                    <buttons>
+                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="46.0" prefWidth="87.0" text="Delete" />
+                        <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="46.0" prefWidth="87.0" text="Update" />
+                  <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="45.0" prefWidth="110.0" text="Load table " />
+                  <Button fx:id="btnBack" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="46.0" prefWidth="110.0" style="-fx-cursor: hand" text="HomePage" />
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAddChild" prefHeight="46.0" prefWidth="87.0" text="Add child" />
+                    </buttons>
+                  </ButtonBar>
+                  <TableView fx:id="tableIngr" layoutX="47.0" layoutY="399.0" prefHeight="156.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="colIngr" prefWidth="198.40007781982422" text="Possible allergies" />
+                    </columns>
                      <effect>
                         <SepiaTone />
                      </effect>
-                  </Button>
+                  </TableView>
+                  <ButtonBar layoutX="47.0" layoutY="555.0" prefHeight="40.0" prefWidth="200.0">
+                     <buttons>
+                        <Button fx:id="btnLoadIngredients" mnemonicParsing="false" onAction="#handleLoadIngredients" prefHeight="26.0" prefWidth="74.0" text="Load list" />
+                        <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="26.0" prefWidth="110.0" text="Deselect all" />
+                     </buttons>
+                  </ButtonBar>
+                  <Text layoutX="270.0" layoutY="412.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select one or more." />
+                  <Text layoutX="270.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="If your child has no allergy," />
+                  <Text layoutX="270.0" layoutY="460.0" strokeType="OUTSIDE" strokeWidth="0.0" text="then please click on void row." />
+                  <Text layoutX="270.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" />
           </children>
         </AnchorPane>
       </items>
