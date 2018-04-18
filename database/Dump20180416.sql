@@ -1,1 +1,1 @@
-SELECT * FROM project.menu_base;
+SELECT * FROM project.ingredients;
