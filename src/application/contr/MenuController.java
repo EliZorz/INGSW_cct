@@ -2,11 +2,13 @@ package application.contr;
 
 import application.details.DishesDbDetails;
 import application.details.DishesDetails;
+import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -20,6 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
@@ -44,7 +47,10 @@ public class MenuController implements Initializable {
     private ObservableList<DishesDetails> menu = FXCollections.observableArrayList();
 
     @FXML
-    public Button addMenu;
+    public Button handleLoad;
+
+    @FXML
+    public Button createMenu;
 
     @FXML
     public Button noMenu;
@@ -71,12 +77,18 @@ public class MenuController implements Initializable {
     public TableColumn<DishesDetails, String> colDrink;
 
     @FXML
+    public TableColumn<DishesDetails,String> colDay;
+
+    @FXML
+    public TableColumn<DishesDetails,String> colSide;
+
+    @FXML
     public TableView<DishesDetails> tableMenu;
 
 
-    public void backHome(ActionEvent event) {
 
-    }
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -85,6 +97,8 @@ public class MenuController implements Initializable {
         colMainCourse.setCellValueFactory(cellData -> cellData.getValue().mainCourseProperty());
         colEntree.setCellValueFactory(cellData -> cellData.getValue().entreeProperty());
         colNumber.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
+        colDay.setCellValueFactory(cellData -> cellData.getValue().dayProperty());
+        colSide.setCellValueFactory(cellData -> cellData.getValue().sideDishProperty());
     }
 
 
@@ -126,6 +140,19 @@ public class MenuController implements Initializable {
             }
         }
     }
+
+    @FXML
+    public void openCreation(ActionEvent event) throws IOException {
+        new GuiNew("newMenu");
+    }
+
+
+    @FXML
+    public void esc(ActionEvent event) {
+        ((Node) (event.getSource())).getScene().getWindow().hide();
+    }
+
+
 
 }
 

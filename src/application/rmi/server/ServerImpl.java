@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         ResultSet result = null;
 
-        String queryLog = "SELECT * FROM UserIn WHERE Username = ? AND Password = ? ";//"SELECT * FROM sys.login WHERE Username = ? AND Password = ? " ;
+        String queryLog = "SELECT * FROM project.UserIn WHERE Username = ? AND Password = ? ";//"SELECT * FROM sys.login WHERE Username = ? AND Password = ? " ;
 
         boolean res = false;
 
@@ -88,7 +89,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
             }
 
-         }
+        }
 
 
         return res;
@@ -106,7 +107,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<ChildDbDetails> childDbArrayList = new ArrayList<>(9);
 
         String queryLoad = "SELECT Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia" +
-                " FROM interni INNER JOIN bambino" +
+                " FROM project.interni INNER JOIN project.bambino" +
                 " ON interni.CF = bambino.Interni_CF";
 
         try{
@@ -177,9 +178,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         ArrayList<IngredientsDbDetails> ingrArrayList = new ArrayList<>(1);
 
-        String queryLoad = "SELECT ingredient " +
-                            "FROM ingredients INNER JOIN fornitore " +
-                            "ON ingredients.Fornitore_PIVA = fornitore.PIVA";
+        String queryLoad = "SELECT project.ingredient " +
+                "FROM ingredients INNER JOIN fornitore " +
+                "ON ingredients.Fornitore_PIVA = fornitore.PIVA";
 
         try{
             st = this.connHere().prepareStatement(queryLoad);
@@ -235,8 +236,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
-                            " VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String queryAdd = "INSERT INTO project.interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
+                " VALUES (?,?,?,?,?,?,?,?,?,?)";
         String queryLastCodRif = "SELECT MAX(CodRif) FROM bambino";  //select last CodRif inserted
         String queryAddCf = "INSERT INTO bambino(CodRif, Interni_CF) VALUES (?,?)";
 
@@ -673,7 +674,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         ArrayList<DishesDbDetails> dishes = new ArrayList<>(4);
 
-        String queryLoad1 = "SELECT * FROM login.menubase";
+        String queryLoad1 = "SELECT * FROM project.menu_base";
 
         try{
             st = this.connHere().prepareStatement(queryLoad1);
@@ -698,7 +699,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         prova = new DishesDbDetails(result.getString(1),result.getString(2),
                                 result.getString(3),
                                 result.getString(4),
-                                result.getString(5));
+                                result.getString(5),result.getString(6),result.getString(7));
 
 
                         //get string from db, put into list of ChildGuiData, ready to put it into GUI
@@ -716,6 +717,46 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
         return dishes;
+
+    }
+
+    @Override
+    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
+        PreparedStatement st = null;
+
+        String queryAdd = "INSERT INTO project.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
+                " VALUES (?,?,?,?,?,?,?)";
+
+
+        ResultSet result = null;
+
+
+
+        try {
+            //add data new child into db
+            st = this.connHere().prepareStatement(queryAdd);
+            st.setString(1, num);
+            st.setString(2, entree);
+            st.setString(3, mainCourse);
+            st.setString(4, dessert);
+            st.setString(5, sideDish);
+            st.setString(6, drink);
+            st.setDate(7, Date.valueOf(date));
+            st.executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
 
     }
 

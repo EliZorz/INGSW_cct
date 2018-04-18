@@ -8,7 +8,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 //quello corretto
 public class SocketThread extends Thread {
@@ -111,8 +115,17 @@ public class SocketThread extends Thread {
         else if(credentials[0].equals("loadmenu")){
             System.out.println("Richiedo l'apertura del menu");
             if(impl.loadMenu() != null)
-                ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getDrink();
+                ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getSideDish()+" "+impl.loadMenu().get(0).getDrink()+" "+impl.loadMenu().get(0).getDay();
                 return ret;
+        }
+            else if(credentials[0].equals("addMenu")){
+                    System.out.println("Invio il nuovo menu al database");
+                    System.out.println(credentials[7]);
+                    LocalDate d = LocalDate.parse(credentials[7],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    System.out.println(d);
+
+                    if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6],d))
+                        return "Ok";
         }
         return "no";
     }
