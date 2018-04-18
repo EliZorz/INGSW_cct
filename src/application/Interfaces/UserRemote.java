@@ -1,7 +1,10 @@
 package application.Interfaces;
 
-import application.details.*;
-import javafx.collections.ObservableList;
+import application.details.ChildDbDetails;
+import application.details.ChildGuiDetails;
+import application.details.DishesDbDetails;
+import application.details.IngredientsDbDetails;
+import javafx.beans.property.StringProperty;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -22,4 +25,6 @@ public interface UserRemote extends Remote {
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
 
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
+
+    boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date)throws RemoteException;
 }

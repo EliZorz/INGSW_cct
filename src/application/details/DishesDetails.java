@@ -2,6 +2,7 @@ package application.details;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 
 public class DishesDetails {
 
@@ -9,7 +10,9 @@ public class DishesDetails {
     private StringProperty entree;
     private StringProperty mainCourse;
     private StringProperty dessert;
+    private StringProperty sideDish;
     private StringProperty drink;
+    private StringProperty day;
 
     public DishesDetails(DishesDbDetails ddd){
         this.dessert = new SimpleStringProperty(ddd.getDessert());
@@ -17,6 +20,8 @@ public class DishesDetails {
         this.entree = new SimpleStringProperty(ddd.getEntree());
         this.number = new SimpleStringProperty(ddd.getNumber());
         this.mainCourse = new SimpleStringProperty(ddd.getMainCourse());
+        this.day = new SimpleStringProperty(ddd.getDay());
+        this.sideDish = new SimpleStringProperty(ddd.getSideDish());
 
     }
 
@@ -60,6 +65,10 @@ public class DishesDetails {
         this.dessert.set(dessert);
     }
 
+    public void setSideDish(String sideDish){this.sideDish.set(sideDish);}
+
+
+
     public StringProperty dessertProperty() {
         return dessert;
     }
@@ -81,4 +90,17 @@ public class DishesDetails {
     }
 
 
+    public String getDay() {
+        return day.get();
+    }
+
+    public StringProperty dayProperty() {
+        return day;
+    }
+
+    public String getSideDish() {
+        return sideDish.get();
+    }
+
+    public StringProperty sideDishProperty(){return sideDish;}
 }

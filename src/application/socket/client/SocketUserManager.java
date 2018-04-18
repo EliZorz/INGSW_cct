@@ -93,11 +93,16 @@ public class SocketUserManager implements UserRemote {
 
         if(responce != null){
             String[] date = responce.split("\\s");
-            dMenu = new DishesDbDetails(date[0], date[1], date[2], date[3], date[4]);
+            dMenu = new DishesDbDetails(date[0], date[1], date[2], date[3], date[4],date[5],date[6]);
             dish.add(dMenu);
             return dish;
         }
         return null;
+    }
+
+    @Override
+    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
+        return false;
     }
 
 

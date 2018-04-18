@@ -111,7 +111,7 @@ public class SocketThread extends Thread {
         else if(credentials[0].equals("loadmenu")){
             System.out.println("Richiedo l'apertura del menu");
             if(impl.loadMenu() != null)
-                ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getDrink();
+                ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getSideDish()+" "+impl.loadMenu().get(0).getDrink()+" "+impl.loadMenu().get(0).getDay();
                 return ret;
         }
         return "no";
