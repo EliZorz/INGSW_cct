@@ -6,8 +6,10 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CreationMenuController">
    <children>
@@ -30,6 +32,15 @@
       </AnchorPane>
       <Button fx:id="save" layoutX="495.0" layoutY="414.0" mnemonicParsing="false" onAction="#saveMenu" prefHeight="36.0" prefWidth="131.0" text="Save menu" />
       <ImageView fitHeight="135.0" fitWidth="131.0" layoutX="495.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="label1" layoutX="495.0" layoutY="377.0" prefHeight="25.0" prefWidth="131.0" text="Label" />
+      <Label fx:id="label1" layoutX="496.0" layoutY="368.0" prefHeight="25.0" prefWidth="131.0" text="Correct">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Button fx:id="backHome" layoutX="539.0" layoutY="30.0" mnemonicParsing="false" onAction="#backHome" prefHeight="36.0" prefWidth="44.0" />
+      <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="547.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

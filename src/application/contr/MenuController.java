@@ -151,8 +151,13 @@ public class MenuController implements Initializable {
         //System.exit(0);  //in questo modo chiudo tutto
         // Platform.exit(); altro modo per chiudere tutto
         ((Node)(event.getSource())).getScene().getWindow().hide();
-        new GuiNew("Menu");
 
+
+    }
+
+    @FXML
+    public void esc(ActionEvent event) {
+        ((Node) (event.getSource())).getScene().getWindow().hide();
     }
 
 }

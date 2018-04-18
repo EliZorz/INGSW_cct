@@ -24,7 +24,7 @@
       <Button fx:id="createMenu" layoutX="217.0" layoutY="478.0" mnemonicParsing="false" onAction="#openCreation" prefHeight="36.0" prefWidth="145.0" text="Create a new menu " AnchorPane.leftAnchor="210.0" />
       <Button fx:id="updateMenu" layoutX="388.0" layoutY="478.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="145.0" text="Modify the menu" AnchorPane.rightAnchor="210.0" />
       <Button fx:id="noMenu" layoutX="556.0" layoutY="478.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="145.0" text="Delete the menu " AnchorPane.rightAnchor="34.0" />
-      <Button fx:id="backHome" layoutX="26.0" layoutY="25.0" mnemonicParsing="false" onAction="#backHome" prefHeight="36.0" prefWidth="44.0" />
+      <Button fx:id="backHome" layoutX="26.0" layoutY="25.0" mnemonicParsing="false" onAction="#esc" prefHeight="36.0" prefWidth="44.0" />
       <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="34.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
