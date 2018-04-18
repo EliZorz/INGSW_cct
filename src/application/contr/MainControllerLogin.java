@@ -23,7 +23,7 @@ import java.sql.SQLException;
 public class MainControllerLogin {
 
     ServicesManager ch = null;
-    public static String selected = null;
+    public static String selected = null;  //per la scelta tra rmi e socket
 
 
     @FXML
@@ -50,10 +50,11 @@ public class MainControllerLogin {
 
 
         try {
-            if (selected.equals("")){
+          /*  if (selected.equals("")){
                 System.out.println("User did not choose.\nRetry...");
                 lblStatus.setText("RMI or SOCKET?");
-            } else if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
+            } else*/
+                if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
                 this.renameLabel("Insert username, password");
 
             } else if(selected.equals("RMI")){

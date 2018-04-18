@@ -41,7 +41,7 @@ public class MenuInizialeController {
 
     @FXML
     void openMenuBasePlates (ActionEvent event)throws Exception{
-        
+
         new GuiNew("MenuBasePlates");
     }
 

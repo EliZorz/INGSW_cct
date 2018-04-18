@@ -4,6 +4,7 @@ import application.Interfaces.UserRemote;
 import application.details.*;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +14,10 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 public class SocketUserManager implements UserRemote {
     private final Socket socket;  //socket del client
@@ -102,6 +106,21 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
+        String responce = null;
+        String when = date.format(DateTimeFormatter.BASIC_ISO_DATE);
+        String what = "addMenu "+ num + " " + entree +" " + mainCourse + " " + dessert+" "+ sideDish +" " + drink +" " + when;
+        System.out.println("Sending the new menu to database....");
+        out.println(what);
+        out.flush();
+        try{
+            responce = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Errore durante l'ascolto");
+        }
+
+         if(responce.equals("Ok"))
+            return true;
         return false;
     }
 

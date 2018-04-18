@@ -88,6 +88,8 @@ public class MenuController implements Initializable {
 
 
 
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colDessert.setCellValueFactory(cellData -> cellData.getValue().dessertProperty());
@@ -144,21 +146,13 @@ public class MenuController implements Initializable {
         new GuiNew("newMenu");
     }
 
-    @FXML
-    public void backHome(ActionEvent event)throws Exception{
-        //.setOnAction(e -> Platform.exit());
-
-        //System.exit(0);  //in questo modo chiudo tutto
-        // Platform.exit(); altro modo per chiudere tutto
-        ((Node)(event.getSource())).getScene().getWindow().hide();
-
-
-    }
 
     @FXML
     public void esc(ActionEvent event) {
         ((Node) (event.getSource())).getScene().getWindow().hide();
     }
+
+
 
 }
 

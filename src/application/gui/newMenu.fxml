@@ -27,7 +27,8 @@
                 <TableColumn prefWidth="199.0" text="Ingredients in the menu" />
               </columns>
             </TableView>
-            <Button layoutX="226.0" layoutY="287.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="131.0" text="Add ingredients" />
+            <Button fx:id="ingredients" layoutX="226.0" layoutY="287.0" mnemonicParsing="false" onAction="#openIngredients" prefHeight="36.0" prefWidth="131.0" text="Add ingredients" />
+            <Button fx:id="loadIngr" layoutX="226.0" layoutY="335.0" mnemonicParsing="false" onAction="#loadIngredients" prefHeight="36.0" prefWidth="131.0" text="Load ingredients" />
          </children>
       </AnchorPane>
       <Button fx:id="save" layoutX="495.0" layoutY="414.0" mnemonicParsing="false" onAction="#saveMenu" prefHeight="36.0" prefWidth="131.0" text="Save menu" />

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.gui.AddIngr">
+   <children>
+      <TableView layoutX="33.0" layoutY="27.0" prefHeight="547.0" prefWidth="269.0" AnchorPane.bottomAnchor="26.5" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="26.5">
+        <columns>
+          <TableColumn prefWidth="113.22222900390625" text="PIVA" />
+          <TableColumn prefWidth="154.77777099609375" text="Ingredient" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
