@@ -1,57 +1,64 @@
 package application.details;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import java.io.Serializable;
 
-
 /**
- * Created by ELISA on 11/04/2018.
+ * Created by ELISA on 18/04/2018.
  */
-
-public class ChildDbDetails implements Serializable{
-
+public class ContactsDbDetails implements Serializable {
 
     private String name;
     private String surname;
     private String cf;
+    private String tel;
+    private String mail;
     private String bornOn;
     private String bornWhere;
-    private String residence;
     private String address;
     private String cap;
     private String province;
+    private String isDoc;
+    private String isGuardian;
+    private String isContact;
+
 
 
     //default constructor StringProperty -> String per salvare dati da GUI a DB
-    public ChildDbDetails(ChildGuiDetails childguiSp){
+    public ContactsDbDetails(ContactsGuiDetails childguiSp){
 
 
         this.name = childguiSp.getName();
         this.surname = childguiSp.getSurname();
         this.cf = childguiSp.getCf();
+        this.tel = childguiSp.getTel();
+        this.mail = childguiSp.getMail();
         this.bornOn = childguiSp.getBornOn();
         this.bornWhere = childguiSp.getBornWhere();
-        this.residence = childguiSp.getResidence();
         this.address = childguiSp.getAddress();
         this.cap = childguiSp.getCap();
         this.province = childguiSp.getProvince();
+        this.isDoc = childguiSp.getIsDoc();
+        this.isGuardian = childguiSp.getIsGuardian();
+        this.isContact = childguiSp.getIsContact();
 
     }
 
     //default constructor String -> StringProperty per inserire dati in GUI
-    public ChildDbDetails(String name, String surname, String cf, String bornOn, String bornWhere, String residence, String address, String cap, String province){
+    public ContactsDbDetails(String name, String surname, String cf, String tel, String mail, String bornOn, String bornWhere, String address, String cap, String province, String isDoc, String isGuardian, String isContact){
 
         this.name = name;
         this.surname = surname;
         this.cf = cf;
+        this.tel = tel;
+        this.mail = mail;
         this.bornOn = bornOn;
         this.bornWhere = bornWhere;
-        this.residence = residence;
         this.address = address;
         this.cap = cap;
         this.province = province;
+        this.isDoc = isDoc;
+        this.isGuardian = isGuardian;
+        this.isContact = isContact;
 
     }
 
@@ -68,16 +75,18 @@ public class ChildDbDetails implements Serializable{
         return cf;
     }
 
+    public String getTel(){
+        return tel;
+    }
+
+    public String getMail(){ return mail; }
+
     public String getBornOn(){
         return bornOn;
     }
 
     public String getBornWhere(){
         return bornWhere;
-    }
-
-    public String getResidence(){
-        return residence;
     }
 
     public String getAddress(){
@@ -92,13 +101,35 @@ public class ChildDbDetails implements Serializable{
         return province;
     }
 
+    public String getIsDoc(){
+        return isDoc;
+    }
+
+    public String getIsGuardian(){
+        return isGuardian;
+    }
+
+    public String getIsContact(){
+        return isContact;
+    }
+
 
     //setters
     public void setName(String value){ this.name = value; }
 
-    public void setSurname(String value){ this.surname = value; }
+    public void setSurname(String value){
+        this.surname = value;
+    }
 
     public void setCf(String value){
+        this.cf = value;
+    }
+
+    public void setTel(String value){
+        this.cf = value;
+    }
+
+    public void setMail(String value){
         this.cf = value;
     }
 
@@ -108,10 +139,6 @@ public class ChildDbDetails implements Serializable{
 
     public void setBornWhere(String value){
         this.bornWhere = value;
-    }
-
-    public void setResidence(String value){
-        this.residence = value;
     }
 
     public void setAddress(String value){
@@ -124,5 +151,17 @@ public class ChildDbDetails implements Serializable{
 
     public void setProvince(String value){
         this.province = value;
+    }
+
+    public void setIsDoc(String value){
+        this.cf = value;
+    }
+
+    public void setIsGuardian(String value){
+        this.cf = value;
+    }
+
+    public void setIsContact(String value){
+        this.cf = value;
     }
 }

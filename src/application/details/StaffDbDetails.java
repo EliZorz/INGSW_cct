@@ -1,21 +1,16 @@
 package application.details;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import java.io.Serializable;
 
-
 /**
- * Created by ELISA on 11/04/2018.
+ * Created by ELISA on 18/04/2018.
  */
-
-public class ChildDbDetails implements Serializable{
-
+public class StaffDbDetails implements Serializable {
 
     private String name;
     private String surname;
     private String cf;
+    private String mail;
     private String bornOn;
     private String bornWhere;
     private String residence;
@@ -25,12 +20,13 @@ public class ChildDbDetails implements Serializable{
 
 
     //default constructor StringProperty -> String per salvare dati da GUI a DB
-    public ChildDbDetails(ChildGuiDetails childguiSp){
+    public StaffDbDetails(StaffGuiDetails childguiSp){
 
 
         this.name = childguiSp.getName();
         this.surname = childguiSp.getSurname();
         this.cf = childguiSp.getCf();
+        this.mail = childguiSp.getMail();
         this.bornOn = childguiSp.getBornOn();
         this.bornWhere = childguiSp.getBornWhere();
         this.residence = childguiSp.getResidence();
@@ -41,11 +37,12 @@ public class ChildDbDetails implements Serializable{
     }
 
     //default constructor String -> StringProperty per inserire dati in GUI
-    public ChildDbDetails(String name, String surname, String cf, String bornOn, String bornWhere, String residence, String address, String cap, String province){
+    public StaffDbDetails(String name, String surname, String cf, String mail, String bornOn, String bornWhere, String residence, String address, String cap, String province){
 
         this.name = name;
         this.surname = surname;
         this.cf = cf;
+        this.mail = mail;
         this.bornOn = bornOn;
         this.bornWhere = bornWhere;
         this.residence = residence;
@@ -67,6 +64,8 @@ public class ChildDbDetails implements Serializable{
     public String getCf(){
         return cf;
     }
+
+    public String getMail() { return mail; }
 
     public String getBornOn(){
         return bornOn;
@@ -101,6 +100,8 @@ public class ChildDbDetails implements Serializable{
     public void setCf(String value){
         this.cf = value;
     }
+
+    public void setMail(String value) { this.mail = value; }
 
     public void setBornOn(String value){
         this.bornOn = value;

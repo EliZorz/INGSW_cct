@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +21,16 @@ public interface UserRemote extends Remote {
     boolean addData(String name, String surname, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
 
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
+
+    ArrayList<ContactsDbDetails> loadDataContacts() throws RemoteException;
+
+    boolean addContact(String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
+
+    boolean deleteChild(String cf) throws RemoteException;
+
+    ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException;
+
+    boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
 
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
 }

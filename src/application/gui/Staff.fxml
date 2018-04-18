@@ -1,56 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="774.0" prefWidth="1300.0" style="" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MenuInizialeController">
+<AnchorPane prefHeight="774.0" prefWidth="1300.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.StaffController">
   <children>
     <SplitPane dividerPositions="0.6956856702619415" focusTraversable="true" prefHeight="774.0" prefWidth="1300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="772.0" prefWidth="954.0">
           <children>
-            <TableView prefHeight="772.0" prefWidth="906.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-6.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="tableStaff" prefHeight="772.0" prefWidth="906.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-6.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Name" />
-                <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="99.0" text="Surname" />
-                <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="167.0" text="CF" />
-                <TableColumn prefWidth="75.0" text="Born ">
-                  <columns>
-                    <TableColumn prefWidth="75.0" text="when" />
-                    <TableColumn prefWidth="75.0" text="where" />
-                  </columns>
-                </TableColumn>
-                <TableColumn maxWidth="20000.0" minWidth="17.0" prefWidth="20.0" text="Living">
-                  <columns>
-                    <TableColumn prefWidth="75.0" text="City" />
-                    <TableColumn prefWidth="75.0" text="Address" />
-                    <TableColumn prefWidth="75.0" text="CAP" />
-                    <TableColumn prefWidth="75.0" text="Province" />
-                  </columns>
-                </TableColumn>
-                <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="110.0" text="e-mail" />
+                <TableColumn fx:id="colSurname" maxWidth="5000.0" minWidth="10.0" prefWidth="99.0" text="Surname" />
+                <TableColumn fx:id="colName" maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Name" />
+                <TableColumn fx:id="colCf" maxWidth="5000.0" minWidth="10.0" prefWidth="167.0" text="CF" />
+                <TableColumn fx:id="colBornOn" prefWidth="75.0" text="Birthday" />
+                <TableColumn fx:id="colBornWhere" prefWidth="75.0" text="Hometown" />
+                  <TableColumn fx:id="colResidence" prefWidth="75.0" text="Residence" />
+                <TableColumn fx:id="colAddress" prefWidth="75.0" text="Address" />
+                <TableColumn fx:id="colCap" prefWidth="75.0" text="CAP" />
+                <TableColumn fx:id="colProvince" prefWidth="75.0" text="Province" />
+                  <TableColumn fx:id="colMail" maxWidth="5000.0" minWidth="10.0" prefWidth="112.39996337890625" text="e-mail" />
               </columns>
             </TableView>
           </children>
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="0.0">
           <children>
-            <Button id="back" layoutX="264.0" layoutY="673.0" mnemonicParsing="false" onAction="#ReturnToHomePage" prefHeight="58.0" prefWidth="109.0" style="-fx-cursor: hand" text="Save (back)" />
-            <Button layoutX="94.0" layoutY="673.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="87.0" text="Add" />
-            <TextField layoutX="28.0" layoutY="52.0" prefWidth="133.0" text="Name" />
-            <TextField layoutX="188.0" layoutY="52.0" prefWidth="190.0" text="Surname" />
-            <TextField layoutX="28.0" layoutY="116.0" prefWidth="351.0" text="CF" />
-            <TextField layoutX="28.0" layoutY="293.0" prefWidth="190.0" text="Born on YYYY-MM-DD" />
-            <TextField layoutX="28.0" layoutY="344.0" prefWidth="190.0" text="Born in " />
-            <TextField layoutX="28.0" layoutY="430.0" prefWidth="250.0" text="Current city address" />
-            <TextField layoutX="28.0" layoutY="484.0" prefWidth="200.0" text="Street " />
-            <TextField layoutX="28.0" layoutY="543.0" prefWidth="200.0" text="CAP" />
-            <TextField layoutX="28.0" layoutY="601.0" prefWidth="200.0" text="Province" />
-            <TextField layoutX="28.0" layoutY="201.0" prefWidth="200.0" text="e-mail" />
+            <TextField fx:id="txtName" layoutX="238.0" layoutY="26.0" prefWidth="133.0" promptText="First Name" />
+            <TextField fx:id="txtSurname" layoutX="28.0" layoutY="26.0" prefWidth="190.0" promptText="Last Name" />
+            <TextField fx:id="txtCf" layoutX="28.0" layoutY="68.0" prefHeight="26.0" prefWidth="343.0" promptText="CF" />
+            <TextField fx:id="txtBornWhere" layoutX="173.0" layoutY="157.0" prefHeight="26.0" prefWidth="200.0" promptText="Hometown" />
+            <TextField fx:id="txtResidence" layoutX="29.0" layoutY="204.0" prefHeight="26.0" prefWidth="200.0" promptText="Current city" />
+            <TextField fx:id="txtAddress" layoutX="29.0" layoutY="249.0" prefWidth="200.0" promptText="Address" />
+            <TextField fx:id="txtCap" layoutX="29.0" layoutY="294.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
+            <TextField fx:id="txtProvince" layoutX="185.0" layoutY="294.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
+            <TextField fx:id="txtMail" layoutX="28.0" layoutY="111.0" prefHeight="26.0" prefWidth="343.0" promptText="e-mail" />
+                  <DatePicker fx:id="dpBirthday" layoutX="28.0" layoutY="157.0" prefHeight="26.0" prefWidth="126.0" promptText="Birthday" />
+                  <Button fx:id="btnBack" layoutX="213.0" layoutY="696.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="158.0" text="Homepage" />
+                  <ButtonBar layoutX="20.0" layoutY="634.0" prefHeight="40.0" prefWidth="343.0">
+                    <buttons>
+                      <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadStaff" text="Load table" />
+                        <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddStaff" prefHeight="26.0" text="Add " />
+                        <Button fx:id="btnUpdate" minWidth="38.0" mnemonicParsing="false" onAction="#handleUpdateStaff" prefHeight="26.0" text="Update" />
+                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDeleteStaff" text="Delete" />
+                    </buttons>
+                  </ButtonBar>
+                  <TableView fx:id="tableIngr" layoutX="29.0" layoutY="349.0" prefHeight="177.0" prefWidth="174.0">
+                    <columns>
+                      <TableColumn fx:id="colIngr" prefWidth="174.40002822875977" text="Possible allergies" />
+                    </columns>
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </TableView>
+                  <ButtonBar layoutX="14.0" layoutY="536.0" prefHeight="40.0" prefWidth="190.0">
+                    <buttons>
+                      <Button fx:id="btnLoadIngredients" mnemonicParsing="false" onAction="#handleLoadIngredients" text="Load list" />
+                        <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="26.0" prefWidth="91.0" text="Deselect all" />
+                    </buttons>
+                  </ButtonBar>
+                  <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="25.0" layoutY="585.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
           </children>
         </AnchorPane>
       </items>

@@ -44,7 +44,7 @@
             <TextField fx:id="txtAddress" layoutX="47.0" layoutY="258.0" prefWidth="200.0" promptText="Address" />
             <TextField fx:id="txtCap" layoutX="270.0" layoutY="304.0" prefWidth="126.0" promptText="CAP" />
             <TextField fx:id="txtProvince" layoutX="47.0" layoutY="304.0" prefWidth="200.0" promptText="Province" />
-            <Label fx:id="lblWarning" alignment="CENTER" layoutX="55.0" layoutY="607.0" prefHeight="35.0" prefWidth="355.0" text="Status" textAlignment="CENTER" textFill="RED">
+            <Label fx:id="lblWarning" alignment="CENTER" layoutX="55.0" layoutY="601.0" prefHeight="35.0" prefWidth="355.0" text="Status" textAlignment="CENTER" textFill="RED">
               <font>
                 <Font name="Courier New" size="24.0" />
               </font>
@@ -55,13 +55,13 @@
                         <SepiaTone />
                      </effect>
                   </Button>
-                  <ButtonBar layoutX="13.0" layoutY="676.0" prefHeight="40.0" prefWidth="200.0">
+            <Button fx:id="btnBack" layoutX="252.0" layoutY="713.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="16.0" prefWidth="190.0" style="-fx-cursor: hand" text="HomePage" />
+                  <ButtonBar layoutX="26.0" layoutY="659.0" prefHeight="26.0" prefWidth="414.0">
                     <buttons>
-                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="46.0" prefWidth="87.0" text="Delete" />
-                        <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="46.0" prefWidth="87.0" text="Update" />
                   <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="45.0" prefWidth="110.0" text="Load table " />
-                  <Button fx:id="btnBack" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="46.0" prefWidth="110.0" style="-fx-cursor: hand" text="HomePage" />
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAddChild" prefHeight="46.0" prefWidth="87.0" text="Add child" />
+                        <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="46.0" prefWidth="87.0" text="Update" />
+                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="46.0" prefWidth="87.0" text="Delete" />
                     </buttons>
                   </ButtonBar>
                   <TableView fx:id="tableIngr" layoutX="47.0" layoutY="399.0" prefHeight="156.0" prefWidth="200.0">
@@ -80,7 +80,7 @@
                   </ButtonBar>
                   <Text layoutX="270.0" layoutY="412.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select one or more." />
                   <Text layoutX="270.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="If your child has no allergy," />
-                  <Text layoutX="270.0" layoutY="460.0" strokeType="OUTSIDE" strokeWidth="0.0" text="then please click on void row." />
+                  <Text layoutX="270.0" layoutY="460.0" strokeType="OUTSIDE" strokeWidth="0.0" text="don't click or click void row." />
                   <Text layoutX="270.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" />
           </children>
         </AnchorPane>
