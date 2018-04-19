@@ -63,12 +63,46 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
+        ArrayList<ChildDbDetails> child = new ArrayList<>(1);
+        String responce = null;
+        ChildDbDetails dChild;
+        System.out.println("sending a message to load the children");
+        out.println("loadchild");
+        out.flush();
+        try{
+            responce = in.readLine();
+        }catch (Exception e){
+            System.out.println("Problema durante l'ascolto");
+            e.printStackTrace();
+        }
+
+        if(responce != null){
+            String[] children = responce.split("\\*");
+            dChild = new ChildDbDetails(children[0], children[1],children[2],children[3],children[4],children[5],children[6],children[7],children[8]);
+            child.add(dChild);
+            return child;
+        }
         return null;
     }
 
     @Override
     public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
-        return true;
+        String responce = null;
+        String when = birthday.format(DateTimeFormatter.BASIC_ISO_DATE);
+        String what = "addMenu*"+ name + "*" + surname +"*" + cf + "*" + when+"*"+ bornWhere +"*" + residence +"*" + address+"*"+ cap +"*"+ province+"*"+selectedAllergy;
+        System.out.println("Sending the new menu to database....");
+        out.println(what);
+        out.flush();
+        try{
+            responce = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Errore durante l'ascolto");
+        }
+
+        if(responce.equals("Ok"))
+            return true;
+        return false;
     }
 
     @Override

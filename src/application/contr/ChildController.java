@@ -7,6 +7,7 @@ import application.details.ChildGuiDetails;
 import application.details.IngredientsDbDetails;
 import application.details.IngredientsGuiDetails;
 import application.gui.GuiNew;
+import application.rmi.client.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -154,32 +155,61 @@ public class ChildController implements Initializable {
     public void handleLoadData() {
 
         System.out.println("Loading data...");
+        if(MainControllerLogin.selected.equals("RMI")) {
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-        try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+                ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
 
-            ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
+                dataObsList.clear();
 
-            dataObsList.clear();
+                if (childDbArrayList != null) {
+                    for (ChildDbDetails c : childDbArrayList) {
+                        ChildGuiDetails tmp = new ChildGuiDetails(c);
+                        dataObsList.add(tmp);
 
-            if (childDbArrayList != null){
-                for(ChildDbDetails c : childDbArrayList){
-                    ChildGuiDetails tmp = new ChildGuiDetails(c);
-                    dataObsList.add(tmp);
+                    }
 
+                    tableChild.setItems(null);
+                    tableChild.setItems(dataObsList);
+
+                    this.renameLabel("Table loaded!");
+
+                } else {
+                    this.renameLabel("Error.");
                 }
 
-                tableChild.setItems(null);
-                tableChild.setItems(dataObsList);
-
-                this.renameLabel("Table loaded!");
-
-            }else{
-                this.renameLabel("Error.");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
+        else{
+            try {
+                UserRemote u = Singleton.getInstance().methodSocket();  //lookup
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
+
+                dataObsList.clear();
+
+                if (childDbArrayList != null) {
+                    for (ChildDbDetails c : childDbArrayList) {
+                        ChildGuiDetails tmp = new ChildGuiDetails(c);
+                        dataObsList.add(tmp);
+
+                    }
+
+                    tableChild.setItems(null);
+                    tableChild.setItems(dataObsList);
+
+                    this.renameLabel("Table loaded!");
+
+                } else {
+                    this.renameLabel("Error.");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -216,18 +246,34 @@ public class ChildController implements Initializable {
 
         } else {
             System.out.println("Adding data to database...");
-            try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            if(MainControllerLogin.selected.equals("RMI")){
+                try {
+                    UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-                boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+                    boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
-                //IN SERVERIMPL: pick every field content and save into list (1 list for child -> interni + 1 list for allergy)
+                    //IN SERVERIMPL: pick every field content and save into list (1 list for child -> interni + 1 list for allergy)
 
-                if (isAddOk) {
-                    lblWarning.setText("Congrats! Child added.");
+                    if (isAddOk) {
+                        lblWarning.setText("Congrats! Child added.");
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            }else{
+                try{
+                    UserRemote u = Singleton.getInstance().methodSocket();
+                    boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+
+
+                    if (isAddOk) {
+                        lblWarning.setText("Congrats! Child added.");
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         }
     }

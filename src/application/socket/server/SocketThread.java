@@ -95,6 +95,7 @@ public class SocketThread extends Thread {
     private String doAction(String line) throws IOException {
 
         String[] credentials = line.split("\\s+");
+        String[] what = line.split("\\*");
         String ret = null;
 
         if (credentials[0].equals("login")){
@@ -126,6 +127,17 @@ public class SocketThread extends Thread {
 
                     if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6],d))
                         return "Ok";
+                    else if(credentials[0].equals("loadChild")){
+                System.out.println("sto caricando i bambini");
+                if (impl.loadData() != null) {
+                    ret = impl.loadData().get(0).getName() + "*" + impl.loadData().get(0).getSurname() + "*" + impl.loadData().get(0).getCf() + "*" + impl.loadData().get(0).getBornOn() + "*" + impl.loadData().get(0).getBornWhere() + "*" + impl.loadData().get(0).getResidence() + "*" + impl.loadData().get(0).getAddress() + "*" + impl.loadData().get(0).getCap() + "*" + impl.loadData().get(0).getProvince();
+                    return ret;
+                }
+            }
+            else if(what[0].equals("addMenu")){
+                        //devo finirla per capire se fa o meno errori per via delle stringhe 
+                    }
+
         }
         return "no";
     }
