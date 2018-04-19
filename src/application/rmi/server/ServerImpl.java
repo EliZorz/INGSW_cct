@@ -176,9 +176,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         ArrayList<IngredientsDbDetails> ingrArrayList = new ArrayList<>(1);
 
-        String queryLoad = "SELECT project.ingredient " +
+      /*  String queryLoad = "SELECT project.ingredient " +
                 "FROM ingredients INNER JOIN fornitore " +
-                "ON ingredients.Fornitore_PIVA = fornitore.PIVA";
+                "ON ingredients.Fornitore_PIVA = fornitore.PIVA";*/
+      String queryLoad = "SELECT ingredient FROM project.ingredients";
 
         try{
             st = this.connHere().prepareStatement(queryLoad);
