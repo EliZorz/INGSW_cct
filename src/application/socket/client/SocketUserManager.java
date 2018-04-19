@@ -105,6 +105,31 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public ArrayList<ContactsDbDetails> loadDataContacts() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean addContact(String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean deleteChild(String cf) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+        return false;
+    }
+
+    @Override
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
         String responce = null;
         String when = date.format(DateTimeFormatter.BASIC_ISO_DATE);
