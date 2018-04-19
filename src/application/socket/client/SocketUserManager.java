@@ -2,22 +2,17 @@ package application.socket.client;
 
 import application.Interfaces.UserRemote;
 import application.details.*;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 public class SocketUserManager implements UserRemote {
     private final Socket socket;  //socket del client
@@ -52,7 +47,7 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
 
-        System.out.println("recieved : " + responce);
+        System.out.println("received : " + responce);
 
         if (responce.equals("ok"))
             return true;  //da capire a chi
@@ -63,13 +58,62 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
+        ArrayList<ChildDbDetails> child = new ArrayList<>(1);
+        ArrayList<IngredientsDbDetails> allergy = new ArrayList<>(1);
+        String responce = null ;
+        ChildDbDetails dChild;
+        IngredientsDbDetails dAllergy;
+        System.out.println("sending a message to open table of children + table of allergies");
+        out.println("loadchildren");
+        out.flush();
+
+        try{
+            responce = in.readLine();
+
+
+        }catch(Exception e){
+            System.out.println("OMG ERROR LISTENING");
+            e.printStackTrace();
+        }
+
+        if(responce != null){
+            String[] date = responce.split("\\s");
+            dChild = new ChildDbDetails(date[0], date[1], date[2], date[3], date[4],date[5],date[6], date[7], date[8]);
+            dAllergy = new IngredientsDbDetails(date[9]);
+            child.add(dChild);
+            allergy.add(dAllergy);
+
+            return child;
+        }
+
         return null;
     }
 
     @Override
     public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+        String responce = null;
+        String bornOn = birthday.format(DateTimeFormatter.BASIC_ISO_DATE);
+        String what = "addChild "+ name + " " + surname +" "+ cf +" "+ bornOn +" "+ bornWhere +" "+ residence +" "+ address +" "+ cap +" "+ province+" "+ selectedAllergy.get(0);
+        System.out.println("Sending the new child to database....");
+        out.println(what);
+        out.flush();
+        try{
+            responce = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("OMG ERROR LISTENING");
+        }
+
+        if(responce.equals("Ok"))
+            return true;
+        return false;
+    }
+
+    @Override
+    public boolean updateChild(String name, String surname, String oldcf, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException{
         return true;
     }
+
 
     @Override
     public ArrayList<ContactsDbDetails> loadDataContacts() throws RemoteException {
@@ -93,6 +137,37 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException{
+        ArrayList<StaffDbDetails> staff = new ArrayList<>(1);
+        ArrayList<IngredientsDbDetails> allergy = new ArrayList<>(1);
+
+        String responce = null ;
+
+        StaffDbDetails dStaff;
+        IngredientsDbDetails dAllergy;
+
+        System.out.println("sending a message to open table of staff + table of allergies");
+        out.println("loadstaff");
+        out.flush();
+
+        try{
+            responce = in.readLine();
+
+
+        }catch(Exception e){
+            System.out.println("OMG ERROR LISTENING");
+            e.printStackTrace();
+        }
+
+        if(responce != null){
+            String[] date = responce.split("\\s");
+            dStaff = new StaffDbDetails(date[0], date[1], date[2], date[3], date[4],date[5],date[6], date[7], date[8], date[9]);
+            dAllergy = new IngredientsDbDetails(date[10]);
+            staff.add(dStaff);
+            allergy.add(dAllergy);
+
+            return staff;
+        }
+
         return null;
     }
 
@@ -101,8 +176,13 @@ public class SocketUserManager implements UserRemote {
         return true;
     }
 
+    @Override
+    public boolean deleteStaff(String cf) throws RemoteException {
+        return true;
+    }
 
-        @Override
+
+    @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
         ArrayList<DishesDbDetails> dish = new ArrayList<>(1);
         String responce = null ;
@@ -116,18 +196,20 @@ public class SocketUserManager implements UserRemote {
 
 
         }catch(Exception e){
-            System.out.println("Errore durante l'ascolto");
+            System.out.println("OMG ERROR LISTENING");
             e.printStackTrace();
         }
 
         if(responce != null){
             String[] date = responce.split("\\s");
-            dMenu = new DishesDbDetails(date[0], date[1], date[2], date[3], date[4],date[5],date[6]);
+            dMenu = new DishesDbDetails(date[0], date[1], date[2], date[3], date[4], date[5], date[6]);
             dish.add(dMenu);
+
             return dish;
         }
         return null;
     }
+
 
     @Override
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
@@ -141,7 +223,7 @@ public class SocketUserManager implements UserRemote {
             responce = in.readLine();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Errore durante l'ascolto");
+            System.out.println("OMG ERROR DURING LISTENING");
         }
 
          if(responce.equals("Ok"))

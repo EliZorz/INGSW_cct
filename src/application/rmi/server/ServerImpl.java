@@ -178,7 +178,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         ArrayList<IngredientsDbDetails> ingrArrayList = new ArrayList<>(1);
 
-        String queryLoad = "SELECT project.ingredient " +
+        String queryLoad = "SELECT ingredient " +
                 "FROM ingredients INNER JOIN fornitore " +
                 "ON ingredients.Fornitore_PIVA = fornitore.PIVA";
 
@@ -236,7 +236,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryAdd = "INSERT INTO project.interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
         String queryLastCodRif = "SELECT MAX(CodRif) FROM bambino";  //select last CodRif inserted
         String queryAddCf = "INSERT INTO bambino(CodRif, Interni_CF) VALUES (?,?)";
@@ -320,6 +320,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
                     String currentLast = codRifArrayList.get(0).getCodRif();
                     String newCod = "c" + (Integer.parseInt(currentLast.substring(1, currentLast.length()))+1);
+                    System.out.println("new CodRif");
                     st = this.connHere().prepareStatement(queryAddCf);
                     st.setString(1, newCod);
                     st.setString(2, cf);
@@ -432,11 +433,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryAdd = "INSERT INTO adulto(Cognome, Nome, CF, Mail, Tel, DataNascita, CittaNascita, Indirizzo, CAP, Provincia, Pediatra, Tutore, Contatto)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        String queryLastCodRif = "SELECT MAX(CodRif) FROM bambino";  //select last CodRif inserted (the contact I'm adding is the last, thus last CodRif ++, same reasoning as adding child)
 
-        ArrayList<CodRifChildDbDetails> codRifArrayList = new ArrayList<>(1);
-
-        ResultSet result = null;
+        //COME FARE PER IL CODRIF???????????????????????
 
 
         return true;
@@ -634,17 +632,87 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
     @Override
-    public boolean deleteChild(String cf) throws RemoteException{
+    public boolean deleteChild(String oldcf) throws RemoteException{
         PreparedStatement st = null;
 
-        String queryDelete = "DELETE FROM interni WHERE CF = '" + cf + "';";
-        String queryDeleteCodRif = "DELETE FROM bambino WHERE Interni_CF = '" + cf + "';";
+        String queryDelete = "DELETE FROM interni WHERE CF = '" + oldcf + "';";
 
         //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
 
         try{
-            st = this.connHere().prepareStatement(queryDeleteCodRif);
-            st.executeUpdate(queryDeleteCodRif);
+            st = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate(queryDelete);
+            System.out.println("Deleted from interni.");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean updateChild(String name, String surname, String oldcf, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+
+        PreparedStatement st = null;
+
+        //divide items from arraylist selectedAllergy into string to put into database
+        StringBuilder allAllergies = new StringBuilder();
+        if(! selectedAllergy.isEmpty()){
+            for(String s : selectedAllergy){
+                allAllergies.append(selectedAllergy.toString()+ ", ");
+            }
+            System.out.println(allAllergies.toString());
+        } else {
+            allAllergies.append("none");
+        }
+
+        String queryEdit = "UPDATE interni SET Cognome ='" + surname + "', Nome ='" + name + "', CF ='" + cf + "', " +
+                "DataNascita ='" + Date.valueOf(bornOn) + "', CittaNascita='" + bornWhere + "', Residenza='" + residence + "', " +
+                "Indirizzo='" + address + "', CAP='" + cap + "', Provincia='" + province + "', Allergia='" + allAllergies.toString() + "'" +
+                "WHERE CF = '" + oldcf + "';";
+
+        try {
+            //COD RIF NON CAMBIA, IL CF IN bambino, CHE è FOREIGN KEY, è IMPOSTATO ON UPDATE CASCADE!
+            //edit data new child into db
+            st = this.connHere().prepareStatement(queryEdit);
+            st.executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean deleteStaff(String cf) throws RemoteException{
+        PreparedStatement st = null;
+
+        String queryDelete = "DELETE FROM interni WHERE CF = '" + cf + "';";
+        String queryDeleteCodID = "DELETE FROM personaleint WHERE Interni_CF = '" + cf + "';";
+
+        //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
+
+        try{
+            st = this.connHere().prepareStatement(queryDeleteCodID);
+            st.executeUpdate(queryDeleteCodID);
             System.out.println("Deleted CodRif.");
 
             st = this.connHere().prepareStatement(queryDelete);
@@ -726,10 +794,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryAdd = "INSERT INTO project.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
                 " VALUES (?,?,?,?,?,?,?)";
-
-
-        ResultSet result = null;
-
 
 
         try {

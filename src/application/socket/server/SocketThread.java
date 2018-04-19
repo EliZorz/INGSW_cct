@@ -1,8 +1,6 @@
 package application.socket.server;
 
-import application.details.DishesDbDetails;
 import application.rmi.server.ServerImpl;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,8 +9,6 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
-import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 //quello corretto
 public class SocketThread extends Thread {
@@ -106,27 +102,63 @@ public class SocketThread extends Thread {
 
                 return "ok";
             } else {
-                System.out.println("non va bene");
+                System.out.println("OMG SOMETHING WENT WRONG");
                 return "no";
             }
-        }
 
-
-        else if(credentials[0].equals("loadmenu")){
-            System.out.println("Richiedo l'apertura del menu");
+        } else if(credentials[0].equals("loadmenu")){
+            System.out.println("Asking for menu opening");
             if(impl.loadMenu() != null)
                 ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getSideDish()+" "+impl.loadMenu().get(0).getDrink()+" "+impl.loadMenu().get(0).getDay();
                 return ret;
-        }
-            else if(credentials[0].equals("addMenu")){
-                    System.out.println("Invio il nuovo menu al database");
-                    System.out.println(credentials[7]);
-                    LocalDate d = LocalDate.parse(credentials[7],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    System.out.println(d);
 
-                    if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6],d))
-                        return "Ok";
+        } else if(credentials[0].equals("addMenu")){
+            System.out.println("Sending menu to database again");
+            System.out.println(credentials[7]);
+            LocalDate d = LocalDate.parse(credentials[7],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            System.out.println(d);
+
+            if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6], d))
+                return "Ok";
+
+        } else if(credentials[0].equals("loadchildren")) {
+            System.out.println("Asking for children's table opening");
+            if(impl.loadData() != null)
+                ret = impl.loadData().get(0).getName()+" "+impl.loadData().get(0).getSurname()+" "
+                        +impl.loadData().get(0).getCf()+ " "+impl.loadData().get(0).getBornOn()+" "
+                        + impl.loadData().get(0).getBornWhere()+" "+impl.loadData().get(0).getResidence()+" "
+                        +impl.loadData().get(0).getAddress()+" "+impl.loadData().get(0).getCap()+" "
+                        +impl.loadData().get(0).getProvince()+" "+impl.loadIngr().get(0).getIngr();
+
+            return ret;
+
+        } else if(credentials[0].equals("addchild")){
+            System.out.println("Sending menu to database again");
+            System.out.println(credentials[10]);
+            LocalDate d = LocalDate.parse(credentials[4],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            ArrayList<String> allergy = new ArrayList<>();
+            allergy.add(credentials[10]);
+            System.out.println(d);
+
+            if(impl.addData(credentials[1],credentials[2],credentials[3], d, credentials[5],credentials[6], credentials[7], credentials[8], credentials[9], allergy))
+                return "Ok";
+
+        } else if(credentials[0].equals("loadstaff")) {
+            System.out.println("Asking for staff's table opening");
+            if(impl.loadDataStaff() != null)
+                ret = impl.loadDataStaff().get(0).getName()+" "+impl.loadDataStaff().get(0).getSurname()+" "
+                        +impl.loadDataStaff().get(0).getCf()+" "+impl.loadDataStaff().get(0).getMail() + " "+impl.loadDataStaff().get(0).getBornOn()+" "
+                        + impl.loadDataStaff().get(0).getBornWhere()+" "+impl.loadDataStaff().get(0).getResidence()+" "
+                        +impl.loadDataStaff().get(0).getAddress()+" "+impl.loadDataStaff().get(0).getCap()+" "
+                        +impl.loadDataStaff().get(0).getProvince()+" "+impl.loadIngr().get(0).getIngr();
+
+            return ret;
         }
+
+
+
+
+
         return "no";
     }
 }
