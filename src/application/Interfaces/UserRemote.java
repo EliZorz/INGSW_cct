@@ -1,9 +1,6 @@
 package application.Interfaces;
 
-import application.details.ChildDbDetails;
-import application.details.ChildGuiDetails;
-import application.details.DishesDbDetails;
-import application.details.IngredientsDbDetails;
+import application.details.*;
 import javafx.beans.property.StringProperty;
 
 import java.io.IOException;
@@ -25,6 +22,16 @@ public interface UserRemote extends Remote {
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
 
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
+
+    ArrayList<ContactsDbDetails> loadDataContacts() throws RemoteException;
+
+    boolean addContact(String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
+
+    boolean deleteChild(String cf) throws RemoteException;
+
+    ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException;
+
+    boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
 
     boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date)throws RemoteException;
 }

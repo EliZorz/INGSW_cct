@@ -349,6 +349,320 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
+    @Override
+    public ArrayList<ContactsDbDetails> loadDataContacts() throws RemoteException {
+
+        PreparedStatement st = null;
+
+        ResultSet result = null;
+
+        ArrayList<ContactsDbDetails> contactsDbArrayList = new ArrayList<>(13);
+
+        String queryLoadContacts = "SELECT Cognome, Nome, CF, Mail, Tel, Indirizzo, CAP, Provincia, DataNascita, CittaNascita, Pediatra, Tutore, Contatto" +
+                " FROM adulto";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadContacts);
+            result = st.executeQuery(queryLoadContacts);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try{
+            if( !result.next() ) {
+                System.out.println("No contact in DB");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        ContactsDbDetails prova = new ContactsDbDetails(result.getString(1),
+                                result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5),
+                                result.getString(6),
+                                result.getString(7),
+                                result.getString(8),
+                                result.getString(9),
+                                result.getString(10),
+                                result.getString(11),
+                                result.getString(12),
+                                result.getString(13));
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        contactsDbArrayList.add(prova);
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return contactsDbArrayList;
+    }
+
+
+    @Override
+    public boolean addContact (String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+        PreparedStatement st = null;
+
+        String queryAdd = "INSERT INTO adulto(Cognome, Nome, CF, Mail, Tel, DataNascita, CittaNascita, Indirizzo, CAP, Provincia, Pediatra, Tutore, Contatto)" +
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String queryLastCodRif = "SELECT MAX(CodRif) FROM bambino";  //select last CodRif inserted (the contact I'm adding is the last, thus last CodRif ++, same reasoning as adding child)
+
+        ArrayList<CodRifChildDbDetails> codRifArrayList = new ArrayList<>(1);
+
+        ResultSet result = null;
+
+
+        return true;
+
+    }
+
+
+    @Override
+    public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException {
+
+        PreparedStatement st = null;
+
+        ResultSet result = null;
+
+        ArrayList<StaffDbDetails> staffDbArrayList = new ArrayList<>(10);
+
+        String queryLoad = "SELECT Cognome, Nome, CF, Mail, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia" +
+                " FROM interni INNER JOIN personaleint" +
+                " ON interni.CF = personaleint.Interni_CF";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try{
+            if( !result.next() ) {
+                System.out.println("No staff in DB");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        StaffDbDetails prova = new StaffDbDetails(result.getString(1),
+                                result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5),
+                                result.getString(6),
+                                result.getString(7),
+                                result.getString(8),
+                                result.getString(9),
+                                result.getString(10));
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        staffDbArrayList.add(prova);
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return staffDbArrayList;
+
+
+    }
+
+    @Override
+    public boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+        PreparedStatement st = null;
+
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
+                " VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String queryLastCodRif = "SELECT MAX(CodID) FROM personaleint";  //select last CodRif inserted
+        String queryAddCf = "INSERT INTO personaleint(Mail, CodID, Interni_CF) VALUES (?,?,?)";
+
+        ArrayList<CodRifChildDbDetails> codRifArrayList = new ArrayList<>(1);
+
+        ResultSet result = null;
+
+        //divide items from arraylist selectedAllergy into string to put into database
+        StringBuilder allAllergies = new StringBuilder();
+        if(! selectedAllergy.isEmpty()){
+            for(String s : selectedAllergy){
+                allAllergies.append(selectedAllergy.toString()+ ", ");
+            }
+            System.out.println(allAllergies.toString());
+        } else {
+            allAllergies.append("none");
+        }
+
+
+        try {
+            st = this.connHere().prepareStatement(queryAdd);
+            st.setString(1, surname);
+            st.setString(2, name);
+            st.setString(3, cf);
+            st.setDate(4, java.sql.Date.valueOf(birthday));
+            st.setString(5, bornWhere);
+            st.setString(6, residence);
+            st.setString(7, address);
+            st.setString(8, cap);
+            st.setString(9, province);
+            st.setString(10, allAllergies.toString());
+            st.executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            //  assign code number to new staff member
+            st = this.connHere().prepareStatement(queryLastCodRif);
+            result = st.executeQuery(queryLastCodRif);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No CodID in DB");
+                //then new CodID is 1
+                String newCod = "s1";
+
+                //add to DB
+                st = this.connHere().prepareStatement(queryAddCf);
+                st.setString(1, mail);
+                st.setString(2, newCod);
+                st.setString(3, cf);
+                st.executeUpdate();
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+
+                try {
+                    while (result.next()) {
+                        CodRifChildDbDetails lastCod = new CodRifChildDbDetails(result.getString(1));
+                        codRifArrayList.add(lastCod);
+                    }
+
+                    String currentLast = codRifArrayList.get(0).getCodRif();
+                    String newCod = "s" + (Integer.parseInt(currentLast.substring(1, currentLast.length()))+1);
+                    st = this.connHere().prepareStatement(queryAddCf);
+                    st.setString(1, mail);
+                    st.setString(2, newCod);
+                    st.setString(3, cf);
+                    st.executeUpdate();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean deleteChild(String cf) throws RemoteException{
+        PreparedStatement st = null;
+
+        String queryDelete = "DELETE FROM interni WHERE CF = '" + cf + "';";
+        String queryDeleteCodRif = "DELETE FROM bambino WHERE Interni_CF = '" + cf + "';";
+
+        //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
+
+        try{
+            st = this.connHere().prepareStatement(queryDeleteCodRif);
+            st.executeUpdate(queryDeleteCodRif);
+            System.out.println("Deleted CodRif.");
+
+            st = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate(queryDelete);
+            System.out.println("Deleted from interni.");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
 
 
     @Override
