@@ -46,4 +46,6 @@ public interface UserRemote extends Remote {
     boolean controllDate(LocalDate d) throws RemoteException;
 
     boolean deleteMenu(LocalDate d) throws RemoteException;
+
+    DishesDbDetails loadforupdate(LocalDate parse) throws RemoteException;
 }

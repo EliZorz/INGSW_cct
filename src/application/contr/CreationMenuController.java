@@ -2,10 +2,7 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.Singleton;
-import application.details.ChildDbDetails;
-import application.details.ChildGuiDetails;
-import application.details.IngredientsDbDetails;
-import application.details.IngredientsGuiDetails;
+import application.details.*;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
+import javax.jws.soap.SOAPBinding;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -58,6 +56,9 @@ public class CreationMenuController implements Initializable{
 
     @FXML
     public Label label1;
+
+    @FXML
+    public Button updateMenu;
 
     @FXML
     public TableColumn<IngredientsGuiDetails,String>  col1;
@@ -182,4 +183,23 @@ public class CreationMenuController implements Initializable{
         }
 
     }
+
+    public  void updateMenu(String selection){
+        try{
+            UserRemote u = Singleton.getInstance().methodRmi();
+            DishesDbDetails loading = u.loadforupdate(LocalDate.parse(selection));
+            entreeTF.setText(loading.getEntree());
+            numTF.setText(loading.getNumber());
+            mainTF.setText(loading.getMainCourse());
+            dessertTF.setText(loading.getDessert());
+            sideTF.setText(loading.getSideDish());
+            drinkTF.setText(loading.getDrink());
+             //DEVO FINIRE LA UPDATE PERCHé DA PROBLEMI CON IL METODO PERCHé DOVREBBE ESSERE STATICO 
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

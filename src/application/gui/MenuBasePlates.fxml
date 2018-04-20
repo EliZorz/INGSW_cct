@@ -24,7 +24,7 @@
       </TableView>
       <Button fx:id="handleLoad" layoutX="34.0" layoutY="460.0" mnemonicParsing="false" onAction="#handleLoad" prefHeight="36.0" prefWidth="145.0" text="Load menu" AnchorPane.leftAnchor="34.0" />
       <Button fx:id="createMenu" layoutX="213.0" layoutY="460.0" mnemonicParsing="false" onAction="#openCreation" prefHeight="36.0" prefWidth="145.0" text="Create a new menu " AnchorPane.leftAnchor="213.0" />
-      <Button fx:id="updateMenu" layoutX="390.0" layoutY="460.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="145.0" text="Modify the menu" AnchorPane.rightAnchor="203.0" />
+      <Button fx:id="updateMenu" layoutX="390.0" layoutY="460.0" mnemonicParsing="false" onAction="#update" prefHeight="36.0" prefWidth="145.0" text="Modify the menu" AnchorPane.rightAnchor="203.0" />
       <Button fx:id="deleteMenu" layoutX="558.0" layoutY="460.0" mnemonicParsing="false" onAction="#delete" prefHeight="36.0" prefWidth="145.0" text="Delete the menu " AnchorPane.rightAnchor="35.0" />
       <Button fx:id="backHome" layoutX="26.0" layoutY="25.0" mnemonicParsing="false" onAction="#esc" prefHeight="36.0" prefWidth="44.0" />
       <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="34.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">

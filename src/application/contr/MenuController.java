@@ -64,17 +64,13 @@ public class MenuController implements Initializable {
     public TableColumn<DishesDetails, String> colDrink;
 
     @FXML
-    public TableColumn<DishesDetails,String> colDay;
+    public TableColumn<DishesDetails, String> colDay;
 
     @FXML
-    public TableColumn<DishesDetails,String> colSide;
+    public TableColumn<DishesDetails, String> colSide;
 
     @FXML
     public TableView<DishesDetails> tableMenu;
-
-
-
-
 
 
     @Override
@@ -88,8 +84,8 @@ public class MenuController implements Initializable {
         colSide.setCellValueFactory(cellData -> cellData.getValue().sideDishProperty());
         tableMenu.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tableMenu.getSelectionModel().setCellSelectionEnabled(true);
-        tableMenu.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection,newSelection)->{
-            if(newSelection != null){
+        tableMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
                 selectedMenu = (newSelection.getDay());
             }
                 }
@@ -124,7 +120,7 @@ public class MenuController implements Initializable {
             System.out.println("open SOCKET menu");
             try {
                 UserRemote u = Singleton.getInstance().methodSocket(); //devo modificarla perché così crea solo nuove socket inutilmente
-                ArrayList<DishesDbDetails> dishesDbArrayList =  u.loadMenu();
+                ArrayList<DishesDbDetails> dishesDbArrayList = u.loadMenu();
                 if (dishesDbArrayList != null) {
                     for (DishesDbDetails d : dishesDbArrayList) {
                         DishesDetails tmp = new DishesDetails(d);
@@ -151,20 +147,19 @@ public class MenuController implements Initializable {
     }
 
     @FXML
-    public void delete(){
-        if(selectedMenu == null)
+    public void delete() {
+        if (selectedMenu == null)
             labelStatus.setText("Please select a menu");
-        else{
-            try{
+        else {
+            try {
                 UserRemote u = Singleton.getInstance().methodRmi();
                 System.out.println(LocalDate.parse(selectedMenu));
                 boolean deleted = u.deleteMenu(LocalDate.parse(selectedMenu));
 
-                if(deleted) {
+                if (deleted) {
                     labelStatus.setText("Delete success!!");
                     handleLoad();
-                }
-                else
+                } else
                     labelStatus.setText("ERROR!! NO DELETE");
 
             } catch (RemoteException e) {
@@ -174,6 +169,16 @@ public class MenuController implements Initializable {
     }
 
 
-
+    public void update(ActionEvent event) {
+       /* if (selectedMenu == null)
+            labelStatus.setText("Please select a menu");
+        else {
+            try {
+                CreationMenuController.updateMenu(selectedMenu);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }*/
+    }
 }
 
