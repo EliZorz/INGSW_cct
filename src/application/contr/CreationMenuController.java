@@ -86,6 +86,8 @@ public class CreationMenuController implements Initializable{
         LocalDate day = dayTF.getValue();
         String dessert = dessertTF.getText().toString();
 
+
+
         //mancano da fare i controlli sui dati inseriti e la verifica che ci sia almeno un ingrediente inserito
         if(num.trim().isEmpty() || num.equals("0")) label1.setText("Insert a number");
         else if(entree.trim().isEmpty() && main.trim().isEmpty()) label1.setText("Insert an entree or a main course");
@@ -93,34 +95,48 @@ public class CreationMenuController implements Initializable{
                 else if(drink.trim().isEmpty()) label1.setText("Insert a drink");
                     else if(day == null) label1.setText("Insert a date");
                         else if(selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
-                            else {
-                                if(MainControllerLogin.selected.equals("RMI")) {
+                            else if(!controllData(day)) label1.setText("Change the date");
+                                else {
+                                    if(MainControllerLogin.selected.equals("RMI")) {
 
-                                    try {
-                                          UserRemote u = Singleton.getInstance().methodRmi();
-                                          boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day);
+                                        try {
+                                              UserRemote u = Singleton.getInstance().methodRmi();
+                                              boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day,selectedIngr);
 
-                                        if(addSuccess){
-                                            label1.setText("Success!! ");
-                                        }
-                                     } catch (RemoteException e) {
-                                         e.printStackTrace();
-                                        }
-                                }
-                                else{
-                                    System.out.println("add SOCKET menu");
-                                    try{
-                                        UserRemote u = Singleton.getInstance().methodSocket();
-                                        boolean addSuccess = u.addMenu(num,entree,main,dessert,side,drink,day);
-                                        if(addSuccess)
-                                            label1.setText("Success!!");
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
+                                            if(addSuccess){
+                                                label1.setText("Success!! ");
+                                            }
+                                         } catch (RemoteException e) {
+                                             e.printStackTrace();
+                                            }
                                     }
-                                }
+                                    else{
+                                        System.out.println("add SOCKET menu");
+                                        try{
+                                            UserRemote u = Singleton.getInstance().methodSocket();
+                                            boolean addSuccess = u.addMenu(num,entree,main,dessert,side,drink,day,selectedIngr);
+                                            if(addSuccess)
+                                                label1.setText("Success!!");
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
                             }
     }
 
+
+
+    //CONTROLLO SULLA DATA INSERITA
+    public boolean controllData(LocalDate day){
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();
+                boolean cont = u.controllDate(day);
+                return cont;
+            }catch(RemoteException e){
+                e.printStackTrace();
+            }
+            return false;
+    }
     public void backHome(ActionEvent event){
         ((Node)(event.getSource())).getScene().getWindow().hide();
     }

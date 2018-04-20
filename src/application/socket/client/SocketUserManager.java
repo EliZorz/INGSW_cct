@@ -231,7 +231,7 @@ public class SocketUserManager implements UserRemote {
 
 
     @Override
-    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
+    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date,ArrayList<String> selectedIngredients) throws RemoteException {
         String responce = null;
         String when = date.format(DateTimeFormatter.BASIC_ISO_DATE);
         String what = "addMenu "+ num + " " + entree +" " + mainCourse + " " + dessert+" "+ sideDish +" " + drink +" " + when;
@@ -247,6 +247,11 @@ public class SocketUserManager implements UserRemote {
 
          if(responce.equals("Ok"))
             return true;
+        return false;
+    }
+
+    @Override
+    public boolean controllDate(LocalDate d) throws RemoteException {
         return false;
     }
 

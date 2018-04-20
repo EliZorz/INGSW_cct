@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class SocketThread extends Thread {
 
     //devo considerare che per chiamare  i metodi devo mandare dei messaggi
 
-    public SocketThread(Socket s, ServerImpl impl) {
+    public SocketThread(Socket s, ServerImpl impl) throws RemoteException {
         this.impl = impl;
         this.s = s;
     }
@@ -106,7 +107,7 @@ public class SocketThread extends Thread {
                 System.out.println("OMG SOMETHING WENT WRONG");
                 return "no";
             }
-        }
+
 
         } else if(credentials[0].equals("loadmenu")){
             System.out.println("Asking for menu opening");
@@ -125,19 +126,20 @@ public class SocketThread extends Thread {
                 return ret;
 
         } else if(credentials[0].equals("addMenu")){
-            System.out.println("Sending menu to database again");
+            /*System.out.println("Sending menu to database again");
             System.out.println(credentials[7]);
             LocalDate d = LocalDate.parse(credentials[7],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             System.out.println(d);
 
-                    if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6],d))
-                        return "Ok";
-                    else if(credentials[0].equals("loadChild")){
+                   // if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6],d))
+                   //     return "Ok";
+                  //  else if(credentials[0].equals("loadChild")){
                 System.out.println("sto caricando i bambini");
                 if (impl.loadData() != null) {
                     ret = impl.loadData().get(0).getName() + "*" + impl.loadData().get(0).getSurname() + "*" + impl.loadData().get(0).getCf() + "*" + impl.loadData().get(0).getBornOn() + "*" + impl.loadData().get(0).getBornWhere() + "*" + impl.loadData().get(0).getResidence() + "*" + impl.loadData().get(0).getAddress() + "*" + impl.loadData().get(0).getCap() + "*" + impl.loadData().get(0).getProvince();
                     return ret;
-                }
+                }*/
+            return "no";
             }
             else if(what[0].equals("addData")){
                         //devo finirla per capire se fa o meno errori per via delle stringhe
@@ -150,10 +152,10 @@ public class SocketThread extends Thread {
                             }
                     }
 
-            else if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6], d))
-                return "Ok";
+          //  else if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6], d))
+            //    return "Ok";
 
-        } else if(credentials[0].equals("loadchildren")) {
+         else if(credentials[0].equals("loadchildren")) {
             System.out.println("Asking for children's table opening");
             if(impl.loadData() != null)
                 ret = impl.loadData().get(0).getName()+" "+impl.loadData().get(0).getSurname()+" "

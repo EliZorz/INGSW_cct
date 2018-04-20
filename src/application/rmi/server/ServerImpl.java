@@ -790,16 +790,18 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
-    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
+    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date,ArrayList<String> selectedIngredients) throws RemoteException {
         PreparedStatement st = null;
+        PreparedStatement stIngr = null;
 
-       // String queryControllDate =
+
 
         String queryAdd = "INSERT INTO project.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
 
         ResultSet result = null;
+        ResultSet resultIngr = null;
 
 
 
@@ -814,13 +816,22 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.setString(6, drink);
             st.setDate(7, Date.valueOf(date));
             st.executeUpdate();
+            for(String x : selectedIngredients){
+                String queryAddIngr = "INSERT INTO project.menu_base_has_ingredients(Ingredients_ingredient , date)" + "VALUES(?,?)";
+                stIngr = this.connHere().prepareStatement(queryAddIngr);
+                stIngr.setString(1,x);
+                stIngr.setDate(2,Date.valueOf(date));
+                stIngr.executeUpdate();
+            }
 
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
             try {
-                if (st != null)
+                if (st != null && stIngr != null) {
                     st.close();
+                    stIngr.close();
+                }
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -829,7 +840,41 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
 
+
+
     }
+
+    @Override
+    public boolean controllDate(LocalDate d) throws RemoteException {
+        PreparedStatement st = null;
+        String queryControll = "SELECT date FROM project.menu_base WHERE date = '" + d + "';";
+
+        ResultSet result = null;
+
+        try {
+
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+
+
+        } catch (SQLException e) {
+            System.out.println("Error during search in DB");
+            e.printStackTrace();
+        }
+
+
+        try {
+            if (!result.next()) {
+                System.out.println("No date like this in database");
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 
     public String sendMessage(String clientMessage) {
