@@ -28,6 +28,7 @@ public class StaffController implements Initializable {
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
+    ArrayList<String> selectedStaff = new ArrayList<>();
 
     @FXML
     public Button btnBack;
@@ -106,6 +107,35 @@ public class StaffController implements Initializable {
         colAddress.setCellValueFactory(cellData -> cellData.getValue().addressProperty());
         colCap.setCellValueFactory(cellData -> cellData.getValue().capProperty());
         colProvince.setCellValueFactory(cellData -> cellData.getValue().provinceProperty());
+
+        tableStaff.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        tableStaff.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if(newSelection != null){
+                selectedStaff.add(newSelection.getName());
+                selectedStaff.add(newSelection.getSurname());
+                selectedStaff.add(newSelection.getCf());
+                selectedStaff.add(newSelection.getMail());
+                selectedStaff.add(newSelection.getBornOn());
+                selectedStaff.add(newSelection.getBornWhere());
+                selectedStaff.add(newSelection.getResidence());
+                selectedStaff.add(newSelection.getAddress());
+                selectedStaff.add(newSelection.getCap());
+                selectedStaff.add(newSelection.getProvince());
+                //Per allergia serve query che cerchi allergia in DB connessa a quel CF
+                txtName.setText(newSelection.getName());
+                txtSurname.setText(newSelection.getSurname());
+                txtCf.setText(newSelection.getCf());
+                txtMail.setText(newSelection.getMail());
+                dpBirthday.setValue(LocalDate.parse(newSelection.getBornOn()));
+                txtBornWhere.setText(newSelection.getBornWhere());
+                txtResidence.setText(newSelection.getResidence());
+                txtAddress.setText(newSelection.getAddress());
+                txtCap.setText(newSelection.getCap());
+                txtProvince.setText(newSelection.getProvince());
+
+            }
+        });
 
         tableStaff.getItems().clear();
 
@@ -241,10 +271,24 @@ public class StaffController implements Initializable {
         stage.close();
     }
 
-    public void handleUpdateStaff(ActionEvent event) {
+    public void handleUpdateStaff() {
     }
 
-    public void handleDeleteStaff(ActionEvent event) {
+    public void handleDeleteStaff() {
+        System.out.println("Loading data...");
+
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            boolean deleted = u.deleteStaff(selectedStaff.get(2));
+            if(deleted){
+                this.renameLabel("Deleted.");
+            } else {
+                this.renameLabel("Error deleting.");
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 

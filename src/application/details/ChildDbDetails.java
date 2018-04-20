@@ -96,9 +96,7 @@ public class ChildDbDetails implements Serializable{
     //setters
     public void setName(String value){ this.name = value; }
 
-    public void setSurame(String value){
-        this.surname = value;
-    }
+    public void setSurname(String value){ this.surname = value; }
 
     public void setCf(String value){
         this.cf = value;

@@ -2,12 +2,10 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.Singleton;
-import application.details.ChildDbDetails;
-import application.details.ChildGuiDetails;
-import application.details.IngredientsDbDetails;
-import application.details.IngredientsGuiDetails;
+import application.details.*;
 import application.gui.GuiNew;
-import application.rmi.client.Main;
+import application.rmi.server.ServerImpl;
+import com.mysql.jdbc.Connection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +15,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -26,6 +27,8 @@ public class ChildController implements Initializable {
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
     ArrayList<String> selectedChild = new ArrayList<>();
+    //ArrayList<String> selectedCodRif = new ArrayList<>();
+    String oldcf = new String();
 
     @FXML
     public Button btnBack;
@@ -117,7 +120,13 @@ public class ChildController implements Initializable {
                 selectedChild.add(newSelection.getAddress());
                 selectedChild.add(newSelection.getCap());
                 selectedChild.add(newSelection.getProvince());
-                //Per allergia serve query che cerchi allergia in DB connessa a quel CF
+                //PER EVIDENZIARE ALLERGIA QUANDO SELEZIONO RIGA SERVE QUERY CHE CERCHI NEL DB LE ALLERGIE COLLEGATE AL CF DEL SELEZIONATO - per ora lasciamo che riselezioni quelle che vuole
+
+                oldcf = newSelection.getCf();
+
+                //Serve una query che salvi il CodRif del selezionato PRIMA di modificare qualsiasi cosa (vd updateChild)
+                //this.loadCodRif(newSelection.getCf());
+
                 txtName.setText(newSelection.getName());
                 txtSurname.setText(newSelection.getSurname());
                 txtCf.setText(newSelection.getCf());
@@ -155,61 +164,32 @@ public class ChildController implements Initializable {
     public void handleLoadData() {
 
         System.out.println("Loading data...");
-        if(MainControllerLogin.selected.equals("RMI")) {
-            try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-                ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-                dataObsList.clear();
+            ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
 
-                if (childDbArrayList != null) {
-                    for (ChildDbDetails c : childDbArrayList) {
-                        ChildGuiDetails tmp = new ChildGuiDetails(c);
-                        dataObsList.add(tmp);
+            dataObsList.clear();
 
-                    }
+            if (childDbArrayList != null){
+                for(ChildDbDetails c : childDbArrayList){
+                    ChildGuiDetails tmp = new ChildGuiDetails(c);
+                    dataObsList.add(tmp);
 
-                    tableChild.setItems(null);
-                    tableChild.setItems(dataObsList);
-
-                    this.renameLabel("Table loaded!");
-
-                } else {
-                    this.renameLabel("Error.");
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                tableChild.setItems(null);
+                tableChild.setItems(dataObsList);
+
+                this.renameLabel("Table loaded!");
+
+            }else{
+                this.renameLabel("Error.");
             }
-        }
-        else{
-            try {
-                UserRemote u = Singleton.getInstance().methodSocket();  //lookup
 
-                ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
-
-                dataObsList.clear();
-
-                if (childDbArrayList != null) {
-                    for (ChildDbDetails c : childDbArrayList) {
-                        ChildGuiDetails tmp = new ChildGuiDetails(c);
-                        dataObsList.add(tmp);
-
-                    }
-
-                    tableChild.setItems(null);
-                    tableChild.setItems(dataObsList);
-
-                    this.renameLabel("Table loaded!");
-
-                } else {
-                    this.renameLabel("Error.");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
@@ -246,34 +226,18 @@ public class ChildController implements Initializable {
 
         } else {
             System.out.println("Adding data to database...");
-            if(MainControllerLogin.selected.equals("RMI")){
-                try {
-                    UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-                    boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+                boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
-                    //IN SERVERIMPL: pick every field content and save into list (1 list for child -> interni + 1 list for allergy)
+                //IN SERVERIMPL: pick every field content and save into list (1 list for child -> interni + 1 list for allergy)
 
-                    if (isAddOk) {
-                        lblWarning.setText("Congrats! Child added.");
-                    }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+                if (isAddOk) {
+                    lblWarning.setText("Congrats! Child added.");
                 }
-            }else{
-                try{
-                    UserRemote u = Singleton.getInstance().methodSocket();
-                    boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
-
-
-                    if (isAddOk) {
-                        lblWarning.setText("Congrats! Child added.");
-                    }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-
-
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -335,11 +299,9 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleDelete() {
-        System.out.println("Loading data...");
-
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-            boolean deleted = u.deleteChild(selectedChild.get(2));
+            boolean deleted = u.deleteChild(oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
             } else {
@@ -354,10 +316,38 @@ public class ChildController implements Initializable {
 
 
     @FXML
-    public void handleUpdate(){
+    public void handleUpdate() {
+        System.out.println("Loading data...");
 
+        String name = txtName.getText().toString();
+        String surname = txtSurname.getText().toString();
+        String cf = txtCf.getText().toString();
+        LocalDate birthday = dpBirthday.getValue();
+        String bornWhere = txtBornWhere.getText().toString();
+        String residence = txtResidence.getText().toString();
+        String address = txtAddress.getText().toString();
+        String cap = txtCap.getText().toString();
+        String province = txtProvince.getText().toString();
 
+        if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday == null
+                || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
+                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+            //this verifies there are no void fields
+            this.renameLabel("Insert data.");
+        } else {
+            System.out.println("Adding data to database...");
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
+                boolean isEditOk = u.updateChild(surname, name, oldcf, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+
+                if (isEditOk) {
+                    lblWarning.setText("Congrats! Child edited.");
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -365,7 +355,51 @@ public class ChildController implements Initializable {
         lblWarning.setText(st);
     }
 
+    /*
+    public ArrayList<String> loadCodRif (String cf) {
+        String queryLoadCodRif = "SELECT CodRif FROM bambino WHERE Interni_CF = '" + cf + "';";
+        PreparedStatement st;
+        ResultSet result = null;
+        try{
+            st = this.connHere().prepareStatement(queryLoadCodRif);
+            result = st.executeQuery(queryLoadCodRif);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No CodRif in Db");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet for CodRif");
+                try {
+                    while (result.next()) {
+                        String prova = new String(result.getString(1));
+                        selectedCodRif.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return selectedCodRif;
+    }
+    */
 
+
+    public Connection connHere (){
+        Database receivedCon = new Database();
+        Connection connectionOK = receivedCon.databaseCon();
+        if(connectionOK != null)
+            System.out.println("Connection successful");
+        else
+            System.out.println("Connection failed");
+
+        return connectionOK;
+
+    }
 
 
 }

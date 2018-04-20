@@ -1,6 +1,8 @@
 package application.contr;
 
-
+/**
+ * Created by ELISA on 18/04/2018.
+ */
 import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.ContactsDbDetails;
