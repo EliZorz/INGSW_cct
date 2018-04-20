@@ -134,8 +134,15 @@ public class SocketThread extends Thread {
                     return ret;
                 }
             }
-            else if(what[0].equals("addMenu")){
-                        //devo finirla per capire se fa o meno errori per via delle stringhe 
+            else if(what[0].equals("addData")){
+                        //devo finirla per capire se fa o meno errori per via delle stringhe
+                    }
+                    else if(credentials[0].equals("loadIngr")){
+                            System.out.println("invio richiesta a server impl");
+                            if(impl.loadIngr() != null){
+                                ret = impl.loadIngr().get(0).getIngr();
+                                return ret;
+                            }
                     }
 
         }

@@ -89,7 +89,7 @@ public class SocketUserManager implements UserRemote {
     public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
         String responce = null;
         String when = birthday.format(DateTimeFormatter.BASIC_ISO_DATE);
-        String what = "addMenu*"+ name + "*" + surname +"*" + cf + "*" + when+"*"+ bornWhere +"*" + residence +"*" + address+"*"+ cap +"*"+ province+"*"+selectedAllergy;
+        String what = "addData*"+ name + "*" + surname +"*" + cf + "*" + when+"*"+ bornWhere +"*" + residence +"*" + address+"*"+ cap +"*"+ province+"*"+selectedAllergy;
         System.out.println("Sending the new menu to database....");
         out.println(what);
         out.flush();
@@ -107,6 +107,24 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
+        ArrayList<IngredientsDbDetails> ingr = new ArrayList<>(1);
+        String responce = null;
+        IngredientsDbDetails dIngr;
+        System.out.println("sending a message to load the ingredients");
+        out.println("loadIngr");
+        out.flush();
+        try{
+            in.readLine();
+        } catch (IOException e) {
+            System.out.println("problema nella lettura del messaggio");
+            e.printStackTrace();
+        }
+        if(responce != null){
+
+            dIngr = new IngredientsDbDetails(responce); // perché passa solo una parola se fossero più parole bisogna modificarlo
+            ingr.add(dIngr);
+            return ingr;
+        }
         return null;
     }
 
