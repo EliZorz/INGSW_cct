@@ -92,6 +92,7 @@ public class CreationMenuController implements Initializable{
             else if(dessert.trim().isEmpty()) label1.setText("Insert a dessert");
                 else if(drink.trim().isEmpty()) label1.setText("Insert a drink");
                     else if(day == null) label1.setText("Insert a date");
+                        else if(selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
                             else {
                                 if(MainControllerLogin.selected.equals("RMI")) {
 

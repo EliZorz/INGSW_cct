@@ -722,6 +722,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
         PreparedStatement st = null;
 
+       // String queryControllDate =
+
         String queryAdd = "INSERT INTO project.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
