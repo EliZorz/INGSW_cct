@@ -144,7 +144,7 @@ public class CreationMenuController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         col1.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
-        tabIng.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabIng.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tabIng.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
