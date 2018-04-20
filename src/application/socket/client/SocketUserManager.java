@@ -255,5 +255,10 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
+    @Override
+    public boolean deleteMenu(LocalDate d) throws RemoteException {
+        return false;
+    }
+
 
 }

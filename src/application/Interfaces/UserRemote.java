@@ -44,4 +44,6 @@ public interface UserRemote extends Remote {
     boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date,ArrayList<String> selectedIngredients)throws RemoteException;
 
     boolean controllDate(LocalDate d) throws RemoteException;
+
+    boolean deleteMenu(LocalDate d) throws RemoteException;
 }

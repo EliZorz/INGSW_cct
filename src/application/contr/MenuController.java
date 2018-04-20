@@ -10,39 +10,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import application.Interfaces.UserRemote;
 import application.Singleton;
-import application.details.ChildDbDetails;
-import application.details.ChildGuiDetails;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.stage.Stage;
-import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
+
+    public String selectedMenu;
 
     private ObservableList<DishesDetails> menu = FXCollections.observableArrayList();
 
@@ -53,13 +37,16 @@ public class MenuController implements Initializable {
     public Button createMenu;
 
     @FXML
-    public Button noMenu;
+    public Button deleteMenu;
 
     @FXML
     public Button updateMenu;
 
     @FXML
     public Button backHome;
+
+    @FXML
+    public Label labelStatus;
 
     @FXML
     public TableColumn<DishesDetails, String> colNumber;
@@ -99,16 +86,26 @@ public class MenuController implements Initializable {
         colNumber.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
         colDay.setCellValueFactory(cellData -> cellData.getValue().dayProperty());
         colSide.setCellValueFactory(cellData -> cellData.getValue().sideDishProperty());
+        tableMenu.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tableMenu.getSelectionModel().setCellSelectionEnabled(true);
+        tableMenu.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection,newSelection)->{
+            if(newSelection != null){
+                selectedMenu = (newSelection.getDay());
+            }
+                }
+        );
+        tableMenu.getItems().clear();
     }
 
 
     @FXML
-    public void handleLoad(ActionEvent event) {
+    public void handleLoad() {
         if (MainControllerLogin.selected.equals("RMI")) {
             System.out.println("oper RMI menu");
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();
                 ArrayList<DishesDbDetails> dishesDbArrayList = u.loadMenu();
+                menu.clear();
 
                 if (dishesDbArrayList != null) {
                     for (DishesDbDetails d : dishesDbArrayList) {
@@ -117,6 +114,7 @@ public class MenuController implements Initializable {
                     }
                     tableMenu.setItems(null);
                     tableMenu.setItems(menu);
+                    //labelStatus.setText("Table loaded");
                 }
 
             } catch (RemoteException e) {
@@ -150,6 +148,29 @@ public class MenuController implements Initializable {
     @FXML
     public void esc(ActionEvent event) {
         ((Node) (event.getSource())).getScene().getWindow().hide();
+    }
+
+    @FXML
+    public void delete(){
+        if(selectedMenu == null)
+            labelStatus.setText("Please select a menu");
+        else{
+            try{
+                UserRemote u = Singleton.getInstance().methodRmi();
+                System.out.println(LocalDate.parse(selectedMenu));
+                boolean deleted = u.deleteMenu(LocalDate.parse(selectedMenu));
+
+                if(deleted) {
+                    labelStatus.setText("Delete success!!");
+                    handleLoad();
+                }
+                else
+                    labelStatus.setText("ERROR!! NO DELETE");
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

@@ -875,6 +875,35 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return false;
     }
 
+    @Override
+    public boolean deleteMenu(LocalDate d) throws RemoteException {
+        PreparedStatement st = null;
+
+        String queryDelete = "DELETE FROM project.menu_base WHERE date = '" + d + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate(queryDelete);
+            System.out.println("Menu deleted.");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null){
+                    st.close();
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
 
 
     public String sendMessage(String clientMessage) {
