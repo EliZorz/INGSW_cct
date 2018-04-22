@@ -28,6 +28,7 @@
               </columns>
             </TableView>
             <Button fx:id="loadIngr" layoutX="226.0" layoutY="288.0" mnemonicParsing="false" onAction="#loadIngredients" prefHeight="36.0" prefWidth="131.0" text="Load ingredients" />
+            <Button fx:id="deselectIngr" layoutX="226.0" layoutY="334.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="131.0" text="Deselect all ingredients" />
          </children>
       </AnchorPane>
       <Button fx:id="save" layoutX="495.0" layoutY="414.0" mnemonicParsing="false" onAction="#saveMenu" prefHeight="36.0" prefWidth="131.0" text="Save menu" />

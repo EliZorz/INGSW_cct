@@ -31,6 +31,8 @@ public class Database {
             //establish connection
             con = (Connection) DriverManager.getConnection(url, usrname, pw);
 
+
+
             if (con != null) {
                 System.out.println("Connection successful");
             } else {

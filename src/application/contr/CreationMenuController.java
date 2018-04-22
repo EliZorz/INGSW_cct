@@ -33,6 +33,9 @@ public class CreationMenuController implements Initializable{
     public Button backHome;
 
     @FXML
+    public Button deselectIngr;
+
+    @FXML
     public TextField entreeTF;
 
     @FXML
@@ -73,6 +76,13 @@ public class CreationMenuController implements Initializable{
     public void openIngredients() throws IOException {
         new GuiNew("AddIngr");
     }
+
+
+    @FXML
+    public void deselect(){
+        tabIng.getSelectionModel().clearSelection();
+    }
+
 
     @FXML
     public void saveMenu(ActionEvent event) {
@@ -127,7 +137,7 @@ public class CreationMenuController implements Initializable{
         else if (dessert.trim().isEmpty()) label1.setText("Insert a dessert");
         else if (drink.trim().isEmpty()) label1.setText("Insert a drink");
         else if (day == null) label1.setText("Insert a date");
-        else if (!controllData(day)) label1.setText("Change the date");
+        else if (selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
         else{
             try{
                 UserRemote u = Singleton.getInstance().methodRmi();
