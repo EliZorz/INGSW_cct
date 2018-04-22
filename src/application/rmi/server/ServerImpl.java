@@ -234,6 +234,52 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
+    public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, ArrayList<String> selectedIngredients, LocalDate oldDate) throws RemoteException{
+
+        PreparedStatement st = null;
+        PreparedStatement stIngr = null;
+
+        String queryUpdate = "UPDATE project.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
+
+        ResultSet result = null;
+        ResultSet resultIngr = null;
+
+        try {
+            //add data new child into db
+            st = this.connHere().prepareStatement(queryUpdate);
+            st.executeUpdate();
+            String queryDelete = "DELETE project.menu_base_has_ingredients WHERE date = '"+ oldDate+"'";
+            stIngr = this.connHere().prepareStatement(queryDelete);
+            stIngr.executeUpdate();
+
+            for(String x : selectedIngredients){
+               // String queryAddIngr = "UPDATE project.menu_base_has_ingredients SET Ingredients_ingredient ='"+ x+"', date ='"+ day +"' WHERE date= '"+ oldDate+"'";
+
+                String queryAddIngr = "INSERT INTO project.menu_base_has_ingredients(Ingredients_ingredient, date) VALUES (?,?)";
+                stIngr = this.connHere().prepareStatement(queryAddIngr);
+                stIngr.setString(1,x);
+                stIngr.setDate(2,Date.valueOf(day));
+                stIngr.executeUpdate();
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null && stIngr != null) {
+                    st.close();
+                    stIngr.close();
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+    }
+
+    @Override
     public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
         PreparedStatement st = null;
 

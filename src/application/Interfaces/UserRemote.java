@@ -25,7 +25,7 @@ public interface UserRemote extends Remote {
 
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
 
-
+    boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, ArrayList<String> selectedIngredients, LocalDate oldDate) throws RemoteException;
 
     boolean deleteStaff(String cf) throws RemoteException;
 

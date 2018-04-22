@@ -27,8 +27,7 @@ public class CreationMenuController implements Initializable{
 
     ArrayList<String> selectedIngr = new ArrayList<>();
 
-
-    static ArrayList<String> selectedMenu = new ArrayList<>();
+    static ArrayList<String> selectedMenu = null;
 
     @FXML
     public Button backHome;
@@ -61,9 +60,6 @@ public class CreationMenuController implements Initializable{
     public Label label1;
 
     @FXML
-    public Button updateMenu;
-
-    @FXML
     public TableColumn<IngredientsGuiDetails,String>  col1;
 
     @FXML
@@ -91,41 +87,57 @@ public class CreationMenuController implements Initializable{
         String dessert = dessertTF.getText().toString();
 
 
-
+    if(selectedMenu == null) {
         //mancano da fare i controlli sui dati inseriti e la verifica che ci sia almeno un ingrediente inserito
-        if(num.trim().isEmpty() || num.equals("0")) label1.setText("Insert a number");
-        else if(entree.trim().isEmpty() && main.trim().isEmpty()) label1.setText("Insert an entree or a main course");
-            else if(dessert.trim().isEmpty()) label1.setText("Insert a dessert");
-                else if(drink.trim().isEmpty()) label1.setText("Insert a drink");
-                    else if(day == null) label1.setText("Insert a date");
-                        else if(selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
-                            else if(!controllData(day)) label1.setText("Change the date");
-                                else {
-                                    if(MainControllerLogin.selected.equals("RMI")) {
+        if (num.trim().isEmpty() || num.equals("0")) label1.setText("Insert a number");
+        else if (entree.trim().isEmpty() && main.trim().isEmpty()) label1.setText("Insert an entree or a main course");
+        else if (dessert.trim().isEmpty()) label1.setText("Insert a dessert");
+        else if (drink.trim().isEmpty()) label1.setText("Insert a drink");
+        else if (day == null) label1.setText("Insert a date");
+        else if (selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
+        else if (!controllData(day)) label1.setText("Change the date");
+        else {
+            if (MainControllerLogin.selected.equals("RMI")) {
 
-                                        try {
-                                              UserRemote u = Singleton.getInstance().methodRmi();
-                                              boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day,selectedIngr);
+                try {
+                    UserRemote u = Singleton.getInstance().methodRmi();
+                    boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day, selectedIngr);
 
-                                            if(addSuccess){
-                                                label1.setText("Success!! ");
-                                            }
-                                         } catch (RemoteException e) {
-                                             e.printStackTrace();
-                                            }
-                                    }
-                                    else{
-                                        System.out.println("add SOCKET menu");
-                                        try{
-                                            UserRemote u = Singleton.getInstance().methodSocket();
-                                            boolean addSuccess = u.addMenu(num,entree,main,dessert,side,drink,day,selectedIngr);
-                                            if(addSuccess)
-                                                label1.setText("Success!!");
-                                        } catch (RemoteException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                            }
+                    if (addSuccess) {
+                        label1.setText("Success!! ");
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("add SOCKET menu");
+                try {
+                    UserRemote u = Singleton.getInstance().methodSocket();
+                    boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day, selectedIngr);
+                    if (addSuccess)
+                        label1.setText("Success!!");
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    } else{
+        if (num.trim().isEmpty() || num.equals("0")) label1.setText("Insert a number");
+        else if (entree.trim().isEmpty() && main.trim().isEmpty()) label1.setText("Insert an entree or a main course");
+        else if (dessert.trim().isEmpty()) label1.setText("Insert a dessert");
+        else if (drink.trim().isEmpty()) label1.setText("Insert a drink");
+        else if (day == null) label1.setText("Insert a date");
+        else if (!controllData(day)) label1.setText("Change the date");
+        else{
+            try{
+                UserRemote u = Singleton.getInstance().methodRmi();
+                boolean updateSuccess = u.updateMenu(num,entree,main,dessert,side,drink,day,selectedIngr,LocalDate.parse(selectedMenu.get(6)));
+                if(updateSuccess) label1.setText("Success!!");
+            }catch( RemoteException e){
+                e.printStackTrace();
+            }
+        }
+    }
     }
 
 
@@ -198,6 +210,10 @@ public class CreationMenuController implements Initializable{
             e.printStackTrace();
         }
 
+        if(selectedMenu != null ){
+
+        }
+
     }
 
     public void upChoice(ArrayList<String> choice){
@@ -205,22 +221,7 @@ public class CreationMenuController implements Initializable{
         System.out.println(selectedMenu);
     }
 
-    public  void updateMenu(){
-       /* try{
-            UserRemote u = Singleton.getInstance().methodRmi();
-            DishesDbDetails loading = u.loadforupdate(LocalDate.parse(selection));
-            entreeTF.setText(loading.getEntree());
-            numTF.setText(loading.getNumber());
-            mainTF.setText(loading.getMainCourse());
-            dessertTF.setText(loading.getDessert());
-            sideTF.setText(loading.getSideDish());
-            drinkTF.setText(loading.getDrink());
-             //DEVO FINIRE LA UPDATE PERCHé DA PROBLEMI CON IL METODO PERCHé DOVREBBE ESSERE STATICO
 
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }*/
-    }
 
 
 }

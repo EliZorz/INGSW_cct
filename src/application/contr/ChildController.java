@@ -387,19 +387,7 @@ public class ChildController implements Initializable {
         return selectedCodRif;
     }
     */
-
-
-    public Connection connHere (){
-        Database receivedCon = new Database();
-        Connection connectionOK = receivedCon.databaseCon();
-        if(connectionOK != null)
-            System.out.println("Connection successful");
-        else
-            System.out.println("Connection failed");
-
-        return connectionOK;
-
-    }
+    
 
 
 }
