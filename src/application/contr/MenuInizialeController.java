@@ -26,7 +26,6 @@ public class MenuInizialeController {
 
     @FXML
     void openChildren(ActionEvent event) throws Exception{
-
         new GuiNew("Children");
     }
 

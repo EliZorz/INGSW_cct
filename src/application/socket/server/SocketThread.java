@@ -136,11 +136,17 @@ public class SocketThread extends Thread {
             System.out.println("Sending menu to database again");
             System.out.println(credentials[10]);
             LocalDate d = LocalDate.parse(credentials[4],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate dContact = LocalDate.parse(credentials[16],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            boolean doc = Boolean.parseBoolean(credentials[21]);
+            boolean guardian = Boolean.parseBoolean(credentials[22]);
+            boolean contact = Boolean.parseBoolean(credentials[23]);
             ArrayList<String> allergy = new ArrayList<>();
             allergy.add(credentials[10]);
             System.out.println(d);
 
-            if(impl.addData(credentials[1],credentials[2],credentials[3], d, credentials[5],credentials[6], credentials[7], credentials[8], credentials[9], allergy))
+            if(impl.addData(credentials[1],credentials[2],credentials[3], d, credentials[5],credentials[6], credentials[7], credentials[8], credentials[9], allergy,
+                    credentials[10], credentials[11], credentials[13], credentials[14], credentials[15], dContact, credentials[17], credentials[18], credentials[19], credentials[20],
+                    doc, guardian, contact))
                 return "Ok";
 
         } else if(credentials[0].equals("loadstaff")) {

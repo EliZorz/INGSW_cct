@@ -90,7 +90,9 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+    public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy,
+                           String nameContact, String surnameContact, String cfContact, String mailContact, String telContact, LocalDate birthdayContact, String bornWhereContact, String addressContact, String capContact, String provinceContact,
+                           boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         String responce = null;
         String bornOn = birthday.format(DateTimeFormatter.BASIC_ISO_DATE);
         String what = "addChild "+ name + " " + surname +" "+ cf +" "+ bornOn +" "+ bornWhere +" "+ residence +" "+ address +" "+ cap +" "+ province+" "+ selectedAllergy.get(0);
@@ -116,17 +118,27 @@ public class SocketUserManager implements UserRemote {
 
 
     @Override
-    public ArrayList<ContactsDbDetails> loadDataContacts() throws RemoteException {
-        return null;
+    public boolean addContact (ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+        return true;
     }
 
     @Override
-    public boolean addContact (String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+    public boolean deleteContact (String oldcfContact) throws RemoteException{
+        return true;
+    }
+
+    @Override
+    public boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException{
         return true;
     }
 
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException {
         return null;
     }
 

@@ -18,7 +18,9 @@ public interface UserRemote extends Remote {
 
     ArrayList<ChildDbDetails> loadData() throws RemoteException;
 
-    boolean addData(String name, String surname, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
+    boolean addData(String name, String surname, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy,
+                    String nameContact, String surnameContact, String cfContact, String mailContact, String telContact, LocalDate birthdayContact, String bornWhereContact, String addressContact, String capContact, String provinceContact,
+                    boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
 
     boolean deleteChild(String cf) throws RemoteException;
 
@@ -26,9 +28,13 @@ public interface UserRemote extends Remote {
 
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
 
-    ArrayList<ContactsDbDetails> loadDataContacts() throws RemoteException;
+    ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException;
 
-    boolean addContact(String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
+    boolean addContact(ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
+
+    boolean deleteContact (String oldcfContact) throws RemoteException;
+
+    boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException;
 
     ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException;
 
