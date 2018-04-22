@@ -54,7 +54,7 @@
             <Button fx:id="btnBack" layoutX="420.0" layoutY="719.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="16.0" prefWidth="190.0" style="-fx-cursor: hand" text="HomePage" />
                   <ButtonBar layoutX="258.0" layoutY="670.0" prefHeight="26.0" prefWidth="221.0">
                      <buttons>
-                  <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="118.0" text=" Load table Child" />
+                  <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="118.0" text="Load" />
                         <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="25.0" prefWidth="87.0" text="Edit" />
                   <Button fx:id="btnAdd" minWidth="68.0" mnemonicParsing="false" onAction="#handleAddChild" prefHeight="26.0" prefWidth="87.0" text="Add" />
                         <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="17.0" prefWidth="87.0" text="Delete" />
@@ -114,11 +114,6 @@
                   <ButtonBar layoutX="422.0" layoutY="271.0" prefHeight="40.0" prefWidth="200.0">
                     <buttons>
                       <Button fx:id="btnLoadContact" mnemonicParsing="false" onAction="#handleLoadContacts" text="Load">
-                           <effect>
-                              <SepiaTone />
-                           </effect>
-                        </Button>
-                        <Button fx:id="btnDeselectContact" mnemonicParsing="false" onAction="#handleDeselect" text="Deselect">
                            <effect>
                               <SepiaTone />
                            </effect>

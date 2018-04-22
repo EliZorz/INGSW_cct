@@ -109,8 +109,6 @@ public class ChildController implements Initializable {
     @FXML
     public Button btnLoadContact;
     @FXML
-    public Button btnDeselectContact;
-    @FXML
     public TextField txtSurnameContact;
     @FXML
     public TextField txtNameContact;
