@@ -33,6 +33,11 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public ArrayList<String> loadIngr(LocalDate day) throws RemoteException {
+        return null;
+    }
+
+    @Override
     public boolean funzLog(String usr, String pwd) throws RemoteException {
 
         String responce = null;

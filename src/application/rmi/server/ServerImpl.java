@@ -234,41 +234,96 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
+    public ArrayList<String> loadIngr(LocalDate d) throws RemoteException{
+        PreparedStatement st = null;
+        String queryLoad = "SELECT ingredients_ingredient FROM project.menu_base_has_ingredients WHERE date ='" + d+"'";
+        ResultSet result = null;
+        ArrayList<String> resIngr = new ArrayList<>();
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if(!result.next()){
+                System.out.println("Error");
+            }else{
+                result.beforeFirst();
+                try{
+                    while(result.next()){
+                        String str = new String(result.getString(1));
+                        resIngr.add(str);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return resIngr;
+    }
+
+    @Override
     public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, ArrayList<String> selectedIngredients, LocalDate oldDate) throws RemoteException{
 
         PreparedStatement st = null;
         PreparedStatement stIngr = null;
+        PreparedStatement stIngr2 = null;
 
         String queryUpdate = "UPDATE project.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
 
         ResultSet result = null;
         ResultSet resultIngr = null;
+        ResultSet resultIngr2 = null;
 
         try {
             //add data new child into db
             st = this.connHere().prepareStatement(queryUpdate);
             st.executeUpdate();
-            String queryDelete = "DELETE project.menu_base_has_ingredients WHERE date = '"+ oldDate+"'";
-            stIngr = this.connHere().prepareStatement(queryDelete);
-            stIngr.executeUpdate();
+
+            ArrayList<String> ingrMenu = loadIngr(oldDate);
+            for(String y : ingrMenu) {
+                String queryDelete = "DELETE FROM project.menu_base_has_ingredients WHERE ingredients_ingredient = '"+y+"' and date = '" + oldDate + "'";
+                System.out.println();
+                stIngr = this.connHere().prepareStatement(queryDelete);
+                stIngr.executeUpdate();
+            }
 
             for(String x : selectedIngredients){
                // String queryAddIngr = "UPDATE project.menu_base_has_ingredients SET Ingredients_ingredient ='"+ x+"', date ='"+ day +"' WHERE date= '"+ oldDate+"'";
 
                 String queryAddIngr = "INSERT INTO project.menu_base_has_ingredients(Ingredients_ingredient, date) VALUES (?,?)";
-                stIngr = this.connHere().prepareStatement(queryAddIngr);
-                stIngr.setString(1,x);
-                stIngr.setDate(2,Date.valueOf(day));
-                stIngr.executeUpdate();
+                stIngr2 = this.connHere().prepareStatement(queryAddIngr);
+                stIngr2.setString(1,x);
+                stIngr2.setDate(2,Date.valueOf(day));
+                stIngr2.executeUpdate();
             }
 
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
             try {
-                if (st != null && stIngr != null) {
+                if (st != null && stIngr != null && stIngr2 != null) {
                     st.close();
                     stIngr.close();
+                    stIngr2.close();
                 }
                 return true;
             } catch (Exception e) {

@@ -138,7 +138,7 @@ public class CreationMenuController implements Initializable{
         else if (drink.trim().isEmpty()) label1.setText("Insert a drink");
         else if (day == null) label1.setText("Insert a date");
         else if (selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
-        else{
+        else if(controllData(day) || day.equals(LocalDate.parse(selectedMenu.get(6)))){
             try{
                 UserRemote u = Singleton.getInstance().methodRmi();
                 boolean updateSuccess = u.updateMenu(num,entree,main,dessert,side,drink,day,selectedIngr,LocalDate.parse(selectedMenu.get(6)));
@@ -147,6 +147,7 @@ public class CreationMenuController implements Initializable{
                 e.printStackTrace();
             }
         }
+        else label1.setText("Change the date");
     }
     }
 
