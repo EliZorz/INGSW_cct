@@ -29,6 +29,7 @@ public class StaffController implements Initializable {
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
     ArrayList<String> selectedStaff = new ArrayList<>();
+    String oldcf = null;
 
     @FXML
     public Button btnBack;
@@ -122,6 +123,9 @@ public class StaffController implements Initializable {
                 selectedStaff.add(newSelection.getAddress());
                 selectedStaff.add(newSelection.getCap());
                 selectedStaff.add(newSelection.getProvince());
+
+                oldcf = newSelection.getCf();
+
                 //Per allergia serve query che cerchi allergia in DB connessa a quel CF
                 txtName.setText(newSelection.getName());
                 txtSurname.setText(newSelection.getSurname());
@@ -272,6 +276,39 @@ public class StaffController implements Initializable {
     }
 
     public void handleUpdateStaff() {
+        System.out.println("Loading data...");
+
+        String name = txtName.getText();
+        String surname = txtSurname.getText();
+        String cf = txtCf.getText();
+        LocalDate birthday = dpBirthday.getValue();
+        String mail = txtMail.getText();
+        String bornWhere = txtBornWhere.getText();
+        String residence = txtResidence.getText();
+        String address = txtAddress.getText();
+        String cap = txtCap.getText();
+        String province = txtProvince.getText();
+
+        if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday == null
+                || mail.trim().isEmpty() || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
+                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+            //this verifies there are no void fields
+            this.renameLabel("Insert data.");
+        } else {
+            System.out.println("Adding data to database...");
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+
+                boolean isEditOk = u.updateStaff(surname, name, oldcf, cf, mail, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+
+                if (isEditOk) {
+                    lblWarning.setText("Congrats! Staff member edited.");
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void handleDeleteStaff() {

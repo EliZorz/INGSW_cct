@@ -32,6 +32,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         super();
     }
 
+
+//LOGIN----------------------------------------------------------------------------------
     @Override
     public boolean funzLog (String usr, String pwd){
 
@@ -97,6 +99,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     }
 
+
+//CHILDREN---------------------------------------------------------------------------------------
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
 
@@ -170,67 +174,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     }
 
-    @Override
-    public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
-        PreparedStatement st = null;
-
-        ResultSet result = null;
-
-        ArrayList<IngredientsDbDetails> ingrArrayList = new ArrayList<>(1);
-
-        String queryLoad = "SELECT ingredient " +
-                "FROM ingredients INNER JOIN fornitore " +
-                "ON ingredients.Fornitore_PIVA = fornitore.PIVA";
-
-        try{
-            st = this.connHere().prepareStatement(queryLoad);
-            result = st.executeQuery(queryLoad);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        try{
-            if( !result.next() ) {
-                System.out.println("No ingredient in DB");
-
-            } else {
-                result.beforeFirst();
-                System.out.println("Processing ResultSet");
-                try {
-                    while (result.next()) {
-                        IngredientsDbDetails prova = new IngredientsDbDetails(result.getString(1));
-                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
-                        ingrArrayList.add(prova);
-                    }
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null)
-                    result.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return ingrArrayList;
-
-    }
 
     @Override
     public boolean addData(String name, String surname, String cf, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy,
@@ -444,8 +387,70 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
+//ALLERGIES----------------------------------------------------------------------------
+    @Override
+    public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
+        PreparedStatement st = null;
+
+        ResultSet result = null;
+
+        ArrayList<IngredientsDbDetails> ingrArrayList = new ArrayList<>(1);
+
+        String queryLoad = "SELECT ingredient " +
+                "FROM ingredients INNER JOIN fornitore " +
+                "ON ingredients.Fornitore_PIVA = fornitore.PIVA";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
+        try{
+            if( !result.next() ) {
+                System.out.println("No ingredient in DB");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        IngredientsDbDetails prova = new IngredientsDbDetails(result.getString(1));
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        ingrArrayList.add(prova);
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return ingrArrayList;
+
+    }
+
+//CONTACTS------------------------------------------------------------------------------------------
     @Override
     public ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException {
 
@@ -633,7 +638,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
-
+//STAFF---------------------------------------------------------------------------------------
     @Override
     public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException {
 
@@ -857,9 +862,55 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
-
-
     @Override
+    public boolean updateStaff(String name, String surname, String oldcf, String cf, String mail, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+
+        PreparedStatement st = null;
+
+        //divide items from arraylist selectedAllergy into string to put into database
+        StringBuilder allAllergies = new StringBuilder();
+        if (!selectedAllergy.isEmpty()) {
+            for (String s : selectedAllergy) {
+                allAllergies.append(selectedAllergy.toString() + ", ");
+            }
+            System.out.println(allAllergies.toString());
+        } else {
+            allAllergies.append("none");
+        }
+
+        String queryEdit = "UPDATE interni SET Cognome ='" + surname + "', Nome ='" + name + "', CF ='" + cf + "', " +
+                "DataNascita ='" + Date.valueOf(bornOn) + "', CittaNascita ='" + bornWhere + "', Residenza ='" + residence + "', " +
+                "Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "', Allergia ='" + allAllergies.toString() + "'" +
+                "WHERE CF = '" + oldcf + "';";
+
+        String queryEditMail = "UPDATE personaleint SET Mail ='" + mail + "'" +
+                "WHERE Interni_CF = '" + oldcf + "';";
+
+        try {
+            //CODID NON CAMBIA, IL CF IN personaleint, CHE è FOREIGN KEY, è IMPOSTATO ON UPDATE CASCADE!
+            st = this.connHere().prepareStatement(queryEdit);
+            st.executeUpdate();
+            st = this.connHere().prepareStatement(queryEditMail);
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
+
+//MENU BASE---------------------------------------------------------------------------------------
+
+        @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
         PreparedStatement st;
         ResultSet result = null;
@@ -948,12 +999,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
-    public String sendMessage(String clientMessage) {
+//USEFUL EVERYWHERE------------------------------------------------------------------------------
+
+        public String sendMessage(String clientMessage) {
         return "Client Message".equals(clientMessage) ? "Server Message" : null;
     }
 
 
-    public Connection connHere (){
+    public Connection connHere(){
 
         Database receivedCon = new Database();
         Connection connectionOK = receivedCon.databaseCon();

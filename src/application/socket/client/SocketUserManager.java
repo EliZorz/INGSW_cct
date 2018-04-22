@@ -193,6 +193,11 @@ public class SocketUserManager implements UserRemote {
         return true;
     }
 
+    @Override
+    public boolean updateStaff(String name, String surname, String oldcf, String cf, String mail, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException{
+        return true;
+    }
+
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
