@@ -904,39 +904,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return false;
     }
 
-    @Override
-    public DishesDbDetails loadforupdate(LocalDate parse) throws RemoteException {
-        PreparedStatement st;
-        ResultSet result = null;
 
-        String queryLoad1 = "SELECT * FROM project.menu_base WHERE date = 'parse'";
-
-        try{
-            st = this.connHere().prepareStatement(queryLoad1);
-            result = st.executeQuery(queryLoad1);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        System.out.println("ok");
-        DishesDbDetails prova  = null;
-        try {
-
-            prova = new DishesDbDetails(result.getString(1),result.getString(2),
-                        result.getString(3),
-                        result.getString(4),
-                        result.getString(5),result.getString(6),result.getString(7));
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return prova;
-    }
 
 
     public String sendMessage(String clientMessage) {

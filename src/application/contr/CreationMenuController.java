@@ -27,6 +27,9 @@ public class CreationMenuController implements Initializable{
 
     ArrayList<String> selectedIngr = new ArrayList<>();
 
+
+    static ArrayList<String> selectedMenu = new ArrayList<>();
+
     @FXML
     public Button backHome;
 
@@ -154,6 +157,19 @@ public class CreationMenuController implements Initializable{
         });
 
         tabIng.getItems().clear();
+       if(selectedMenu != null) {
+           entreeTF.setText(selectedMenu.get(1));
+           numTF.setText(selectedMenu.get(0));
+           drinkTF.setText(selectedMenu.get(5));
+           dessertTF.setText(selectedMenu.get(3));
+           sideTF.setText(selectedMenu.get(4));
+           mainTF.setText(selectedMenu.get(2));
+           dayTF.setValue(LocalDate.parse(selectedMenu.get(6)));
+
+
+       }
+
+
     }
 
     @FXML
@@ -184,8 +200,13 @@ public class CreationMenuController implements Initializable{
 
     }
 
-    public  void updateMenu(String selection){
-        try{
+    public void upChoice(ArrayList<String> choice){
+        selectedMenu = choice;
+        System.out.println(selectedMenu);
+    }
+
+    public  void updateMenu(){
+       /* try{
             UserRemote u = Singleton.getInstance().methodRmi();
             DishesDbDetails loading = u.loadforupdate(LocalDate.parse(selection));
             entreeTF.setText(loading.getEntree());
@@ -194,11 +215,11 @@ public class CreationMenuController implements Initializable{
             dessertTF.setText(loading.getDessert());
             sideTF.setText(loading.getSideDish());
             drinkTF.setText(loading.getDrink());
-             //DEVO FINIRE LA UPDATE PERCHé DA PROBLEMI CON IL METODO PERCHé DOVREBBE ESSERE STATICO 
+             //DEVO FINIRE LA UPDATE PERCHé DA PROBLEMI CON IL METODO PERCHé DOVREBBE ESSERE STATICO
 
         } catch (RemoteException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 

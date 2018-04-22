@@ -26,7 +26,9 @@ import java.util.ArrayList;
 
 public class MenuController implements Initializable {
 
-    public String selectedMenu;
+   ArrayList<String> selectedMenu = new ArrayList<>();
+   String dateSelected = new String();
+
 
     private ObservableList<DishesDetails> menu = FXCollections.observableArrayList();
 
@@ -83,10 +85,18 @@ public class MenuController implements Initializable {
         colDay.setCellValueFactory(cellData -> cellData.getValue().dayProperty());
         colSide.setCellValueFactory(cellData -> cellData.getValue().sideDishProperty());
         tableMenu.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        tableMenu.getSelectionModel().setCellSelectionEnabled(true);
+        tableMenu.getSelectionModel().setCellSelectionEnabled(false);
         tableMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                selectedMenu = (newSelection.getDay());
+                selectedMenu.add(newSelection.getNumber());
+                selectedMenu.add(newSelection.getEntree());
+                selectedMenu.add(newSelection.getMainCourse());
+                selectedMenu.add(newSelection.getDessert());
+                selectedMenu.add(newSelection.getSideDish());
+                selectedMenu.add(newSelection.getDrink());
+                selectedMenu.add(newSelection.getDay());
+                dateSelected = newSelection.getDay();
+
             }
                 }
         );
@@ -153,8 +163,8 @@ public class MenuController implements Initializable {
         else {
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();
-                System.out.println(LocalDate.parse(selectedMenu));
-                boolean deleted = u.deleteMenu(LocalDate.parse(selectedMenu));
+                System.out.println(LocalDate.parse(dateSelected));
+                boolean deleted = u.deleteMenu(LocalDate.parse(dateSelected));
 
                 if (deleted) {
                     labelStatus.setText("Delete success!!");
@@ -169,16 +179,9 @@ public class MenuController implements Initializable {
     }
 
 
-    public void update(ActionEvent event) {
-       /* if (selectedMenu == null)
-            labelStatus.setText("Please select a menu");
-        else {
-            try {
-                CreationMenuController.updateMenu(selectedMenu);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
+    public void update(ActionEvent event) throws IOException {
+        CreationMenuController.selectedMenu = selectedMenu;
+       new GuiNew("newMenu");
     }
 }
 
