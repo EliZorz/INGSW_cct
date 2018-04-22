@@ -198,6 +198,26 @@ public class SocketUserManager implements UserRemote {
         return true;
     }
 
+    @Override
+    public ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean deleteSupplier(String piva) throws RemoteException {
+        return false;
+    }
+
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {

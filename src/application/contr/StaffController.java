@@ -193,16 +193,16 @@ public class StaffController implements Initializable {
     public void handleAddStaff() {
         System.out.println("Adding new staff member to database...");
 
-        String name = txtName.getText().toString();
-        String surname = txtSurname.getText().toString();
-        String cf = txtCf.getText().toString();
-        String mail = txtMail.getText().toString();
+        String name = txtName.getText();
+        String surname = txtSurname.getText();
+        String cf = txtCf.getText();
+        String mail = txtMail.getText();
         LocalDate birthday = dpBirthday.getValue();
-        String bornWhere = txtBornWhere.getText().toString();
-        String residence = txtResidence.getText().toString();
-        String address = txtAddress.getText().toString();
-        String cap = txtCap.getText().toString();
-        String province = txtProvince.getText().toString();
+        String bornWhere = txtBornWhere.getText();
+        String residence = txtResidence.getText();
+        String address = txtAddress.getText();
+        String cap = txtCap.getText();
+        String province = txtProvince.getText();
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || mail.trim().isEmpty() || birthday == null
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()

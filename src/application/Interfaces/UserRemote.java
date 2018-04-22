@@ -39,6 +39,12 @@ public interface UserRemote extends Remote {
     boolean updateStaff(String name, String surname, String oldcf, String cf, String mail, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
 
 
+    ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException;
+    boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
+    boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
+    boolean deleteSupplier(String piva) throws RemoteException;
+
+
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
     boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date)throws RemoteException;
 
