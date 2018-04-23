@@ -18,6 +18,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 
@@ -106,6 +107,7 @@ public class CreationMenuController implements Initializable{
         else if (day == null) label1.setText("Insert a date");
         else if (selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
         else if (!controllData(day)) label1.setText("Change the date");
+        else if(day.isBefore(LocalDate.now())) label1.setText("This date is already past");
         else {
             if (MainControllerLogin.selected.equals("RMI")) {
 

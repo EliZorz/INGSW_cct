@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MenuInizialeController" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SpecialMenuController">
+   <children>
+      <DatePicker fx:id="dateMenu" layoutX="47.0" layoutY="65.0" prefHeight="40.0" prefWidth="176.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="65.0" />
+      <Text layoutX="59.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Insert special menu date" wrappingWidth="299.99998474121094">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Text>
+      <Button fx:id="loadDate" layoutX="251.0" layoutY="65.0" mnemonicParsing="false" prefHeight="40.0" text="Load" AnchorPane.leftAnchor="251.0" AnchorPane.topAnchor="65.0" />
+      <TableView fx:id="tabRif" layoutX="47.0" layoutY="183.0" prefHeight="499.0" prefWidth="283.0" AnchorPane.bottomAnchor="118.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="183.0">
+        <columns>
+          <TableColumn fx:id="colRif" prefWidth="107.0" text="Reference code" />
+          <TableColumn fx:id="colAller" prefWidth="175.0" text="Allergies" />
+        </columns>
+      </TableView>
+      <Text layoutX="724.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SPECIAL MENU" wrappingWidth="341.69232177734375">
+         <font>
+            <Font name="System Bold" size="35.0" />
+         </font>
+      </Text>
+      <TextField fx:id="entreeTF" layoutX="930.0" layoutY="183.0" prefHeight="25.0" prefWidth="212.0" promptText="Entree" />
+      <TextField fx:id="mainTF" layoutX="930.0" layoutY="228.0" prefHeight="25.0" prefWidth="212.0" promptText="Main Course" />
+      <TextField fx:id="dessertTF" layoutX="930.0" layoutY="276.0" prefHeight="25.0" prefWidth="212.0" promptText="Dessert" />
+      <TextField fx:id="sideTF" layoutX="930.0" layoutY="321.0" prefHeight="25.0" prefWidth="212.0" promptText="Side dish" />
+      <TextField fx:id="drinkTF" layoutX="930.0" layoutY="366.0" prefHeight="25.0" prefWidth="212.0" promptText="Drink" />
+      <TableView fx:id="tabIngr" layoutX="547.0" layoutY="171.0" prefHeight="384.0" prefWidth="212.0" AnchorPane.topAnchor="183.0">
+        <columns>
+          <TableColumn fx:id="Ingredients" prefWidth="211.0" text="Ingredients" />
+        </columns>
+      </TableView>
+      <Button fx:id="deselect" layoutX="525.0" layoutY="591.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
+      <Button fx:id="loadIngr" layoutX="666.0" layoutY="591.0" mnemonicParsing="false" onAction="#loadIngredients" prefHeight="40.0" prefWidth="115.0" text="Load Ingredients" />
+      <Button fx:id="deselectElements" layoutX="47.0" layoutY="705.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
+      <Button fx:id="save" layoutX="1027.0" layoutY="453.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Save " />
+      <Label fx:id="status" layoutX="930.0" layoutY="521.0" prefHeight="35.0" prefWidth="212.0" text="Status">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="backHome" layoutX="1142.0" layoutY="39.0" mnemonicParsing="false" onAction="#exit" prefHeight="35.0" prefWidth="44.0" AnchorPane.bottomAnchor="726.0" AnchorPane.rightAnchor="94.0" AnchorPane.topAnchor="39.0">
+         <graphic>
+            <ImageView fitHeight="28.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+   </children>
+</AnchorPane>

@@ -33,6 +33,9 @@ public class MenuController implements Initializable {
     private ObservableList<DishesDetails> menu = FXCollections.observableArrayList();
 
     @FXML
+    public Button deselect;
+
+    @FXML
     public Button handleLoad;
 
     @FXML
@@ -146,6 +149,11 @@ public class MenuController implements Initializable {
     }
 
     @FXML
+    public void deselect(){
+        tableMenu.getSelectionModel().clearSelection();
+    }
+
+    @FXML
     public void openCreation(ActionEvent event) throws IOException {
         new GuiNew("newMenu");
     }
@@ -153,6 +161,8 @@ public class MenuController implements Initializable {
 
     @FXML
     public void esc(ActionEvent event) {
+
+        selectedMenu = null;
         ((Node) (event.getSource())).getScene().getWindow().hide();
     }
 
