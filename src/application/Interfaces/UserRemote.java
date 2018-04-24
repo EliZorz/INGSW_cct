@@ -14,6 +14,10 @@ import java.util.List;
 
 public interface UserRemote extends Remote {
 
+    DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException;
+
+    ArrayList<String> searchIngredients(String dish) throws RemoteException;
+
     ArrayList<String> loadIngr(LocalDate day) throws RemoteException;
 
     boolean funzLog(String usr, String pwd) throws RemoteException; //questa funzione controllerà se username e password sono corretti

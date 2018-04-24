@@ -234,6 +234,98 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
+    public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {
+        PreparedStatement st;
+        ResultSet result = null;
+        DishesDbDetails dishes  = null;
+        String queryLoad1 = "SELECT * FROM project.menu_base WHERE date ='"+date+"'";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad1);
+            result = st.executeQuery(queryLoad1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try{
+            System.out.println("ok");
+            if( !result.next() ) {
+                System.out.println("No menu in Db");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        dishes = new DishesDbDetails(result.getString(1),result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5),result.getString(6),result.getString(7));
+
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return dishes;
+    }
+
+    @Override
+    public ArrayList<String> searchIngredients(String dish) throws RemoteException {
+        PreparedStatement st = null;
+        String querySearch = "SELECT ingredients_ingredient FROM project.menu_base_has_ingredients WHERE Nome_Piatto='"+dish+"'";
+        ResultSet result = null;
+        ArrayList<String> ingredientsForThisDish = new ArrayList<>();
+        try{
+            st = this.connHere().prepareStatement(querySearch);
+            result = st.executeQuery(querySearch);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("Error");
+            }else{
+                result.beforeFirst();
+                try{
+                    while(result.next()){
+                        String str = new String(result.getString(3));
+                        System.out.println(str);
+                        String[] ingredients = str.split("\\s");
+                        for(String x : ingredients)
+                            ingredientsForThisDish.add(x);
+                    }
+                }catch(SQLException e){
+                    e.printStackTrace();
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(result != null){
+                    result.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return ingredientsForThisDish;
+
+    }
+
+    @Override
     public ArrayList<String> loadIngr(LocalDate d) throws RemoteException{
         PreparedStatement st = null;
         String queryLoad = "SELECT ingredients_ingredient FROM project.menu_base_has_ingredients WHERE date ='" + d+"'";

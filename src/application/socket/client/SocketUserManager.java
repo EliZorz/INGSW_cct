@@ -33,6 +33,16 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> searchIngredients(String dish) throws RemoteException {
+        return null;
+    }
+
+    @Override
     public ArrayList<String> loadIngr(LocalDate day) throws RemoteException {
         return null;
     }

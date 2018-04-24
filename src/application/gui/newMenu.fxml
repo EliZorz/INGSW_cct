@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CreationMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="582.0" prefWidth="814.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CreationMenuController">
    <children>
-      <AnchorPane layoutX="30.0" layoutY="30.0" prefHeight="416.0" prefWidth="451.0" style="-fx-border-color: #000080;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane layoutX="30.0" layoutY="30.0" prefHeight="522.0" prefWidth="593.0" style="-fx-border-color: #000080;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0">
          <children>
             <TextField fx:id="entreeTF" layoutX="24.0" layoutY="31.0" promptText="Entree" AnchorPane.leftAnchor="24.0" />
             <TextField fx:id="mainTF" layoutX="24.0" layoutY="77.0" promptText="Main Course" AnchorPane.leftAnchor="24.0" />
@@ -22,26 +22,32 @@
             <TextField fx:id="sideTF" layoutX="24.0" layoutY="167.0" promptText="Side dish" AnchorPane.leftAnchor="24.0" />
             <DatePicker fx:id="dayTF" layoutX="24.0" layoutY="254.0" promptText="Date" AnchorPane.leftAnchor="24.0" />
             <TextField fx:id="numTF" layoutX="26.0" layoutY="299.0" prefHeight="25.0" prefWidth="64.0" promptText="Number" AnchorPane.leftAnchor="25.0" />
-            <TableView fx:id="tabIng" layoutX="226.0" layoutY="23.0" prefHeight="256.0" prefWidth="200.0">
-              <columns>
-                <TableColumn fx:id="col1" prefWidth="199.0" text="Available ingredients" />
-              </columns>
-            </TableView>
-            <Button fx:id="loadIngr" layoutX="226.0" layoutY="288.0" mnemonicParsing="false" onAction="#loadIngredients" prefHeight="36.0" prefWidth="131.0" text="Load ingredients" />
-            <Button fx:id="deselectIngr" layoutX="226.0" layoutY="334.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="131.0" text="Deselect all ingredients" />
+            <Button fx:id="loadIngr" layoutX="366.0" layoutY="306.0" mnemonicParsing="false" onAction="#loadIngredients" prefHeight="36.0" prefWidth="141.0" text="Load ingredients" />
+            <Button fx:id="deselectIngr" layoutX="366.0" layoutY="363.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="141.0" text="Deselect all ingredients" />
+            <Button fx:id="entreeOk" layoutX="185.0" layoutY="31.0" mnemonicParsing="false" onAction="#entreeIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="mainOk" layoutX="185.0" layoutY="77.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="dessertOk" layoutX="185.0" layoutY="123.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="sideOk" layoutX="185.0" layoutY="167.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="drinkOk" layoutX="185.0" layoutY="210.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Label fx:id="label1" layoutX="96.0" layoutY="441.0" prefHeight="30.0" prefWidth="323.0" text="Correct">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
-      <Button fx:id="save" layoutX="495.0" layoutY="414.0" mnemonicParsing="false" onAction="#saveMenu" prefHeight="36.0" prefWidth="131.0" text="Save menu" />
+      <Button fx:id="save" layoutX="642.0" layoutY="412.0" mnemonicParsing="false" onAction="#saveMenu" prefHeight="36.0" prefWidth="131.0" text="Save menu" />
       <ImageView fitHeight="135.0" fitWidth="131.0" layoutX="495.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="label1" layoutX="496.0" layoutY="368.0" prefHeight="25.0" prefWidth="131.0" text="Correct">
-         <font>
-            <Font size="20.0" />
-         </font></Label>
-      <Button fx:id="backHome" layoutX="539.0" layoutY="30.0" mnemonicParsing="false" onAction="#backHome" prefHeight="36.0" prefWidth="44.0" />
-      <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="547.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="backHome" layoutX="729.0" layoutY="34.0" mnemonicParsing="false" onAction="#backHome" prefHeight="36.0" prefWidth="44.0" />
+      <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="737.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
          </image>
       </ImageView>
+      <TableView fx:id="tabIng" layoutX="395.0" layoutY="49.0" prefHeight="256.0" prefWidth="200.0">
+        <columns>
+          <TableColumn fx:id="col1" prefWidth="199.0" text="Available ingredients" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

@@ -30,6 +30,8 @@ public class CreationMenuController implements Initializable{
 
     static ArrayList<String> selectedMenu = null;
 
+    public String selectedDish = null;
+
     @FXML
     public Button backHome;
 
@@ -71,6 +73,22 @@ public class CreationMenuController implements Initializable{
 
     @FXML
     public Button loadIngr;
+
+    @FXML
+    public Button entreeOk;
+
+    @FXML
+    public Button mainOk;
+
+    @FXML
+    public Button dessertOk;
+
+    @FXML
+    public Button sideOk;
+
+    @FXML
+    public Button drinkOk;
+
 
 
     @FXML
@@ -232,6 +250,15 @@ public class CreationMenuController implements Initializable{
     public void upChoice(ArrayList<String> choice){
         selectedMenu = choice;
         System.out.println(selectedMenu);
+    }
+
+
+    public void entreeIngr (ActionEvent event) throws RemoteException {
+        selectedDish = entreeTF.getText().toString();
+        UserRemote u = Singleton.getInstance().methodRmi();
+        ArrayList<String> ingredientsForThisDish = u.searchIngredients(selectedDish);
+        selectedIngr = ingredientsForThisDish;
+
     }
 
 
