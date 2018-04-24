@@ -95,9 +95,9 @@ CREATE TABLE `bus` (
   `Gita_NumeroGita` varchar(8) NOT NULL,
   PRIMARY KEY (`Targa`,`Noleggio_PIVA`),
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
-  KEY `fk_Bus_Fornitore1_idx` (`Noleggio_PIVA`),
   KEY `fk_Bus_Gita1_idx` (`Gita_NumeroGita`),
-  CONSTRAINT `fk_Bus_Fornitore1` FOREIGN KEY (`Noleggio_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `fk_bus_noleggio1_idx` (`Noleggio_PIVA`),
+  CONSTRAINT `fk_bus_noleggio1` FOREIGN KEY (`Noleggio_PIVA`) REFERENCES `noleggio` (`PIVA`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -166,7 +166,7 @@ CREATE TABLE `gita` (
 
 LOCK TABLES `gita` WRITE;
 /*!40000 ALTER TABLE `gita` DISABLE KEYS */;
-INSERT INTO `gita` VALUES ('Verona - Venezia - Firenze','2018-09-01 06:00:00','2018-09-27 21:00:00','via Imbonati 4, FI','2018-09-22 11:00:00','','');
+INSERT INTO `gita` VALUES ('Verona','2018-09-01 06:00:00','2018-09-27 21:00:00','via Imbonati 4, FI','2018-09-22 11:00:00','Firenze','g1');
 /*!40000 ALTER TABLE `gita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -272,8 +272,8 @@ CREATE TABLE `interni_has_gita` (
   `Partecipante_effettivo` tinyint(4) NOT NULL,
   PRIMARY KEY (`interni_CF`,`gita_NumGita`),
   KEY `fk_interni_has_gita_gita1_idx` (`gita_NumGita`),
-  CONSTRAINT `fk_interni_has_gita_gita1` FOREIGN KEY (`gita_NumGita`) REFERENCES `gita` (`NumGita`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_interni_has_gita_interni1` FOREIGN KEY (`interni_CF`) REFERENCES `interni` (`CF`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_interni_has_gita_gita1` FOREIGN KEY (`gita_NumGita`) REFERENCES `gita` (`NumGita`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_interni_has_gita_interni1` FOREIGN KEY (`interni_CF`) REFERENCES `interni` (`CF`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -283,6 +283,7 @@ CREATE TABLE `interni_has_gita` (
 
 LOCK TABLES `interni_has_gita` WRITE;
 /*!40000 ALTER TABLE `interni_has_gita` DISABLE KEYS */;
+INSERT INTO `interni_has_gita` VALUES ('VRDNTS10P41D150R','g1',1);
 /*!40000 ALTER TABLE `interni_has_gita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -511,4 +512,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-24 12:31:38
+-- Dump completed on 2018-04-24 14:55:14
