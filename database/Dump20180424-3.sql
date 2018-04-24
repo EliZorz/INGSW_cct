@@ -85,19 +85,6 @@ UNLOCK TABLES;
 -- Table structure for table `bus`
 --
 
-DROP TABLE IF EXISTS `bus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bus` (
-  `Targa` int(7) NOT NULL,
-  `capienza` int(70) NOT NULL,
-  `Noleggio_PIVA` int(30) NOT NULL,
-  `Gita_NumeroGita` varchar(8) NOT NULL,
-  PRIMARY KEY (`Targa`,`Noleggio_PIVA`,`Gita_NumeroGita`),
-  UNIQUE KEY `Targa_UNIQUE` (`Targa`),
- 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bus`
