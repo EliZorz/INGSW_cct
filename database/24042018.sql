@@ -28,7 +28,7 @@ CREATE TABLE `adulto` (
   `Nome` varchar(15) NOT NULL,
   `Cognome` varchar(25) NOT NULL,
   `CF` char(16) NOT NULL,
-  `Mail` varchar(30) NOT NULL,
+  `Mail` varchar(45) NOT NULL,
   `CAP` int(5) NOT NULL,
   `Provincia` char(2) NOT NULL,
   `Indirizzo` varchar(45) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE `adulto` (
 
 LOCK TABLES `adulto` WRITE;
 /*!40000 ALTER TABLE `adulto` DISABLE KEYS */;
-INSERT INTO `adulto` VALUES ('Alessia','Perera','PRRLSS80S47F205O','perera.alessia@mailone.com',20140,'MI','Milano Bovisa','1980-11-07','Milano','3278599655',0,1,0,'c1');
+INSERT INTO `adulto` VALUES ('Alessia','Perera','PRRLSS80S47F205O','perera.alessia@mailone.com',20140,'MI','Milano Bovisa','1980-11-07','Milano','3278599655',0,1,0,'c1'),('reggi','r','r','8',6,'CR','rr','2018-03-27','r','m',1,0,0,'c3'),('Daniele','Espera','SPRDNL80L02D150C','espera.daniele@mailone.com',20158,'MI','Milano Bovisa','1980-07-02','Milano','2569875441',0,1,1,'c2'),('nonso','w','w','5',6,'w','ee','2018-03-26','e','e',1,0,0,'c4');
 /*!40000 ALTER TABLE `adulto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,15 +91,13 @@ DROP TABLE IF EXISTS `bus`;
 CREATE TABLE `bus` (
   `Targa` int(7) NOT NULL,
   `capienza` int(70) NOT NULL,
-  `Fornitore_PIVA` int(30) NOT NULL,
-  `Gita_NumeroGita` int(11) NOT NULL,
-  `Gita_Interni_CF` int(16) NOT NULL,
-  PRIMARY KEY (`Targa`,`Fornitore_PIVA`),
+  `Noleggio_PIVA` int(30) NOT NULL,
+  `Gita_NumeroGita` varchar(8) NOT NULL,
+  PRIMARY KEY (`Targa`,`Noleggio_PIVA`),
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
-  KEY `fk_Bus_Fornitore1_idx` (`Fornitore_PIVA`),
-  KEY `fk_Bus_Gita1_idx` (`Gita_NumeroGita`,`Gita_Interni_CF`),
-  CONSTRAINT `fk_Bus_Fornitore1` FOREIGN KEY (`Fornitore_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Bus_Gita1` FOREIGN KEY (`Gita_NumeroGita`) REFERENCES `gita` (`NumeroGita`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_Bus_Fornitore1_idx` (`Noleggio_PIVA`),
+  KEY `fk_Bus_Gita1_idx` (`Gita_NumeroGita`),
+  CONSTRAINT `fk_Bus_Fornitore1` FOREIGN KEY (`Noleggio_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -138,7 +136,7 @@ CREATE TABLE `fornitore` (
 
 LOCK TABLES `fornitore` WRITE;
 /*!40000 ALTER TABLE `fornitore` DISABLE KEYS */;
-INSERT INTO `fornitore` VALUES (152635645,'Pescado Fresco',37689562,'pescadofresco@mail.com','Mantova',46100,'MN'),(156870031,'Las Fresas de Milo',37265485,'fresasdemilo@mail.com','Cavatigozzi',26100,'CR'),(256332641,'Pane e panini Danilo',523826548,'panedani@mail.com','Monticelli',29010,'PC'),(256486523,'Solo Carne',1564856,'carnepesce@mail.com','Roma',118,'RO');
+INSERT INTO `fornitore` VALUES (152635645,'Pescado Fresco',37689562,'pescadofresco@mail.com','Mantova',46100,'MN'),(156870031,'Las Fresas de Milo',37265485,'fresasdemilo@mail.com','Cavatigozzi',26100,'CR'),(256332641,'Pane e panini Ferruccio',523826548,'panedani@mail.com','Monticelli',29010,'PC'),(256486523,'Solo Carne',1564856,'carnepesce@mail.com','Roma',118,'RO'),(256832647,'PatateFolli',583894548,'solopatate@mail.com','Monticelli',29010,'PC');
 /*!40000 ALTER TABLE `fornitore` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,11 +148,15 @@ DROP TABLE IF EXISTS `gita`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gita` (
-  `Luogo` tinytext NOT NULL,
+  `Partenza` varchar(35) NOT NULL,
   `DataOraPar` datetime NOT NULL,
   `DataOraRit` datetime NOT NULL,
-  `NumeroGita` int(11) NOT NULL,
-  PRIMARY KEY (`NumeroGita`)
+  `Alloggio` tinytext,
+  `DataOraArr` datetime NOT NULL,
+  `Destinazione` varchar(35) NOT NULL,
+  `NumGita` varchar(8) NOT NULL,
+  PRIMARY KEY (`NumGita`),
+  UNIQUE KEY `NumGita_UNIQUE` (`NumGita`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -164,39 +166,37 @@ CREATE TABLE `gita` (
 
 LOCK TABLES `gita` WRITE;
 /*!40000 ALTER TABLE `gita` DISABLE KEYS */;
+INSERT INTO `gita` VALUES ('Verona - Venezia - Firenze','2018-09-01 06:00:00','2018-09-27 21:00:00','via Imbonati 4, FI','2018-09-22 11:00:00','','');
 /*!40000 ALTER TABLE `gita` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `gita_has_participants`
+-- Table structure for table `gita_has_tappa`
 --
 
-DROP TABLE IF EXISTS `gita_has_participants`;
+DROP TABLE IF EXISTS `gita_has_tappa`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gita_has_participants` (
-  `Gita_NumeroGita` int(11) NOT NULL,
-  `PresenteEff` bit(1) NOT NULL,
-  `Bus_Targa` int(7) NOT NULL,
-  `Bus_Fornitore_PIVA` int(30) NOT NULL,
-  `Interni_CF` char(16) NOT NULL,
-  PRIMARY KEY (`Gita_NumeroGita`,`Bus_Targa`,`Bus_Fornitore_PIVA`,`Interni_CF`),
-  KEY `fk_Gita_has_Interni_Gita1_idx` (`Gita_NumeroGita`),
-  KEY `fk_Gita_has_Participants_Bus1_idx` (`Bus_Targa`,`Bus_Fornitore_PIVA`),
-  KEY `fk_Gita_has_Participants_Interni1_idx` (`Interni_CF`),
-  CONSTRAINT `fk_Gita_has_Interni_Gita1` FOREIGN KEY (`Gita_NumeroGita`) REFERENCES `gita` (`NumeroGita`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Gita_has_Participants_Bus1` FOREIGN KEY (`Bus_Targa`, `Bus_Fornitore_PIVA`) REFERENCES `bus` (`Targa`, `Fornitore_PIVA`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Gita_has_Participants_Interni1` FOREIGN KEY (`Interni_CF`) REFERENCES `interni` (`CF`) ON DELETE NO ACTION ON UPDATE NO ACTION
+CREATE TABLE `gita_has_tappa` (
+  `interni_CF` char(16) NOT NULL,
+  `is_here` tinyint(4) NOT NULL,
+  `bus_Targa` int(7) NOT NULL,
+  `bus_noleggio_PIVA` int(11) NOT NULL,
+  PRIMARY KEY (`interni_CF`,`bus_Targa`,`bus_noleggio_PIVA`),
+  KEY `fk_interni_has_gita1_interni1_idx` (`interni_CF`),
+  KEY `fk_gita_has_tappa_bus1_idx` (`bus_Targa`,`bus_noleggio_PIVA`),
+  CONSTRAINT `fk_gita_has_tappa_bus1` FOREIGN KEY (`bus_Targa`, `bus_noleggio_PIVA`) REFERENCES `bus` (`Targa`, `Noleggio_PIVA`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_interni_has_gita1_interni1` FOREIGN KEY (`interni_CF`) REFERENCES `interni` (`CF`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `gita_has_participants`
+-- Dumping data for table `gita_has_tappa`
 --
 
-LOCK TABLES `gita_has_participants` WRITE;
-/*!40000 ALTER TABLE `gita_has_participants` DISABLE KEYS */;
-/*!40000 ALTER TABLE `gita_has_participants` ENABLE KEYS */;
+LOCK TABLES `gita_has_tappa` WRITE;
+/*!40000 ALTER TABLE `gita_has_tappa` DISABLE KEYS */;
+/*!40000 ALTER TABLE `gita_has_tappa` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -212,7 +212,7 @@ CREATE TABLE `ingredients` (
   PRIMARY KEY (`ingredient`),
   UNIQUE KEY `ingredient_UNIQUE` (`ingredient`),
   KEY `fk_Ingredients_Fornitore1_idx` (`Fornitore_PIVA`),
-  CONSTRAINT `fk_Ingredients_Fornitore1` FOREIGN KEY (`Fornitore_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_Ingredients_Fornitore1` FOREIGN KEY (`Fornitore_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -255,8 +255,60 @@ CREATE TABLE `interni` (
 
 LOCK TABLES `interni` WRITE;
 /*!40000 ALTER TABLE `interni` DISABLE KEYS */;
-INSERT INTO `interni` VALUES ('Fieri','Mariapia','FRIMRP68C47D612B','1968-03-07','Firenze','Cremona','corso Garibaldi 51',26100,'CR','[fragole],'),('e','a','l','2018-04-11','l','l','l',7,'l','none'),('Perera','Luca','PRRLCU09H10F205M','2009-06-10','Milano','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Perera','Virginie','PRRVGN10P56F205F','2010-09-16','Milano','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Verdi','Anastasia','VRDNTS10P41D150R','2010-09-01','Cremona','Cremona','via Garibaldi 57',26100,'CR','none');
+INSERT INTO `interni` VALUES ('Fieri','Mariapia','FRIMRP68C47D612B','1968-03-07','Firenze','Cremona','corso Garibaldi 51',26100,'CR','[fragole],'),('Perera','Luca','PRRLCU09H10F205M','2009-06-10','Milano','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Perera','Virginie','PRRVGN10P56F205F','2010-09-16','Milano','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Verdi','Anastasia','VRDNTS10P41D150R','2010-09-01','Cremona','Cremona','via Garibaldi 57',26100,'CR','none');
 /*!40000 ALTER TABLE `interni` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `interni_has_gita`
+--
+
+DROP TABLE IF EXISTS `interni_has_gita`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `interni_has_gita` (
+  `interni_CF` char(16) NOT NULL,
+  `gita_NumGita` varchar(45) NOT NULL,
+  `Partecipante_effettivo` tinyint(4) NOT NULL,
+  PRIMARY KEY (`interni_CF`,`gita_NumGita`),
+  KEY `fk_interni_has_gita_gita1_idx` (`gita_NumGita`),
+  CONSTRAINT `fk_interni_has_gita_gita1` FOREIGN KEY (`gita_NumGita`) REFERENCES `gita` (`NumGita`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_interni_has_gita_interni1` FOREIGN KEY (`interni_CF`) REFERENCES `interni` (`CF`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `interni_has_gita`
+--
+
+LOCK TABLES `interni_has_gita` WRITE;
+/*!40000 ALTER TABLE `interni_has_gita` DISABLE KEYS */;
+/*!40000 ALTER TABLE `interni_has_gita` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `interno_has_allergia`
+--
+
+DROP TABLE IF EXISTS `interno_has_allergia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `interno_has_allergia` (
+  `has_allergia` tinyint(4) NOT NULL DEFAULT '0',
+  `interni_CF` char(16) NOT NULL,
+  PRIMARY KEY (`has_allergia`,`interni_CF`),
+  KEY `fk_interno_has_allergia_interni1_idx` (`interni_CF`),
+  CONSTRAINT `fk_interno_has_allergia_interni1` FOREIGN KEY (`interni_CF`) REFERENCES `interni` (`CF`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `interno_has_allergia`
+--
+
+LOCK TABLES `interno_has_allergia` WRITE;
+/*!40000 ALTER TABLE `interno_has_allergia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `interno_has_allergia` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -301,7 +353,7 @@ CREATE TABLE `menu_base_has_ingredients` (
   `date` varchar(45) NOT NULL,
   PRIMARY KEY (`Ingredients_ingredient`,`date`),
   KEY `fk_menu_base_has_Ingredients_Ingredients1_idx` (`Ingredients_ingredient`),
-  CONSTRAINT `fk_menu_base_has_Ingredients_Ingredients1` FOREIGN KEY (`Ingredients_ingredient`) REFERENCES `ingredients` (`ingredient`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_menu_base_has_Ingredients_Ingredients1` FOREIGN KEY (`Ingredients_ingredient`) REFERENCES `ingredients` (`ingredient`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -330,8 +382,8 @@ CREATE TABLE `menu_special` (
   `side_dish` tinytext,
   `drink` tinytext,
   `date` date NOT NULL,
-  PRIMARY KEY (`date`),
-  UNIQUE KEY `giorno_UNIQUE` (`date`)
+  `Interni_CodRif` varchar(45) NOT NULL,
+  PRIMARY KEY (`date`,`Interni_CodRif`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -356,7 +408,7 @@ CREATE TABLE `menu_special_has_ingredients` (
   `date` varchar(45) NOT NULL,
   PRIMARY KEY (`Ingredients_ingredient`,`date`),
   KEY `fk_menu_special_has_Ingredients_Ingredients1_idx` (`Ingredients_ingredient`),
-  CONSTRAINT `fk_menu_special_has_Ingredients_Ingredients1` FOREIGN KEY (`Ingredients_ingredient`) REFERENCES `ingredients` (`ingredient`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_menu_special_has_Ingredients_Ingredients1` FOREIGN KEY (`Ingredients_ingredient`) REFERENCES `ingredients` (`ingredient`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -367,6 +419,34 @@ CREATE TABLE `menu_special_has_ingredients` (
 LOCK TABLES `menu_special_has_ingredients` WRITE;
 /*!40000 ALTER TABLE `menu_special_has_ingredients` DISABLE KEYS */;
 /*!40000 ALTER TABLE `menu_special_has_ingredients` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `noleggio`
+--
+
+DROP TABLE IF EXISTS `noleggio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `noleggio` (
+  `PIVA` int(11) NOT NULL,
+  `NomeAzienda` varchar(45) NOT NULL,
+  `Tel` int(11) NOT NULL,
+  `Mail` varchar(30) NOT NULL,
+  `Indirizzo` varchar(45) NOT NULL,
+  `CAP` int(5) NOT NULL,
+  `Provincia` varchar(45) NOT NULL,
+  PRIMARY KEY (`PIVA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `noleggio`
+--
+
+LOCK TABLES `noleggio` WRITE;
+/*!40000 ALTER TABLE `noleggio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `noleggio` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -393,7 +473,7 @@ CREATE TABLE `personaleint` (
 
 LOCK TABLES `personaleint` WRITE;
 /*!40000 ALTER TABLE `personaleint` DISABLE KEYS */;
-INSERT INTO `personaleint` VALUES ('fieri.mariapia@cct.mailunion.com','s1','FRIMRP68C47D612B'),('s','s2','l');
+INSERT INTO `personaleint` VALUES ('fieri.mariapia@cct.mailunion.com','s1','FRIMRP68C47D612B');
 /*!40000 ALTER TABLE `personaleint` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -431,4 +511,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-20 10:05:23
+-- Dump completed on 2018-04-24 12:31:38

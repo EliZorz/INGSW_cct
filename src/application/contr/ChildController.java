@@ -24,11 +24,17 @@ import java.util.*;
 public class ChildController implements Initializable {
     private ObservableList<ChildGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
+    private ObservableList<ContactsGuiDetails> dataContactObsList = FXCollections.observableArrayList();
+
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
     ArrayList<String> selectedChild = new ArrayList<>();
-    //ArrayList<String> selectedCodRif = new ArrayList<>();
+    ArrayList<String> selectedContact = new ArrayList<>();
     String oldcf = new String();
+    String oldcfContact = new String();
+    int isDocint = 0;
+    int isContactint = 0;
+    int isGuardianint = 0;
 
     @FXML
     public Button btnBack;
@@ -40,8 +46,6 @@ public class ChildController implements Initializable {
     public Button btnUpdate;
     @FXML
     public Button btnDelete;
-    @FXML
-    public Button btnContacts;
     @FXML
     public Label lblWarning;
     @FXML
@@ -85,6 +89,53 @@ public class ChildController implements Initializable {
 
 
     @FXML
+    public TableView<ContactsGuiDetails> tableContacts;
+    @FXML
+    public TableColumn<ContactsGuiDetails, String> colSurnameContact;
+    @FXML
+    public TableColumn<ContactsGuiDetails, String> colCfContact;
+    @FXML
+    public TableColumn<ContactsGuiDetails, String> colDoc;
+    @FXML
+    public TableColumn<ContactsGuiDetails, String> colGuardian;
+    @FXML
+    public TableColumn<ContactsGuiDetails, String> colContact;
+    @FXML
+    public Button btnDeleteContact;
+    @FXML
+    public Button btnAddContact;
+    @FXML
+    public Button btnUpdateContact;
+    @FXML
+    public Button btnLoadContact;
+    @FXML
+    public TextField txtSurnameContact;
+    @FXML
+    public TextField txtNameContact;
+    @FXML
+    public TextField txtCfContact;
+    @FXML
+    public TextField txtTelContact;
+    @FXML
+    public TextField txtMailContact;
+    @FXML
+    public TextField txtAddressContact;
+    @FXML
+    public TextField txtCapContact;
+    @FXML
+    public TextField txtProvinceContact;
+    @FXML
+    public DatePicker dpBirthdayContact;
+    @FXML
+    public TextField txtBornWhereContact;
+    @FXML
+    public CheckBox cbDoc;
+    @FXML
+    public CheckBox cbGuardian;
+    @FXML
+    public CheckBox cbContact;
+
+    @FXML
     public Button btnLoadIngredients;
     @FXML
     public Button btnDeselect;
@@ -110,48 +161,104 @@ public class ChildController implements Initializable {
         tableChild.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         tableChild.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if(newSelection != null){
-                selectedChild.add(newSelection.getName());
-                selectedChild.add(newSelection.getSurname());
-                selectedChild.add(newSelection.getCf());
-                selectedChild.add(newSelection.getBornOn());
-                selectedChild.add(newSelection.getBornWhere());
-                selectedChild.add(newSelection.getResidence());
-                selectedChild.add(newSelection.getAddress());
-                selectedChild.add(newSelection.getCap());
-                selectedChild.add(newSelection.getProvince());
-                //PER EVIDENZIARE ALLERGIA QUANDO SELEZIONO RIGA SERVE QUERY CHE CERCHI NEL DB LE ALLERGIE COLLEGATE AL CF DEL SELEZIONATO - per ora lasciamo che riselezioni quelle che vuole
+                    if (newSelection != null) {
+                        selectedChild.add(newSelection.getName());
+                        selectedChild.add(newSelection.getSurname());
+                        selectedChild.add(newSelection.getCf());
+                        selectedChild.add(newSelection.getBornOn());
+                        selectedChild.add(newSelection.getBornWhere());
+                        selectedChild.add(newSelection.getResidence());
+                        selectedChild.add(newSelection.getAddress());
+                        selectedChild.add(newSelection.getCap());
+                        selectedChild.add(newSelection.getProvince());
+                        //PER EVIDENZIARE ALLERGIA QUANDO SELEZIONO RIGA SERVE QUERY CHE CERCHI NEL DB LE ALLERGIE COLLEGATE AL CF DEL SELEZIONATO - per ora lasciamo che riselezioni quelle che vuole
 
-                oldcf = newSelection.getCf();
+                        oldcf = newSelection.getCf();
 
-                //Serve una query che salvi il CodRif del selezionato PRIMA di modificare qualsiasi cosa (vd updateChild)
-                //this.loadCodRif(newSelection.getCf());
+                        //Serve una query che salvi il CodRif del selezionato PRIMA di modificare qualsiasi cosa (vd updateChild)
 
-                txtName.setText(newSelection.getName());
-                txtSurname.setText(newSelection.getSurname());
-                txtCf.setText(newSelection.getCf());
-                dpBirthday.setValue(LocalDate.parse(newSelection.getBornOn()));
-                txtBornWhere.setText(newSelection.getBornWhere());
-                txtResidence.setText(newSelection.getResidence());
-                txtAddress.setText(newSelection.getAddress());
-                txtCap.setText(newSelection.getCap());
-                txtProvince.setText(newSelection.getProvince());
+                        txtName.setText(newSelection.getName());
+                        txtSurname.setText(newSelection.getSurname());
+                        txtCf.setText(newSelection.getCf());
+                        dpBirthday.setValue(LocalDate.parse(newSelection.getBornOn()));
+                        txtBornWhere.setText(newSelection.getBornWhere());
+                        txtResidence.setText(newSelection.getResidence());
+                        txtAddress.setText(newSelection.getAddress());
+                        txtCap.setText(newSelection.getCap());
+                        txtProvince.setText(newSelection.getProvince());
 
-            }
+                        //LOAD TABLE CONTACTS
+                        colSurnameContact.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
+                        colCfContact.setCellValueFactory(cellData -> cellData.getValue().cfProperty());
+                        colDoc.setCellValueFactory(cellData -> cellData.getValue().isDocProperty());
+                        colGuardian.setCellValueFactory(cellData -> cellData.getValue().isGuardianProperty());
+                        colContact.setCellValueFactory(cellData -> cellData.getValue().isContactProperty());
+
+                        tableContacts.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+                        tableContacts.getSelectionModel().selectedItemProperty().addListener((obsContact, oldSelectionContact, newSelectionContact) -> {
+                            if (newSelectionContact != null) {
+                                selectedContact.add(newSelectionContact.getName());
+                                selectedContact.add(newSelectionContact.getSurname());
+                                selectedContact.add(newSelectionContact.getCf());
+                                selectedContact.add(newSelectionContact.getMail());
+                                selectedContact.add(newSelectionContact.getTel());
+                                selectedContact.add(newSelectionContact.getBornOn());
+                                selectedContact.add(newSelectionContact.getBornWhere());
+                                selectedContact.add(newSelectionContact.getAddress());
+                                selectedContact.add(newSelectionContact.getCap());
+                                selectedContact.add(newSelectionContact.getProvince());
+                                selectedContact.add(newSelectionContact.getIsDoc());
+                                selectedContact.add(newSelectionContact.getIsGuardian());
+                                selectedContact.add(newSelectionContact.getIsContact());
+
+                                txtNameContact.setText(newSelectionContact.getName());
+                                txtSurnameContact.setText(newSelectionContact.getSurname());
+                                txtCfContact.setText(newSelectionContact.getCf());
+                                txtMailContact.setText(newSelectionContact.getMail());
+                                txtTelContact.setText(newSelectionContact.getTel());
+                                dpBirthdayContact.setValue(LocalDate.parse(newSelectionContact.getBornOn()));
+                                txtBornWhereContact.setText(newSelectionContact.getBornWhere());
+                                txtAddressContact.setText(newSelectionContact.getAddress());
+                                txtCapContact.setText(newSelectionContact.getCap());
+                                txtProvinceContact.setText(newSelectionContact.getProvince());
+                                if (newSelectionContact.getIsDoc().equals("1")) {
+                                    cbDoc.setSelected(true);
+                                    isDocint = 1;
+                                } else {
+                                    cbDoc.setSelected(false);
+                                    isDocint = 0;
+                                }
+                                if (newSelectionContact.getIsGuardian().equals("1")) {
+                                    cbGuardian.setSelected(true);
+                                    isGuardianint = 1;
+                                } else{
+                                    cbGuardian.setSelected(false);
+                                    isGuardianint = 0;
+                                }
+                                if (newSelectionContact.getIsContact().equals("1")){
+                                    cbContact.setSelected(true);
+                                    isContactint = 1;
+                                }else {
+                                    cbContact.setSelected(false);
+                                    isContactint = 0;
+                                }
+                                oldcfContact = newSelectionContact.getCf();
+                            }
+                        });
+                        tableContacts.getItems().clear();
+                    }
         });
-
         tableChild.getItems().clear();
-
 
         colIngr.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
 
         tableIngr.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableIngr.getSelectionModel().setCellSelectionEnabled(true);  //could have been deleted, as there's just 1 cell for each row
 
-        tableIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                selectedAllergy.add(newSelection.getIngr());
-                System.out.println(newSelection.getIngr());
+        tableIngr.getSelectionModel().selectedItemProperty().addListener((obsIngr, oldSelectionIngr, newSelectionIngr) -> {
+            if (newSelectionIngr != null) {
+                selectedAllergy.add(newSelectionIngr.getIngr());
+                System.out.println(newSelectionIngr.getIngr());
             }
         });
 
@@ -211,14 +318,37 @@ public class ChildController implements Initializable {
         String cap = txtCap.getText().toString();
         String province = txtProvince.getText().toString();
 
+        String nameContact = txtNameContact.getText().toString();
+        String surnameContact = txtSurnameContact.getText().toString();
+        String cfContact = txtCfContact.getText().toString();
+        String mailContact = txtMailContact.getText().toString();
+        String telContact = txtTelContact.getText().toString();
+        LocalDate birthdayContact = dpBirthdayContact.getValue();
+        String bornWhereContact = txtBornWhereContact.getText().toString();
+        String addressContact = txtAddressContact.getText().toString();
+        String capContact = txtCapContact.getText().toString();
+        String provinceContact = txtProvince.getText().toString();
+        boolean isDoc = cbDoc.isSelected();
+        if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
+        else { cbDoc.setSelected(false); }
+        boolean isGuardian = cbGuardian.isSelected();
+        if(cbGuardian.isSelected()){ cbGuardian.setSelected(true); }
+        else { cbGuardian.setSelected(false); }
+        boolean isContact = cbContact.isSelected();
+        if(cbContact.isSelected()){ cbContact.setSelected(true); }
+        else { cbContact.setSelected(false); }
+
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday == null
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
-                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+                || cap.trim().isEmpty() || province.trim().isEmpty()
+                || nameContact.trim().isEmpty() || surnameContact.trim().isEmpty() || cfContact.trim().isEmpty() || mailContact.trim().isEmpty() || telContact.trim().isEmpty()
+                || birthdayContact == null || bornWhereContact.trim().isEmpty() || addressContact.trim().isEmpty()
+                || capContact.trim().isEmpty() || provinceContact.trim().isEmpty() || ! isDoc) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
 
 
-            //DA VERIFICARE : CONTACTS -> ha una handleAdd separata! (in database risulta separato..)
+            //DA VERIFICARE : CONTACTS
             // NON DIMENTICARE di collegare ogni nuovo contatto al corrispondente Bambino (CodRif NECESSARIO per associare)
 
             //X ALLERGIES: IN MANUALE UTENTE -> "Se l'utente non seleziona nulla dal campo allergia,
@@ -229,7 +359,8 @@ public class ChildController implements Initializable {
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
-                boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+                boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy,
+                        nameContact, surnameContact, cfContact, mailContact, telContact, birthdayContact, bornWhereContact, addressContact, capContact, provinceContact, isDoc, isGuardian, isContact);  //call method in Server Impl
 
                 //IN SERVERIMPL: pick every field content and save into list (1 list for child -> interni + 1 list for allergy)
 
@@ -241,61 +372,6 @@ public class ChildController implements Initializable {
             }
         }
     }
-
-    public void handleLoadIngredients(){
-        System.out.println("Loading data...");
-
-        try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
-            ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
-
-            ingredientsObsList.clear();
-
-            if (ingrArrayList != null){
-                for(IngredientsDbDetails c : ingrArrayList){
-                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(c);
-                    ingredientsObsList.add(tmp);
-                }
-
-                tableIngr.setItems(null);
-                tableIngr.setItems(ingredientsObsList);
-
-
-            } else {
-                System.out.println("Error loading Ingredients");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    public void handleDeselect() {
-        tableIngr.getSelectionModel().clearSelection();
-    }
-
-
-
-    @FXML
-    public void handleBackHomepage() {
-        //exit window (the previous window was MenuIniziale.fxml
-        Stage stage = (Stage) btnBack.getScene().getWindow();
-        stage.close();
-    }
-
-
-    @FXML
-    public void handleContacts() {
-        try {
-            new GuiNew("Contacts");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @FXML
     public void handleDelete() {
@@ -351,43 +427,191 @@ public class ChildController implements Initializable {
     }
 
 
+    public void handleLoadContacts() {
+        System.out.println("Loading data contacts...");
+
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+
+            ArrayList<ContactsDbDetails> contactsDbArrayList = u.loadDataContacts(oldcf); //carico i contatti del selezionato!
+
+            dataContactObsList.clear();
+
+            if (contactsDbArrayList != null){
+                for(ContactsDbDetails c : contactsDbArrayList){
+                    ContactsGuiDetails tmpc = new ContactsGuiDetails(c);
+                    dataContactObsList.add(tmpc);
+                }
+
+                tableContacts.setItems(null);
+                tableContacts.setItems(dataContactObsList);
+
+                this.renameLabel("Table loaded!");
+            }else{
+                this.renameLabel("Error.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void handleAddContact() {
+        System.out.println("Adding new contact to database...");
+
+        String name = txtNameContact.getText().toString();
+        String surname = txtSurnameContact.getText().toString();
+        String cf = txtCfContact.getText().toString();
+        String mail = txtMailContact.getText().toString();
+        String tel = txtTelContact.getText().toString();
+        LocalDate birthday = dpBirthdayContact.getValue();
+        String bornWhere = txtBornWhereContact.getText().toString();
+        String address = txtAddressContact.getText().toString();
+        String cap = txtCapContact.getText().toString();
+        String province = txtProvince.getText().toString();
+        boolean isDoc = cbDoc.isSelected();
+        if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
+        else { cbDoc.setSelected(false); }
+        boolean isGuardian = cbGuardian.isSelected();
+        if(cbGuardian.isSelected()){ cbGuardian.setSelected(true); }
+        else { cbGuardian.setSelected(false); }
+        boolean isContact = cbContact.isSelected();
+        if(cbContact.isSelected()){ cbContact.setSelected(true); }
+        else { cbContact.setSelected(false); }
+
+        if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
+                || birthday == null || bornWhere.trim().isEmpty() || address.trim().isEmpty()
+                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+            //this verifies there are no void fields (isSth are boolean with default value '0')
+            this.renameLabel("Insert data.");
+
+        } else {
+
+            System.out.println("Adding data to database...");
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+
+                boolean isAddOk = u.addContact(selectedChild, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+
+                if (isAddOk) {
+                    this.renameLabel("Congrats! Contact added.");
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+    public void handleUpdateContact() {
+        System.out.println("Loading data...");
+
+        String name = txtNameContact.getText().toString();
+        String surname = txtSurnameContact.getText().toString();
+        String cf = txtCfContact.getText().toString();
+        String mail = txtMailContact.getText().toString();
+        String tel = txtTelContact.getText().toString();
+        LocalDate birthday = dpBirthdayContact.getValue();
+        String bornWhere = txtBornWhereContact.getText().toString();
+        String address = txtAddressContact.getText().toString();
+        String cap = txtCapContact.getText().toString();
+        String province = txtProvince.getText().toString();
+        boolean isDoc = cbDoc.isSelected();
+        if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
+        else { cbDoc.setSelected(false); }
+        boolean isGuardian = cbGuardian.isSelected();
+        if(cbGuardian.isSelected()){ cbGuardian.setSelected(true); }
+        else { cbGuardian.setSelected(false); }
+        boolean isContact = cbContact.isSelected();
+        if(cbContact.isSelected()){ cbContact.setSelected(true); }
+        else { cbContact.setSelected(false); }
+
+        if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
+                || birthday == null || bornWhere.trim().isEmpty() || address.trim().isEmpty()
+                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+            //this verifies there are no void fields (isSth are boolean with default value '0')
+            this.renameLabel("Insert data.");
+
+        } else {
+            System.out.println("Adding data to database...");
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+
+                boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl
+
+                if (isEditOk) {
+                    lblWarning.setText("Congrats! Child edited.");
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void handleDeleteContact() {
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            boolean deleted = u.deleteContact(oldcfContact);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
+            if(deleted){
+                this.renameLabel("Deleted.");
+            } else {
+                this.renameLabel("Error deleting.");
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void handleLoadIngredients(){
+        System.out.println("Loading data...");
+
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+
+            ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
+
+            ingredientsObsList.clear();
+
+            if (ingrArrayList != null){
+                for(IngredientsDbDetails c : ingrArrayList){
+                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(c);
+                    ingredientsObsList.add(tmp);
+                }
+
+                tableIngr.setItems(null);
+                tableIngr.setItems(ingredientsObsList);
+
+
+            } else {
+                System.out.println("Error loading Ingredients");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void handleDeselect() {
+        tableIngr.getSelectionModel().clearSelection();
+    }
+
+
+    public void handleBackHomepage() {
+        //exit window (the previous window was MenuIniziale.fxml
+        Stage stage = (Stage) btnBack.getScene().getWindow();
+        stage.close();
+    }
+
+
     public void renameLabel(String st){
         lblWarning.setText(st);
     }
-
-    /*
-    public ArrayList<String> loadCodRif (String cf) {
-        String queryLoadCodRif = "SELECT CodRif FROM bambino WHERE Interni_CF = '" + cf + "';";
-        PreparedStatement st;
-        ResultSet result = null;
-        try{
-            st = this.connHere().prepareStatement(queryLoadCodRif);
-            result = st.executeQuery(queryLoadCodRif);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try{
-            if( !result.next() ) {
-                System.out.println("No CodRif in Db");
-            } else {
-                result.beforeFirst();
-                System.out.println("Processing ResultSet for CodRif");
-                try {
-                    while (result.next()) {
-                        String prova = new String(result.getString(1));
-                        selectedCodRif.add(prova);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return selectedCodRif;
-    }
-    */
-
-
 
 }

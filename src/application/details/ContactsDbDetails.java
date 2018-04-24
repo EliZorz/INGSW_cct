@@ -126,11 +126,11 @@ public class ContactsDbDetails implements Serializable {
     }
 
     public void setTel(String value){
-        this.cf = value;
+        this.tel = value;
     }
 
     public void setMail(String value){
-        this.cf = value;
+        this.mail = value;
     }
 
     public void setBornOn(String value){
@@ -154,14 +154,14 @@ public class ContactsDbDetails implements Serializable {
     }
 
     public void setIsDoc(String value){
-        this.cf = value;
+        this.isDoc = value;
     }
 
     public void setIsGuardian(String value){
-        this.cf = value;
+        this.isGuardian = value;
     }
 
     public void setIsContact(String value){
-        this.cf = value;
+        this.isContact = value;
     }
 }

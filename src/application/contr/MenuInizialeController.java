@@ -26,7 +26,6 @@ public class MenuInizialeController {
 
     @FXML
     void openChildren(ActionEvent event) throws Exception{
-
         new GuiNew("Children");
     }
 
@@ -37,11 +36,9 @@ public class MenuInizialeController {
     }
 
 
-
-
     @FXML
     void openMenuBasePlates (ActionEvent event)throws Exception{
-
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
     }
 
@@ -56,10 +53,33 @@ public class MenuInizialeController {
     @FXML
     void openDayTrip(ActionEvent event)throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
-        new GuiNew("DayTrip");
+        new GuiNew("TripMenu");
 
     }
 
+    @FXML
+    void openTableTrips(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripTable");
+    }
+
+    @FXML
+    void openPlanTrip(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripPlan");
+    }
+
+    @FXML
+    public void openActualParticipants(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripActualParticipants");
+    }
+
+    @FXML
+    void openBeforeTrip(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripBefore");
+    }
 
 
     @FXML
@@ -87,13 +107,6 @@ public class MenuInizialeController {
 
     @FXML
     private URL location;
-
-    @FXML
-    void initialize() {
-
-
-    }
-
 
 
 }
