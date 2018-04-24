@@ -95,9 +95,7 @@ CREATE TABLE `bus` (
   `Gita_NumeroGita` varchar(8) NOT NULL,
   PRIMARY KEY (`Targa`,`Noleggio_PIVA`,`Gita_NumeroGita`),
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
- KEY `fk_Bus_Gita1_idx` (`Gita_NumeroGita`),
-  KEY `fk_bus_noleggio1_idx` (`Noleggio_PIVA`),
-  
+ 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
