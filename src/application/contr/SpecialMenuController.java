@@ -166,7 +166,9 @@ public class SpecialMenuController implements Initializable {
     }
 
     @FXML
-    public void showEntreeIngredients(){}
+    public void showEntreeIngredients(){
+
+    }
 
     @FXML
     public void showSideIngredients(){ }

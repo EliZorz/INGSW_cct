@@ -93,10 +93,11 @@ CREATE TABLE `bus` (
   `capienza` int(70) NOT NULL,
   `Noleggio_PIVA` int(30) NOT NULL,
   `Gita_NumeroGita` varchar(8) NOT NULL,
-  PRIMARY KEY (`Targa`,`Noleggio_PIVA`),
+  PRIMARY KEY (`Targa`,`Noleggio_PIVA`,`Gita_NumeroGita`),
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
   KEY `fk_Bus_Gita1_idx` (`Gita_NumeroGita`),
   KEY `fk_bus_noleggio1_idx` (`Noleggio_PIVA`),
+  CONSTRAINT `fk_bus_gita1` FOREIGN KEY (`Gita_NumeroGita`) REFERENCES `gita` (`NumGita`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_bus_noleggio1` FOREIGN KEY (`Noleggio_PIVA`) REFERENCES `noleggio` (`PIVA`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -512,4 +513,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-24 14:55:14
+-- Dump completed on 2018-04-24 15:02:37
