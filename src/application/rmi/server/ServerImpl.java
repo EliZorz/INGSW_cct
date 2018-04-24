@@ -1133,10 +1133,58 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     }
 
+//TRIP---------------------------------------------------------------------------------------------
+    @Override
+    public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
+        PreparedStatement st;
+        ResultSet result = null;
+        ArrayList<TripTableDbDetails> trips = new ArrayList<>(7);
+        String queryLoadTrip = "SELECT Luoghi, DataOraPar, DataOraRit, DataOraArr, Alloggio FROM gita";
+        String queryCount = "SELECT COUNT(*) " +
+                "FROM interni_has_gita " +
+                "WHERE Presente_effettivo = 1";
+
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadTrip);
+            result = st.executeQuery(queryLoadTrip);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if( !result.next() ) {
+                System.out.println("No trip in Db");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        TripTableDbDetails prova  = null;
+                        prova = new TripTableDbDetails(result.getString(1),
+                                result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5));
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        trips.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trips;
+    }
+
+
 
 //USEFUL EVERYWHERE------------------------------------------------------------------------------
 
-        public String sendMessage(String clientMessage) {
+    public String sendMessage(String clientMessage) {
         return "Client Message".equals(clientMessage) ? "Server Message" : null;
     }
 

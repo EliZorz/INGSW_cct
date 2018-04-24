@@ -9,9 +9,10 @@
    <children>
       <AnchorPane layoutX="40.0" layoutY="36.0" prefHeight="407.0" prefWidth="256.0" style="-fx-background-color: #ef4896; -fx-border-color: #deffff;">
          <children>
-            <Button layoutX="47.0" layoutY="63.0" mnemonicParsing="false" onAction="#openTableTrips" prefHeight="46.0" prefWidth="162.0" text="VIEW PLANNED TRIPS" />
-            <Button layoutX="47.0" layoutY="180.0" mnemonicParsing="false" onAction="#openPlanTrip" prefHeight="46.0" prefWidth="162.0" text="PLAN NEW TRIP" />
-            <Button layoutX="47.0" layoutY="295.0" mnemonicParsing="false" onAction="#openBeforeTrip" prefHeight="46.0" prefWidth="162.0" text="BEFORE THE TRIP" />
+            <Button layoutX="47.0" layoutY="43.0" mnemonicParsing="false" onAction="#openTableTrips" prefHeight="46.0" prefWidth="162.0" text="VIEW PLANNED TRIPS" />
+            <Button layoutX="47.0" layoutY="132.0" mnemonicParsing="false" onAction="#openPlanTrip" prefHeight="46.0" prefWidth="162.0" text="PLAN NEW TRIP" />
+            <Button layoutX="47.0" layoutY="309.0" mnemonicParsing="false" onAction="#openBeforeTrip" prefHeight="46.0" prefWidth="162.0" text="BEFORE THE TRIP" />
+            <Button layoutX="47.0" layoutY="223.0" mnemonicParsing="false" onAction="#openActualParticipants" prefHeight="46.0" prefWidth="162.0" text="WHO PARTICIPATES?" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="405.0" layoutY="45.0" prefHeight="292.0" prefWidth="197.0" style="-fx-border-color: #def001; -fx-background-color: #ffffff;">

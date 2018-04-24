@@ -268,5 +268,9 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
+    @Override
+    public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
+        return null;
+    }
 
 }

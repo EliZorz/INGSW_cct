@@ -57,6 +57,6 @@
             <Font name="Courier New" size="24.0" />
          </font>
       </Label>
-      <Button layoutX="483.0" layoutY="624.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="143.0" text="Homepage" />
+      <Button layoutX="483.0" layoutY="624.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="38.0" prefWidth="143.0" text="Homepage" />
    </children>
 </AnchorPane>

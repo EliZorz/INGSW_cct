@@ -38,7 +38,7 @@ public class MenuInizialeController {
 
     @FXML
     void openMenuBasePlates (ActionEvent event)throws Exception{
-
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
     }
 
@@ -67,6 +67,12 @@ public class MenuInizialeController {
     void openPlanTrip(ActionEvent event) throws Exception {
         ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("TripPlan");
+    }
+
+    @FXML
+    public void openActualParticipants(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripActualParticipants");
     }
 
     @FXML
@@ -101,7 +107,6 @@ public class MenuInizialeController {
 
     @FXML
     private URL location;
-
 
 
 }

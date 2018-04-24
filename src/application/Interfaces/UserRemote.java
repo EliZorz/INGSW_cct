@@ -48,4 +48,6 @@ public interface UserRemote extends Remote {
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
     boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date)throws RemoteException;
 
+
+    ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;
 }
