@@ -54,4 +54,6 @@ public interface UserRemote extends Remote {
     boolean deleteMenu(LocalDate d) throws RemoteException;
 
 
+
+
 }

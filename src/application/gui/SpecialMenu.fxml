@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SpecialMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1292.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SpecialMenuController">
    <children>
       <DatePicker fx:id="dateMenu" layoutX="47.0" layoutY="65.0" prefHeight="40.0" prefWidth="176.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="65.0" />
       <Button fx:id="loadDate" layoutX="251.0" layoutY="65.0" mnemonicParsing="false" onAction="#searchMenuDate" prefHeight="40.0" text="Load" AnchorPane.leftAnchor="251.0" AnchorPane.topAnchor="65.0" />
@@ -60,10 +60,10 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="showEntree" layoutX="1160.0" layoutY="183.0" mnemonicParsing="false" onAction="#showEntreeIngredients" text="Button" />
-      <Button fx:id="showMain" layoutX="1160.0" layoutY="228.0" mnemonicParsing="false" onAction="#showMainIngredients" text="Button" />
-      <Button fx:id="showDessert" layoutX="1160.0" layoutY="276.0" mnemonicParsing="false" onAction="#showDessertIngredients" text="Button" />
-      <Button fx:id="showSide" layoutX="1160.0" layoutY="321.0" mnemonicParsing="false" onAction="#showSideIngredients" text="Button" />
-      <Button fx:id="showDrink" layoutX="1160.0" layoutY="366.0" mnemonicParsing="false" onAction="#showDrinkIngredients" text="Button" />
+      <Button fx:id="showEntree" layoutX="1160.0" layoutY="183.0" mnemonicParsing="false" onAction="#showEntreeIngredients" text="Show Ingredients " />
+      <Button fx:id="showMain" layoutX="1160.0" layoutY="228.0" mnemonicParsing="false" onAction="#showMainIngredients" text="Show Ingredients" />
+      <Button fx:id="showDessert" layoutX="1160.0" layoutY="276.0" mnemonicParsing="false" onAction="#showDessertIngredients" text="Show Ingredients" />
+      <Button fx:id="showSide" layoutX="1160.0" layoutY="321.0" mnemonicParsing="false" onAction="#showSideIngredients" text="Show Ingredients" />
+      <Button fx:id="showDrink" layoutX="1160.0" layoutY="366.0" mnemonicParsing="false" onAction="#showDrinkIngredients" text="Show Ingredients" />
    </children>
 </AnchorPane>
