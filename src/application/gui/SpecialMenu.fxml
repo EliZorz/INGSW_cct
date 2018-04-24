@@ -40,7 +40,7 @@
       <Button fx:id="deselect" layoutX="525.0" layoutY="591.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
       <Button fx:id="loadIngr" layoutX="666.0" layoutY="591.0" mnemonicParsing="false" onAction="#loadIngredients" prefHeight="40.0" prefWidth="115.0" text="Load Ingredients" />
       <Button fx:id="deselectElements" layoutX="47.0" layoutY="705.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
-      <Button fx:id="save" layoutX="1027.0" layoutY="453.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Save " />
+      <Button fx:id="save" layoutX="1027.0" layoutY="453.0" mnemonicParsing="false" onAction="#saveSpecialMenu" prefHeight="40.0" prefWidth="115.0" text="Save " />
       <Label fx:id="status" layoutX="930.0" layoutY="521.0" prefHeight="35.0" prefWidth="212.0" text="Status">
          <font>
             <Font size="24.0" />
@@ -60,10 +60,10 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button layoutX="1160.0" layoutY="183.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="1160.0" layoutY="228.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="1160.0" layoutY="276.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="1160.0" layoutY="321.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="1160.0" layoutY="366.0" mnemonicParsing="false" text="Button" />
+      <Button fx:id="showEntree" layoutX="1160.0" layoutY="183.0" mnemonicParsing="false" onAction="#showEntreeIngredients" text="Button" />
+      <Button fx:id="showMain" layoutX="1160.0" layoutY="228.0" mnemonicParsing="false" onAction="#showMainIngredients" text="Button" />
+      <Button fx:id="showDessert" layoutX="1160.0" layoutY="276.0" mnemonicParsing="false" onAction="#showDessertIngredients" text="Button" />
+      <Button fx:id="showSide" layoutX="1160.0" layoutY="321.0" mnemonicParsing="false" onAction="#showSideIngredients" text="Button" />
+      <Button fx:id="showDrink" layoutX="1160.0" layoutY="366.0" mnemonicParsing="false" onAction="#showDrinkIngredients" text="Button" />
    </children>
 </AnchorPane>

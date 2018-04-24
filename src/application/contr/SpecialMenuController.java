@@ -27,6 +27,21 @@ public class SpecialMenuController implements Initializable {
     LocalDate dateSpecialMenu = null;
 
     @FXML
+    public Button showEntree;
+
+    @FXML
+    public Button showMain;
+
+    @FXML
+    public Button showSide;
+
+    @FXML
+    public Button showDrink;
+
+    @FXML
+    public Button showDessert;
+
+    @FXML
     public Button loadDate;
 
     @FXML
@@ -145,11 +160,31 @@ public class SpecialMenuController implements Initializable {
                     controllSearchedDate.setText("Loaded");
                 }
             }else controllSearchedDate.setText("No menu for this date");
-            } catch(RemoteException e){
+        } catch(RemoteException e){
                 e.printStackTrace();
-            }
         }
     }
+
+    @FXML
+    public void showEntreeIngredients(){}
+
+    @FXML
+    public void showSideIngredients(){ }
+
+    @FXML
+    public void showMainIngredients(){}
+
+    @FXML
+    public void showDessertIngredients(){}
+
+    @FXML
+    public void showDrinkIngredients(){}
+
+    @FXML
+    public void saveSpecialMenu(){}
+
+}
+
 
     
 
