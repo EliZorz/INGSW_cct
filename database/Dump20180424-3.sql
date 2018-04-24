@@ -90,10 +90,7 @@ UNLOCK TABLES;
 -- Dumping data for table `bus`
 --
 
-LOCK TABLES `bus` WRITE;
-/*!40000 ALTER TABLE `bus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `bus` ENABLE KEYS */;
-UNLOCK TABLES;
+
 
 --
 -- Table structure for table `fornitore`
