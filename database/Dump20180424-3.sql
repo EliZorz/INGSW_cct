@@ -95,10 +95,9 @@ CREATE TABLE `bus` (
   `Gita_NumeroGita` varchar(8) NOT NULL,
   PRIMARY KEY (`Targa`,`Noleggio_PIVA`,`Gita_NumeroGita`),
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
-  KEY `fk_Bus_Gita1_idx` (`Gita_NumeroGita`),
+ KEY `fk_Bus_Gita1_idx` (`Gita_NumeroGita`),
   KEY `fk_bus_noleggio1_idx` (`Noleggio_PIVA`),
-  CONSTRAINT `fk_bus_gita1` FOREIGN KEY (`Gita_NumeroGita`) REFERENCES `gita` (`NumGita`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bus_noleggio1` FOREIGN KEY (`Noleggio_PIVA`) REFERENCES `noleggio` (`PIVA`) ON DELETE CASCADE ON UPDATE CASCADE
+  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
