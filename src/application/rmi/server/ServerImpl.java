@@ -11,11 +11,12 @@ import javafx.fxml.FXML;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1139,16 +1140,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st;
         ResultSet result = null;
         ArrayList<TripTableDbDetails> trips = new ArrayList<>(7);
-        String queryLoadTrip = "SELECT Luoghi, DataOraPar, DataOraRit, DataOraArr, Alloggio FROM gita";
-        String queryCount = "SELECT COUNT(*) " +
-                "FROM interni_has_gita " +
-                "WHERE Presente_effettivo = 1";
-
+        String queryLoadTrip = "SELECT DataOraPar, DataOraArr, DataOraRit, Alloggio, Partenza, Destinazione, NumGita FROM gita";
 
         try{
             st = this.connHere().prepareStatement(queryLoadTrip);
             result = st.executeQuery(queryLoadTrip);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1166,7 +1162,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                                 result.getString(2),
                                 result.getString(3),
                                 result.getString(4),
-                                result.getString(5));
+                                result.getString(5),
+                                result.getString(6));
                         //get string from db, put into list of ChildGuiData, ready to put it into GUI
                         trips.add(prova);
                     }
@@ -1179,6 +1176,49 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
         return trips;
     }
+
+
+    @Override
+    public boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String staying, LocalDateTime dateArr, String arr) throws RemoteException {
+        PreparedStatement st = null;
+
+        DateTimeFormatter dtfdep = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampDep = Timestamp.valueOf(dateDep.format(dtfdep));
+
+        DateTimeFormatter dtfarr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampArr = Timestamp.valueOf(dateArr.format(dtfarr));
+
+        DateTimeFormatter dtfcom = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampCom = Timestamp.valueOf(dateCom.format(dtfcom));
+
+        System.out.println(dep + "  " + arr + "  " + dateDep +"  "+ dateArr +"  "+ dateCom +"  "+ staying);
+
+        String queryDelete = "DELETE FROM gita " +
+                "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ arr + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate(queryDelete);
+            System.out.println("Deleted.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
+
+
+
+
+
 
 
 

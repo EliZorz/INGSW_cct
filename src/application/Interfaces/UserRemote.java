@@ -10,7 +10,9 @@ import java.sql.Array;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public interface UserRemote extends Remote {
@@ -50,4 +52,5 @@ public interface UserRemote extends Remote {
 
 
     ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;
+    boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String alloggio, LocalDateTime dateArr, String arr) throws RemoteException;
 }

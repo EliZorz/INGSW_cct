@@ -10,8 +10,10 @@ import java.lang.reflect.Array;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class SocketUserManager implements UserRemote {
@@ -272,5 +274,11 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
         return null;
     }
+
+    @Override
+    public boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String alloggio, LocalDateTime dateArr, String arr) throws RemoteException {
+        return false;
+    }
+
 
 }
