@@ -9,9 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 
-import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -25,6 +23,8 @@ public class SpecialMenuController implements Initializable {
     ArrayList<String> selectedIngr = new ArrayList<>();
 
     LocalDate dateSpecialMenu = null;
+
+    String selectedDish = null;
 
     @FXML
     public Button showEntree;
@@ -165,22 +165,60 @@ public class SpecialMenuController implements Initializable {
         }
     }
 
+    public boolean showSelection(String selection) throws RemoteException {
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();
+            ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
+            ingredients.clear();
+            for (IngredientsDbDetails x : ingredientsForThisDish) {
+                IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                ingredients.add(tmp);
+            }
+            tabIngr.setItems(null);
+            tabIngr.setItems(ingredients);
+            return true;
+        }catch (RemoteException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
     @FXML
-    public void showEntreeIngredients(){
+    public void showEntreeIngredients() throws RemoteException {
+
+                selectedDish = entreeTF.getText().toString();
+                showSelection(selectedDish);
+                status.setText("Entree ingredients");
 
     }
 
     @FXML
-    public void showSideIngredients(){ }
+    public void showSideIngredients()throws RemoteException{
+
+        selectedDish = sideTF.getText().toString();
+        if(showSelection(selectedDish))
+            status.setText("Side dish ingredients");
+    }
 
     @FXML
-    public void showMainIngredients(){}
+    public void showMainIngredients() throws RemoteException{
+        selectedDish = mainTF.getText().toString();
+        if(showSelection(selectedDish))
+            status.setText("Main course ingredients");
+    }
 
     @FXML
-    public void showDessertIngredients(){}
+    public void showDessertIngredients()throws RemoteException{
+        selectedDish = dessertTF.getText().toString();
+        if(showSelection(selectedDish))
+            status.setText("Dessert ingredients");
+    }
 
     @FXML
-    public void showDrinkIngredients(){}
+    public void showDrinkIngredients()throws RemoteException{
+        selectedDish = drinkTF.getText().toString();
+        if(showSelection(selectedDish))
+            status.setText("Drink");
+    }
 
     @FXML
     public void saveSpecialMenu(){}

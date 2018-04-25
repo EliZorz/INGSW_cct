@@ -38,7 +38,7 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public ArrayList<String> searchIngredients(String dish) throws RemoteException {
+    public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
         return null;
     }
 

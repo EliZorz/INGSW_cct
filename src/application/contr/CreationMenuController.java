@@ -241,9 +241,6 @@ public class CreationMenuController implements Initializable{
             e.printStackTrace();
         }
 
-        if(selectedMenu != null ){
-
-        }
 
     }
 
@@ -253,11 +250,23 @@ public class CreationMenuController implements Initializable{
     }
 
 
-    public void entreeIngr (ActionEvent event) throws RemoteException {
-        selectedDish = entreeTF.getText().toString();
-        UserRemote u = Singleton.getInstance().methodRmi();
-        ArrayList<String> ingredientsForThisDish = u.searchIngredients(selectedDish);
-        selectedIngr = ingredientsForThisDish;
+    public void entreeIngr () throws RemoteException {
+        try {
+            selectedDish = entreeTF.getText().toString();
+            System.out.println(selectedDish);
+            UserRemote u = Singleton.getInstance().methodRmi();
+            ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selectedDish);
+            ingredients.clear();
+            for (IngredientsDbDetails x : ingredientsForThisDish) {
+                IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                ingredients.add(tmp);
+            }
+            tabIng.setItems(null);
+            tabIng.setItems(ingredients);
+            label1.setText("Entree ingredients");
+        }catch(RemoteException e){
+            e.printStackTrace();
+        }
 
     }
 
