@@ -308,26 +308,26 @@ public class ChildController implements Initializable {
     public void handleAddChild() {
         System.out.println("Adding new child to database...");
 
-        String name = txtName.getText().toString();
-        String surname = txtSurname.getText().toString();
-        String cf = txtCf.getText().toString();
+        String name = txtName.getText();
+        String surname = txtSurname.getText();
+        String cf = txtCf.getText();
         LocalDate birthday = dpBirthday.getValue();
-        String bornWhere = txtBornWhere.getText().toString();
-        String residence = txtResidence.getText().toString();
-        String address = txtAddress.getText().toString();
-        String cap = txtCap.getText().toString();
-        String province = txtProvince.getText().toString();
+        String bornWhere = txtBornWhere.getText();
+        String residence = txtResidence.getText();
+        String address = txtAddress.getText();
+        String cap = txtCap.getText();
+        String province = txtProvince.getText();
 
-        String nameContact = txtNameContact.getText().toString();
-        String surnameContact = txtSurnameContact.getText().toString();
-        String cfContact = txtCfContact.getText().toString();
-        String mailContact = txtMailContact.getText().toString();
-        String telContact = txtTelContact.getText().toString();
+        String nameContact = txtNameContact.getText();
+        String surnameContact = txtSurnameContact.getText();
+        String cfContact = txtCfContact.getText();
+        String mailContact = txtMailContact.getText();
+        String telContact = txtTelContact.getText();
         LocalDate birthdayContact = dpBirthdayContact.getValue();
-        String bornWhereContact = txtBornWhereContact.getText().toString();
-        String addressContact = txtAddressContact.getText().toString();
-        String capContact = txtCapContact.getText().toString();
-        String provinceContact = txtProvince.getText().toString();
+        String bornWhereContact = txtBornWhereContact.getText();
+        String addressContact = txtAddressContact.getText();
+        String capContact = txtCapContact.getText();
+        String provinceContact = txtProvince.getText();
         boolean isDoc = cbDoc.isSelected();
         if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
         else { cbDoc.setSelected(false); }

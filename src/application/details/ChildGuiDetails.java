@@ -109,15 +109,11 @@ public class ChildGuiDetails {
     }
 
     //stringproperty
-    public StringProperty nameProperty(){
-        return name;
-    }
+    public StringProperty nameProperty(){ return name;}
 
     public StringProperty surnameProperty(){ return surname; }
 
-    public StringProperty cfProperty(){
-        return cf;
-    }
+    public StringProperty cfProperty(){return cf;}
 
     public StringProperty bornOnProperty(){
         return bornOn;

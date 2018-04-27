@@ -53,4 +53,10 @@ public interface UserRemote extends Remote {
 
     ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;
     boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String alloggio, LocalDateTime dateArr, String arr) throws RemoteException;
+    ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException;
+    ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException;
+    int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
+                     LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
+                     String departureFrom, String ArrivalTo, String staying) throws RemoteException;
+
 }

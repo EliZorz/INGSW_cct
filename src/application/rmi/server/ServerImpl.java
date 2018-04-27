@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1214,9 +1215,259 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
+    @Override
+    public ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException {
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<ChildTripDbDetails> childDbArrayList = new ArrayList<>();
+
+        String queryLoad = "SELECT Cognome, Nome, CF" +
+                " FROM project.interni INNER JOIN project.bambino" +
+                " ON interni.CF = bambino.Interni_CF";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No child in DB");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        ChildTripDbDetails prova = new ChildTripDbDetails(result.getString(1),
+                                result.getString(2),
+                                result.getString(3));
+                        childDbArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return childDbArrayList;
+    }
 
 
+    @Override
+    public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<StaffTripDbDetails> staffDbArrayList = new ArrayList<>();
 
+        String queryLoad = "SELECT Cognome, Nome, CF" +
+                " FROM project.interni INNER JOIN project.personaleint" +
+                " ON interni.CF = personaleint.Interni_CF";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No staff in DB");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        StaffTripDbDetails prova = new StaffTripDbDetails(result.getString(1),
+                                result.getString(2),
+                                result.getString(3));
+                        staffDbArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return staffDbArrayList;
+    }
+
+
+    @Override
+    public int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
+                            LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
+                            String departureFrom, String arrivalTo, String staying) throws RemoteException {
+        PreparedStatement st = null;
+
+        DateTimeFormatter dtfdep = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampDep = Timestamp.valueOf(localDateTimeDep.format(dtfdep));
+
+        DateTimeFormatter dtfarr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampArr = Timestamp.valueOf(localDateTimeArr.format(dtfarr));
+
+        DateTimeFormatter dtfcom = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampCom = Timestamp.valueOf(localDateTimeCom.format(dtfcom));
+
+        String queryAddTrip = "INSERT INTO gita (Partenza, DataOraPar, DataOraRit, Alloggio, DataOraArr, Destinazione, NumGita)" +
+                " VALUES (?,?,?,?,?,?, ?)";
+        String queryLastNumGita = "SELECT MAX(NumGita) FROM gita";  //to create new NumGita for the added trip (simply ++)
+
+        //add into interni_has_gita (still not true if it is participant or not, leave default = false), as for selectedAllergy
+        //execute query in for cycle, to divide items from arraylist selectedChildren/selectedStaff into string to put every item into database
+        //divide items from arraylist selectedChild/selectedStaff into string to put into database
+        String[] selectedChildArray = selectedChild.toArray(new String[selectedChild.size()]);
+        String[] selectedStaffArray = selectedStaff.toArray(new String[selectedStaff.size()]);
+        String queryAddSelectedParticipants = "INSERT into interni_has_gita (interni_CF, gita_NumGita, Partecipante_effettivo)" +
+                " VALUES (?,?,?)";
+
+        String newNumGita;
+        ArrayList<NumGitaDbDetails> numGitaArrayList = new ArrayList<>(1);
+        ResultSet result = null;
+        int[] totParticipants = new int[2];
+        totParticipants[0] = 0;
+        totParticipants[1] = 0;
+
+
+        try {
+            st = this.connHere().prepareStatement(queryLastNumGita);
+            result = st.executeQuery(queryLastNumGita);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No NumGita in DB");
+                //then new child's CodRif is 1
+                newNumGita = "g1";
+                //first add new NumGita to gita
+                st = this.connHere().prepareStatement(queryAddTrip);
+                st.setString(1, departureFrom);
+                st.setTimestamp(2, timestampDep);
+                st.setTimestamp(3, timestampCom);
+                st.setString(4, staying);
+                st.setTimestamp(5, timestampArr);
+                st.setString(6, arrivalTo);
+                st.setString(7, newNumGita);
+                st.executeUpdate();
+
+                //add interni_CF into interni_has_gita: for every selectedParticipant his CF, newNumGita, Partecipante_effettivo = 0
+                for (String selectedParticipantCf : selectedChildArray){
+                    st = this.connHere().prepareStatement(queryAddSelectedParticipants);
+                    st.setString(1, selectedParticipantCf);
+                    st.setString(2, newNumGita);
+                    st.setString(3, "0");
+                    st.executeUpdate();
+
+                    totParticipants[0] ++;
+                    System.out.println(totParticipants[0]);
+                }
+                for (String selectedParticipantCf : selectedStaffArray){
+                    st = this.connHere().prepareStatement(queryAddSelectedParticipants);
+                    st.setString(1, selectedParticipantCf);
+                    st.setString(2, newNumGita);
+                    st.setString(3, "0");
+                    st.executeUpdate();
+
+                    totParticipants[1] ++;
+                    System.out.println(totParticipants[1]);
+                }
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet to create new NumGita");
+                try {
+                    while (result.next()) {
+                        NumGitaDbDetails lastCod = new NumGitaDbDetails(result.getString(1));
+                        numGitaArrayList.add(lastCod);
+                    }
+
+                    String currentLast = numGitaArrayList.get(0).getNumGita();
+                    newNumGita = "g" + (Integer.parseInt(currentLast.substring(1, currentLast.length()))+1);
+                    System.out.println("new NumGita created");
+                    //first add new NumGita to gita
+                    st = this.connHere().prepareStatement(queryAddTrip);
+                    st.setString(1, departureFrom);
+                    st.setTimestamp(2, timestampDep);
+                    st.setTimestamp(3, timestampCom);
+                    st.setString(4, staying);
+                    st.setTimestamp(5, timestampArr);
+                    st.setString(6, arrivalTo);
+                    st.setString(7, newNumGita);
+                    st.executeUpdate();
+
+                    //then add interni_CF into interni_has_gita
+                    for (String selectedParticipantCf : selectedChildArray){
+                        st = this.connHere().prepareStatement(queryAddSelectedParticipants);
+                        st.setString(1, selectedParticipantCf);
+                        st.setString(2, newNumGita);
+                        st.setString(3, "0");
+                        st.executeUpdate();
+
+                        totParticipants[0] ++;
+                        System.out.println(totParticipants[0]);
+                    }
+                    for (String selectedParticipantCf : selectedStaffArray){
+                        st = this.connHere().prepareStatement(queryAddSelectedParticipants);
+                        st.setString(1, selectedParticipantCf);
+                        st.setString(2, newNumGita);
+                        st.setString(3, "0");
+                        st.executeUpdate();
+
+                        totParticipants[1] ++;
+                        System.out.println(totParticipants[1]);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totParticipants;
+    }
 
 
 

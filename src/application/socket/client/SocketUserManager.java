@@ -280,5 +280,21 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
+    @Override
+    public ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException{
+        return  null;
+    }
+
+    @Override
+    public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
+        return null;
+    }
+
+    @Override
+    public int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
+                            LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
+                            String departureFrom, String ArrivalTo, String staying) throws RemoteException {
+        return null;
+    }
 
 }
