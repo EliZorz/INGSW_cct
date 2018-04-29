@@ -75,7 +75,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        }finally {
             try {
                 if (result != null)
                     result.close();
@@ -398,7 +398,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
       /*  String queryLoad = "SELECT project.ingredient " +
                 "FROM ingredients INNER JOIN fornitore " +
                 "ON ingredients.Fornitore_PIVA = fornitore.PIVA";*/
-      String queryLoad = "SELECT ingredient FROM project.ingredients";
+      String queryLoad = "SELECT ingredient FROM mydb.ingredients";
 
         try{
             st = this.connHere().prepareStatement(queryLoad);
@@ -1095,7 +1095,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
         PreparedStatement st = null;
-        String querySearch = "SELECT ingredients_ingredient FROM mydb.menu_base_has_ingredients WHERE Nome_piatto_base='"+dish+"'";
+        String querySearch = "SELECT ingredients_ingredient FROM mydb.dish_ingredients WHERE Nome_piatto='"+dish+"'";
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
         try{
@@ -1108,6 +1108,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if(!result.next()){
                 System.out.println("Error no ingredients for this dish");
+                return null;
             }else{
                 result.beforeFirst();
                 try{
@@ -1413,6 +1414,21 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
+    public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException{
+        PreparedStatement st = null;
+        ResultSet result = null;
+        //DIPENDE DA COME INTERPRETA INTERNI_HAS_ALLERGIA
+        String queryNumAllergies = "SELECT num_allergici FROM mydb.menu_base WHERE date = '"+date+"'";
+        try{
+            st = this.connHere().prepareStatement(queryNumAllergies);
+            result = st.executeQuery(queryNumAllergies);
+            if(!result.wasNull()) System.out.println("No allergici");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
 //TRIP---------------------------------------------------------------------------------------------
@@ -1483,5 +1499,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return connectionOK;
 
     }
+
 
 }

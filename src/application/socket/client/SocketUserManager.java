@@ -317,6 +317,10 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
+    @Override
+    public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
+        return null;
+    }
 
 
     @Override

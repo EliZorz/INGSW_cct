@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import java.net.URL;
@@ -20,11 +19,15 @@ public class SpecialMenuController implements Initializable {
 
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedIngr = new ArrayList<>();
+    private ObservableList<SpecialGuiDetails> specialInterni = FXCollections.observableArrayList();
 
-    LocalDate dateSpecialMenu = null;
+    private ArrayList<String> selectedIngr = new ArrayList<>();
 
-    String selectedDish = null;
+    private LocalDate dateSpecialMenu = null;
+
+    private String selectedDish = null;
+
+    private ArrayList<String> selectedInterno = new ArrayList<>();
 
     @FXML
     public Button showEntree;
@@ -63,7 +66,7 @@ public class SpecialMenuController implements Initializable {
     public Button deselect;
 
     @FXML
-    public Button loadIngr;
+    public Button saveIngr;
 
     @FXML
     public TableView<IngredientsGuiDetails> tabIngr;
@@ -103,6 +106,9 @@ public class SpecialMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Ingredients.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
         tabIngr.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        colRif.setCellValueFactory(cellData -> cellData.getValue().refCodeProperty());
+        colAller.setCellValueFactory(cellData -> cellData.getValue().allergiesProperty());
+        tabRif.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -110,12 +116,19 @@ public class SpecialMenuController implements Initializable {
             }
         });
 
+        tabRif.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if(newSelection != null){
+                selectedInterno.add(newSelection.getRefCode());
+            }
+        });
+
         tabIngr.getItems().clear();
+        tabRif.getItems().clear();
     }
 
 
     @FXML
-    public void loadIngredients(){
+    private void loadIngredients(){
         try{
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
@@ -163,20 +176,28 @@ public class SpecialMenuController implements Initializable {
         } catch(RemoteException e){
                 e.printStackTrace();
         }
+
+
     }
 
-    public boolean showSelection(String selection) throws RemoteException {
+    private boolean showSelection(String selection) throws RemoteException {
         try {
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
-            for (IngredientsDbDetails x : ingredientsForThisDish) {
-                IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
-                ingredients.add(tmp);
+            if(ingredientsForThisDish != null) {
+                for (IngredientsDbDetails x : ingredientsForThisDish) {
+                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                    ingredients.add(tmp);
+                }
+            }else{
+                loadIngredients(); //load all the ingredients
+                return false;
             }
             tabIngr.setItems(null);
             tabIngr.setItems(ingredients);
             return true;
+
         }catch (RemoteException e){
             e.printStackTrace();
             return false;
@@ -184,44 +205,82 @@ public class SpecialMenuController implements Initializable {
     }
     @FXML
     public void showEntreeIngredients() throws RemoteException {
-
-                selectedDish = entreeTF.getText().toString();
-                showSelection(selectedDish);
-                status.setText("Entree ingredients");
+        selectedDish = entreeTF.getText();
+        if(showSelection(selectedDish))
+            status.setText("Entree ingredients");
+        else status.setText("Select the ingredients for the entree");
 
     }
 
     @FXML
     public void showSideIngredients()throws RemoteException{
-
-        selectedDish = sideTF.getText().toString();
+        selectedDish = sideTF.getText();
         if(showSelection(selectedDish))
             status.setText("Side dish ingredients");
+        else status.setText("Select the ingredients for the side dish");
     }
 
     @FXML
     public void showMainIngredients() throws RemoteException{
-        selectedDish = mainTF.getText().toString();
+        selectedDish = mainTF.getText();
         if(showSelection(selectedDish))
             status.setText("Main course ingredients");
+        else status.setText("Select the ingredients for the main course");
     }
 
     @FXML
     public void showDessertIngredients()throws RemoteException{
-        selectedDish = dessertTF.getText().toString();
+        selectedDish = dessertTF.getText();
         if(showSelection(selectedDish))
             status.setText("Dessert ingredients");
+        else status.setText("Select the ingredients for the dessert");
     }
 
     @FXML
     public void showDrinkIngredients()throws RemoteException{
-        selectedDish = drinkTF.getText().toString();
+        selectedDish = drinkTF.getText();
         if(showSelection(selectedDish))
             status.setText("Drink");
+        else status.setText("Select the ingredients for the drink");
     }
 
     @FXML
     public void saveSpecialMenu(){}
+
+    @FXML
+    public void saveIngredients(){
+        if(status.getText().equals("Select the ingredients for the side dish")){
+            saveCall(selectedIngr,"side");
+        }
+
+    }
+
+    private void saveCall(ArrayList<String> selectedIngr, String what) {
+        UserRemote u = Singleton.getInstance().methodRmi();
+
+    }
+
+    @FXML
+    public void showAllergical(){
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();
+            ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
+            specialInterni.clear();
+
+            if(loadInterni != null){
+                for(SpecialDbDetails x : loadInterni){
+                    SpecialGuiDetails tmp = new SpecialGuiDetails(x);
+                    specialInterni.add(tmp);
+
+                }
+                tabRif.setItems(null);
+                tabRif.setItems(specialInterni);
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 

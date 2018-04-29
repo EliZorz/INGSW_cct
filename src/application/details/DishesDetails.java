@@ -14,14 +14,15 @@ public class DishesDetails {
     private StringProperty drink;
     private StringProperty day;
 
-    public DishesDetails(DishesDbDetails ddd){
-        this.dessert = new SimpleStringProperty(ddd.getDessert());
-        this.drink = new SimpleStringProperty(ddd.getDrink());
-        this.entree = new SimpleStringProperty(ddd.getEntree());
-        this.number = new SimpleStringProperty(ddd.getNumber());
-        this.mainCourse = new SimpleStringProperty(ddd.getMainCourse());
-        this.day = new SimpleStringProperty(ddd.getDay());
-        this.sideDish = new SimpleStringProperty(ddd.getSideDish());
+
+    public DishesDetails(DishesDbDetails dishes){
+        this.dessert = new SimpleStringProperty(dishes.getDessert());
+        this.drink = new SimpleStringProperty(dishes.getDrink());
+        this.entree = new SimpleStringProperty(dishes.getEntree());
+        this.number = new SimpleStringProperty(dishes.getNumber());
+        this.mainCourse = new SimpleStringProperty(dishes.getMainCourse());
+        this.day = new SimpleStringProperty(dishes.getDay());
+        this.sideDish = new SimpleStringProperty(dishes.getSideDish());
 
     }
 
@@ -45,6 +46,12 @@ public class DishesDetails {
         return number.get();
     }
 
+    public String getSideDish() {
+        return sideDish.get();
+    }
+
+    public String getDay() { return day.get(); }
+
     public void setNumber(String number) {
         this.number.set(number);
     }
@@ -67,8 +74,6 @@ public class DishesDetails {
 
     public void setSideDish(String sideDish){this.sideDish.set(sideDish);}
 
-
-
     public StringProperty dessertProperty() {
         return dessert;
     }
@@ -89,18 +94,7 @@ public class DishesDetails {
         return number;
     }
 
-
-    public String getDay() {
-        return day.get();
-    }
-
-    public StringProperty dayProperty() {
-        return day;
-    }
-
-    public String getSideDish() {
-        return sideDish.get();
-    }
+    public StringProperty dayProperty() { return day;}
 
     public StringProperty sideDishProperty(){return sideDish;}
 }

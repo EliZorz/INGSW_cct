@@ -37,11 +37,11 @@
           <TableColumn fx:id="Ingredients" prefWidth="211.0" text="Ingredients" />
         </columns>
       </TableView>
-      <Button fx:id="deselect" layoutX="525.0" layoutY="591.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
-      <Button fx:id="loadIngr" layoutX="666.0" layoutY="591.0" mnemonicParsing="false" onAction="#loadIngredients" prefHeight="40.0" prefWidth="115.0" text="Load Ingredients" />
+      <Button fx:id="deselect" layoutX="546.0" layoutY="583.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="212.0" text="Deselect all" />
+      <Button fx:id="saveIngr" layoutX="547.0" layoutY="642.0" mnemonicParsing="false" onAction="#saveIngredients" prefHeight="40.0" prefWidth="212.0" text="Save ingredients for this plate " AnchorPane.bottomAnchor="118.0" />
       <Button fx:id="deselectElements" layoutX="47.0" layoutY="705.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
       <Button fx:id="save" layoutX="1027.0" layoutY="453.0" mnemonicParsing="false" onAction="#saveSpecialMenu" prefHeight="40.0" prefWidth="115.0" text="Save " />
-      <Label fx:id="status" layoutX="930.0" layoutY="521.0" prefHeight="35.0" prefWidth="212.0" text="Status">
+      <Label fx:id="status" layoutX="930.0" layoutY="521.0" prefHeight="40.0" prefWidth="352.0" text="Status">
          <font>
             <Font size="24.0" />
          </font>
@@ -65,5 +65,6 @@
       <Button fx:id="showDessert" layoutX="1160.0" layoutY="276.0" mnemonicParsing="false" onAction="#showDessertIngredients" text="Show Ingredients" />
       <Button fx:id="showSide" layoutX="1160.0" layoutY="321.0" mnemonicParsing="false" onAction="#showSideIngredients" text="Show Ingredients" />
       <Button fx:id="showDrink" layoutX="1160.0" layoutY="366.0" mnemonicParsing="false" onAction="#showDrinkIngredients" text="Show Ingredients" />
+      <Button fx:id="showWho" layoutX="547.0" layoutY="705.0" mnemonicParsing="false" onAction="#showAllergical" prefHeight="40.0" prefWidth="212.0" text="Show who has allergies for this plate" />
    </children>
 </AnchorPane>

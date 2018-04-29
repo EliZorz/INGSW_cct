@@ -26,8 +26,8 @@ import java.util.ArrayList;
 
 public class MenuController implements Initializable {
 
-   ArrayList<String> selectedMenu = new ArrayList<>();
-   String dateSelected = new String();
+   private ArrayList<String> selectedMenu = new ArrayList<>();
+   private String dateSelected;
 
 
     private ObservableList<DishesDetails> menu = FXCollections.observableArrayList();
