@@ -1422,7 +1422,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             st = this.connHere().prepareStatement(queryNumAllergies);
             result = st.executeQuery(queryNumAllergies);
-            if(!result.wasNull()) System.out.println("No allergici");
+            if(!result.wasNull()) return null;
+            else{
+                String queryAllergies = "SELECT CF, Allergia FROM mydb.interni WHERE Allergia IS NOT NULL";
+                // DA FINIRE PER SELEZIONARE LE PERSONE CHE SONO ALLERGICHE A QUEL MENU 
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
