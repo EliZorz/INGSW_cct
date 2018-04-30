@@ -118,7 +118,7 @@ public class CreationMenuController implements Initializable{
         else if (dessert.trim().isEmpty()) label1.setText("Insert a dessert");
         else if (drink.trim().isEmpty()) label1.setText("Insert a drink");
         else if (day == null) label1.setText("Insert a date");
-        else if (selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
+//        else if (selectedIngr.isEmpty()) label1.setText("Insert an ingredient");
         else if (!controllData(day)) label1.setText("Change the date");
         else if(day.isBefore(LocalDate.now())) label1.setText("This date is already past");
         else {
@@ -189,7 +189,7 @@ public class CreationMenuController implements Initializable{
         tabIng.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tabIng.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
+            if (newSelection != null && selectedIngr!= null) {
                 selectedIngr.add(newSelection.getIngr());
             }
         });
@@ -244,31 +244,46 @@ public class CreationMenuController implements Initializable{
     public void entreeIngr () throws RemoteException {
             selectedDish = entreeTF.getText();
             if (showSelection(selectedDish)) label1.setText("Entree ingredients loaded");
-            else label1.setText("Select the ingredients for the entree");
+            else{
+                label1.setText("Select the ingredients for the entree");
+            }
+
     }
 
     public void mainIngr() throws RemoteException{
         selectedDish = mainTF.getText();
         if(showSelection(selectedDish)) label1.setText("Main course ingredients loaded");
-        else label1.setText("Select the ingredients for the main course");
+        else {
+            label1.setText("Select the ingredients for the main course");
+
+        }
     }
 
     public void dessertIngr() throws RemoteException{
         selectedDish = dessertTF.getText();
         if(showSelection(selectedDish)) label1.setText("Dessert ingredients loaded");
-        else label1.setText("Select the ingredients for the dessert");
+        else{
+            label1.setText("Select the ingredients for the dessert");
+        }
     }
 
     public void drinkIngr() throws RemoteException{
         selectedDish = drinkTF.getText();
         if(showSelection(selectedDish)) label1.setText("Drink ingredients loaded");
-        else label1.setText("Select the ingredients for the drink");
+        else {
+            label1.setText("Select the ingredients for the drink");
+
+        }
     }
 
     public void sideIngr() throws RemoteException{
         selectedDish = sideTF.getText();
         if(showSelection(selectedDish)) label1.setText("Side dish ingredients loaded");
-        else label1.setText("Select the ingredients for the side");
+        else {
+
+            label1.setText("Select the ingredients for the side");
+
+        }
     }
 
 
@@ -302,32 +317,38 @@ public class CreationMenuController implements Initializable{
         if(label1.getText().equals("Select the ingredients for the entree")){
             saveIngredientsForThisDish(entreeTF.getText(),selectedIngr);
             deselect();
+            selectedIngr = null;
             addedIngredients = true;
 
         }
         else if(label1.getText().equals("Select the ingredients for the main course")){
             saveIngredientsForThisDish(mainTF.getText(),selectedIngr);
             deselect();
+            selectedIngr = null;
             addedIngredients = true;
         }
         else if(label1.getText().equals("Select the ingredients for the dessert")){
             saveIngredientsForThisDish(dessertTF.getText(),selectedIngr);
             deselect();
+            selectedIngr = null;
             addedIngredients = true;
         }
         else if(label1.getText().equals("Select the ingredients for the drink")){
             saveIngredientsForThisDish(drinkTF.getText(),selectedIngr);
             deselect();
+            selectedIngr = null;
             addedIngredients = true;
         }
         else if(label1.getText().equals("Select the ingredients for the side")) {
             saveIngredientsForThisDish(sideTF.getText(),selectedIngr);
             deselect();
+            selectedIngr = null;
             addedIngredients = true;
         }
         else {
             label1.getText().equals("This plate already exists");
             deselect();
+            selectedIngr = null;
             addedIngredients = true;
         }
 
