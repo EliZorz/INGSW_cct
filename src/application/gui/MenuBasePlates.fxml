@@ -14,19 +14,19 @@
    <children>
       <TableView fx:id="tableMenu" layoutX="172.0" layoutY="127.0" prefHeight="602.0" prefWidth="620.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="172.0" AnchorPane.rightAnchor="488.0" AnchorPane.topAnchor="127.0">
         <columns>
-          <TableColumn fx:id="colNumber" prefWidth="58.4444580078125" text="Number" />
-          <TableColumn fx:id="colEntree" prefWidth="112.22222900390625" text="Entree" />
-            <TableColumn fx:id="colMainCourse" prefWidth="103.6666259765625" text="Main Course" />
-            <TableColumn fx:id="colDessert" prefWidth="92.0" text="Dessert" />
-            <TableColumn fx:id="colSide" prefWidth="88.333251953125" text="Side dish" />
-            <TableColumn fx:id="colDrink" minWidth="0.0" prefWidth="82.22216796875" text="Drink" />
-            <TableColumn fx:id="colDay" prefWidth="86.0" text="Date" />
+          <TableColumn fx:id="colNumber" prefWidth="58.4444580078125" resizable="false" text="Number" />
+          <TableColumn fx:id="colEntree" prefWidth="112.22222900390625" resizable="false" text="Entree" />
+            <TableColumn fx:id="colMainCourse" prefWidth="103.6666259765625" resizable="false" text="Main Course" />
+            <TableColumn fx:id="colDessert" prefWidth="92.0" resizable="false" text="Dessert" />
+            <TableColumn fx:id="colSide" prefWidth="88.333251953125" resizable="false" text="Side dish" />
+            <TableColumn fx:id="colDrink" minWidth="0.0" prefWidth="82.22216796875" resizable="false" text="Drink" />
+            <TableColumn fx:id="colDay" prefWidth="86.0" resizable="false" text="Date" />
         </columns>
       </TableView>
-      <Button fx:id="handleLoad" layoutX="932.0" layoutY="190.0" mnemonicParsing="false" onAction="#handleLoad" prefHeight="36.0" prefWidth="145.0" text="Load menu" AnchorPane.leftAnchor="932.0" />
-      <Button fx:id="createMenu" layoutX="932.0" layoutY="343.0" mnemonicParsing="false" onAction="#openCreation" prefHeight="36.0" prefWidth="145.0" text="Create a new menu " AnchorPane.leftAnchor="932.0" />
-      <Button fx:id="updateMenu" layoutX="932.0" layoutY="428.0" mnemonicParsing="false" onAction="#update" prefHeight="36.0" prefWidth="145.0" text="Modify the menu" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="deleteMenu" layoutX="932.0" layoutY="513.0" mnemonicParsing="false" onAction="#delete" prefHeight="36.0" prefWidth="145.0" text="Delete the menu " AnchorPane.rightAnchor="203.0" />
+      <Button fx:id="handleLoad" layoutX="932.0" layoutY="190.0" mnemonicParsing="false" onAction="#handleLoad" prefHeight="36.0" prefWidth="145.0" text="Load menu" AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
+      <Button fx:id="createMenu" layoutX="932.0" layoutY="343.0" mnemonicParsing="false" onAction="#openCreation" prefHeight="36.0" prefWidth="145.0" text="Create a new menu " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
+      <Button fx:id="updateMenu" layoutX="932.0" layoutY="428.0" mnemonicParsing="false" onAction="#update" prefHeight="36.0" prefWidth="145.0" text="Modify the menu" AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
+      <Button fx:id="deleteMenu" layoutX="932.0" layoutY="513.0" mnemonicParsing="false" onAction="#delete" prefHeight="36.0" prefWidth="145.0" text="Delete the menu " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
       <Button fx:id="backHome" layoutX="62.0" layoutY="45.0" mnemonicParsing="false" onAction="#esc" prefHeight="36.0" prefWidth="44.0">
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -45,7 +45,7 @@
             <Font name="System Bold" size="35.0" />
          </font>
       </Text>
-      <Button fx:id="deselect" layoutX="932.0" layoutY="264.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="145.0" text="Deselect All " />
+      <Button fx:id="deselect" layoutX="932.0" layoutY="264.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="145.0" text="Deselect All " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
 
    </children>
 </AnchorPane>

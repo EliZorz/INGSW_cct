@@ -285,9 +285,13 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
-
-
     @Override
+    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
+        return false;
+    }
+
+
+
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date,ArrayList<String> selectedIngredients) throws RemoteException {
         String responce = null;
         String when = date.format(DateTimeFormatter.BASIC_ISO_DATE);
@@ -320,6 +324,11 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
         return null;
+    }
+
+    @Override
+    public boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException {
+        return false;
     }
 
 
