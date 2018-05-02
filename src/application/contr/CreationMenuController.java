@@ -26,7 +26,7 @@ public class CreationMenuController implements Initializable{
 
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
 
-    private ArrayList<String> selectedIngr = new ArrayList<>();
+    private ArrayList<String> selectedIngr = null;
 
     static ArrayList<String> selectedMenu = null;
 
@@ -189,12 +189,13 @@ public class CreationMenuController implements Initializable{
         tabIng.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tabIng.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null && selectedIngr!= null) {
+            if (newSelection != null) {
                 selectedIngr.add(newSelection.getIngr());
             }
         });
 
         tabIng.getItems().clear();
+
        if(selectedMenu != null) {
            entreeTF.setText(selectedMenu.get(1));
            numTF.setText(selectedMenu.get(0));
@@ -252,6 +253,7 @@ public class CreationMenuController implements Initializable{
 
     public void mainIngr() throws RemoteException{
         selectedDish = mainTF.getText();
+        selectedIngr = null;
         if(showSelection(selectedDish)) label1.setText("Main course ingredients loaded");
         else {
             label1.setText("Select the ingredients for the main course");
@@ -261,6 +263,7 @@ public class CreationMenuController implements Initializable{
 
     public void dessertIngr() throws RemoteException{
         selectedDish = dessertTF.getText();
+        selectedIngr = null;
         if(showSelection(selectedDish)) label1.setText("Dessert ingredients loaded");
         else{
             label1.setText("Select the ingredients for the dessert");
@@ -269,6 +272,7 @@ public class CreationMenuController implements Initializable{
 
     public void drinkIngr() throws RemoteException{
         selectedDish = drinkTF.getText();
+        selectedIngr = null;
         if(showSelection(selectedDish)) label1.setText("Drink ingredients loaded");
         else {
             label1.setText("Select the ingredients for the drink");
@@ -278,6 +282,7 @@ public class CreationMenuController implements Initializable{
 
     public void sideIngr() throws RemoteException{
         selectedDish = sideTF.getText();
+        selectedIngr = null;
         if(showSelection(selectedDish)) label1.setText("Side dish ingredients loaded");
         else {
 
@@ -357,8 +362,10 @@ public class CreationMenuController implements Initializable{
     private void saveIngredientsForThisDish(String dish, ArrayList<String> selection){
         try{
             UserRemote u = Singleton.getInstance().methodRmi();
-            if(u.saveIngredients(dish, selection))
+            if(u.saveIngredients(dish, selection)) {
+                System.out.println(selection);
                 label1.setText("Success!!!");
+            }
             else
                 label1.setText("There is a problem with this plate");
         }catch(RemoteException e){

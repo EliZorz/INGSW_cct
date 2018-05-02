@@ -1483,9 +1483,19 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 st.setString(2, x);
                 st.executeUpdate();
             }
+            try{
+                if(st != null) {
+                    st.close();
+                }
+                return true;
+            }catch(Exception e){
+                e.printStackTrace();
+                return false; 
+            }
         }catch (SQLException e){
             e.printStackTrace();
-        }finally {
+            return false;
+       /* }finally {
             try {
                 if (st != null) {
                     st.close();
@@ -1494,8 +1504,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
-            }
-        }
+            }*/
+      }
 
 
 
