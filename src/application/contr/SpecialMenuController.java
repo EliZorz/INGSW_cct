@@ -206,15 +206,19 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public void showEntreeIngredients() throws RemoteException {
         selectedDish = entreeTF.getText();
-        if(showSelection(selectedDish))
-            status.setText("Entree ingredients");
-        else status.setText("Select the ingredients for the entree");
+        if(selectedDish.trim().length() == 0) status.setText("Insert an entree");
+        else{
+            if (showSelection(selectedDish))
+                status.setText("Entree ingredients");
+            else status.setText("Select the ingredients for the entree");
+        }
 
     }
 
     @FXML
     public void showSideIngredients()throws RemoteException{
         selectedDish = sideTF.getText();
+        if(selectedDish.trim().length() == 0) status.setText("Insert a side dish");
         if(showSelection(selectedDish))
             status.setText("Side dish ingredients");
         else status.setText("Select the ingredients for the side dish");
@@ -223,6 +227,7 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public void showMainIngredients() throws RemoteException{
         selectedDish = mainTF.getText();
+        if(selectedDish.trim().length() == 0) status.setText("Insert a main course");
         if(showSelection(selectedDish))
             status.setText("Main course ingredients");
         else status.setText("Select the ingredients for the main course");
@@ -231,6 +236,7 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public void showDessertIngredients()throws RemoteException{
         selectedDish = dessertTF.getText();
+        if(selectedDish.trim().length() == 0) status.setText("Insert a dessert");
         if(showSelection(selectedDish))
             status.setText("Dessert ingredients");
         else status.setText("Select the ingredients for the dessert");
@@ -239,6 +245,7 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public void showDrinkIngredients()throws RemoteException{
         selectedDish = drinkTF.getText();
+        if(selectedDish.trim().length() == 0) status.setText("Insert a drink");
         if(showSelection(selectedDish))
             status.setText("Drink");
         else status.setText("Select the ingredients for the drink");
@@ -248,15 +255,21 @@ public class SpecialMenuController implements Initializable {
     public void saveSpecialMenu(){}
 
     @FXML
-    public void saveIngredients(){
+    public void saveIngredients() throws RemoteException {
         if(status.getText().equals("Select the ingredients for the side dish")){
-            saveCall(selectedIngr,"side");
+            saveCall(selectedIngr,sideTF.getText());
         }
 
     }
 
-    private void saveCall(ArrayList<String> selectedIngr, String what) {
-        UserRemote u = Singleton.getInstance().methodRmi();
+    private void saveCall(ArrayList<String> selectedIngr, String what) throws RemoteException {
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();
+            if (u.saveIngredients(what, selectedIngr)) status.setText("Success!! New dish added!");
+            else status.setText("Error with the new dish");
+        }catch (RemoteException e){
+            e.printStackTrace();
+        }
 
     }
 

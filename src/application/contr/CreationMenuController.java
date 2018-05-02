@@ -26,7 +26,7 @@ public class CreationMenuController implements Initializable{
 
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
 
-    private ArrayList<String> selectedIngr = null;
+    public  ArrayList<String> selectedIngr = new ArrayList<>();
 
     static ArrayList<String> selectedMenu = null;
 
