@@ -123,9 +123,8 @@ public class TripPlanController implements Initializable {
 
     @FXML
     public void handleAddTrip() {
-        System.out.println("Adding new child to database...");
+        System.out.println("Adding new trip to database...");
 
-        System.out.println(selectedChild.toString() + selectedStaff.toString());
         LocalDate localDateDep = dpDepTime.getValue();
         LocalDateTime localDateTimeDep = localDateDep.atStartOfDay();
         LocalDate localDateArr = dpArrTime.getValue();
@@ -150,7 +149,7 @@ public class TripPlanController implements Initializable {
         } else if (localDateTimeDep.getDayOfYear() <= today.getDayOfYear()) {
             this.renameLabelStatus("Insert future data.");
         } else {
-            System.out.println("Adding data to database...");
+            System.out.println("Adding...");
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 //in serverImpl create NumGita too (as in add for children)

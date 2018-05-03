@@ -6,14 +6,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class SocketUserManager implements UserRemote {
@@ -294,6 +292,16 @@ public class SocketUserManager implements UserRemote {
     public int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
                             LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
                             String departureFrom, String ArrivalTo, String staying) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         return null;
     }
 

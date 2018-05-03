@@ -1,19 +1,12 @@
 package application.Interfaces;
 
 import application.details.*;
-import javafx.beans.property.StringProperty;
 
-import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.Array;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public interface UserRemote extends Remote {
     boolean funzLog(String usr, String pwd) throws RemoteException; //questa funzione controllerà se username e password sono corretti
@@ -58,5 +51,7 @@ public interface UserRemote extends Remote {
     int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
                      LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
                      String departureFrom, String ArrivalTo, String staying) throws RemoteException;
+    ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
+    ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
 
 }
