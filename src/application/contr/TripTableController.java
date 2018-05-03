@@ -5,6 +5,7 @@ import application.Singleton;
 import application.details.TripTableDbDetails;
 import application.details.TripTableGuiDetails;
 import application.gui.GuiNew;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -62,8 +63,6 @@ public class TripTableController implements Initializable{
         colArrival.setCellValueFactory(cellData->cellData.getValue().arrProperty());
         colArrivalTo.setCellValueFactory(cellData->cellData.getValue().arrToProperty());
 
-        //COME INIZIALIZZO COL_PARTICIPANTS, COL_STAFF???????
-
         tableTrip.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         tableTrip.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -76,7 +75,6 @@ public class TripTableController implements Initializable{
                 selectedTrip.add(newSelection.getArrTo());
             }
         });
-
         tableTrip.getItems().clear();
     }
 
@@ -135,6 +133,7 @@ public class TripTableController implements Initializable{
             boolean deleted = u.deleteTrip(selectedTrip.get(0), localDateTimeDep,localDateTimeCom, selectedTrip.get(3), localDateTimeArr, selectedTrip.get(5));
             if(deleted){
                 this.renameLabel("Deleted.");
+                selectedTrip.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }

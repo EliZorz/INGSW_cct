@@ -380,6 +380,7 @@ public class ChildController implements Initializable {
             boolean deleted = u.deleteChild(oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
+                selectedChild.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -419,6 +420,7 @@ public class ChildController implements Initializable {
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Child edited.");
+                    selectedChild.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -541,7 +543,8 @@ public class ChildController implements Initializable {
                 boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl
 
                 if (isEditOk) {
-                    lblWarning.setText("Congrats! Child edited.");
+                    lblWarning.setText("Congrats! Contact edited.");
+                    selectedContact.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -556,6 +559,7 @@ public class ChildController implements Initializable {
             boolean deleted = u.deleteContact(oldcfContact);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
+                selectedContact.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -604,9 +608,14 @@ public class ChildController implements Initializable {
 
 
     public void handleBackHomepage() {
-        //exit window (the previous window was MenuIniziale.fxml
+        //exit window (the previous window was MenuIniziale.fxml)
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.close();
+        try {
+            new GuiNew("Information");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

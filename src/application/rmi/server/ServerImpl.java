@@ -1192,7 +1192,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         DateTimeFormatter dtfcom = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Timestamp timestampCom = Timestamp.valueOf(dateCom.format(dtfcom));
 
-        System.out.println(dep + "  " + arr + "  " + dateDep +"  "+ dateArr +"  "+ dateCom +"  "+ staying);
+        System.out.println("You selected " + dep + "  " + arr + "  " + dateDep +"  "+ dateArr +"  "+ dateCom +"  "+ staying);
 
         String queryDelete = "DELETE FROM gita " +
                 "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ arr + "';";
@@ -1200,7 +1200,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
-            System.out.println("Deleted.");
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

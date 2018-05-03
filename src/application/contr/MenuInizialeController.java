@@ -26,6 +26,7 @@ public class MenuInizialeController {
 
     @FXML
     void openChildren(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("Children");
     }
 

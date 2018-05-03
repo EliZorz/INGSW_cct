@@ -4,12 +4,15 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.SupplierDbDetails;
 import application.details.SupplierGuiDetails;
+import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -178,7 +181,8 @@ public class SupplierController implements Initializable{
                 boolean isEditOk = u.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isEditOk) {
-                    lblWarning.setText("Congrats! Staff member edited.");
+                    lblWarning.setText("Congrats! Supplier edited.");
+                    selectedSupplier.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -194,6 +198,7 @@ public class SupplierController implements Initializable{
             boolean deleted = u.deleteSupplier(selectedSupplier.get(1));
             if(deleted){
                 this.renameLabel("Deleted.");
+                selectedSupplier.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -206,6 +211,11 @@ public class SupplierController implements Initializable{
     public void handleBackHomepage() {
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.close();
+        try {
+            new GuiNew("Information");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void renameLabel(String st){
