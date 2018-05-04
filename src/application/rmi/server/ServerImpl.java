@@ -1322,12 +1322,15 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.setString(6, drink);
             st.setDate(7, Date.valueOf(date));
             st.executeUpdate();
+
             if(!entree.equals(null))
                 addMenuIngredients(date, entree, searchIngredients(entree));
             if(!sideDish.equals(null))
                 addMenuIngredients(date, sideDish, searchIngredients(sideDish));
             if(!drink.equals(null))
                 addMenuIngredients(date, drink, searchIngredients(drink));
+            if(!dessert.equals(null))
+                addMenuIngredients(date, dessert,searchIngredients(dessert));
             if(!mainCourse.equals(null))
                 addMenuIngredients(date, mainCourse, searchIngredients(mainCourse));
 
