@@ -1190,7 +1190,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
-    public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, ArrayList<String> selectedIngredients, LocalDate oldDate) throws RemoteException{
+    public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day,  LocalDate oldDate) throws RemoteException{
 
         PreparedStatement st = null;
         PreparedStatement stIngr = null;
@@ -1198,44 +1198,25 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryUpdate = "UPDATE mydb.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
 
+        String queryDelete = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"' and dish_ingredients_nome_piatto != '"+entree+"' || dish_ingredients_nome_piatto !='"+side+"'||dish_ingredients_nome_piatto !=' "+dessert+"'||dish_ingredients_nome_piatto != '"+drink+"'|| dish_ingredients_nome_piatto != '"+main+"'";
         ResultSet result = null;
-        ResultSet resultIngr = null;
-        ResultSet resultIngr2 = null;
+        ResultSet result1 = null;
+
 
         try {
-            //add data new child into db
+
             st = this.connHere().prepareStatement(queryUpdate);
             st.executeUpdate();
-
-            ArrayList<IngredientsDbDetails> ingrMenu = loadIngr(oldDate);
-            ArrayList<String> example = new ArrayList<>();
-            for(IngredientsDbDetails x : ingrMenu)
-                example.add(x.getIngr());
-            for(String y : example) {
-                String queryDelete = "DELETE FROM mydb.menu_base_has_ingredients WHERE ingredients_ingredient = '"+y+"' and date = '" + oldDate + "'";
-                System.out.println();
-                stIngr = this.connHere().prepareStatement(queryDelete);
-                stIngr.executeUpdate();
-            }
-
-            for(String x : selectedIngredients){
-               // String queryAddIngr = "UPDATE project.menu_base_has_ingredients SET Ingredients_ingredient ='"+ x+"', date ='"+ day +"' WHERE date= '"+ oldDate+"'";
-
-                String queryAddIngr = "INSERT INTO mydb.menu_base_has_ingredients(Ingredients_ingredient, date) VALUES (?,?)";
-                stIngr2 = this.connHere().prepareStatement(queryAddIngr);
-                stIngr2.setString(1,x);
-                stIngr2.setDate(2,Date.valueOf(day));
-                stIngr2.executeUpdate();
-            }
+            stIngr = this.connHere().prepareStatement(queryDelete);
+            stIngr.executeUpdate();
 
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
             try {
-                if (st != null && stIngr != null && stIngr2 != null) {
+                if (st != null && stIngr != null) {
                     st.close();
                     stIngr.close();
-                    stIngr2.close();
                 }
                 return true;
             } catch (Exception e) {

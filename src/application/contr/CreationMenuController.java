@@ -156,7 +156,7 @@ public class CreationMenuController implements Initializable{
         else if(controllData(day) || day.equals(LocalDate.parse(selectedMenu.get(6)))){
             try{
                 UserRemote u = Singleton.getInstance().methodRmi();
-                boolean updateSuccess = u.updateMenu(num,entree,main,dessert,side,drink,day,selectedIngr,LocalDate.parse(selectedMenu.get(6)));
+                boolean updateSuccess = u.updateMenu(num,entree,main,dessert,side,drink,day,LocalDate.parse(selectedMenu.get(6)));
                 if(updateSuccess) label1.setText("Success!!");
             }catch( RemoteException e){
                 e.printStackTrace();

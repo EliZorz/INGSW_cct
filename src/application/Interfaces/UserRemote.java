@@ -53,7 +53,7 @@ public interface UserRemote extends Remote {
 
     ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException;
 
-    boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, ArrayList<String> selectedIngredients, LocalDate oldDate) throws RemoteException;
+    boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, LocalDate oldDate) throws RemoteException;
 
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
 

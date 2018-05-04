@@ -100,6 +100,7 @@ public class MenuController implements Initializable {
                 selectedMenu.add(newSelection.getDrink());
                 selectedMenu.add(newSelection.getDay());
                 dateSelected = newSelection.getDay();*/
+                selectedMenu = new String[7];
                 selectedMenu[0] = newSelection.getNumber();
                 selectedMenu[1] = newSelection.getEntree();
                 selectedMenu[2] = newSelection.getMainCourse();
