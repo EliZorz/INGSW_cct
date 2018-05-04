@@ -67,6 +67,8 @@ public interface UserRemote extends Remote {
 
     boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException;
 
+    boolean addMenuIngredients(LocalDate date, String name, ArrayList<IngredientsDbDetails> ingredients) throws RemoteException;
+
 
 
     ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;

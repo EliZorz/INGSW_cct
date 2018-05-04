@@ -26,7 +26,8 @@ import java.util.ArrayList;
 
 public class MenuController implements Initializable {
 
-   private ArrayList<String> selectedMenu = new ArrayList<>();
+  // private ArrayList<String> selectedMenu = new ArrayList<>();
+    private String[] selectedMenu = new String[7];
    private String dateSelected;
 
 
@@ -91,13 +92,21 @@ public class MenuController implements Initializable {
         tableMenu.getSelectionModel().setCellSelectionEnabled(false);
         tableMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                selectedMenu.add(newSelection.getNumber());
+                /*selectedMenu.add(newSelection.getNumber());
                 selectedMenu.add(newSelection.getEntree());
                 selectedMenu.add(newSelection.getMainCourse());
                 selectedMenu.add(newSelection.getDessert());
                 selectedMenu.add(newSelection.getSideDish());
                 selectedMenu.add(newSelection.getDrink());
                 selectedMenu.add(newSelection.getDay());
+                dateSelected = newSelection.getDay();*/
+                selectedMenu[0] = newSelection.getNumber();
+                selectedMenu[1] = newSelection.getEntree();
+                selectedMenu[2] = newSelection.getMainCourse();
+                selectedMenu[3] = newSelection.getDessert();
+                selectedMenu[4] = newSelection.getSideDish();
+                selectedMenu[5] = newSelection.getDrink();
+                selectedMenu[6] = newSelection.getDay();
                 dateSelected = newSelection.getDay();
 
             }
@@ -151,6 +160,7 @@ public class MenuController implements Initializable {
     @FXML
     public void deselect(){
         tableMenu.getSelectionModel().clearSelection();
+        selectedMenu = null;
     }
 
     @FXML
@@ -190,8 +200,11 @@ public class MenuController implements Initializable {
 
 
     public void update(ActionEvent event) throws IOException {
-        CreationMenuController.selectedMenu = selectedMenu;
-       new GuiNew("newMenu");
+        if(selectedMenu != null) {
+            newMenuController.selectedMenu = selectedMenu;
+            new GuiNew("newMenu");
+        }
+        else labelStatus.setText("Please select a menu");
     }
 }
 

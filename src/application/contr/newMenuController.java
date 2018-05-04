@@ -28,6 +28,8 @@ public class newMenuController implements Initializable {
 
     private boolean controllIngredients = false;
 
+    public static String[] selectedMenu = null;
+
     @FXML
     public Button backHome;
 
@@ -98,6 +100,17 @@ public class newMenuController implements Initializable {
         });
         
         tabIng.getItems().clear();
+
+        if(selectedMenu != null){
+            numTF.setText(selectedMenu[0]);
+            entreeTF.setText(selectedMenu[1]);
+            mainTF.setText(selectedMenu[2]);
+            dessertTF.setText(selectedMenu[3]);
+            sideTF.setText(selectedMenu[4]);
+            drinkTF.setText(selectedMenu[5]);
+            dayTF.setValue(LocalDate.parse(selectedMenu[6]));
+
+        }
     }
 
 
@@ -306,6 +319,19 @@ public class newMenuController implements Initializable {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+        }
+
+        try{
+            UserRemote u = Singleton.getInstance().methodRmi();
+            boolean result = false;
+            if(entree.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), entree, u.searchIngredients(entree));
+            if(side.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), side, u.searchIngredients(side));
+            if(main.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), main, u.searchIngredients(main));
+            if(drink.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), drink, u.searchIngredients(drink));
+            if(dessert.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), dessert, u.searchIngredients(dessert));
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 

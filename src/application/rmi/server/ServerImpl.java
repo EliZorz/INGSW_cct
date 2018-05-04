@@ -1323,18 +1323,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.setDate(7, Date.valueOf(date));
             st.executeUpdate();
 
-            if(!entree.equals(null))
-                addMenuIngredients(date, entree, searchIngredients(entree));
-            if(!sideDish.equals(null))
-                addMenuIngredients(date, sideDish, searchIngredients(sideDish));
-            if(!drink.equals(null))
-                addMenuIngredients(date, drink, searchIngredients(drink));
-            if(!dessert.equals(null))
-                addMenuIngredients(date, dessert,searchIngredients(dessert));
-            if(!mainCourse.equals(null))
-                addMenuIngredients(date, mainCourse, searchIngredients(mainCourse));
-
-
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
@@ -1350,23 +1338,27 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
         }
     }
+    @Override
+    public boolean addMenuIngredients(LocalDate date, String name, ArrayList<IngredientsDbDetails> ingredients) throws RemoteException {
 
-    private boolean addMenuIngredients(LocalDate date, String name, ArrayList<IngredientsDbDetails> ingredients) throws SQLException {
-        try {
-            PreparedStatement stIngr = null;
-            for (IngredientsDbDetails x : ingredients) {
-                String queryAddIngr = "INSERT INTO mydb.menu_base_has_dish_ingredients(menu_base_date, dish_ingredients_Nome_piatto,dish_ingredients_ingredients)" + "VALUES(?,?,?)";
+        PreparedStatement stIngr = null;
+        for (IngredientsDbDetails x : ingredients) {
+            String queryAddIngr = "INSERT INTO `mydb`.`menu_base_has_dish_ingredients` (`menu_base_date`, `dish_ingredients_Nome_piatto`, `dish_ingredients_ingredients`) VALUES (?,?,?)";
+            try {
                 stIngr = this.connHere().prepareStatement(queryAddIngr);
                 stIngr.setDate(1, Date.valueOf(date));
                 stIngr.setString(2, name);
                 stIngr.setString(3, x.getIngr());
                 stIngr.executeUpdate();
+
+                if (stIngr != null)
+                    stIngr.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            if(stIngr != null )
-                stIngr.close();
             return true;
-        }catch (SQLException e){
-            e.printStackTrace();
+
+
         }
         return false;
     }
