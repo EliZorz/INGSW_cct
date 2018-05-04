@@ -91,7 +91,7 @@ public class CreationMenuController implements Initializable{
     @FXML
     public Button drinkOk;
 
-
+    //FATTO
     @FXML
     public void deselect(){
         tabIng.getSelectionModel().clearSelection();
@@ -183,6 +183,8 @@ public class CreationMenuController implements Initializable{
         ((Node)(event.getSource())).getScene().getWindow().hide();
     }
 
+
+    //FATTO
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         col1.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
@@ -195,7 +197,7 @@ public class CreationMenuController implements Initializable{
         });
 
         tabIng.getItems().clear();
-
+//
        if(selectedMenu != null) {
            entreeTF.setText(selectedMenu.get(1));
            numTF.setText(selectedMenu.get(0));
@@ -211,7 +213,7 @@ public class CreationMenuController implements Initializable{
 
     }
 
-
+    //FATTO
     private void loadIngredients(){
         try{
             UserRemote u = Singleton.getInstance().methodRmi();
@@ -241,7 +243,7 @@ public class CreationMenuController implements Initializable{
     }
 
 
-
+    //FATTO
     public void entreeIngr () throws RemoteException {
             selectedDish = entreeTF.getText();
             if (showSelection(selectedDish)) label1.setText("Entree ingredients loaded");
@@ -291,7 +293,7 @@ public class CreationMenuController implements Initializable{
         }
     }
 
-
+    //FATTO
     private boolean showSelection(String selection) throws RemoteException {
         try {
             UserRemote u = Singleton.getInstance().methodRmi();
@@ -316,7 +318,7 @@ public class CreationMenuController implements Initializable{
         }
     }
 
-
+    //FATTO
     @FXML
     private void saveIngredients(){
         if(label1.getText().equals("Select the ingredients for the entree")){
@@ -358,7 +360,7 @@ public class CreationMenuController implements Initializable{
         }
 
     }
-
+    //FATTO
     private void saveIngredientsForThisDish(String dish, ArrayList<String> selection){
         try{
             UserRemote u = Singleton.getInstance().methodRmi();

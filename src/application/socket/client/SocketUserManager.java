@@ -43,7 +43,7 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public ArrayList<String> loadIngr(LocalDate day) throws RemoteException {
+    public ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException {
         return null;
     }
 

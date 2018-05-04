@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="582.0" prefWidth="814.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CreationMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="582.0" prefWidth="814.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.newMenuController">
    <children>
       <AnchorPane layoutX="30.0" layoutY="30.0" prefHeight="522.0" prefWidth="593.0" style="-fx-border-color: #000080;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0">
          <children>
@@ -46,7 +46,7 @@
       </ImageView>
       <TableView fx:id="tabIng" layoutX="395.0" layoutY="49.0" prefHeight="256.0" prefWidth="200.0">
         <columns>
-          <TableColumn fx:id="col1" prefWidth="199.0" text="Available ingredients" />
+          <TableColumn fx:id="colIngr" prefWidth="199.0" text="Available ingredients" />
         </columns>
       </TableView>
    </children>

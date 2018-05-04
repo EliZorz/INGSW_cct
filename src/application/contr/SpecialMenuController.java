@@ -171,6 +171,7 @@ public class SpecialMenuController implements Initializable {
                     sideTF.setText(loadedMenu.getSideDish());
                     drinkTF.setText(loadedMenu.getDrink());
                     controllSearchedDate.setText("Loaded");
+                   showAllergical();
                 }
             }else controllSearchedDate.setText("No menu for this date");
         } catch(RemoteException e){
@@ -281,6 +282,7 @@ public class SpecialMenuController implements Initializable {
             specialInterni.clear();
 
             if(loadInterni != null){
+                System.out.println(loadInterni);
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);
@@ -289,6 +291,7 @@ public class SpecialMenuController implements Initializable {
                 tabRif.setItems(null);
                 tabRif.setItems(specialInterni);
             }
+            else controllSearchedDate.setText("No allergicals for this menu");
 
         } catch (RemoteException e) {
             e.printStackTrace();

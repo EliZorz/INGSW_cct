@@ -51,7 +51,7 @@ public interface UserRemote extends Remote {
 
     ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException;
 
-    ArrayList<String> loadIngr(LocalDate day) throws RemoteException;
+    ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException;
 
     boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, ArrayList<String> selectedIngredients, LocalDate oldDate) throws RemoteException;
 
@@ -66,6 +66,7 @@ public interface UserRemote extends Remote {
     ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException;
 
     boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException;
+
 
 
     ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;

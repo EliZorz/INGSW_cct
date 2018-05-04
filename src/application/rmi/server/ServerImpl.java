@@ -1143,11 +1143,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
-    public ArrayList<String> loadIngr(LocalDate d) throws RemoteException{
+    public ArrayList<IngredientsDbDetails> loadIngr(LocalDate d) throws RemoteException{
         PreparedStatement st = null;
-        String queryLoad = "SELECT ingredients_ingredient FROM mydb.menu_base_has_ingredients WHERE date ='" + d+"'";
+        String queryLoad = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date ='" + d+"'";
         ResultSet result = null;
-        ArrayList<String> resIngr = new ArrayList<>();
+        ArrayList<IngredientsDbDetails> resIngr = new ArrayList<>();
         try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
@@ -1161,7 +1161,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 result.beforeFirst();
                 try{
                     while(result.next()){
-                        String str = new String(result.getString(1));
+                        IngredientsDbDetails str = new IngredientsDbDetails(result.getString(1));
                         resIngr.add(str);
                     }
                 } catch (SQLException e) {
@@ -1207,8 +1207,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st = this.connHere().prepareStatement(queryUpdate);
             st.executeUpdate();
 
-            ArrayList<String> ingrMenu = loadIngr(oldDate);
-            for(String y : ingrMenu) {
+            ArrayList<IngredientsDbDetails> ingrMenu = loadIngr(oldDate);
+            ArrayList<String> example = new ArrayList<>();
+            for(IngredientsDbDetails x : ingrMenu)
+                example.add(x.getIngr());
+            for(String y : example) {
                 String queryDelete = "DELETE FROM mydb.menu_base_has_ingredients WHERE ingredients_ingredient = '"+y+"' and date = '" + oldDate + "'";
                 System.out.println();
                 stIngr = this.connHere().prepareStatement(queryDelete);
@@ -1301,7 +1304,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
         PreparedStatement st = null;
-        PreparedStatement stIngr = null;
+
 
 
 
@@ -1319,63 +1322,23 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.setString(6, drink);
             st.setDate(7, Date.valueOf(date));
             st.executeUpdate();
-            ArrayList<IngredientsDbDetails> ingredients = searchIngredients(entree);
-            for(IngredientsDbDetails x : ingredients){
-                String queryAddIngr = "INSERT INTO mydb.menu_base_has_dish_ingredients(menu_base_date, dish_ingredients_Nome_piatto,dish_ingredients_ingredients)" + "VALUES(?,?,?)";
-                stIngr = this.connHere().prepareStatement(queryAddIngr);
-                stIngr.setDate(1,Date.valueOf(date));
-                stIngr.setString(2,entree);
-                stIngr.setString(3,x.getIngr());
-                stIngr.executeUpdate();
-            }
-            ingredients = searchIngredients(mainCourse);
-            for(IngredientsDbDetails x : ingredients){
-                String queryAddIngr = "INSERT INTO mydb.menu_base_has_dish_ingredients(menu_base_date, dish_ingredients_Nome_piatto,dish_ingredients_ingredients)" + "VALUES(?,?,?)";
-                stIngr = this.connHere().prepareStatement(queryAddIngr);
-                stIngr.setDate(1,Date.valueOf(date));
-                stIngr.setString(2,mainCourse);
-                stIngr.setString(3,x.getIngr());
-                stIngr.executeUpdate();
-            }
-
-            ingredients = searchIngredients(dessert);
-            for(IngredientsDbDetails x : ingredients){
-                String queryAddIngr = "INSERT INTO mydb.menu_base_has_dish_ingredients(menu_base_date, dish_ingredients_Nome_piatto,dish_ingredients_ingredients)" + "VALUES(?,?,?)";
-                stIngr = this.connHere().prepareStatement(queryAddIngr);
-                stIngr.setDate(1,Date.valueOf(date));
-                stIngr.setString(2,dessert);
-                stIngr.setString(3,x.getIngr());
-                stIngr.executeUpdate();
-            }
-
-            ingredients = searchIngredients(sideDish);
-            for(IngredientsDbDetails x : ingredients){
-                String queryAddIngr = "INSERT INTO mydb.menu_base_has_dish_ingredients(menu_base_date, dish_ingredients_Nome_piatto,dish_ingredients_ingredients)" + "VALUES(?,?,?)";
-                stIngr = this.connHere().prepareStatement(queryAddIngr);
-                stIngr.setDate(1,Date.valueOf(date));
-                stIngr.setString(2,sideDish);
-                stIngr.setString(3,x.getIngr());
-                stIngr.executeUpdate();
-            }
-
-            ingredients = searchIngredients(drink);
-            for(IngredientsDbDetails x : ingredients){
-                String queryAddIngr = "INSERT INTO mydb.menu_base_has_dish_ingredients(menu_base_date, dish_ingredients_Nome_piatto,dish_ingredients_ingredients)" + "VALUES(?,?,?)";
-                stIngr = this.connHere().prepareStatement(queryAddIngr);
-                stIngr.setDate(1,Date.valueOf(date));
-                stIngr.setString(2,drink);
-                stIngr.setString(3,x.getIngr());
-                stIngr.executeUpdate();
-            }
+            if(!entree.equals(null))
+                addMenuIngredients(date, entree, searchIngredients(entree));
+            if(!sideDish.equals(null))
+                addMenuIngredients(date, sideDish, searchIngredients(sideDish));
+            if(!drink.equals(null))
+                addMenuIngredients(date, drink, searchIngredients(drink));
+            if(!mainCourse.equals(null))
+                addMenuIngredients(date, mainCourse, searchIngredients(mainCourse));
 
 
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
             try {
-                if (st != null && stIngr != null) {
+                if (st != null ) {
                     st.close();
-                    stIngr.close();
+
                 }
                 return true;
             } catch (Exception e) {
@@ -1383,10 +1346,26 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 return false;
             }
         }
+    }
 
-
-
-
+    private boolean addMenuIngredients(LocalDate date, String name, ArrayList<IngredientsDbDetails> ingredients) throws SQLException {
+        try {
+            PreparedStatement stIngr = null;
+            for (IngredientsDbDetails x : ingredients) {
+                String queryAddIngr = "INSERT INTO mydb.menu_base_has_dish_ingredients(menu_base_date, dish_ingredients_Nome_piatto,dish_ingredients_ingredients)" + "VALUES(?,?,?)";
+                stIngr = this.connHere().prepareStatement(queryAddIngr);
+                stIngr.setDate(1, Date.valueOf(date));
+                stIngr.setString(2, name);
+                stIngr.setString(3, x.getIngr());
+                stIngr.executeUpdate();
+            }
+            if(stIngr != null )
+                stIngr.close();
+            return true;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -1457,15 +1436,35 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException{
         PreparedStatement st = null;
         ResultSet result = null;
+        ArrayList<IngredientsDbDetails> ingredients = null;
+        ArrayList<SpecialDbDetails> interni = new ArrayList<>();
         //DIPENDE DA COME INTERPRETA INTERNI_HAS_ALLERGIA
-        String queryNumAllergies = "SELECT num_allergici FROM mydb.menu_base WHERE date = '"+date+"'";
+         String queryAllergies = "SELECT has_allergia, interni_CF FROM mydb.interno_has_allergia WHERE has_allergia IS NOT NULL";
         try{
-            st = this.connHere().prepareStatement(queryNumAllergies);
-            result = st.executeQuery(queryNumAllergies);
-            if(!result.wasNull()) return null;
+            st = this.connHere().prepareStatement(queryAllergies);
+            result = st.executeQuery(queryAllergies);
+            if(!result.next()) return null;
             else{
-                String queryAllergies = "SELECT CF, Allergia FROM mydb.interni WHERE Allergia IS NOT NULL";
-                // DA FINIRE PER SELEZIONARE LE PERSONE CHE SONO ALLERGICHE A QUEL MENU
+                result.beforeFirst();
+                try{
+                    while(result.next()){
+                        SpecialDbDetails example = null;
+                        System.out.println(result.getString(1));
+                        example = new SpecialDbDetails(result.getString(2),result.getString(1));
+                        ingredients = loadIngr(date);
+                        for(IngredientsDbDetails x : ingredients){
+                            if(example.getAllergies().contains(x.getIngr()))
+                                interni.add(example);
+                        }
+                    }
+                    return interni;
+
+
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+                return interni;
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
