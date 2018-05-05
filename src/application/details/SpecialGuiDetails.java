@@ -3,24 +3,29 @@ package application.details;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.ArrayList;
+
 public class SpecialGuiDetails {
-    private StringProperty refCode;
-    private StringProperty allergies;
+    private StringProperty CF;
+    private StringProperty allergie;
 
     public SpecialGuiDetails(SpecialDbDetails special){
-        this.refCode = new SimpleStringProperty(special.getRefCode());
-        this.allergies = new SimpleStringProperty(special.getAllergies());
+        this.CF = new SimpleStringProperty(special.getCF());
+        this.allergie = new SimpleStringProperty(special.getAllergie());
+
     }
 
-    public String getRefCode(){return refCode.get();}
+    public String getCF(){return CF.get();}
 
-    public String getAllergies(){return allergies.get();}
+    public String getAllergie() {
+        return allergie.get();
+    }
 
-    public void setRefCode(String refCode){this.refCode.set(refCode);}
+    public StringProperty CFProperty() {
+        return CF;
+    }
 
-    public void setAllergies(String allergies){this.allergies.set(allergies);}
-
-    public StringProperty allergiesProperty() { return allergies; }
-
-    public StringProperty refCodeProperty() { return refCode; }
+    public StringProperty allergieProperty(){
+        return allergie;
+    }
 }

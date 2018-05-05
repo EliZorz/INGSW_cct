@@ -1409,45 +1409,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
-    public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException{
-        PreparedStatement st = null;
-        ResultSet result = null;
-        ArrayList<IngredientsDbDetails> ingredients = null;
-        ArrayList<SpecialDbDetails> interni = new ArrayList<>();
-        //DIPENDE DA COME INTERPRETA INTERNI_HAS_ALLERGIA
-         String queryAllergies = "SELECT has_allergia, interni_CF FROM mydb.interno_has_allergia WHERE has_allergia IS NOT NULL";
-        try{
-            st = this.connHere().prepareStatement(queryAllergies);
-            result = st.executeQuery(queryAllergies);
-            if(!result.next()) return null;
-            else{
-                result.beforeFirst();
-                try{
-                    while(result.next()){
-                        SpecialDbDetails example = null;
-                        System.out.println(result.getString(1));
-                        example = new SpecialDbDetails(result.getString(2),result.getString(1));
-                        ingredients = loadIngr(date);
-                        for(IngredientsDbDetails x : ingredients){
-                            if(example.getAllergies().contains(x.getIngr()))
-                                interni.add(example);
-                        }
-                    }
-                    return interni;
-
-
-                }catch (SQLException e){
-                    e.printStackTrace();
-                }
-                return interni;
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException{
         PreparedStatement st = null;
         try {
@@ -1484,6 +1445,40 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
 
+    }
+
+    public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
+        PreparedStatement st;
+        ResultSet result = null;
+        ArrayList<SpecialDbDetails> special = new ArrayList<>();
+        String queryLoad = "SELECT CF, Allergie FROM mydb.interni";
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No interni in db");
+            }else{
+                result.beforeFirst();
+                try{
+                    while(result.next()){
+                        SpecialDbDetails example = null;
+                        example = new SpecialDbDetails(result.getString(1),result.getString(2));
+                        special.add(example);
+                    }
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return special;
     }
 
 
@@ -1534,6 +1529,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
         return trips;
     }
+
+
+
 
 
 

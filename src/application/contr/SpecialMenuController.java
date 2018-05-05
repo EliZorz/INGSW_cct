@@ -5,12 +5,15 @@ import application.Singleton;
 import application.details.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -106,19 +109,12 @@ public class SpecialMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Ingredients.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
         tabIngr.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        colRif.setCellValueFactory(cellData -> cellData.getValue().refCodeProperty());
-        colAller.setCellValueFactory(cellData -> cellData.getValue().allergiesProperty());
-        tabRif.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        //tabRif.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedIngr.add(newSelection.getIngr());
-            }
-        });
-
-        tabRif.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if(newSelection != null){
-                selectedInterno.add(newSelection.getRefCode());
             }
         });
 
@@ -147,10 +143,6 @@ public class SpecialMenuController implements Initializable {
     }
 
 
-    @FXML
-    public void exit() { //DA MODIFICARE PERCHé NON ACCETTA ACTIONEVENT
-        //((Node)(event.getSource())).getScene().getWindow().hide();
-    }
 
     @FXML
     public void searchMenuDate(){
@@ -171,7 +163,6 @@ public class SpecialMenuController implements Initializable {
                     sideTF.setText(loadedMenu.getSideDish());
                     drinkTF.setText(loadedMenu.getDrink());
                     controllSearchedDate.setText("Loaded");
-                   showAllergical();
                 }
             }else controllSearchedDate.setText("No menu for this date");
         } catch(RemoteException e){
@@ -281,8 +272,7 @@ public class SpecialMenuController implements Initializable {
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
-            if(loadInterni != null){
-                System.out.println(loadInterni);
+           if(specialInterni != null){
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);
@@ -296,8 +286,12 @@ public class SpecialMenuController implements Initializable {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+
     }
 
+    public void exit(ActionEvent event) {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+    }
 }
 
 

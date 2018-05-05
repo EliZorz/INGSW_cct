@@ -1,30 +1,28 @@
 package application.details;
 
-public class SpecialDbDetails {
 
-    private String refCode;
-    private String allergies;
+import java.io.Serializable;
 
-    public SpecialDbDetails(SpecialGuiDetails special){
-        this.allergies = special.getAllergies();
-        this.refCode = special.getRefCode();
-    }
+public class SpecialDbDetails implements Serializable {
 
-    public SpecialDbDetails(String refCode,String allergies){
-        this.refCode = refCode;
-        this.allergies = allergies;
-    }
+   private String CF;
+   private String allergie;
 
-    public String getRefCode(){
-        return getRefCode();
-    }
+   public SpecialDbDetails(String CF, String allergie){
+       this.CF = CF;
+       this.allergie = allergie;
+   }
 
-    public String getAllergies() {
-        return allergies;
-    }
+   public SpecialDbDetails(SpecialGuiDetails special){
+       this.CF = special.getCF();
+       this.allergie = special.getAllergie();
+   }
 
-    public void setRefCode(String refCode){this.refCode = refCode;}
+   public String getCF(){return CF; }
 
-    public void setAllergies(String allergies){this.allergies = allergies;}
+   public String getAllergie(){return allergie;}
 
+   public void setCF(String CF){this.CF = CF;}
+
+   public void setAllergie(String allergie){this.allergie = allergie;}
 }
