@@ -143,11 +143,13 @@ public class TripPlanController implements Initializable {
                 localDateTimeArr.toString().trim().isEmpty() || localDateTimeDep.toString().trim().isEmpty() ||
                 localDateTimeCom.toString().trim().isEmpty()){
             this.renameLabelStatus("Insert data.");
+        } else if (selectedChild == null || selectedChild == null){
+            this.renameLabelStatus("Add at least one child AND one staff member.");
         } else if (localDateTimeDep.getDayOfYear() > localDateArr.getDayOfYear() ||
                 localDateArr.getDayOfYear() > localDateCom.getDayOfYear()){
-            this.renameLabelStatus("Insert correct data.");
+            this.renameLabelStatus("Insert consequential time.");
         } else if (localDateTimeDep.getDayOfYear() <= today.getDayOfYear()) {
-            this.renameLabelStatus("Insert future data.");
+            this.renameLabelStatus("Insert future time.");
         } else {
             System.out.println("Adding...");
             try {
@@ -219,6 +221,27 @@ public class TripPlanController implements Initializable {
             e.printStackTrace();
         }
     }
+
+
+    public void handleDeselect() {
+        tableChildren.getSelectionModel().clearSelection();
+        tableStaff.getSelectionModel().clearSelection();
+
+        dpDepTime.setValue(LocalDate.now());
+        dpArrTime.setValue(LocalDate.now());
+        dpComTime.setValue(LocalDate.now());
+        txtArrTo.clear();
+        txtDepFrom.clear();
+        txtStaying.clear();
+        
+        this.renameLabelStatus("Status");
+        this.renameLabelTotChildren(0);
+        this.renameLabelTotStaff(0);
+        this.renameLabelChildren("Deselected");
+        this.renameLabelStaff("Deselected");
+    }
+
+
 
     public void renameLabelChildren(String st){lblStatusChildren.setText(st);}
 

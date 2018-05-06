@@ -1472,7 +1472,113 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
-        return null;
+        //load children related to the selected trip
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultChildren = null;
+
+        System.out.println(selectedDep + ", "+ selectedDepFrom + ", " + selectedAccomodation + ", " + selectedArr + ", " + selectedArrTo + ", " + selectedCom);
+
+        ArrayList<ChildSelectedTripDbDetails> childDbArrayList = new ArrayList<>(3);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        //convert localtimedate string to timestamp
+        Timestamp timestampDep = Timestamp.valueOf(selectedDep);
+        Timestamp timestampArr = Timestamp.valueOf(selectedArr);
+        Timestamp timestampCom = Timestamp.valueOf(selectedCom);
+
+        String queryFindNumGita = "SELECT MAX(NumGita)" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryLoadChildrenParticipant = "SELECT Cognome, Nome, CF" +
+                " FROM interni AS I INNER JOIN" +
+                " bambino AS B ON (I.CF = B.Interni_CF) INNER JOIN" +
+                " interni_has_gita AS IG ON (B.Interni_CF = IG.Interni_CF AND IG.gita_NumGita = '" + numGita + "');";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadChildrenParticipant);
+                resultChildren = st.executeQuery(queryLoadChildrenParticipant);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultChildren.next() ) {
+                System.out.println("No child in DB");
+            } else {
+                resultChildren.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultChildren.next()) {
+                        ChildSelectedTripDbDetails prova = new ChildSelectedTripDbDetails(resultChildren.getString(1),
+                                resultChildren.getString(2),
+                                resultChildren.getString(3));
+                        childDbArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultChildren != null)
+                    resultChildren.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return childDbArrayList;
     }
 
     @Override
@@ -1587,6 +1693,176 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
+    @Override
+    public ArrayList<CodRifChildDbDetails> findNotAvailableStaff(String selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException{
+        PreparedStatement st;
+        ResultSet resultStaff = null;
+        ResultSet resultOverlap = null;
+        ArrayList<CodRifChildDbDetails> staffNotAvailableArrayList = new ArrayList<>();
+
+        //seleziono CF di chi ha Partecipante_effettivo = 1
+        // NELLE GITE PER PERIODI SOVRAPPOSTI A QUELLO DATO
+        // ed è stato selezionato per la gita corrente
+        // -> se ! resultStaff.next() NON posso aggiungere quegli elementi
+
+        String queryFindIfOverlap = "SELECT G1.NumGita" +
+                " FROM gita G1, gita G2" +
+                " WHERE G2.DataOraPar BETWEEN G1.DataOraPar AND G1.DataOraRit" +
+                    " OR G2.DataOraRit BETWEEN G1.DataOraPar AND G1.DataOraRit" +
+                    " AND G1.NumGita < G2.NumGita" +
+                " AND G1.DataOraPar = '" + selectedTripDep + "' AND G1.DataOraRit = '" + selectedTripCom + "'" +
+                " ORDER BY G1.NumGita";
+        String queryFindNotAvailableStaff = "SELECT IG.interni_CF" +
+                " FROM interni_has_gita AS IG" +
+                " WHERE IG.Partecipante_effettivo = 1" +
+                " AND IG.Interni_CF = '" + selectedStaffCf + "';";
+
+
+        try{
+            st = this.connHere().prepareStatement(queryFindIfOverlap);
+            resultOverlap = st.executeQuery(queryFindIfOverlap);
+            System.out.println("Found any overlapping periods?");
+        } catch(SQLException se){
+            se.printStackTrace();
+        }
+        try{
+            if( !resultOverlap.next()) {  //se non ho gite sovrapposte a quella selezionata
+                //OK
+                System.out.println("The selected staff members are available.");
+                return null;
+
+            } else {    //se ho gite sovrapposte alla selezionata
+                System.out.println("Found overlapping periods.");
+                try{
+                    st = this.connHere().prepareStatement(queryFindNotAvailableStaff);
+                    resultStaff = st.executeQuery(queryFindNotAvailableStaff);
+                } catch(SQLException se){
+                    se.printStackTrace();
+                }
+                try{
+                    if(!resultStaff.next()){ //MA la persona selezionata NON partecipa effettivamente alle altre gite
+                        //OK
+                        System.out.println("The selected staff members are available.");
+                        return null;
+                    } else { //SE LA PERSONA SELEZIONATA PARTECIPA ANCHE A ALTRE GITE -> EVIDENZIO
+                        resultStaff.beforeFirst();
+                        System.out.println("Processing ResultSet to find out who's not available.");
+                        try {
+                            while (resultStaff.next()) {
+                                CodRifChildDbDetails prova = new CodRifChildDbDetails(resultStaff.getString(1));
+                                staffNotAvailableArrayList.add(prova);
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return staffNotAvailableArrayList;
+    }
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> findNotAvailableChild(String selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException{
+        PreparedStatement st;
+        ResultSet resultChild = null;
+        ResultSet resultOverlap = null;
+        ArrayList<CodRifChildDbDetails> childNotAvailableArrayList = new ArrayList<>();
+
+        String queryFindIfOverlap = "SELECT G1.NumGita" +
+                " FROM gita G1 INNER JOIN gita G2 ON (G1.NumGita = G2.NumGita)" +
+                " WHERE G2.DataOraPar BETWEEN G1.DataOraPar AND G1.DataOraRit" +
+                " OR G2.DataOraRit BETWEEN G1.DataOraPar AND G1.DataOraRit" +
+                " AND G1.NumGita < G2.NumGita" +
+                " AND G1.DataOraPar = '" + selectedTripDep + "' AND G1.DataOraRit = '" + selectedTripCom + "'" +
+                " ORDER BY G1.NumGita";
+        String queryFindNotAvailableChild = "SELECT IG.interni_CF" +
+                " FROM interni_has_gita AS IG" +
+                " WHERE IG.Partecipante_effettivo = 1" +
+                " AND IG.Interni_CF = '" + selectedChildCf + "';";
+
+
+        try{
+            st = this.connHere().prepareStatement(queryFindIfOverlap);
+            resultOverlap = st.executeQuery(queryFindIfOverlap);
+            System.out.println("Found any overlapping periods?");
+        } catch(SQLException se){
+            se.printStackTrace();
+        }
+        try{
+            if( !resultOverlap.next()) {  //se non ho gite sovrapposte a quella selezionata
+                //OK
+                System.out.println("The selected children are available.");
+                return null;
+
+            } else {    //se ho gite sovrapposte alla selezionata
+                System.out.println("Found overlapping periods.");
+                try{
+                    st = this.connHere().prepareStatement(queryFindNotAvailableChild);
+                    resultChild = st.executeQuery(queryFindNotAvailableChild);
+                } catch(SQLException se){
+                    se.printStackTrace();
+                }
+                try{
+                    if(!resultChild.next()){ //MA la persona selezionata NON partecipa effettivamente alle altre gite
+                        //OK
+                        System.out.println("The selected staff members are available.");
+                        return null;
+                    } else { //SE LA PERSONA SELEZIONATA PARTECIPA ANCHE A ALTRE GITE -> EVIDENZIO
+                        resultChild.beforeFirst();
+                        System.out.println("Processing ResultSet to find out who's not available.");
+                        try {
+                            while (resultChild.next()) {
+                                CodRifChildDbDetails prova = new CodRifChildDbDetails(resultChild.getString(1));
+                                childNotAvailableArrayList.add(prova);
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return childNotAvailableArrayList;
+    }
+
+
+    @Override
+    public int[] doActualParticipants (String selectedChildCf, String selectedStaffCf) throws RemoteException {
+        PreparedStatement st;
+        int[] totParticipants = new int[2];
+        totParticipants[0] = 0;
+        totParticipants[1] = 0;
+
+        String queryMakeActualChild = "UPDATE interni_has_gita" +
+                " SET Partecipante_effettivo = '1'" +
+                " WHERE interni_CF = '" + selectedChildCf + "';";
+        String queryMakeActualStaff = "UPDATE interni_has_gita" +
+                " SET Partecipante_effettivo = '1'" +
+                " WHERE interni_CF = '" + selectedStaffCf + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryMakeActualStaff);
+            totParticipants[0] = st.executeUpdate();
+
+            st = this.connHere().prepareStatement(queryMakeActualChild);
+            totParticipants[1] = st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totParticipants;
+    }
 
 
 //USEFUL EVERYWHERE------------------------------------------------------------------------------
