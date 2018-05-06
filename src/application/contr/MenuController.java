@@ -110,8 +110,7 @@ public class MenuController implements Initializable {
                 selectedMenu[6] = newSelection.getDay();
                 dateSelected = newSelection.getDay();
 
-            }
-                }
+            }}
         );
         tableMenu.getItems().clear();
     }

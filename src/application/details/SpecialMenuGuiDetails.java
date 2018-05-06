@@ -1,5 +1,6 @@
 package application.details;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class SpecialMenuGuiDetails {
@@ -14,6 +15,14 @@ public class SpecialMenuGuiDetails {
     private StringProperty allergies;
 
     public SpecialMenuGuiDetails(SpecialMenuDbDetails special){
+        this.date = new SimpleStringProperty(special.getDate());
+        this.allergies = new SimpleStringProperty(special.getAllergies());
+        this.entree = new SimpleStringProperty(special.getEntree());
+        this.mainCourse = new SimpleStringProperty(special.getMain());
+        this.sideDish = new SimpleStringProperty(special.getSide());
+        this.dessert = new SimpleStringProperty(special.getDessert());
+        this.drink = new SimpleStringProperty(special.getDrink());
+        this.FC = new SimpleStringProperty(special.getFC());
 
     }
 

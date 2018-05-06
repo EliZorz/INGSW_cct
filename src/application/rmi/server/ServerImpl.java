@@ -1482,8 +1482,95 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
+    @Override
+    public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException{
+        PreparedStatement st;
+        ResultSet result = null;
+        ArrayList<SpecialMenuDbDetails> dishes = new ArrayList<>(4);
 
-//TRIP---------------------------------------------------------------------------------------------
+        String queryLoad1 = "SELECT * FROM mydb.menu_special";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad1);
+            result = st.executeQuery(queryLoad1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try{
+            System.out.println("ok");
+            if( !result.next() ) {
+                System.out.println("No menu in Db");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        SpecialMenuDbDetails prova  = null;
+                        prova = new SpecialMenuDbDetails(result.getString(6),result.getString(1),
+                                result.getString(4),
+                                result.getString(3),
+                                result.getString(5),result.getString(2),result.getString(7), result.getString(8));
+
+
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        dishes.add(prova);
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return dishes;
+
+    }
+
+
+
+    public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException{
+        PreparedStatement st = null;
+
+        String queryDelete = "DELETE FROM mydb.menu_special WHERE date = '" + date + "'and CF ='"+FC+"' and Allergie = '"+ allergies+"'";
+
+       // String queryDeleteIngredients = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
+
+        try{
+            st = this.connHere().prepareStatement(queryDelete);
+           // st.executeUpdate(queryDeleteIngredients);
+            st.executeUpdate(queryDelete);
+            System.out.println("Menu deleted.");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null){
+                    st.close();
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+
+
+
+    //TRIP---------------------------------------------------------------------------------------------
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
         PreparedStatement st;
