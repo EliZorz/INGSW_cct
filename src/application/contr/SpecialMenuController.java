@@ -24,7 +24,7 @@ public class SpecialMenuController implements Initializable {
 
     private ObservableList<SpecialGuiDetails> specialInterni = FXCollections.observableArrayList();
 
-    private ArrayList<String> selectedIngr = new ArrayList<>();
+    public ArrayList<String> selectedIngr = new ArrayList<>();
 
     private LocalDate dateSpecialMenu = null;
 
@@ -192,7 +192,7 @@ public class SpecialMenuController implements Initializable {
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
                     ingredients.add(tmp);
                 }
-                
+
             }else{
                 loadIngredients(); //load all the ingredients
                 return false;
@@ -335,6 +335,61 @@ public class SpecialMenuController implements Initializable {
 
     public void exit(ActionEvent event) {
         ((Node)(event.getSource())).getScene().getWindow().hide();
+    }
+
+
+    private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
+        try{
+            UserRemote u = Singleton.getInstance().methodRmi();
+            if(u.saveIngredients(dishName, ingredients)){
+                status.setText("Success!!");
+                selectedIngr = new ArrayList<>();
+            }else{
+                status.setText("There is a problem with this dish");
+            }
+        }catch(RemoteException e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void saveIngredients(ActionEvent event) {
+        if(status.getText().equals("Select the ingredients for the entree")){
+            saveIngredientsForThisDish(entreeTF.getText(),selectedIngr);
+            deselect();
+            selectedIngr = new ArrayList<>();
+
+        }
+        else if(status.getText().equals("Select the ingredients for the main course")){
+            saveIngredientsForThisDish(mainTF.getText(),selectedIngr);
+            deselect();
+            selectedIngr= new ArrayList<>();
+        }
+        else if(status.getText().equals("Select the ingredients for the dessert")){
+            saveIngredientsForThisDish(dessertTF.getText(),selectedIngr);
+            deselect();
+            selectedIngr = new ArrayList<>();
+        }
+        else if(status.getText().equals("Select the ingredients for the drink")){
+            saveIngredientsForThisDish(drinkTF.getText(),selectedIngr);
+            deselect();
+            selectedIngr = new ArrayList<>();
+        }
+        else if(status.getText().equals("Select the ingredients for the side")) {
+            saveIngredientsForThisDish(sideTF.getText(),selectedIngr);
+            deselect();
+            selectedIngr = new ArrayList<>();
+        }
+        else {
+            status.getText().equals("This plate already exists");
+            deselect();
+            selectedIngr = new ArrayList<>();
+        }
+    }
+
+    public void deselect() {
+        tabIngr.getSelectionModel().clearSelection();
+        selectedIngr = new ArrayList<>();
     }
 
 
