@@ -112,7 +112,12 @@ public class SpecialMenuLoadController implements Initializable{
         new GuiNew("SpecialMenu");
     }
 
-    public void updateMenu(ActionEvent event) {
+    public void updateMenu(ActionEvent event) throws IOException {
+        if(selectedMenu != null) {
+            SpecialMenuController.selectedMenu = selectedMenu;
+            new GuiNew("SpecialMenu");
+        }
+        else labelStatus.setText("Please select a menu");
     }
 
 

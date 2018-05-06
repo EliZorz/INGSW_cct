@@ -34,6 +34,8 @@ public class SpecialMenuController implements Initializable {
 
     private boolean correctDate = false;
 
+    public static String[] selectedMenu = null;
+
     @FXML
     public Button showEntree;
 
@@ -122,6 +124,18 @@ public class SpecialMenuController implements Initializable {
 
         tabIngr.getItems().clear();
         tabRif.getItems().clear();
+
+        if(selectedMenu != null){
+            entreeTF.setText(selectedMenu[1]);
+            dateMenu.setValue(LocalDate.parse(selectedMenu[0]));
+            mainTF.setText(selectedMenu[2]);
+            dessertTF.setText(selectedMenu[3]);
+            sideTF.setText(selectedMenu[4]);
+            drinkTF.setText(selectedMenu[5]);
+            specialInterni.add(new SpecialGuiDetails(new SpecialDbDetails(selectedMenu[6],selectedMenu[7])));
+            tabRif.setItems(null);
+            tabRif.setItems(specialInterni);
+        }
     }
 
 

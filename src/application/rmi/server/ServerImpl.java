@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-/**
- * Created by ELISA on 21/03/2018.
- */
 public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //socket e rmi usano entrambe questa implementazione
 
 
@@ -75,7 +72,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        }finally
+         {
             try {
                 if (result != null)
                     result.close();
@@ -1540,12 +1538,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
 
         String queryDelete = "DELETE FROM mydb.menu_special WHERE date = '" + date + "'and CF ='"+FC+"' and Allergie = '"+ allergies+"'";
-
-       // String queryDeleteIngredients = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
+        String queryDeleteIngredients = "DELETE FROM mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and menu_special_CF ='"+FC+"' and menu_special_allergie='"+allergies+"'";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
-           // st.executeUpdate(queryDeleteIngredients);
+            st.executeUpdate(queryDeleteIngredients);
             st.executeUpdate(queryDelete);
             System.out.println("Menu deleted.");
 
