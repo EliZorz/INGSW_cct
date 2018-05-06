@@ -1451,7 +1451,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st;
         ResultSet result = null;
         ArrayList<SpecialDbDetails> special = new ArrayList<>();
-        String queryLoad = "SELECT CF, Allergie FROM mydb.interni";
+        String queryLoad = "SELECT CF,Allergie FROM mydb.interni";
         try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);

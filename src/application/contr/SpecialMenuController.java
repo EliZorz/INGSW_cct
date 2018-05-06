@@ -32,6 +32,8 @@ public class SpecialMenuController implements Initializable {
 
     private ArrayList<String> selectedInterno = new ArrayList<>();
 
+    private boolean correctDate = false;
+
     @FXML
     public Button showEntree;
 
@@ -147,6 +149,13 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public void searchMenuDate(){
         dateSpecialMenu = dateMenu.getValue();
+        //cleaning the text fields and set false correctDate for a new search
+        correctDate = false;
+        entreeTF.setText("");
+        mainTF.setText("");
+        dessertTF.setText("");
+        drinkTF.setText("");
+        sideTF.setText("");
 
         //load this menu
         try {
@@ -163,6 +172,7 @@ public class SpecialMenuController implements Initializable {
                     sideTF.setText(loadedMenu.getSideDish());
                     drinkTF.setText(loadedMenu.getDrink());
                     controllSearchedDate.setText("Loaded");
+                    correctDate = true;
                 }
             }else controllSearchedDate.setText("No menu for this date");
         } catch(RemoteException e){
@@ -182,6 +192,7 @@ public class SpecialMenuController implements Initializable {
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
                     ingredients.add(tmp);
                 }
+                
             }else{
                 loadIngredients(); //load all the ingredients
                 return false;
@@ -197,50 +208,85 @@ public class SpecialMenuController implements Initializable {
     }
     @FXML
     public void showEntreeIngredients() throws RemoteException {
-        selectedDish = entreeTF.getText();
-        if(selectedDish.trim().length() == 0) status.setText("Insert an entree");
+        if(!correctDate) {
+            controllSearchedDate.setText("Insert a valid date");
+        }
         else{
-            if (showSelection(selectedDish))
-                status.setText("Entree ingredients");
-            else status.setText("Select the ingredients for the entree");
+            selectedDish = entreeTF.getText();
+            if(selectedDish.trim().length() != 0) {
+                if (showSelection(selectedDish))
+                    status.setText("Entree ingredients");
+                else status.setText("Select the ingredients for the entree");
+            }else {
+                status.setText("Insert an entree");
+                tabIngr.setItems(null);
+            }
         }
 
     }
 
     @FXML
-    public void showSideIngredients()throws RemoteException{
-        selectedDish = sideTF.getText();
-        if(selectedDish.trim().length() == 0) status.setText("Insert a side dish");
-        if(showSelection(selectedDish))
-            status.setText("Side dish ingredients");
-        else status.setText("Select the ingredients for the side dish");
+    public void showSideIngredients()throws RemoteException {
+        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        else {
+            selectedDish = sideTF.getText();
+            if (selectedDish.trim().length() != 0) {
+                if (showSelection(selectedDish))
+                    status.setText("Side dish ingredients");
+                else status.setText("Select the ingredients for the side dish");
+            } else {
+                status.setText("Insert a side dish");
+                tabIngr.setItems(null);
+            }
+        }
     }
 
     @FXML
     public void showMainIngredients() throws RemoteException{
-        selectedDish = mainTF.getText();
-        if(selectedDish.trim().length() == 0) status.setText("Insert a main course");
-        if(showSelection(selectedDish))
-            status.setText("Main course ingredients");
-        else status.setText("Select the ingredients for the main course");
+        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        else {
+            selectedDish = mainTF.getText();
+            if (selectedDish.trim().length() != 0) {
+                if (showSelection(selectedDish))
+                    status.setText("Main course ingredients");
+                else status.setText("Select the ingredients for the main course");
+            } else {
+                status.setText("Insert a main course");
+                tabIngr.setItems(null);
+            }
+        }
     }
 
     @FXML
     public void showDessertIngredients()throws RemoteException{
-        selectedDish = dessertTF.getText();
-        if(selectedDish.trim().length() == 0) status.setText("Insert a dessert");
-        if(showSelection(selectedDish))
-            status.setText("Dessert ingredients");
-        else status.setText("Select the ingredients for the dessert");
+        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        else {
+            selectedDish = dessertTF.getText();
+            if (selectedDish.trim().length() != 0) {
+                if (showSelection(selectedDish))
+                    status.setText("Dessert ingredients");
+                else status.setText("Select the ingredients for the dessert");
+            } else {
+                status.setText("Insert a dessert");
+                tabIngr.setItems(null);
+            }
+        }
     }
 
     @FXML
     public void showDrinkIngredients()throws RemoteException{
-        selectedDish = drinkTF.getText();
-        if(selectedDish.trim().length() == 0) status.setText("Insert a drink");
-        if(showSelection(selectedDish))
-            status.setText("Drink");
-        else status.setText("Select the ingredients for the drink");
+        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        else {
+            selectedDish = drinkTF.getText();
+            if (selectedDish.trim().length() != 0) {
+                if (showSelection(selectedDish))
+                    status.setText("Drink");
+                else status.setText("Select the ingredients for the drink");
+            } else {
+                status.setText("Insert a drink");
+                tabIngr.setItems(null);
+            }
+        }
     }
 
     @FXML
@@ -248,9 +294,6 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void saveIngredients() throws RemoteException {
-        if(status.getText().equals("Select the ingredients for the side dish")){
-            saveCall(selectedIngr,sideTF.getText());
-        }
 
     }
 
@@ -278,8 +321,9 @@ public class SpecialMenuController implements Initializable {
                     specialInterni.add(tmp);
 
                 }
-                tabRif.setItems(null);
-                tabRif.setItems(specialInterni);
+               tabRif.setItems(null);
+               tabRif.setItems(specialInterni);
+               tabRif.setVisible(true);
             }
             else controllSearchedDate.setText("No allergicals for this menu");
 
@@ -292,6 +336,8 @@ public class SpecialMenuController implements Initializable {
     public void exit(ActionEvent event) {
         ((Node)(event.getSource())).getScene().getWindow().hide();
     }
+
+
 }
 
 
