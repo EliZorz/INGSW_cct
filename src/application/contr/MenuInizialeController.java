@@ -43,7 +43,7 @@ public class MenuInizialeController {
 
     @FXML
     void openSpecialMenu (ActionEvent event)throws Exception{
-        new GuiNew("SpecialMenu");
+        new GuiNew("LoadSpecialMenu");
     }
 
 
