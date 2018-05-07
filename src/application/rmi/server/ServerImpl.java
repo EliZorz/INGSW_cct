@@ -1588,11 +1588,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
-    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, ArrayList<SpecialDbDetails> special) throws RemoteException{
+    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date,SpecialDbDetails special) throws RemoteException{
         String queryAdd = "INSERT INTO mydb.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement st = null;
         try {
-            for (SpecialDbDetails x : special) {
+
                 st = this.connHere().prepareStatement(queryAdd);
                 st.setString(1, entree);
                 st.setString(2, main);
@@ -1600,10 +1600,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 st.setString(4, side);
                 st.setString(5, drink);
                 st.setDate(6, Date.valueOf(date));
-                st.setString(7, x.getCF());
-                st.setString(8, x.getAllergie());
+                st.setString(7, special.getCF());
+                st.setString(8, special.getAllergie());
                 st.executeUpdate();
-            }
+
             try{
                 if(st != null) {
                     st.close();

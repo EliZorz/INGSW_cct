@@ -347,7 +347,7 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, ArrayList<SpecialDbDetails> special) throws RemoteException {
+    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
         return false;
     }
 

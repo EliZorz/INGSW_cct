@@ -30,7 +30,7 @@ public class SpecialMenuController implements Initializable {
 
     private String selectedDish = null;
 
-    private ArrayList<SpecialDbDetails> selectedInterno = null;
+    private ArrayList<SpecialDbDetails> selectedInterno = new ArrayList<>();
 
     private boolean correctDate = false;
 
@@ -133,7 +133,6 @@ public class SpecialMenuController implements Initializable {
 
         tabInterni.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection, newSelection)->{
             if(newSelection != null){
-                selectedInterno = new ArrayList<>();
                 selectedInterno.add(new SpecialDbDetails(newSelection.getCF(), newSelection.getAllergie()));
             }
         });
@@ -180,7 +179,7 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void searchMenuDate(){
-        selectedInterno = null;
+        selectedInterno = new ArrayList<>();
         selectedMenu = null;
         selectedIngr = new ArrayList<>();
         selectedDish = null;
@@ -366,19 +365,66 @@ public class SpecialMenuController implements Initializable {
         else if(drink.trim().isEmpty()) status.setText("Insert a drink");
         else if(date == null) status.setText("Insert a valid date");
         else if(!controlIngredients && selectedMenu == null) status.setText("Make sure you have added all the ingredients");
-        else if(selectedInterno == null) status.setText("Select a person");
+        else if(selectedInterno.isEmpty()) status.setText("Select a person");
         else if(tabInterni.getItems() == null) status.setText("No allergical");
+        else if(controllAllergicals()) status.setText("A person is allergic to this menu");
         else{
             try{
                 UserRemote u = Singleton.getInstance().methodRmi();
                 if(selectedMenu == null){
-                    boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, selectedInterno);
-                    if(addSuccess) status.setText("Success!!");
+                    for(SpecialDbDetails x : selectedInterno) {
+                        boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
+                        if (addSuccess) status.setText("Success!!");
+                    }
                 }
             }catch(RemoteException e){
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean controllAllergicals(){
+        ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
+        try{
+            UserRemote u = Singleton.getInstance().methodRmi();
+            if(entreeTF.getText().trim().length() != 0) {
+                ingredientsForThisDish = u.searchIngredients(entreeTF.getText());
+                for(SpecialDbDetails x : selectedInterno)
+                    for(IngredientsDbDetails y : ingredientsForThisDish)
+                        if(x.getAllergie().contains(y.getIngr())) return true;
+            }
+            if(mainTF.getText().trim().length() != 0) {
+                ingredientsForThisDish = u.searchIngredients(mainTF.getText());
+                for(SpecialDbDetails x : selectedInterno)
+                    for(IngredientsDbDetails y : ingredientsForThisDish)
+                        if(x.getAllergie().contains(y.getIngr())) return true;
+            }
+            if(sideTF.getText().trim().length() != 0) {
+                ingredientsForThisDish = u.searchIngredients(sideTF.getText());
+                for(SpecialDbDetails x : selectedInterno)
+                    for(IngredientsDbDetails y : ingredientsForThisDish)
+                        if(x.getAllergie().contains(y.getIngr())) return true;
+            }
+            if(dessertTF.getText().trim().length() != 0) {
+                ingredientsForThisDish = u.searchIngredients(dessertTF.getText());
+                for(SpecialDbDetails x : selectedInterno)
+                    for(IngredientsDbDetails y : ingredientsForThisDish)
+                        if(x.getAllergie().contains(y.getIngr())) return true;
+            }
+            if(drinkTF.getText().trim().length() != 0) {
+                ingredientsForThisDish = u.searchIngredients(drinkTF.getText());
+                for(SpecialDbDetails x : selectedInterno)
+                    for(IngredientsDbDetails y : ingredientsForThisDish)
+                        if(x.getAllergie().contains(y.getIngr())) return true;
+            }
+
+            return false;
+
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
@@ -499,7 +545,7 @@ public class SpecialMenuController implements Initializable {
 
     public void deselectInterni(){
         tabInterni.getSelectionModel().clearSelection();
-        selectedInterno = null;
+        selectedInterno = new ArrayList<>();
     }
 
 
