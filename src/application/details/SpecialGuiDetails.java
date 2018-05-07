@@ -21,6 +21,14 @@ public class SpecialGuiDetails {
         return allergie.get();
     }
 
+    public void setCF(String CF){
+        this.CF.set(CF);
+    }
+
+    public void setAllergie(String allergie){
+        this.allergie.set(allergie);
+    }
+
     public StringProperty CFProperty() {
         return CF;
     }
