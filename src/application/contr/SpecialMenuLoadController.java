@@ -109,6 +109,8 @@ public class SpecialMenuLoadController implements Initializable{
     }
 
     public void addSpecialMenu(ActionEvent event) throws IOException {
+        SpecialMenuController.selectedMenu = null;
+        selectedMenu = null;
         new GuiNew("SpecialMenu");
     }
 

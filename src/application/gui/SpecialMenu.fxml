@@ -16,12 +16,6 @@
    <children>
       <DatePicker fx:id="dateMenu" layoutX="47.0" layoutY="65.0" prefHeight="40.0" prefWidth="176.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="65.0" />
       <Button fx:id="loadDate" layoutX="251.0" layoutY="65.0" mnemonicParsing="false" onAction="#searchMenuDate" prefHeight="40.0" text="Load" AnchorPane.leftAnchor="251.0" AnchorPane.topAnchor="65.0" />
-      <TableView fx:id="tabRif" layoutX="47.0" layoutY="183.0" prefHeight="499.0" prefWidth="283.0" AnchorPane.bottomAnchor="118.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="183.0">
-        <columns>
-          <TableColumn fx:id="colRif" prefWidth="107.0" text="Reference code" />
-          <TableColumn fx:id="colAller" prefWidth="175.0" text="Allergies" />
-        </columns>
-      </TableView>
       <Text layoutX="724.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SPECIAL MENU" wrappingWidth="341.69232177734375">
          <font>
             <Font name="System Bold" size="35.0" />
@@ -39,7 +33,7 @@
       </TableView>
       <Button fx:id="deselect" layoutX="546.0" layoutY="583.0" mnemonicParsing="false" onAction="#deselect" prefHeight="40.0" prefWidth="212.0" text="Deselect all" />
       <Button fx:id="saveIngr" layoutX="547.0" layoutY="642.0" mnemonicParsing="false" onAction="#saveIngredients" prefHeight="40.0" prefWidth="212.0" text="Save ingredients for this plate " AnchorPane.bottomAnchor="118.0" />
-      <Button fx:id="deselectElements" layoutX="47.0" layoutY="705.0" mnemonicParsing="false" onAction="#showAllergical" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
+      <Button fx:id="deselectElements" layoutX="47.0" layoutY="583.0" mnemonicParsing="false" onAction="#showAllergical" prefHeight="40.0" prefWidth="115.0" text="Deselect all" />
       <Button fx:id="save" layoutX="1027.0" layoutY="453.0" mnemonicParsing="false" onAction="#saveSpecialMenu" prefHeight="40.0" prefWidth="115.0" text="Save " />
       <Label fx:id="status" layoutX="930.0" layoutY="521.0" prefHeight="40.0" prefWidth="352.0" text="Status">
          <font>
@@ -66,5 +60,11 @@
       <Button fx:id="showSide" layoutX="1160.0" layoutY="321.0" mnemonicParsing="false" onAction="#showSideIngredients" text="Show Ingredients" />
       <Button fx:id="showDrink" layoutX="1160.0" layoutY="366.0" mnemonicParsing="false" onAction="#showDrinkIngredients" text="Show Ingredients" />
       <Button fx:id="showWho" layoutX="547.0" layoutY="705.0" mnemonicParsing="false" onAction="#showAllergical" prefHeight="40.0" prefWidth="212.0" text="Show who has allergies for this plate" />
+      <TableView fx:id="tabInterni" layoutX="47.0" layoutY="189.0" prefHeight="384.0" prefWidth="248.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="183.0">
+        <columns>
+          <TableColumn fx:id="FC" prefWidth="97.6666259765625" text="Fiscal Code" />
+          <TableColumn fx:id="All" prefWidth="150.3333740234375" text="Allergies" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

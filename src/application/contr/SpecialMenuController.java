@@ -58,15 +58,6 @@ public class SpecialMenuController implements Initializable {
     public DatePicker dateMenu;
 
     @FXML
-    public TableView<SpecialGuiDetails> tabRif;
-
-    @FXML
-    public TableColumn<SpecialGuiDetails, String> colRif;
-
-    @FXML
-    public TableColumn<SpecialGuiDetails, String> colAller;
-
-    @FXML
     public Button deselectElements;
 
     @FXML
@@ -108,13 +99,26 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public Label controllSearchedDate;
 
+    @FXML
+    public TableColumn<SpecialGuiDetails, String> FC;
+
+    @FXML
+    public TableColumn<SpecialGuiDetails, String> All;
+
+    @FXML
+    public TableView<SpecialGuiDetails> tabInterni;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Ingredients.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
         tabIngr.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        //tabRif.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        FC.setCellValueFactory(cellData-> cellData.getValue().CFProperty());
+        All.setCellValueFactory(cellData -> cellData.getValue().allergieProperty());
+        tabInterni.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+
 
         tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -122,8 +126,14 @@ public class SpecialMenuController implements Initializable {
             }
         });
 
+        tabInterni.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection, newSelection)->{
+            if(newSelection != null){
+                selectedInterno.add(newSelection.getCF());
+            }
+        });
+
         tabIngr.getItems().clear();
-        tabRif.getItems().clear();
+        tabInterni.getItems().clear();
 
         if(selectedMenu != null){
             entreeTF.setText(selectedMenu[1]);
@@ -133,8 +143,9 @@ public class SpecialMenuController implements Initializable {
             sideTF.setText(selectedMenu[4]);
             drinkTF.setText(selectedMenu[5]);
             specialInterni.add(new SpecialGuiDetails(new SpecialDbDetails(selectedMenu[6],selectedMenu[7])));
-            tabRif.setItems(null);
-            tabRif.setItems(specialInterni);
+            tabInterni.setItems(null);
+            tabInterni.setItems(specialInterni);
+
         }
     }
 
@@ -335,9 +346,7 @@ public class SpecialMenuController implements Initializable {
                     specialInterni.add(tmp);
 
                 }
-               tabRif.setItems(null);
-               tabRif.setItems(specialInterni);
-               tabRif.setVisible(true);
+
             }
             else controllSearchedDate.setText("No allergicals for this menu");
 
@@ -348,6 +357,9 @@ public class SpecialMenuController implements Initializable {
     }
 
     public void exit(ActionEvent event) {
+        selectedMenu = null;
+        tabIngr.setItems(null);
+        tabInterni.setItems(null);
         ((Node)(event.getSource())).getScene().getWindow().hide();
     }
 

@@ -1489,7 +1489,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryLoad1 = "SELECT * FROM mydb.menu_special";
 
         try{
-            st = this.connHere().prepareStatement(queryLoad1);
+            Connection c = this.connHere();
+            c.setAutoCommit(true);
+            st = c.prepareStatement(queryLoad1);
             result = st.executeQuery(queryLoad1);
 
         } catch (SQLException e) {
