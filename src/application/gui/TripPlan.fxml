@@ -52,7 +52,7 @@
       <DatePicker fx:id="dpComTime" layoutX="452.0" layoutY="476.0" promptText="Come back date time" />
       <TextField fx:id="txtStaying" layoutX="46.0" layoutY="582.0" prefHeight="26.0" prefWidth="231.0" promptText="Staying address" />
       <Button fx:id="btnAddTrip" layoutX="360.0" layoutY="703.0" mnemonicParsing="false" onAction="#handleAddTrip" prefHeight="38.0" prefWidth="111.0" text="Add trip" />
-      <Label fx:id="lblStatus" layoutX="46.0" layoutY="629.0" prefHeight="28.0" prefWidth="299.0" text="Status" textAlignment="CENTER" textFill="#ea0101">
+      <Label fx:id="lblStatus" layoutX="46.0" layoutY="629.0" prefHeight="28.0" prefWidth="607.0" text="Status" textAlignment="CENTER" textFill="#ea0101">
          <font>
             <Font name="Courier New" size="24.0" />
          </font>

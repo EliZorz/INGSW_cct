@@ -143,7 +143,7 @@ public class TripPlanController implements Initializable {
                 localDateTimeArr.toString().trim().isEmpty() || localDateTimeDep.toString().trim().isEmpty() ||
                 localDateTimeCom.toString().trim().isEmpty()){
             this.renameLabelStatus("Insert data.");
-        } else if (selectedChild == null || selectedChild == null){
+        } else if (selectedChild == null || selectedStaff == null){
             this.renameLabelStatus("Add at least one child AND one staff member.");
         } else if (localDateTimeDep.getDayOfYear() > localDateArr.getDayOfYear() ||
                 localDateArr.getDayOfYear() > localDateCom.getDayOfYear()){
@@ -233,7 +233,7 @@ public class TripPlanController implements Initializable {
         txtArrTo.clear();
         txtDepFrom.clear();
         txtStaying.clear();
-        
+
         this.renameLabelStatus("Status");
         this.renameLabelTotChildren(0);
         this.renameLabelTotStaff(0);

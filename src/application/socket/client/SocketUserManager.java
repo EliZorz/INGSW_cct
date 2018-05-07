@@ -306,18 +306,19 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public ArrayList<CodRifChildDbDetails> findNotAvailableStaff(String selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+    public ArrayList<CodRifChildDbDetails> findNotAvailableStaff(ArrayList<String> selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
         return null;
     }
 
     @Override
-    public ArrayList<CodRifChildDbDetails> findNotAvailableChild(String selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+    public ArrayList<CodRifChildDbDetails> findNotAvailableChild(ArrayList<String> selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
         return null;
     }
-
 
     @Override
-    public int[] doActualParticipants(String selectedChildCf, String selectedStaffCf) throws RemoteException{
-        return null;
+    public int[] howManyActualParticipants(ArrayList<String> selectedChildCf, ArrayList<String> selectedStaffCf) throws RemoteException {
+        return new int[0];
     }
+
+
 }

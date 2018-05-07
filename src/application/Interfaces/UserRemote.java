@@ -1,7 +1,6 @@
 package application.Interfaces;
 
 import application.details.*;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -53,8 +52,8 @@ public interface UserRemote extends Remote {
                      String departureFrom, String ArrivalTo, String staying) throws RemoteException;
     ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
     ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
-    ArrayList<CodRifChildDbDetails> findNotAvailableStaff (String selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException;
-    ArrayList<CodRifChildDbDetails> findNotAvailableChild (String selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException;
-    int[] doActualParticipants(String selectedChildCf, String selectedStaffCf) throws RemoteException;
+    ArrayList<CodRifChildDbDetails> findNotAvailableStaff (ArrayList<String> selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException;
+    ArrayList<CodRifChildDbDetails> findNotAvailableChild (ArrayList<String> selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException;
+    int[] howManyActualParticipants(ArrayList<String> selectedChildCf, ArrayList<String> selectedStaffCf) throws RemoteException;
 
 }

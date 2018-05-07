@@ -6,16 +6,22 @@ import application.Singleton;
 import application.details.*;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Created by ELISA on 23/04/2018.
@@ -27,6 +33,8 @@ public class TripActualParticipantsController implements Initializable {
 
     ArrayList<String> selectedTrip = new ArrayList<>();
     ArrayList<String> selectedChild = new ArrayList<>();
+    ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
+    ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
     ArrayList<String> selectedStaff = new ArrayList<>();
     String selectedTripDep = new String();
     String selectedTripCom = new String();
@@ -120,6 +128,7 @@ public class TripActualParticipantsController implements Initializable {
                 selectedChild.add(newSelection.getName());
                 selectedChild.add(newSelection.getSurname());
                 selectedChild.add(newSelection.getCf());
+                selectedChildCfArrayList.add(newSelection.getCf());
             }
         });
         tableActualChildren.getItems().clear();
@@ -137,6 +146,7 @@ public class TripActualParticipantsController implements Initializable {
                 selectedStaff.add(newSelectionStaff.getName());
                 selectedStaff.add(newSelectionStaff.getSurname());
                 selectedStaff.add(newSelectionStaff.getCf());
+                selectedStaffCfArrayList.add(newSelectionStaff.getCf());
             }
         });
         tableActualStaff.getItems().clear();
@@ -227,73 +237,74 @@ public class TripActualParticipantsController implements Initializable {
             System.out.println("Selection is being processed...");
             try{
                 UserRemote u = Singleton.getInstance().methodRmi();
-                ArrayList<CodRifChildDbDetails> notAvailableStaffArrayList = u.findNotAvailableStaff(selectedStaff.get(2), selectedTripDep, selectedTripCom);
-                ArrayList<CodRifChildDbDetails> notAvailableChildArrayList = u.findNotAvailableChild(selectedChild.get(2), selectedTripDep, selectedTripCom);
-                //find out if some partcipants the user selected are already used in a concurrent trip
-                if (notAvailableStaffArrayList == null && notAvailableChildArrayList == null){
-                    int[] totParticipantsSelectedArray = u.doActualParticipants(selectedChild.get(2), selectedStaff.get(2));
+                ArrayList<CodRifChildDbDetails> notAvailableStaffArrayList = u.findNotAvailableStaff(selectedStaffCfArrayList, selectedTripDep, selectedTripCom);
+                ArrayList<CodRifChildDbDetails> notAvailableChildArrayList = u.findNotAvailableChild(selectedChildCfArrayList, selectedTripDep, selectedTripCom);
+
+                //find out if some participants the user selected are already used in a concurrent trip
+                if (notAvailableStaffArrayList.isEmpty() && notAvailableChildArrayList.isEmpty()){
+                    int[] totParticipantsSelectedArray = u.howManyActualParticipants(selectedChildCfArrayList, selectedStaffCfArrayList);
                     int totChildren = totParticipantsSelectedArray[0];
                     int totStaff = totParticipantsSelectedArray[1];
-
                     this.renameLabelTotChildren(totChildren);
                     this.renameLabelTotStaff(totStaff);
                     this.renameLabel("Ready to go.");
 
-                } else {
-                    if (notAvailableChildArrayList != null) {
-                        //highlight items into arrayList
-                        //tell user he has to change actual participants because the highlighted are not available for concurrent trip
-                        //UPDATE PARTICIPANTS INTO TripTable?????????????????????????????
-                        System.out.println("Changing colours in tableview...");
+                    //DEVO CALCOLARE CHI VA SU QUALE BUS!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                        for (CodRifChildDbDetails child : notAvailableChildArrayList) {
+                } else {
+                        //highlight items into arrayList and tell user to reselect
+                        System.out.println("Changing colours for not available children in tableview...");
+                        ArrayList<String> notAvailableChildStrings = new ArrayList<>(notAvailableChildArrayList.size());
+                        for (CodRifChildDbDetails object : notAvailableChildArrayList) {
+                            notAvailableChildStrings.add(Objects.toString(object, null));
+                        }
+                        for (String s : notAvailableChildStrings)
+                            System.out.println("Change colour for: " + s);
+
+
                             colCfChild.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
                                 @Override
                                 protected void updateItem(String item, boolean empty) {
                                     super.updateItem(item, empty);
-
                                     setText(empty ? "" : getItem());
                                     setGraphic(null);
-
                                     TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
-
+                                    for (CodRifChildDbDetails child : notAvailableChildArrayList) {
                                         if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
                                             currentRow.setStyle("-fx-background-color:lightcoral");
                                         }
-
+                                    }
                                 }
                             });
+
+
+                        System.out.println("Changing colours for not available staff members in tableview...");
+                        ArrayList<String> notAvailableStaffStrings = new ArrayList<>(notAvailableStaffArrayList.size());
+                        for (CodRifChildDbDetails object : notAvailableStaffArrayList) {
+                            notAvailableStaffStrings.add(Objects.toString(object, null));
                         }
+                        for(String s : notAvailableStaffStrings)
+                            System.out.println("Change colour for: " + s);
 
-                        System.out.println("Reselect participants.");
-                        this.renameLabel("Red ones are not available during trip period. Reselect.");
 
-                    } if (notAvailableStaffArrayList != null) {
-                        System.out.println("Changing colours in tableview...");
-
-                        for (CodRifChildDbDetails staff : notAvailableStaffArrayList) {
                             colCfStaff.setCellFactory(column -> new TableCell<StaffSelectedTripGuiDetails, String>() {
                                 @Override
                                 protected void updateItem(String item, boolean empty) {
                                     super.updateItem(item, empty);
-
                                     setText(empty ? "" : getItem());
                                     setGraphic(null);
-
                                     TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
-
-                                    if (!currentRow.isEmpty() && item.equals(staff.getCodRif())) {
-                                        currentRow.setStyle("-fx-background-color:lightcoral");
+                                    for (CodRifChildDbDetails staff : notAvailableStaffArrayList) {
+                                        if (!currentRow.isEmpty() && item.equals(staff.getCodRif())) {
+                                            currentRow.setStyle("-fx-background-color:lightcoral");
+                                        }
                                     }
-
                                 }
                             });
-                        }
 
                         System.out.println("Reselect participants.");
                         this.renameLabel("Red ones are not available during trip period. Reselect.");
                     }
-                }
 
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -322,7 +333,7 @@ public class TripActualParticipantsController implements Initializable {
                 TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
 
                 if (!currentRow.isEmpty()) {
-                    currentRow.setStyle("-fx-background-color:white");
+                    currentRow.setStyle("-fx-background-color:table.background");
                 }
 
             }
@@ -339,7 +350,7 @@ public class TripActualParticipantsController implements Initializable {
                 TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
 
                 if (!currentRow.isEmpty()) {
-                    currentRow.setStyle("-fx-background-color:white");
+                    currentRow.setStyle("-fx-background-color:table.background");
                 }
 
             }
