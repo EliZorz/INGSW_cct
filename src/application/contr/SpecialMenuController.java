@@ -30,11 +30,16 @@ public class SpecialMenuController implements Initializable {
 
     private String selectedDish = null;
 
-    private ArrayList<String> selectedInterno = new ArrayList<>();
+    private ArrayList<SpecialDbDetails> selectedInterno = null;
 
     private boolean correctDate = false;
 
+    private String whatDish = null;
+
+    private boolean controlIngredients = true;
+
     public static String[] selectedMenu = null;
+
 
     @FXML
     public Button showEntree;
@@ -128,7 +133,8 @@ public class SpecialMenuController implements Initializable {
 
         tabInterni.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection, newSelection)->{
             if(newSelection != null){
-                selectedInterno.add(newSelection.getCF());
+                selectedInterno = new ArrayList<>();
+                selectedInterno.add(new SpecialDbDetails(newSelection.getCF(), newSelection.getAllergie()));
             }
         });
 
@@ -152,6 +158,7 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     private void loadIngredients(){
+        controlIngredients = false;
         try{
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
@@ -173,6 +180,10 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void searchMenuDate(){
+        selectedInterno = null;
+        selectedMenu = null;
+        selectedIngr = new ArrayList<>();
+        selectedDish = null;
         dateSpecialMenu = dateMenu.getValue();
         //cleaning the text fields and set false correctDate for a new search
         correctDate = false;
@@ -197,7 +208,9 @@ public class SpecialMenuController implements Initializable {
                     sideTF.setText(loadedMenu.getSideDish());
                     drinkTF.setText(loadedMenu.getDrink());
                     controllSearchedDate.setText("Loaded");
+                    status.setText("Status");
                     correctDate = true;
+                    showAllergical();
                 }
             }else controllSearchedDate.setText("No menu for this date");
         } catch(RemoteException e){
@@ -239,9 +252,14 @@ public class SpecialMenuController implements Initializable {
         else{
             selectedDish = entreeTF.getText();
             if(selectedDish.trim().length() != 0) {
-                if (showSelection(selectedDish))
+                if (showSelection(selectedDish)) {
                     status.setText("Entree ingredients");
-                else status.setText("Select the ingredients for the entree");
+                    whatDish = new String();
+                }
+                else {
+                    status.setText("Select the ingredients for the entree");
+                    whatDish = "entree";
+                }
             }else {
                 status.setText("Insert an entree");
                 tabIngr.setItems(null);
@@ -256,9 +274,14 @@ public class SpecialMenuController implements Initializable {
         else {
             selectedDish = sideTF.getText();
             if (selectedDish.trim().length() != 0) {
-                if (showSelection(selectedDish))
+                if (showSelection(selectedDish)) {
                     status.setText("Side dish ingredients");
-                else status.setText("Select the ingredients for the side dish");
+                    whatDish = new String();
+                }
+                else {
+                    status.setText("Select the ingredients for the side dish");
+                    whatDish = "side";
+                }
             } else {
                 status.setText("Insert a side dish");
                 tabIngr.setItems(null);
@@ -272,9 +295,14 @@ public class SpecialMenuController implements Initializable {
         else {
             selectedDish = mainTF.getText();
             if (selectedDish.trim().length() != 0) {
-                if (showSelection(selectedDish))
+                if (showSelection(selectedDish)) {
                     status.setText("Main course ingredients");
-                else status.setText("Select the ingredients for the main course");
+                    whatDish = new String();
+                }
+                else{
+                    status.setText("Select the ingredients for the main course");
+                    whatDish = "main";
+                }
             } else {
                 status.setText("Insert a main course");
                 tabIngr.setItems(null);
@@ -288,9 +316,14 @@ public class SpecialMenuController implements Initializable {
         else {
             selectedDish = dessertTF.getText();
             if (selectedDish.trim().length() != 0) {
-                if (showSelection(selectedDish))
+                if (showSelection(selectedDish)) {
                     status.setText("Dessert ingredients");
-                else status.setText("Select the ingredients for the dessert");
+                    whatDish = new String();
+                }
+                else {
+                    status.setText("Select the ingredients for the dessert");
+                    whatDish = "dessert";
+                }
             } else {
                 status.setText("Insert a dessert");
                 tabIngr.setItems(null);
@@ -304,9 +337,14 @@ public class SpecialMenuController implements Initializable {
         else {
             selectedDish = drinkTF.getText();
             if (selectedDish.trim().length() != 0) {
-                if (showSelection(selectedDish))
+                if (showSelection(selectedDish)) {
                     status.setText("Drink");
-                else status.setText("Select the ingredients for the drink");
+                    whatDish = new String();
+                }
+                else {
+                    status.setText("Select the ingredients for the drink");
+                    whatDish = "drink";
+                }
             } else {
                 status.setText("Insert a drink");
                 tabIngr.setItems(null);
@@ -315,12 +353,35 @@ public class SpecialMenuController implements Initializable {
     }
 
     @FXML
-    public void saveSpecialMenu(){}
+    public void saveSpecialMenu(){
+        String entree = entreeTF.getText();
+        String main = mainTF.getText();
+        String side = sideTF.getText();
+        String dessert = dessertTF.getText();
+        String drink = drinkTF.getText();
+        LocalDate date = dateMenu.getValue();
 
-    @FXML
-    public void saveIngredients() throws RemoteException {
-
+        if(entree.trim().isEmpty() && main.trim().isEmpty()) status.setText("Insert a main course and/or an entree");
+        else if(dessert.trim().isEmpty()) status.setText("Insert a dessert");
+        else if(drink.trim().isEmpty()) status.setText("Insert a drink");
+        else if(date == null) status.setText("Insert a valid date");
+        else if(!controlIngredients && selectedMenu == null) status.setText("Make sure you have added all the ingredients");
+        else if(selectedInterno == null) status.setText("Select a person");
+        else if(tabInterni.getItems() == null) status.setText("No allergical");
+        else{
+            try{
+                UserRemote u = Singleton.getInstance().methodRmi();
+                if(selectedMenu == null){
+                    boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, selectedInterno);
+                    if(addSuccess) status.setText("Success!!");
+                }
+            }catch(RemoteException e){
+                e.printStackTrace();
+            }
+        }
     }
+
+
 
     private void saveCall(ArrayList<String> selectedIngr, String what) throws RemoteException {
         try {
@@ -340,15 +401,20 @@ public class SpecialMenuController implements Initializable {
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
-           if(specialInterni != null){
+           if(specialInterni != null && loadInterni != null){
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);
 
                 }
+               tabInterni.setItems(null);
+               tabInterni.setItems(specialInterni);
 
-            }
-            else controllSearchedDate.setText("No allergicals for this menu");
+           }
+           else {
+               controllSearchedDate.setText("No allergicals for this menu");
+               tabInterni.setItems(null);
+           }
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -373,6 +439,7 @@ public class SpecialMenuController implements Initializable {
             }else{
                 status.setText("There is a problem with this dish");
             }
+            controlIngredients = true;
         }catch(RemoteException e){
             e.printStackTrace();
         }
@@ -380,42 +447,59 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void saveIngredients(ActionEvent event) {
-        if(status.getText().equals("Select the ingredients for the entree")){
+        if(whatDish.equals("entree")){
             saveIngredientsForThisDish(entreeTF.getText(),selectedIngr);
             deselect();
             selectedIngr = new ArrayList<>();
+            whatDish = new String();
+            controlIngredients = true;
 
         }
-        else if(status.getText().equals("Select the ingredients for the main course")){
+        else if(whatDish.equals("main")){
             saveIngredientsForThisDish(mainTF.getText(),selectedIngr);
             deselect();
             selectedIngr= new ArrayList<>();
+            whatDish = new String();
+            controlIngredients = true;
         }
-        else if(status.getText().equals("Select the ingredients for the dessert")){
+        else if(whatDish.equals("dessert")){
             saveIngredientsForThisDish(dessertTF.getText(),selectedIngr);
             deselect();
             selectedIngr = new ArrayList<>();
+            whatDish = new String();
+            controlIngredients = true;
         }
-        else if(status.getText().equals("Select the ingredients for the drink")){
+        else if(whatDish.equals("drink")){
             saveIngredientsForThisDish(drinkTF.getText(),selectedIngr);
             deselect();
             selectedIngr = new ArrayList<>();
+            whatDish = new String();
+            controlIngredients = true;
         }
-        else if(status.getText().equals("Select the ingredients for the side")) {
+        else if(whatDish.equals("side")) {
             saveIngredientsForThisDish(sideTF.getText(),selectedIngr);
             deselect();
             selectedIngr = new ArrayList<>();
+            whatDish = new String();
+            controlIngredients = true;
         }
         else {
-            status.getText().equals("This plate already exists");
+            status.setText("This plate already exists");
             deselect();
             selectedIngr = new ArrayList<>();
+            whatDish = new String();
+            controlIngredients = true;
         }
     }
 
     public void deselect() {
         tabIngr.getSelectionModel().clearSelection();
         selectedIngr = new ArrayList<>();
+    }
+
+    public void deselectInterni(){
+        tabInterni.getSelectionModel().clearSelection();
+        selectedInterno = null;
     }
 
 

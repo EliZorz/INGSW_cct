@@ -346,6 +346,11 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
+    @Override
+    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, ArrayList<SpecialDbDetails> special) throws RemoteException {
+        return false;
+    }
+
 
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {

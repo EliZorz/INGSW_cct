@@ -294,7 +294,7 @@ public class newMenuController implements Initializable {
     }
 
     public void saveMenu(ActionEvent event) {
-        System.out.println("Addinge the info to db");
+        System.out.println("Adding the info to db");
         String num = numTF.getText();
         String entree = entreeTF.getText();
         String main = mainTF.getText();
@@ -309,7 +309,7 @@ public class newMenuController implements Initializable {
         else if (drink.trim().isEmpty()) label1.setText("Insert a drink");
         else if (day == null) label1.setText("Insert a date");
         else if (!controllData(day) && selectedMenu == null) label1.setText("Change the date");
-        else if(!controllIngredients && selectedMenu == null)label1.setText("Controll to have add the ingredients");
+        else if(!controllIngredients && selectedMenu == null)label1.setText("Make sure you have added all the ingredients");
         else if(day.isBefore(LocalDate.now()) && selectedMenu == null) label1.setText("This date is already past");
         else{
             try{

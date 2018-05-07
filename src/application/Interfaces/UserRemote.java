@@ -1,6 +1,7 @@
 package application.Interfaces;
 
 import application.details.*;
+import com.sun.org.apache.regexp.internal.RE;
 import javafx.beans.property.StringProperty;
 
 import java.io.IOException;
@@ -73,6 +74,8 @@ public interface UserRemote extends Remote {
     ArrayList<SpecialMenuDbDetails> loadSpecialMenu()throws RemoteException;
 
     boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException;
+
+    boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, ArrayList<SpecialDbDetails> special) throws RemoteException;
 
 
 

@@ -6,6 +6,7 @@ import application.details.*;
 import application.details.ChildDbDetails;
 import application.details.ChildGuiDetails;
 import com.mysql.jdbc.Connection;
+import com.sun.org.apache.regexp.internal.RE;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
@@ -1447,12 +1448,19 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
         PreparedStatement st;
+        PreparedStatement stIngr;
         ResultSet result = null;
+        ResultSet resIngr = null;
         ArrayList<SpecialDbDetails> special = new ArrayList<>();
-        String queryLoad = "SELECT CF,Allergie FROM mydb.interni";
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+        ArrayList<SpecialDbDetails> specialInterni = new ArrayList<>();
+        String queryLoad = "SELECT CF,Allergie FROM mydb.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM mydb.menu_special where date ='"+date+"')";
+        String queryIngr = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
         try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
+            stIngr = this.connHere().prepareStatement(queryIngr);
+            resIngr = stIngr.executeQuery(queryIngr);
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -1460,6 +1468,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if(!result.next()){
                 System.out.println("No interni in db");
+                return null;
             }else{
                 result.beforeFirst();
                 try{
@@ -1467,6 +1476,18 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         SpecialDbDetails example = null;
                         example = new SpecialDbDetails(result.getString(1),result.getString(2));
                         special.add(example);
+                    }
+
+                    while(resIngr.next()){
+                        IngredientsDbDetails example = null;
+                        example = new IngredientsDbDetails(resIngr.getString(1));
+                        ingredients.add(example);
+                    }
+
+                    for(SpecialDbDetails x : special){
+                        for(IngredientsDbDetails y : ingredients){
+                            if(x.getAllergie().contains(y.getIngr())) specialInterni.add(new SpecialDbDetails(x.getCF(), x.getAllergie()));
+                        }
                     }
                 }catch (SQLException e){
                     e.printStackTrace();
@@ -1476,7 +1497,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             e.printStackTrace();
         }
 
-        return special;
+        return specialInterni;
     }
 
 
@@ -1562,6 +1583,41 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
             }
         }
+
+        return false;
+    }
+
+    @Override
+    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, ArrayList<SpecialDbDetails> special) throws RemoteException{
+        String queryAdd = "INSERT INTO mydb.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
+        PreparedStatement st = null;
+        try {
+            for (SpecialDbDetails x : special) {
+                st = this.connHere().prepareStatement(queryAdd);
+                st.setString(1, entree);
+                st.setString(2, main);
+                st.setString(3, dessert);
+                st.setString(4, side);
+                st.setString(5, drink);
+                st.setDate(6, Date.valueOf(date));
+                st.setString(7, x.getCF());
+                st.setString(8, x.getAllergie());
+                st.executeUpdate();
+            }
+            try{
+                if(st != null) {
+                    st.close();
+                }
+                return true;
+            }catch(Exception e){
+                e.printStackTrace();
+                return false;
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
 
         return false;
     }
