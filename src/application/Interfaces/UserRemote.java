@@ -49,7 +49,7 @@ public interface UserRemote extends Remote {
     ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException;
     ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException;
     int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
-                     LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
+                     String timeDep, String timeArr, String timeCom,
                      String departureFrom, String ArrivalTo, String staying) throws RemoteException;
     ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
     ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;

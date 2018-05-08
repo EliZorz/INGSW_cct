@@ -290,10 +290,8 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
-                            LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
-                            String departureFrom, String ArrivalTo, String staying) throws RemoteException {
-        return null;
+    public int[] addTrip(ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep, String timeArr, String timeCom, String departureFrom, String ArrivalTo, String staying) throws RemoteException {
+        return new int[0];
     }
 
     @Override

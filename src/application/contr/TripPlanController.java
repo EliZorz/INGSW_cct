@@ -14,8 +14,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -31,7 +35,7 @@ public class TripPlanController implements Initializable {
 
 
     @FXML
-    public TableView<ChildTripGuiDetails> tableChildren;     //< ... , ... > servono Details apposta!
+    public TableView<ChildTripGuiDetails> tableChildren;
     @FXML
     public TableColumn<ChildTripGuiDetails, String> colNameChild;
     @FXML
@@ -125,37 +129,32 @@ public class TripPlanController implements Initializable {
     public void handleAddTrip() {
         System.out.println("Adding new trip to database...");
 
-        LocalDate localDateDep = dpDepTime.getValue();
-        LocalDateTime localDateTimeDep = localDateDep.atStartOfDay();
-        LocalDate localDateArr = dpArrTime.getValue();
-        LocalDateTime localDateTimeArr = localDateArr.atStartOfDay();
-        LocalDate localDateCom = dpComTime.getValue();
-        LocalDateTime localDateTimeCom = localDateCom.atStartOfDay();
+        String dateDep = dpDepTime.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String dateArr = dpArrTime.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String dateCom = dpComTime.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String departureFrom = txtDepFrom.getText();
         String arrivalTo = txtArrTo.getText();
         String staying = txtStaying.getText();
-        if(staying.trim().isEmpty()){
-            staying.concat("none");
-        }
         LocalDateTime today = LocalDateTime.now();
 
         if(departureFrom.trim().isEmpty() || arrivalTo.trim().isEmpty() ||
-                localDateTimeArr.toString().trim().isEmpty() || localDateTimeDep.toString().trim().isEmpty() ||
-                localDateTimeCom.toString().trim().isEmpty()){
+                dateArr.trim().isEmpty() || dateDep.trim().isEmpty() ||
+                dateCom.trim().isEmpty()){
             this.renameLabelStatus("Insert data.");
         } else if (selectedChild == null || selectedStaff == null){
             this.renameLabelStatus("Add at least one child AND one staff member.");
-        } else if (localDateTimeDep.getDayOfYear() > localDateArr.getDayOfYear() ||
-                localDateArr.getDayOfYear() > localDateCom.getDayOfYear()){
+        } else if (dpDepTime.getValue().getDayOfYear() > dpArrTime.getValue().getDayOfYear() ||
+                dpArrTime.getValue().getDayOfYear() > dpComTime.getValue().getDayOfYear()){
             this.renameLabelStatus("Insert consequential time.");
-        } else if (localDateTimeDep.getDayOfYear() <= today.getDayOfYear()) {
+        } else if (dpDepTime.getValue().getDayOfYear() <= today.getDayOfYear()) {
             this.renameLabelStatus("Insert future time.");
         } else {
             System.out.println("Adding...");
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 //in serverImpl create NumGita too (as in add for children)
-                int[] totParticipantsArray = u.addTrip(selectedChild, selectedStaff, localDateTimeDep, localDateTimeArr, localDateTimeCom, departureFrom, arrivalTo, staying);
+
+                int[] totParticipantsArray = u.addTrip(selectedChild, selectedStaff, dateDep, dateArr, dateCom, departureFrom, arrivalTo, staying);
 
                 int totChildren = totParticipantsArray[0];
                 int totStaff = totParticipantsArray[1];

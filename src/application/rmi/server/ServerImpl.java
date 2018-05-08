@@ -1317,18 +1317,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
-                            LocalDateTime localDateTimeDep, LocalDateTime localDateTimeArr, LocalDateTime localDateTimeCom,
+                            String localDateDep, String localDateArr, String localDateCom,
                             String departureFrom, String arrivalTo, String staying) throws RemoteException {
         PreparedStatement st = null;
-
-        DateTimeFormatter dtfdep = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampDep = Timestamp.valueOf(localDateTimeDep.format(dtfdep));
-
-        DateTimeFormatter dtfarr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampArr = Timestamp.valueOf(localDateTimeArr.format(dtfarr));
-
-        DateTimeFormatter dtfcom = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampCom = Timestamp.valueOf(localDateTimeCom.format(dtfcom));
 
         String queryAddTrip = "INSERT INTO gita (Partenza, DataOraPar, DataOraRit, Alloggio, DataOraArr, Destinazione, NumGita)" +
                 " VALUES (?,?,?,?,?,?,?)";
@@ -1379,10 +1370,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                     //first add new NumGita to gita
                     st = this.connHere().prepareStatement(queryAddTrip);
                     st.setString(1, departureFrom);
-                    st.setTimestamp(2, timestampDep);
-                    st.setTimestamp(3, timestampCom);
+                    st.setString(2, localDateDep);
+                    st.setString(3, localDateCom);
                     st.setString(4, staying);
-                    st.setTimestamp(5, timestampArr);
+                    st.setString(5, localDateArr);
                     st.setString(6, arrivalTo);
                     st.setString(7, newNumGita);
                     st.executeUpdate();
@@ -1416,10 +1407,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         //first add new NumGita to gita
                         st = this.connHere().prepareStatement(queryAddTrip);
                         st.setString(1, departureFrom);
-                        st.setTimestamp(2, timestampDep);
-                        st.setTimestamp(3, timestampCom);
+                        st.setString(2, localDateDep);
+                        st.setString(3, localDateCom);
                         st.setString(4, staying);
-                        st.setTimestamp(5, timestampArr);
+                        st.setString(5, localDateArr);
                         st.setString(6, arrivalTo);
                         st.setString(7, newNumGita);
                         st.executeUpdate();
@@ -1483,14 +1474,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<ChildSelectedTripDbDetails> childDbArrayList = new ArrayList<>(3);
         ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
 
-        //convert localtimedate string to timestamp
-        Timestamp timestampDep = Timestamp.valueOf(selectedDep);
-        Timestamp timestampArr = Timestamp.valueOf(selectedArr);
-        Timestamp timestampCom = Timestamp.valueOf(selectedCom);
-
         String queryFindNumGita = "SELECT NumGita" +
                 " FROM gita" +
-                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
 
         try{
             st = this.connHere().prepareStatement(queryFindNumGita);
@@ -1594,14 +1580,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<StaffSelectedTripDbDetails> staffDbArrayList = new ArrayList<>(3);
         ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
 
-        //convert localtimedate string to timestamp
-        Timestamp timestampDep = Timestamp.valueOf(selectedDep);
-        Timestamp timestampArr = Timestamp.valueOf(selectedArr);
-        Timestamp timestampCom = Timestamp.valueOf(selectedCom);
-
         String queryFindNumGita = "SELECT NumGita" +
                 " FROM gita" +
-                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
 
         try{
             st = this.connHere().prepareStatement(queryFindNumGita);
@@ -1871,13 +1852,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         System.out.println(selectedDep + ", "+ selectedDepFrom + ", " + selectedAccomodation + ", " + selectedArr + ", " + selectedArrTo + ", " + selectedCom);
 
         ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
-        //convert localtimedate string to timestamp
-        Timestamp timestampDep = Timestamp.valueOf(selectedDep);
-        Timestamp timestampArr = Timestamp.valueOf(selectedArr);
-        Timestamp timestampCom = Timestamp.valueOf(selectedCom);
+
         String queryFindNumGita = "SELECT NumGita" +
                 " FROM gita" +
-                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
         try{
             st = this.connHere().prepareStatement(queryFindNumGita);
             resultNumGita = st.executeQuery(queryFindNumGita);
