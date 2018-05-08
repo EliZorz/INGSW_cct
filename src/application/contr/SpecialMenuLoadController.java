@@ -99,6 +99,7 @@ public class SpecialMenuLoadController implements Initializable{
             }
         });
         tabSpecialMenu.getItems().clear();
+        loadMenu();
 
     }
 
@@ -111,12 +112,14 @@ public class SpecialMenuLoadController implements Initializable{
     public void addSpecialMenu(ActionEvent event) throws IOException {
         SpecialMenuController.selectedMenu = null;
         selectedMenu = null;
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("SpecialMenu");
     }
 
     public void updateMenu(ActionEvent event) throws IOException {
         if(selectedMenu != null) {
             SpecialMenuController.selectedMenu = selectedMenu;
+            ((Node)(event.getSource())).getScene().getWindow().hide();
             new GuiNew("SpecialMenu");
         }
         else labelStatus.setText("Please select a menu");
@@ -164,6 +167,7 @@ public class SpecialMenuLoadController implements Initializable{
 
                 tabSpecialMenu.setItems(null);
                 tabSpecialMenu.setItems(specialMenu);
+                selectedMenu = null;
 
         }catch(RemoteException e){
             e.printStackTrace();

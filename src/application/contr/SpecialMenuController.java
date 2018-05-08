@@ -3,6 +3,7 @@ package application.contr;
 import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.*;
+import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -150,6 +152,8 @@ public class SpecialMenuController implements Initializable {
             specialInterni.add(new SpecialGuiDetails(new SpecialDbDetails(selectedMenu[6],selectedMenu[7])));
             tabInterni.setItems(null);
             tabInterni.setItems(specialInterni);
+            selectedInterno = new ArrayList<>();
+            selectedInterno.add(new SpecialDbDetails(selectedMenu[6], selectedMenu[7]));
 
         }
     }
@@ -179,41 +183,48 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void searchMenuDate(){
-        selectedInterno = new ArrayList<>();
-        selectedMenu = null;
-        selectedIngr = new ArrayList<>();
-        selectedDish = null;
-        dateSpecialMenu = dateMenu.getValue();
-        //cleaning the text fields and set false correctDate for a new search
-        correctDate = false;
-        entreeTF.setText("");
-        mainTF.setText("");
-        dessertTF.setText("");
-        drinkTF.setText("");
-        sideTF.setText("");
 
+        if(selectedMenu != null) {
+            status.setText("You can't change the date");
+            dateMenu.setValue(LocalDate.parse(selectedMenu[0]));
+            correctDate = true;
+        }
         //load this menu
-        try {
-            UserRemote u = Singleton.getInstance().methodRmi();
-            //controll date
-            if (!u.controllDate(dateSpecialMenu)) {
-                controllSearchedDate.setText("Loading");
+       else {
+            selectedInterno = new ArrayList<>();
+            selectedIngr = new ArrayList<>();
+            selectedDish = null;
+            dateSpecialMenu = dateMenu.getValue();
+            //cleaning the text fields and set false correctDate for a new search
+            correctDate = false;
+            entreeTF.setText("");
+            mainTF.setText("");
+            dessertTF.setText("");
+            drinkTF.setText("");
+            sideTF.setText("");
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();
+                //controll date
+                if (!u.controllDate(dateSpecialMenu)) {
+                    controllSearchedDate.setText("Loading");
 
-                DishesDbDetails loadedMenu = u.loadThisMenu(dateSpecialMenu);
-                if (loadedMenu != null) {
-                    entreeTF.setText(loadedMenu.getEntree());
-                    mainTF.setText(loadedMenu.getMainCourse());
-                    dessertTF.setText(loadedMenu.getDessert());
-                    sideTF.setText(loadedMenu.getSideDish());
-                    drinkTF.setText(loadedMenu.getDrink());
-                    controllSearchedDate.setText("Loaded");
-                    status.setText("Status");
-                    correctDate = true;
-                    showAllergical();
-                }
-            }else controllSearchedDate.setText("No menu for this date");
-        } catch(RemoteException e){
+                    DishesDbDetails loadedMenu = u.loadThisMenu(dateSpecialMenu);
+                    if (loadedMenu != null) {
+                        entreeTF.setText(loadedMenu.getEntree());
+                        mainTF.setText(loadedMenu.getMainCourse());
+                        dessertTF.setText(loadedMenu.getDessert());
+                        sideTF.setText(loadedMenu.getSideDish());
+                        drinkTF.setText(loadedMenu.getDrink());
+                        controllSearchedDate.setText("Loaded");
+                        status.setText("Status");
+                        correctDate = true;
+                        showAllergical();
+                    }
+                } else controllSearchedDate.setText("No menu for this date");
+            } catch (RemoteException e) {
                 e.printStackTrace();
+            }
+
         }
 
 
@@ -245,7 +256,7 @@ public class SpecialMenuController implements Initializable {
     }
     @FXML
     public void showEntreeIngredients() throws RemoteException {
-        if(!correctDate) {
+        if(!correctDate && selectedMenu == null) {
             controllSearchedDate.setText("Insert a valid date");
         }
         else{
@@ -269,7 +280,7 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void showSideIngredients()throws RemoteException {
-        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        if(!correctDate && selectedMenu == null) controllSearchedDate.setText("Insert a valid date");
         else {
             selectedDish = sideTF.getText();
             if (selectedDish.trim().length() != 0) {
@@ -290,7 +301,7 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void showMainIngredients() throws RemoteException{
-        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        if(!correctDate && selectedMenu == null) controllSearchedDate.setText("Insert a valid date");
         else {
             selectedDish = mainTF.getText();
             if (selectedDish.trim().length() != 0) {
@@ -311,7 +322,7 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void showDessertIngredients()throws RemoteException{
-        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        if(!correctDate && selectedMenu == null) controllSearchedDate.setText("Insert a valid date");
         else {
             selectedDish = dessertTF.getText();
             if (selectedDish.trim().length() != 0) {
@@ -332,7 +343,7 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void showDrinkIngredients()throws RemoteException{
-        if(!correctDate) controllSearchedDate.setText("Insert a valid date");
+        if(!correctDate && selectedMenu == null) controllSearchedDate.setText("Insert a valid date");
         else {
             selectedDish = drinkTF.getText();
             if (selectedDish.trim().length() != 0) {
@@ -374,11 +385,14 @@ public class SpecialMenuController implements Initializable {
                 UserRemote u = Singleton.getInstance().methodRmi();
                 if(selectedMenu == null){
                     for(SpecialDbDetails x : selectedInterno) {
-                        System.out.println(entree);
-
                         boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
                         if (addSuccess) status.setText("Success!!");
                     }
+                }
+                else {
+                    boolean updateSuccess = u.updateSpecialMenu(entree, main, dessert, side, drink, date, selectedInterno.get(0));
+                    if(updateSuccess) status.setText("Success!!");
+                    else status.setText("ERROR!!");
                 }
             }catch(RemoteException e){
                 e.printStackTrace();
@@ -432,16 +446,7 @@ public class SpecialMenuController implements Initializable {
 
 
 
-    private void saveCall(ArrayList<String> selectedIngr, String what) throws RemoteException {
-        try {
-            UserRemote u = Singleton.getInstance().methodRmi();
-            if (u.saveIngredients(what, selectedIngr)) status.setText("Success!! New dish added!");
-            else status.setText("Error with the new dish");
-        }catch (RemoteException e){
-            e.printStackTrace();
-        }
 
-    }
 
     @FXML
     public void showAllergical(){
@@ -471,11 +476,12 @@ public class SpecialMenuController implements Initializable {
 
     }
 
-    public void exit(ActionEvent event) {
+    public void exit(ActionEvent event) throws IOException {
         selectedMenu = null;
         tabIngr.setItems(null);
         tabInterni.setItems(null);
         ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("LoadSpecialMenu");
     }
 
 

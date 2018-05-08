@@ -77,6 +77,7 @@ public interface UserRemote extends Remote {
 
     boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException;
 
+    boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException;
 
 
     ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;

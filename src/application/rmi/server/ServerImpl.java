@@ -1193,13 +1193,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         PreparedStatement st = null;
         PreparedStatement stIngr = null;
-        PreparedStatement stIngr2 = null;
 
         String queryUpdate = "UPDATE mydb.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
 
         String queryDelete = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"' and dish_ingredients_nome_piatto != '"+entree+"' || dish_ingredients_nome_piatto !='"+side+"'||dish_ingredients_nome_piatto !=' "+dessert+"'||dish_ingredients_nome_piatto != '"+drink+"'|| dish_ingredients_nome_piatto != '"+main+"'";
-        ResultSet result = null;
-        ResultSet result1 = null;
+
 
 
         try {
@@ -1689,6 +1687,36 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         return false;
     }
+
+
+    public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException{
+       PreparedStatement st = null;
+       PreparedStatement stIngr = null;
+       String queryUpdate = "UPDATE mydb.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
+        String queryDelete = "DELETE FROM  mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"' and menu_special_allergie =' "+special.getAllergie()+"' and (dish_ingredients_Nome_piatto != '"+entree+"' || dish_ingredients_Nome_piatto !='"+side+"'||dish_ingredients_Nome_piatto !=' "+dessert+"'||dish_ingredients_Nome_piatto != '"+drink+"'|| dish_ingredients_Nome_piatto != '"+main+"')";
+
+        try{
+            st = this.connHere().prepareStatement(queryUpdate);
+            stIngr = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate();
+            try {
+                if (st != null && stIngr != null) {
+                    st.close();
+                    stIngr.close();
+                }
+                return true;
+            }catch(Exception e){
+                e.printStackTrace();
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return false;
+    }
+
 
 
 
