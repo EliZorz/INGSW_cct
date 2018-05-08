@@ -174,7 +174,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                            boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergie)" +
                             " VALUES (?,?,?,?,?,?,?,?,?,?)";
         String queryLastCodRif = "SELECT MAX(CodRif) FROM bambino";  //select last CodRif inserted
         String queryAddCf = "INSERT INTO bambino(CodRif, Interni_CF) VALUES (?,?)";
@@ -357,7 +357,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryEdit = "UPDATE interni SET Cognome ='" + surname + "', Nome ='" + name + "', CF ='" + cf + "', " +
                 "DataNascita ='" + Date.valueOf(bornOn) + "', CittaNascita='" + bornWhere + "', Residenza='" + residence + "', " +
-                "Indirizzo='" + address + "', CAP='" + cap + "', Provincia='" + province + "', Allergia='" + allAllergies.toString() + "'" +
+                "Indirizzo='" + address + "', CAP='" + cap + "', Provincia='" + province + "', Allergie='" + allAllergies.toString() + "'" +
                 "WHERE CF = '" + oldcf + "';";
 
         try {
@@ -709,7 +709,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergia)" +
+        String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergie)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
         String queryLastCodRif = "SELECT MAX(CodID) FROM personaleint";  //select last CodRif inserted
         String queryAddCf = "INSERT INTO personaleint(Mail, CodID, Interni_CF) VALUES (?,?,?)";
@@ -872,7 +872,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryEdit = "UPDATE interni SET Cognome ='" + surname + "', Nome ='" + name + "', CF ='" + cf + "', " +
                 "DataNascita ='" + Date.valueOf(bornOn) + "', CittaNascita ='" + bornWhere + "', Residenza ='" + residence + "', " +
-                "Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "', Allergia ='" + allAllergies.toString() + "'" +
+                "Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "', Allergie ='" + allAllergies.toString() + "'" +
                 "WHERE CF = '" + oldcf + "';";
 
         String queryEditMail = "UPDATE personaleint SET Mail ='" + mail + "'" +
