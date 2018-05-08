@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface UserRemote extends Remote {
     boolean funzLog(String usr, String pwd) throws RemoteException; //questa funzione controllerà se username e password sono corretti
@@ -55,5 +56,7 @@ public interface UserRemote extends Remote {
     ArrayList<CodRifChildDbDetails> findNotAvailableStaff (ArrayList<String> selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException;
     ArrayList<CodRifChildDbDetails> findNotAvailableChild (ArrayList<String> selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException;
     int[] howManyActualParticipants(ArrayList<String> selectedChildCf, ArrayList<String> selectedStaffCf) throws RemoteException;
+    HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff,
+                                                                  String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
 
 }

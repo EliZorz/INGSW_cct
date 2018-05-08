@@ -75,5 +75,6 @@
       </TableView>
       <Button fx:id="btnLoadTrip" layoutX="684.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleLoadTrip" prefHeight="19.0" prefWidth="99.0" text="Load" />
       <Button fx:id="btnDeselect" layoutX="740.0" layoutY="545.0" mnemonicParsing="false" onAction="#handleDeselectAll" prefHeight="40.0" prefWidth="99.0" text="Deselect all" />
+      <Button fx:id="btnBus" layoutX="740.0" layoutY="487.0" mnemonicParsing="false" onAction="#handleCalculateBus" prefHeight="40.0" prefWidth="99.0" text="Calculate buses" />
    </children>
 </AnchorPane>

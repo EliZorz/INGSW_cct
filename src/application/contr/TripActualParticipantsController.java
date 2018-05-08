@@ -17,10 +17,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,13 +28,22 @@ public class TripActualParticipantsController implements Initializable {
     private ObservableList<ChildSelectedTripGuiDetails> actualChildrenObsList = FXCollections.observableArrayList();
     private ObservableList<StaffSelectedTripGuiDetails> actualStaffObsList = FXCollections.observableArrayList();
 
+    int totChildren = 0;
+    int totStaff = 0;
+
+    private HashMap<String, ArrayList<String>> busForParticipants = new HashMap<>();
+
     ArrayList<String> selectedTrip = new ArrayList<>();
     ArrayList<String> selectedChild = new ArrayList<>();
     ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
     ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
     ArrayList<String> selectedStaff = new ArrayList<>();
+    String selectedTripDepFrom = new String();
     String selectedTripDep = new String();
     String selectedTripCom = new String();
+    String selectedTripAccomodation = new String();
+    String selectedTripArrTo = new String();
+    String selectedTripArr = new String();
 
     @FXML
     public TableView<ChildSelectedTripGuiDetails> tableActualChildren;
@@ -88,6 +94,8 @@ public class TripActualParticipantsController implements Initializable {
     @FXML
     public Button btnLoadStaff;
     @FXML
+    public Button btnBus;
+    @FXML
     public Label lblWarning;
 
     @Override
@@ -110,8 +118,12 @@ public class TripActualParticipantsController implements Initializable {
                 selectedTrip.add(newSelection.getArr());
                 selectedTrip.add(newSelection.getArrTo());
 
+                selectedTripDepFrom = newSelection.getDepFrom();
                 selectedTripDep = newSelection.getDep();
                 selectedTripCom = newSelection.getCom();
+                selectedTripAccomodation = newSelection.getAccomodation();
+                selectedTripArr = newSelection.getArr();
+                selectedTripArrTo = newSelection.getArrTo();
             }
         });
         tableTrip.getItems().clear();
@@ -243,13 +255,12 @@ public class TripActualParticipantsController implements Initializable {
                 //find out if some participants the user selected are already used in a concurrent trip
                 if (notAvailableStaffArrayList.isEmpty() && notAvailableChildArrayList.isEmpty()){
                     int[] totParticipantsSelectedArray = u.howManyActualParticipants(selectedChildCfArrayList, selectedStaffCfArrayList);
-                    int totChildren = totParticipantsSelectedArray[0];
-                    int totStaff = totParticipantsSelectedArray[1];
+                    totChildren = totParticipantsSelectedArray[0];
+                    totStaff = totParticipantsSelectedArray[1];
                     this.renameLabelTotChildren(totChildren);
                     this.renameLabelTotStaff(totStaff);
-                    this.renameLabel("Ready to go.");
 
-                    //DEVO CALCOLARE CHI VA SU QUALE BUS!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ENABLE BUTTON CALCULATE BUS *****************************************************************************************************
 
                 } else {
                         //highlight items into arrayList and tell user to reselect
@@ -313,6 +324,26 @@ public class TripActualParticipantsController implements Initializable {
     }
 
 
+    public void handleCalculateBus() {
+        System.out.println("Calculating necessary buses...");
+        try{
+            UserRemote u = Singleton.getInstance().methodRmi();
+            //calculate who goes on which bus -> HashMap<plateBus, who>
+            busForParticipants = u.associateBusToParticipants(selectedChildCfArrayList, totChildren, selectedStaffCfArrayList, totStaff, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+
+            if(busForParticipants == null){
+                this.renameLabel("ERROR: no buses available.");
+            } else {
+                this.renameLabel("Ready to go.");
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public void handleDeselectAll() {
         tableTrip.getSelectionModel().clearSelection();
         tableActualChildren.getSelectionModel().clearSelection();
@@ -333,7 +364,7 @@ public class TripActualParticipantsController implements Initializable {
                 TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
 
                 if (!currentRow.isEmpty()) {
-                    currentRow.setStyle("-fx-background-color:table.background");
+                    currentRow.setStyle("-fx-background-color:white");
                 }
 
             }
@@ -350,7 +381,7 @@ public class TripActualParticipantsController implements Initializable {
                 TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
 
                 if (!currentRow.isEmpty()) {
-                    currentRow.setStyle("-fx-background-color:table.background");
+                    currentRow.setStyle("-fx-background-color:white");
                 }
 
             }

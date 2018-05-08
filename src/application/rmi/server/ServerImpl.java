@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -1330,7 +1331,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         Timestamp timestampCom = Timestamp.valueOf(localDateTimeCom.format(dtfcom));
 
         String queryAddTrip = "INSERT INTO gita (Partenza, DataOraPar, DataOraRit, Alloggio, DataOraArr, Destinazione, NumGita)" +
-                " VALUES (?,?,?,?,?,?, ?)";
+                " VALUES (?,?,?,?,?,?,?)";
         String queryLastNumGita = "SELECT COALESCE(MAX(NumGita), 0) FROM gita"; //replaces null from empty NumGita with g1
         //to create new NumGita for the added trip simply ++
 
@@ -1339,7 +1340,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         //divide items from arraylist selectedChild/selectedStaff into string to put into database
         String[] selectedChildArray = selectedChild.toArray(new String[selectedChild.size()]);
         String[] selectedStaffArray = selectedStaff.toArray(new String[selectedStaff.size()]);
-        String queryAddSelectedParticipants = "INSERT into interni_has_gita (interni_CF, gita_NumGita, Partecipante_effettivo)" +
+        String queryAddSelectedParticipants = "INSERT INTO interni_has_gita (interni_CF, gita_NumGita, Partecipante_effettivo)" +
                 " VALUES (?,?,?)";
 
         String newNumGita;
@@ -1487,7 +1488,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         Timestamp timestampArr = Timestamp.valueOf(selectedArr);
         Timestamp timestampCom = Timestamp.valueOf(selectedCom);
 
-        String queryFindNumGita = "SELECT MAX(NumGita)" +
+        String queryFindNumGita = "SELECT NumGita" +
                 " FROM gita" +
                 " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ selectedArrTo + "';";
 
@@ -1598,7 +1599,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         Timestamp timestampArr = Timestamp.valueOf(selectedArr);
         Timestamp timestampCom = Timestamp.valueOf(selectedCom);
 
-        String queryFindNumGita = "SELECT MAX(NumGita)" +
+        String queryFindNumGita = "SELECT NumGita" +
                 " FROM gita" +
                 " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ selectedArrTo + "';";
 
@@ -1706,22 +1707,22 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         // ed è stato selezionato per la gita corrente
         // -> se ! resultStaff.next() NON posso aggiungere quegli elementi
 
-        String queryFindNotAvailableStaff = "SELECT interni_CF" +
-                " FROM interni_has_gita AS IG INNER JOIN" +
-                " gita AS G1 ON (IG.gita_NumGita = G1.NumGita) INNER JOIN" +
-                " gita AS G2 ON (G1.NumGita = G2.NumGita AND G2.DataOraPar BETWEEN G1.DataOraPar AND G1.DataOraRit" +
-                                                    " OR G2.DataOraRit BETWEEN G1.DataOraPar AND G1.DataOraRit" +
-                                " AND G1.NumGita < G2.NumGita" +
-                                " AND G1.DataOraPar = '" + selectedTripDep + "' AND G1.DataOraRit = '" + selectedTripCom + "')" +
-                " WHERE IG.Partecipante_effettivo = ?" +
-                " AND IG.interni_CF = ? ";
+        String queryFindNotAvailableStaff = "SELECT DISTINCT IG.interni_CF " +
+                "FROM interni_has_gita AS IG " +
+                "WHERE IG.interni_CF = ? " +
+                "AND IG.Partecipante_effettivo = '1' " +
+                "AND IG.gita_NumGita IN " +
+                "(SELECT DISTINCT G2.NumGita " +
+                "FROM gita AS G1, gita AS G2 " +
+                "WHERE ((G1.DataOraPar <= G2.DataOraPar AND G2.DataOraPar <= G1.DataOraRit) " +
+                "OR (G2.DataOraPar <= G1.DataOraPar AND G1.DataOraPar <= G2.DataOraRit)) " +
+                "AND G1.DataOraPar = '"+ selectedTripDep + "' AND G1.DataOraRit = '"+ selectedTripCom + "')";
 
                 System.out.println("Found NOT AVAILABLE staff members? YES/NO");
                 for(String staff : selectedStaffArray) {
                     try {
                         st = this.connHere().prepareStatement(queryFindNotAvailableStaff);
-                        st.setInt(1,1);
-                        st.setObject(2, staff);
+                        st.setString(1,staff);
                         resultStaff = st.executeQuery();
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -1756,22 +1757,30 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<CodRifChildDbDetails> childNotAvailableArrayList = new ArrayList<>();
         String[] selectedChildArray = selectedChildCf.toArray(new String[selectedChildCf.size()]);
 
-        String queryFindNotAvailableChild = "SELECT interni_CF" +
-                " FROM interni_has_gita AS IG INNER JOIN" +
-                " gita AS G1 ON (IG.gita_NumGita = G1.NumGita) INNER JOIN" +
-                " gita AS G2 ON (G1.NumGita = G2.NumGita AND G2.DataOraPar BETWEEN G1.DataOraPar AND G1.DataOraRit" +
-                                                        " OR G2.DataOraRit BETWEEN G1.DataOraPar AND G1.DataOraRit" +
-                                                        " AND G1.NumGita < G2.NumGita" +
-                                " AND G1.DataOraPar = '" + selectedTripDep + "' AND G1.DataOraRit = '" + selectedTripCom + "')" +
-                " WHERE IG.Partecipante_effettivo = ? " +
-                " AND IG.interni_CF = ? ";
+        /* OVERLAP QUERY
+        SELECT G2.NumGita FROM gita AS G1
+        INNER JOIN gita AS G2 ON (G1.NumGita = G2.NumGita
+        AND G2.DataOraPar <= G1.DataOraRit <= G2.DataOraRit
+        OR G2.DataOraPar <= G1.DataOraPar <= G2.DataOraRit)
+        WHERE G1.NumGita <> G2.NumGita
+        AND G1.DataOraPar = '...' AND G1.DataOraRit = '...'
+        */
+        String queryFindNotAvailableChild = "SELECT DISTINCT IG.interni_CF " +
+                "FROM interni_has_gita AS IG " +
+                "WHERE IG.interni_CF = ? " +
+                "AND IG.Partecipante_effettivo = '1' " +
+                "AND IG.gita_NumGita IN " +
+                "(SELECT DISTINCT G2.NumGita " +
+                "FROM gita AS G1, gita AS G2 " +
+                "WHERE ((G1.DataOraPar <= G2.DataOraPar AND G2.DataOraPar <= G1.DataOraRit) " +
+                "OR (G2.DataOraPar <= G1.DataOraPar AND G1.DataOraPar <= G2.DataOraRit)) " +
+                "AND G1.DataOraPar = '"+ selectedTripDep + "' AND G1.DataOraRit = '"+ selectedTripCom + "')";
 
         System.out.println("Found NOT AVAILABLE children? YES/NO");
         for(String child : selectedChildArray) {
             try {
                 st = this.connHere().prepareStatement(queryFindNotAvailableChild);
-                st.setInt(1,1);
-                st.setObject(2, child);
+                st.setString(1,child);
                 resultChild = st.executeQuery();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -1849,6 +1858,202 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
         return totParticipants;
+    }
+
+
+    @Override
+    public HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff,
+                                                                         String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation,
+                                                                         String selectedArr, String selectedArrTo) throws RemoteException {
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+
+        System.out.println(selectedDep + ", "+ selectedDepFrom + ", " + selectedAccomodation + ", " + selectedArr + ", " + selectedArrTo + ", " + selectedCom);
+
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+        //convert localtimedate string to timestamp
+        Timestamp timestampDep = Timestamp.valueOf(selectedDep);
+        Timestamp timestampArr = Timestamp.valueOf(selectedArr);
+        Timestamp timestampCom = Timestamp.valueOf(selectedCom);
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryFindAvailableBus = "SELECT B.Targa, B.capienza " +
+                "FROM bus AS B " +
+                "WHERE B.Targa NOT IN " +
+                "(SELECT GB.bus_Targa " +
+                "FROM gita_has_bus AS GB " +
+                "WHERE GB.gita_NumGita IN " +
+                "(SELECT DISTINCT G2.NumGita " +
+                "FROM gita AS G1, gita AS G2 " +
+                "WHERE ((G1.DataOraPar <= G2.DataOraPar AND G2.DataOraPar <= G1.DataOraRit) " +
+                "OR (G2.DataOraPar <= G1.DataOraPar AND G1.DataOraPar <= G2.DataOraRit))" +
+                "AND G1.DataOraPar = '"+ selectedDep +"' AND G1.DataOraRit = '"+ selectedCom +"'))" +
+                "ORDER BY B.capienza ASC";
+
+        HashMap<String, ArrayList<String>> busToPartecipantHashMap = new HashMap<>();
+        ResultSet resultBus = null;
+        ArrayList<BusPlateCapacityDbDetails> busAvailableArrayList = new ArrayList<>(2);
+        int totParticipants = totChildren + totStaff;
+        ArrayList<String> everyParticipantArrayList = new ArrayList<>();
+        everyParticipantArrayList.addAll(selectedChildCfArrayList);
+        everyParticipantArrayList.addAll(selectedStaffCfArrayList);
+
+        try {
+            st = this.connHere().prepareStatement(queryFindAvailableBus);
+            resultBus = st.executeQuery(queryFindAvailableBus);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (!resultBus.next()) {
+                System.out.println("No buses available for this period.");
+                return null; // null == ERRORE : NON HO ABBASTANZA BUS ASSEGNABILI
+            } else {
+                System.out.println("Found buses available.");
+                resultBus.beforeFirst();
+                try {
+                    while (resultBus.next()) {
+                        BusPlateCapacityDbDetails prova = new BusPlateCapacityDbDetails(resultBus.getString(1),
+                                resultBus.getString(2));
+                        busAvailableArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        busFromFirstLoop:
+        for(int i=0; i < busAvailableArrayList.size(); i++){  //until the last bus in AL
+            String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
+            int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
+            String plateString = busAvailableArrayList.get(i).getPlate();
+
+            if(capienzaPerBus >= totParticipants){      //if capacity >= totPart -> save that bus, we're done.
+                //everyParticipant goes on that bus -> save in hashmap <plate,everyoneAL<String>>
+                busToPartecipantHashMap.put(plateString, everyParticipantArrayList);
+
+                //make bus mine
+                String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
+                try {
+                    st = this.connHere().prepareStatement(queryMakeBusMine);
+                    st.setString(1,numGita);
+                    st.setString(2,plateString);
+                    st.executeUpdate();
+                } catch (SQLException e){
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (st != null)
+                            st.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                break busFromFirstLoop;
+
+            } //else proseguo in for
+        }
+        //se arrivo a fine busAvailableAL senza trovare un bus, quindi se hashmap.isempty() -> salvo bus da fine AL tornando indietro, finchè
+        // o trovo che, arrivato a inizio AL, ho ancora dei partecipanti non assegnati -> bus non sufficienti -> ERR
+        // o trovo bus per tutte le persone (continuo ricerca finchè totPart - capienza > 0 )
+        if(busToPartecipantHashMap.isEmpty()){
+            ArrayList<String> participantsOnBus = new ArrayList<>();
+
+            busFromLastLoop:
+            for(int i = busAvailableArrayList.size(); i >= 0; i--){  //finchè non ho ripercorso tutti i bus dall'ultimo al primo (cioè da quello con capacità maggiore, DESC)
+                String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
+                int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
+                String plateString = busAvailableArrayList.get(i).getPlate();
+
+                int remainingParticipants = totParticipants - capienzaPerBus;
+
+                while (remainingParticipants > 0) { //finchè restano partecipanti da assegnare ai bus
+                    if(remainingParticipants > 0 && i==0) {  //se ho ancora partecipanti da assegnare ma non ho più bus assegnabili
+                        return null;    //null == ERRORE : NON HO ABBASTANZA BUS ASSEGNABILI
+
+                    } else {
+
+                        //salvo in AL chi sta su quel bus (fino alla capacità max)
+                        for (int pos = 0; pos <= everyParticipantArrayList.size(); pos++) {
+                            for (int k = everyParticipantArrayList.size(); k >= capienzaPerBus; k--) {
+                                //aggiungo quella persona a partOnBusAL da inizio AL
+                                participantsOnBus.add(pos, everyParticipantArrayList.get(k));
+                                //elimino quella persona da everyPartAL
+                                everyParticipantArrayList.remove(everyParticipantArrayList.get(k));
+                            }
+                        }
+                        busToPartecipantHashMap.put(plateString, participantsOnBus);
+
+                        // make bus mine
+                        String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
+                        try {
+                            st = this.connHere().prepareStatement(queryMakeBusMine);
+                            st.setString(1,numGita);
+                            st.setString(2,plateString);
+                            st.executeUpdate();
+                        } catch (SQLException e){
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                if (st != null)
+                                    st.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return busToPartecipantHashMap;
     }
 
 
