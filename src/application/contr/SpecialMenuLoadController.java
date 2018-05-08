@@ -153,15 +153,18 @@ public class SpecialMenuLoadController implements Initializable{
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<SpecialMenuDbDetails> specialDbArrayList = u.loadSpecialMenu();
             specialMenu.clear();
-            if(specialDbArrayList != null){
-                for(SpecialMenuDbDetails x : specialDbArrayList){
+            if(specialDbArrayList != null) {
+                for (SpecialMenuDbDetails x : specialDbArrayList) {
                     SpecialMenuGuiDetails tmp = new SpecialMenuGuiDetails(x);
                     specialMenu.add(tmp);
                 }
+                if(specialDbArrayList.isEmpty()) labelStatus.setText("No special menu in the DB");
+                else labelStatus.setText("Loaded");
+            }
 
                 tabSpecialMenu.setItems(null);
                 tabSpecialMenu.setItems(specialMenu);
-            }
+
         }catch(RemoteException e){
             e.printStackTrace();
         }

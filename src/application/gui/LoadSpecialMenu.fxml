@@ -36,7 +36,7 @@
       <Button fx:id="newMenu" layoutX="950.0" layoutY="106.0" mnemonicParsing="false" onAction="#addSpecialMenu" prefHeight="40.0" prefWidth="212.0" text="New Menu" AnchorPane.rightAnchor="118.0" AnchorPane.topAnchor="106.0" />
       <Button fx:id="update" layoutX="950.0" layoutY="183.0" mnemonicParsing="false" onAction="#updateMenu" prefHeight="40.0" prefWidth="212.0" text="Update" AnchorPane.rightAnchor="118.0" />
       <Button fx:id="delete" layoutX="950.0" layoutY="262.0" mnemonicParsing="false" onAction="#deleteMenu" prefHeight="40.0" prefWidth="212.0" text="Delete" AnchorPane.rightAnchor="118.0" AnchorPane.topAnchor="262.0" />
-      <Label fx:id="labelStatus" layoutX="950.0" layoutY="538.0" prefHeight="40.0" prefWidth="212.0" text="Status" AnchorPane.rightAnchor="118.0">
+      <Label fx:id="labelStatus" layoutX="926.0" layoutY="537.0" prefHeight="117.0" prefWidth="304.0" text="Status" AnchorPane.rightAnchor="50.0">
          <font>
             <Font size="24.0" />
          </font>

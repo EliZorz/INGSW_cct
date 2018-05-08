@@ -1590,23 +1590,90 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date,SpecialDbDetails special) throws RemoteException{
         String queryAdd = "INSERT INTO mydb.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
+        String queryAddDish = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         PreparedStatement st = null;
+        PreparedStatement stDish = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
         try {
 
-                st = this.connHere().prepareStatement(queryAdd);
-                st.setString(1, entree);
-                st.setString(2, main);
-                st.setString(3, dessert);
-                st.setString(4, side);
-                st.setString(5, drink);
-                st.setDate(6, Date.valueOf(date));
-                st.setString(7, special.getCF());
-                st.setString(8, special.getAllergie());
-                st.executeUpdate();
+            st = this.connHere().prepareStatement(queryAdd);
+            stDish= this.connHere().prepareStatement(queryAddDish);
+            st.setString(1, entree);
+            st.setString(2, main);
+            st.setString(3, dessert);
+            st.setString(4, side);
+            st.setString(5, drink);
+            st.setDate(6, Date.valueOf(date));
+            st.setString(7, special.getCF());
+            st.setString(8, special.getAllergie());
+            st.executeUpdate();
+
+            if(!entree.isEmpty()) {
+                ingredients = searchIngredients(entree);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, entree);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!main.isEmpty()) {
+                ingredients = searchIngredients(main);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, main);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!side.isEmpty()) {
+                ingredients = searchIngredients(side);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, side);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!dessert.isEmpty()) {
+                ingredients = searchIngredients(dessert);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, dessert);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!drink.isEmpty()) {
+                ingredients = searchIngredients(drink);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, drink);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+
 
             try{
-                if(st != null) {
+                if(st != null && stDish != null) {
                     st.close();
+                    stDish.close();
                 }
                 return true;
             }catch(Exception e){
@@ -1614,6 +1681,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 return false;
             }
         }catch (SQLException e) {
+            deleteSpecialMenu(date, special.getCF(), special.getAllergie());
             e.printStackTrace();
         }
 

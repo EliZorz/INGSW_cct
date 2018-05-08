@@ -353,6 +353,7 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void saveSpecialMenu(){
+
         String entree = entreeTF.getText();
         String main = mainTF.getText();
         String side = sideTF.getText();
@@ -373,6 +374,8 @@ public class SpecialMenuController implements Initializable {
                 UserRemote u = Singleton.getInstance().methodRmi();
                 if(selectedMenu == null){
                     for(SpecialDbDetails x : selectedInterno) {
+                        System.out.println(entree);
+
                         boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
                         if (addSuccess) status.setText("Success!!");
                     }
