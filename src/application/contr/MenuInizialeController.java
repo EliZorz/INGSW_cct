@@ -46,7 +46,7 @@ public class MenuInizialeController {
     @FXML
     void openSpecialMenu (ActionEvent event)throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
-        new GuiNew("SpecialMenu");
+        new GuiNew("LoadSpecialMenu");
     }
 
 

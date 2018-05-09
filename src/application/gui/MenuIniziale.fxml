@@ -13,14 +13,14 @@
       <children>
         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="21.0">
                   <image>
-                     <Image url="@../Movie_Brainy.png" />
+                     <Image url="@Movie_Brainy.png" />
                   </image></ImageView>
           <Label alignment="CENTER" contentDisplay="CENTER" layoutX="42.0" layoutY="185.0" prefHeight="28.0" prefWidth="114.0" text="USERNAME" />
         <Button layoutX="78.0" layoutY="228.0" mnemonicParsing="false" AnchorPane.bottomAnchor="28.0" AnchorPane.rightAnchor="75.0">
           <graphic>
             <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                           <Image url="@../1211766860.png" />
+                           <Image url="@1211766860.png" />
                         </image></ImageView>
           </graphic>
         </Button>

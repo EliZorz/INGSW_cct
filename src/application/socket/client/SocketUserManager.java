@@ -33,6 +33,8 @@ public class SocketUserManager implements UserRemote {
 
     }
 
+
+    //LOGIN --------------------------------------------------------------------------------------------------
     @Override
     public boolean funzLog(String usr, String pwd) throws RemoteException {
 
@@ -57,6 +59,7 @@ public class SocketUserManager implements UserRemote {
     }
 
 
+    //CHILDREN ---------------------------------------------------------------------------
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
         ArrayList<ChildDbDetails> child = new ArrayList<>(1);
@@ -117,7 +120,36 @@ public class SocketUserManager implements UserRemote {
         return true;
     }
 
+    @Override
+    public boolean deleteChild(String cf) throws RemoteException{
+        return true;
+    }
 
+    @Override
+    public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
+        ArrayList<IngredientsDbDetails> ingr = new ArrayList<>(1);
+        String responce = null;
+        IngredientsDbDetails dIngr;
+        System.out.println("sending a message to load the ingredients");
+        out.println("loadIngr");
+        out.flush();
+        try{
+            in.readLine();
+        } catch (IOException e) {
+            System.out.println("problema nella lettura del messaggio");
+            e.printStackTrace();
+        }
+        if(responce != null){
+
+            dIngr = new IngredientsDbDetails(responce); // perché passa solo una parola se fossero più parole bisogna modificarlo
+            ingr.add(dIngr);
+            return ingr;
+        }
+        return null;
+    }
+
+
+    //CONTACT --------------------------------------------------------------------------------
     @Override
     public boolean addContact (ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         return true;
@@ -134,20 +166,12 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
-        return null;
-    }
-
-    @Override
     public ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException {
         return null;
     }
 
-    @Override
-    public boolean deleteChild(String cf) throws RemoteException{
-        return true;
-    }
 
+    //STAFF ------------------------------------------------------------------------------------------
     @Override
     public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException{
         ArrayList<StaffDbDetails> staff = new ArrayList<>(1);
@@ -199,6 +223,7 @@ public class SocketUserManager implements UserRemote {
         return true;
     }
 
+    //SUPPLIERS ------------------------------------------------------------------------
     @Override
     public ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException {
         return null;
@@ -236,6 +261,27 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean deleteCoachOperator(String piva) throws RemoteException {
+        return false;
+    }
+
+    //MENU -------------------------------------------------------------------------------
+    @Override
+    public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, LocalDate oldDate) throws RemoteException {
         return false;
     }
 
@@ -289,6 +335,48 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
+    @Override
+    public boolean controllDate(LocalDate d) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean deleteMenu(LocalDate d) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException {
+        return false;
+    }
+
+    //SPECIAL MENU ------------------------------------------------------------------------------------
+    @Override
+    public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        return false;
+    }
+
+    //TRIP -------------------------------------------------------------------------------------
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
         return null;

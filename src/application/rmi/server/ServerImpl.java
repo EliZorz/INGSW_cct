@@ -1169,15 +1169,250 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
+//MENU ---------------------------------------------------------------------------------------
+
+    @Override
+    public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {
+        PreparedStatement st;
+        ResultSet result = null;
+        DishesDbDetails dishes  = null;
+        String queryLoad1 = "SELECT * FROM mydb.menu_base WHERE date ='"+date+"'";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad1);
+            result = st.executeQuery(queryLoad1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try{
+            System.out.println("ok");
+            if( !result.next() ) {
+                System.out.println("No menu in Db");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        dishes = new DishesDbDetails(result.getString(1),result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5),result.getString(6),result.getString(7));
+
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return dishes;
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
+        PreparedStatement st = null;
+        String querySearch = "SELECT ingredients_ingredient FROM mydb.dish_ingredients WHERE Nome_piatto='"+dish+"'";
+        ResultSet result = null;
+        ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
+        try{
+            st = this.connHere().prepareStatement(querySearch);
+            result = st.executeQuery(querySearch);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("Error no ingredients for this dish");
+                return null;
+            }else{
+                result.beforeFirst();
+                try{
+                    while(result.next()){
+                        IngredientsDbDetails example = new IngredientsDbDetails(result.getString(1));
+                        //ingredientsForThisDish.add(result.getString(0));
+                       /* String str = new String(result.getString(0));
+                        System.out.println(str);
+                        String[] ingredients = str.split("\\s");
+                        for(String x : ingredients)
+                            ingredientsForThisDish.add(x);*/
+                        ingredientsForThisDish.add(example);
+                    }
+                }catch(SQLException e){
+                    e.printStackTrace();
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(result != null){
+                    result.close();
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return ingredientsForThisDish;
+
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> loadIngr(LocalDate d) throws RemoteException{
+        PreparedStatement st = null;
+        String queryLoad = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date ='" + d+"'";
+        ResultSet result = null;
+        ArrayList<IngredientsDbDetails> resIngr = new ArrayList<>();
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if(!result.next()){
+                System.out.println("Error");
+            }else{
+                result.beforeFirst();
+                try{
+                    while(result.next()){
+                        IngredientsDbDetails str = new IngredientsDbDetails(result.getString(1));
+                        resIngr.add(str);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return resIngr;
+    }
+
+    @Override
+    public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day,  LocalDate oldDate) throws RemoteException{
+
+        PreparedStatement st = null;
+        PreparedStatement stIngr = null;
+        PreparedStatement stAdd = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+
+        String queryUpdate = "UPDATE mydb.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
+
+        String queryDelete = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"'";
+
+        String queryAdd = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients)"+"VALUES (?,?,?)";
+
+        try {
+
+            st = this.connHere().prepareStatement(queryUpdate);
+            st.executeUpdate();
+            stIngr = this.connHere().prepareStatement(queryDelete);
+            stIngr.executeUpdate();
+            stAdd = this.connHere().prepareStatement(queryAdd);
+
+            if(!entree.isEmpty()) {
+                ingredients = searchIngredients(entree);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, entree);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+            if(!main.isEmpty()) {
+                ingredients = searchIngredients(main);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, main);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!side.isEmpty()) {
+                ingredients = searchIngredients(side);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, side);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!dessert.isEmpty()) {
+                ingredients = searchIngredients(dessert);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, dessert);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!drink.isEmpty()) {
+                ingredients = searchIngredients(drink);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, drink);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null && stIngr != null && stAdd != null) {
+                    st.close();
+                    stIngr.close();
+                    stAdd.close();
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+    }
+
+
 //MENU BASE---------------------------------------------------------------------------------------
 
-        @Override
+    @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
         PreparedStatement st;
         ResultSet result = null;
         ArrayList<DishesDbDetails> dishes = new ArrayList<>(4);
 
-        String queryLoad1 = "SELECT * FROM project.menu_base";
+        String queryLoad1 = "SELECT * FROM mydb.menu_base";
 
         try{
             st = this.connHere().prepareStatement(queryLoad1);
@@ -1227,13 +1462,17 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryAdd = "INSERT INTO project.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
+        String queryAdd = "INSERT INTO mydb.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
+        String queryAddDish = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredients)"+"VALUES(?,?,?)";
+        PreparedStatement stDish = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
         try {
             //add data new child into db
             st = this.connHere().prepareStatement(queryAdd);
+            stDish= this.connHere().prepareStatement(queryAddDish);
             st.setString(1, num);
             st.setString(2, entree);
             st.setString(3, mainCourse);
@@ -1243,23 +1482,514 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.setDate(7, Date.valueOf(date));
             st.executeUpdate();
 
+            if(!entree.isEmpty()) {
+                ingredients = searchIngredients(entree);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, entree);
+                    stDish.setString(3,x.getIngr());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!mainCourse.isEmpty()) {
+                ingredients = searchIngredients(mainCourse);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, mainCourse);
+                    stDish.setString(3,x.getIngr());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!sideDish.isEmpty()) {
+                ingredients = searchIngredients(sideDish);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, sideDish);
+                    stDish.setString(3,x.getIngr());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!dessert.isEmpty()) {
+                ingredients = searchIngredients(dessert);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, dessert);
+                    stDish.setString(3,x.getIngr());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!drink.isEmpty()) {
+                ingredients = searchIngredients(drink);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, drink);
+                    stDish.setString(3,x.getIngr());
+                    stDish.executeUpdate();
+                }
+            }
+
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
             try {
-                if (st != null)
+                if (st != null ) {
                     st.close();
+
+                }
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
         }
+    }
+
+
+    @Override
+    public boolean controllDate(LocalDate d) throws RemoteException {
+        PreparedStatement st = null;
+        String queryControll = "SELECT date FROM mydb.menu_base WHERE date = '" + d + "';";
+
+        ResultSet result = null;
+
+        try {
+
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+
+
+        } catch (SQLException e) {
+            System.out.println("Error during search in DB");
+            e.printStackTrace();
+        }
+
+
+        try {
+            if (!result.next()) {
+                System.out.println("No date like this in database");
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteMenu(LocalDate d) throws RemoteException {
+        PreparedStatement st = null;
+        //PreparedStatement st1 = null;
+
+        String queryDelete = "DELETE FROM mydb.menu_base WHERE date = '" + d + "';";
+
+        String queryDeleteIngredients = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
+
+        try{
+            st = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate(queryDeleteIngredients);
+            st.executeUpdate(queryDelete);
+            System.out.println("Menu deleted.");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null){
+                    st.close();
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+
+    public boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException{
+        PreparedStatement st = null;
+        try {
+            for (String x : selectedIngredients) {
+                String queryAddIngredients = "INSERT INTO mydb.dish_ingredients(Nome_piatto, ingredients_ingredient)" + " VALUES(?,?)";
+                st = this.connHere().prepareStatement(queryAddIngredients);
+                st.setString(1, dish);
+                st.setString(2, x);
+                st.executeUpdate();
+            }
+            try{
+                if(st != null) {
+                    st.close();
+                }
+                return true;
+            }catch(Exception e){
+                e.printStackTrace();
+                return false;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+       /* }finally {
+            try {
+                if (st != null) {
+                    st.close();
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }*/
+        }
+
 
 
     }
 
-//TRIP---------------------------------------------------------------------------------------------
+    public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
+        PreparedStatement st;
+        PreparedStatement stIngr;
+        ResultSet result = null;
+        ResultSet resIngr = null;
+        ArrayList<SpecialDbDetails> special = new ArrayList<>();
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+        ArrayList<SpecialDbDetails> specialInterni = new ArrayList<>();
+        String queryLoad = "SELECT CF,Allergie FROM mydb.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM mydb.menu_special where date ='"+date+"')";
+        String queryIngr = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+            stIngr = this.connHere().prepareStatement(queryIngr);
+            resIngr = stIngr.executeQuery(queryIngr);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No interni in db");
+                return null;
+            }else{
+                result.beforeFirst();
+                try{
+                    while(result.next()){
+                        SpecialDbDetails example = null;
+                        example = new SpecialDbDetails(result.getString(1),result.getString(2));
+                        special.add(example);
+                    }
+
+                    while(resIngr.next()){
+                        IngredientsDbDetails example = null;
+                        example = new IngredientsDbDetails(resIngr.getString(1));
+                        ingredients.add(example);
+                    }
+
+                    for(SpecialDbDetails x : special){
+                        for(IngredientsDbDetails y : ingredients){
+                            if(x.getAllergie().contains(y.getIngr())) specialInterni.add(new SpecialDbDetails(x.getCF(), x.getAllergie()));
+                        }
+                    }
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return specialInterni;
+    }
+
+
+    @Override
+    public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException{
+        PreparedStatement st;
+        ResultSet result = null;
+        ArrayList<SpecialMenuDbDetails> dishes = new ArrayList<>(4);
+
+        String queryLoad1 = "SELECT * FROM mydb.menu_special";
+
+        try{
+            Connection c = this.connHere();
+            c.setAutoCommit(true);
+            st = c.prepareStatement(queryLoad1);
+            result = st.executeQuery(queryLoad1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try{
+            System.out.println("ok");
+            if( !result.next() ) {
+                System.out.println("No menu in Db");
+
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        SpecialMenuDbDetails prova  = null;
+                        prova = new SpecialMenuDbDetails(result.getString(6),result.getString(1),
+                                result.getString(4),
+                                result.getString(3),
+                                result.getString(5),result.getString(2),result.getString(7), result.getString(8));
+
+
+                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
+                        dishes.add(prova);
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return dishes;
+
+    }
+
+
+
+    public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException{
+        PreparedStatement st = null;
+
+        String queryDelete = "DELETE FROM mydb.menu_special WHERE date = '" + date + "'and CF ='"+FC+"' and Allergie = '"+ allergies+"'";
+        String queryDeleteIngredients = "DELETE FROM mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and menu_special_CF ='"+FC+"' and menu_special_allergie='"+allergies+"'";
+
+        try{
+            st = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate(queryDeleteIngredients);
+            st.executeUpdate(queryDelete);
+            System.out.println("Menu deleted.");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null){
+                    st.close();
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date,SpecialDbDetails special) throws RemoteException{
+        String queryAdd = "INSERT INTO mydb.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
+        String queryAddDish = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
+        PreparedStatement st = null;
+        PreparedStatement stDish = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+        try {
+
+            st = this.connHere().prepareStatement(queryAdd);
+            stDish= this.connHere().prepareStatement(queryAddDish);
+            st.setString(1, entree);
+            st.setString(2, main);
+            st.setString(3, dessert);
+            st.setString(4, side);
+            st.setString(5, drink);
+            st.setDate(6, Date.valueOf(date));
+            st.setString(7, special.getCF());
+            st.setString(8, special.getAllergie());
+            st.executeUpdate();
+
+            if(!entree.isEmpty()) {
+                ingredients = searchIngredients(entree);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, entree);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!main.isEmpty()) {
+                ingredients = searchIngredients(main);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, main);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!side.isEmpty()) {
+                ingredients = searchIngredients(side);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, side);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!dessert.isEmpty()) {
+                ingredients = searchIngredients(dessert);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, dessert);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+            if(!drink.isEmpty()) {
+                ingredients = searchIngredients(drink);
+                for(IngredientsDbDetails x : ingredients){
+                    stDish.setDate(1,Date.valueOf(date));
+                    stDish.setString(2, drink);
+                    stDish.setString(3,x.getIngr());
+                    stDish.setString(4, special.getCF());
+                    stDish.setString(5, special.getAllergie());
+                    stDish.executeUpdate();
+                }
+            }
+
+
+
+            try{
+                if(st != null && stDish != null) {
+                    st.close();
+                    stDish.close();
+                }
+                return true;
+            }catch(Exception e){
+                e.printStackTrace();
+                return false;
+            }
+        }catch (SQLException e) {
+            deleteSpecialMenu(date, special.getCF(), special.getAllergie());
+            e.printStackTrace();
+        }
+
+
+
+        return false;
+    }
+
+
+    public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException{
+        PreparedStatement st = null;
+        PreparedStatement stIngr = null;
+        PreparedStatement stAdd = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+
+        String queryUpdate = "UPDATE mydb.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
+        String queryDelete = "DELETE FROM  mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
+        String queryAdd = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
+        try{
+            st = this.connHere().prepareStatement(queryUpdate);
+            stIngr = this.connHere().prepareStatement(queryDelete);
+            stAdd = this.connHere().prepareStatement(queryAdd);
+            st.executeUpdate();
+            stIngr.executeUpdate();
+            if(!entree.isEmpty()) {
+                ingredients = searchIngredients(entree);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, entree);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!main.isEmpty()) {
+                ingredients = searchIngredients(main);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, main);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!side.isEmpty()) {
+                ingredients = searchIngredients(side);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, side);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!dessert.isEmpty()) {
+                ingredients = searchIngredients(dessert);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, dessert);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!drink.isEmpty()) {
+                ingredients = searchIngredients(drink);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, drink);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        try {
+            if (st != null && stIngr != null) {
+                st.close();
+                stIngr.close();
+            }
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+
+
+    //TRIP---------------------------------------------------------------------------------------------
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
         PreparedStatement st;

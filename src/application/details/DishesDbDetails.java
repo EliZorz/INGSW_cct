@@ -13,14 +13,14 @@ public class DishesDbDetails extends ArrayList<DishesDbDetails> implements Seria
     private String drink;
     private String day;
 
-    public DishesDbDetails(DishesDetails dd){
-        this.entree = dd.getEntree();
-        this.dessert = dd.getDessert();
-        this.drink = dd.getDrink();
-        this.sideDish = dd.getSideDish();
-        this.mainCourse = dd.getMainCourse();
-        this.number = dd.getNumber();
-        this.day = dd.getDay();
+    public DishesDbDetails(DishesDetails dish){
+        this.entree = dish.getEntree();
+        this.dessert = dish.getDessert();
+        this.drink = dish.getDrink();
+        this.sideDish = dish.getSideDish();
+        this.mainCourse = dish.getMainCourse();
+        this.number = dish.getNumber();
+        this.day = dish.getDay();
 
     }
 
@@ -56,6 +56,14 @@ public class DishesDbDetails extends ArrayList<DishesDbDetails> implements Seria
         return number;
     }
 
+    public String getDay() {
+        return day;
+    }
+
+    public String getSideDish() {
+        return sideDish;
+    }
+
     public void setDessert(String dessert) {
         this.dessert = dessert;
     }
@@ -80,11 +88,5 @@ public class DishesDbDetails extends ArrayList<DishesDbDetails> implements Seria
 
     public void setSideDish(String sideDish){this.sideDish = sideDish;}
 
-    public String getDay() {
-        return day;
-    }
 
-    public String getSideDish() {
-        return sideDish;
-    }
 }

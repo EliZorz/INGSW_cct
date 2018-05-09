@@ -46,8 +46,22 @@ public interface UserRemote extends Remote {
     boolean deleteCoachOperator(String piva) throws RemoteException;
 
 
+    DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException;
+    ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException;
+    ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException;
+    boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, LocalDate oldDate) throws RemoteException;
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
     boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date)throws RemoteException;
+    boolean controllDate(LocalDate d) throws RemoteException;
+    boolean deleteMenu(LocalDate d) throws RemoteException;
+
+
+    ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException;
+    boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException;
+    ArrayList<SpecialMenuDbDetails> loadSpecialMenu()throws RemoteException;
+    boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException;
+    boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException;
+    boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException;
 
 
     ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;
