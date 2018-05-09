@@ -25,13 +25,12 @@ import javafx.scene.control.TableColumn;
 import java.util.ArrayList;
 
 public class MenuController implements Initializable {
-
-  // private ArrayList<String> selectedMenu = new ArrayList<>();
     private String[] selectedMenu = new String[7];
-   private String dateSelected;
+    private String dateSelected;
 
 
     private ObservableList<DishesDetails> menu = FXCollections.observableArrayList();
+    private ObservableList<DishesDetails> searchedMenu = FXCollections.observableArrayList();
 
     @FXML
     public Button deselect;
@@ -77,6 +76,15 @@ public class MenuController implements Initializable {
 
     @FXML
     public TableView<DishesDetails> tableMenu;
+
+    @FXML
+    public Button searchButton;
+
+    @FXML
+    public Button back;
+
+    @FXML
+    public TextField searchTF;
 
 
     @Override
@@ -208,6 +216,37 @@ public class MenuController implements Initializable {
             new GuiNew("newMenu");
         }
         else labelStatus.setText("Please select a menu");
+    }
+
+    public void search(){
+        searchedMenu = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0) {
+            for(DishesDetails x : menu){
+                System.out.println(x.getEntree());
+                if(!x.getEntree().equals(null))
+                   if(x.getEntree().contains(searchTF.getText()))
+                       searchedMenu.add(x);
+                if(!x.getMainCourse().equals(null))
+                    if(x.getMainCourse().contains(searchTF.getText()) && !searchedMenu.contains(x))
+                        searchedMenu.add(x);
+                if(!x.getSideDish().equals(null))
+                    if(x.getSideDish().contains(searchTF.getText()) && !searchedMenu.contains(x))
+                        searchedMenu.add(x);
+
+            }
+            tableMenu.setItems(null);
+            tableMenu.setItems(searchedMenu);
+        }else{
+            tableMenu.setItems(null);
+            tableMenu.setItems(menu);
+        }
+    }
+
+    public void reLoad(){
+        searchedMenu = FXCollections.observableArrayList();
+        searchTF.setText("");
+        tableMenu.setItems(null);
+        tableMenu.setItems(menu);
     }
 }
 

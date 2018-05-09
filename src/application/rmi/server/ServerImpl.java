@@ -1533,6 +1533,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
 
         } catch (SQLException e){
+            if(loadThisMenu(date) != null)
+                deleteMenu(date);
             e.printStackTrace();
         } finally {
             try {

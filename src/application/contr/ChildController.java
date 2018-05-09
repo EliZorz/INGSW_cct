@@ -26,6 +26,9 @@ public class ChildController implements Initializable {
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
     private ObservableList<ContactsGuiDetails> dataContactObsList = FXCollections.observableArrayList();
 
+    private ObservableList<ContactsGuiDetails> searchedContacts = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> searchedAllergies = FXCollections.observableArrayList();
+
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
     ArrayList<String> selectedChild = new ArrayList<>();
@@ -86,6 +89,24 @@ public class ChildController implements Initializable {
     public TextField txtCap;
     @FXML
     public TextField txtProvince;
+
+    @FXML
+    public Button backContact;
+
+    @FXML
+    public TextField searchContact;
+
+    @FXML
+    public Button searchC;
+
+    @FXML
+    public Button backAll;
+
+    @FXML
+    public Button searchA;
+
+    @FXML
+    public TextField searchAll;
 
 
     @FXML
@@ -642,6 +663,51 @@ public class ChildController implements Initializable {
 
     public void renameLabel(String st){
         lblWarning.setText(st);
+    }
+
+    public void reloadContact(){
+        searchedContacts = FXCollections.observableArrayList();
+        searchContact.setText("");
+        tableContacts.setItems(null);
+        tableContacts.setItems(dataContactObsList);
+    }
+
+    public void searchContact(){
+        searchedContacts = FXCollections.observableArrayList();
+        if(searchContact.getText().trim().length() != 0){
+            if(dataContactObsList != null)
+                for(ContactsGuiDetails x : dataContactObsList){
+                    if(x.getCf().contains(searchContact.getText()) || x.getSurname().contains(searchContact.getText()))
+                        searchedContacts.add(x);
+                }
+                tableContacts.setItems(null);
+                tableContacts.setItems(searchedContacts);
+        }
+        else{
+            tableContacts.setItems(null);
+            tableContacts.setItems(searchedContacts);
+        }
+    }
+
+    public void reloadAllergies(){
+        searchedAllergies = FXCollections.observableArrayList();
+        searchAll.setText("");
+        tableIngr.setItems(null);
+        tableIngr.setItems(ingredientsObsList);
+    }
+
+    public void searchAllergies(){
+        searchedAllergies = FXCollections.observableArrayList();
+        if(searchAll.getText().trim().length() != 0){
+            if(ingredientsObsList != null)
+                for(IngredientsGuiDetails x : ingredientsObsList){
+                    if(x.getIngr().contains(searchAll.getText()))
+                        searchedAllergies.add(x);
+                }
+        }else{
+            tableIngr.setItems(null);
+            tableIngr.setItems(searchedAllergies);
+        }
     }
 
 }

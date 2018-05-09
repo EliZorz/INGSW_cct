@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 public class newMenuController implements Initializable {
     
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> searchedIngredients = FXCollections.observableArrayList();
     public ArrayList<String> selectedIngredients = new ArrayList<>();
     
     private String selectedDish = null;
@@ -88,6 +89,15 @@ public class newMenuController implements Initializable {
 
     @FXML
     public Button drinkOk;
+
+    @FXML
+    public TextField searchTF;
+
+    @FXML
+    public Button search;
+
+    @FXML
+    public Button back;
 
 
 
@@ -341,5 +351,27 @@ public class newMenuController implements Initializable {
         tabIng.setItems(null);
         ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
+    }
+
+    public void reLoad(){
+        searchedIngredients = FXCollections.observableArrayList();
+        searchTF.setText("");
+        tabIng.setItems(null);
+        tabIng.setItems(ingredients);
+    }
+
+    public void searchIngr(){
+        searchedIngredients = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0){
+            for(IngredientsGuiDetails x : ingredients){
+                if(x.getIngr().contains(searchTF.getText()))
+                    searchedIngredients.add(x);
+            }
+            tabIng.setItems(null);
+            tabIng.setItems(searchedIngredients);
+        }else{
+            tabIng.setItems(null);
+            tabIng.setItems(ingredients);
+        }
     }
 }

@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -41,12 +42,23 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Text layoutX="362.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SPECIAL MENU">
+      <Text layoutX="58.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SPECIAL MENU">
          <font>
             <Font name="System Bold" size="35.0" />
          </font>
       </Text>
       <Button fx:id="load" layoutX="950.0" layoutY="343.0" mnemonicParsing="false" onAction="#loadMenu" prefHeight="40.0" prefWidth="212.0" text="Load " AnchorPane.rightAnchor="118.0" />
       <Button fx:id="deselect" layoutX="950.0" layoutY="421.0" mnemonicParsing="false" onAction="#deselect" prefHeight="40.0" prefWidth="212.0" text="Deselect " AnchorPane.rightAnchor="118.0" />
+      <TextField fx:id="searchTF" layoutX="752.0" layoutY="46.0" prefHeight="29.0" prefWidth="161.0" AnchorPane.rightAnchor="367.0" AnchorPane.topAnchor="46.0" />
+      <Button fx:id="searchButton" layoutX="924.0" layoutY="46.0" mnemonicParsing="false" onAction="#search" prefHeight="29.0" text="Search" AnchorPane.rightAnchor="304.0" AnchorPane.topAnchor="46.0" />
+      <Button fx:id="back" layoutX="988.0" layoutY="46.0" mnemonicParsing="false" onAction="#reLoad" prefHeight="29.0" AnchorPane.rightAnchor="259.0" AnchorPane.topAnchor="46.0">
+         <graphic>
+            <ImageView fitHeight="17.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../if_back_322419.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>

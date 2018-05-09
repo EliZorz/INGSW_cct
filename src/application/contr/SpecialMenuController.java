@@ -623,11 +623,15 @@ public class SpecialMenuController implements Initializable {
 
 
     public void reLoad(ActionEvent event) {
+        searchedInterni = FXCollections.observableArrayList();
+        searchTF.setText("");
         tabInterni.setItems(null);
         tabInterni.setItems(specialInterni);
     }
 
     public void reLoadIngr(ActionEvent event){
+        searchedInterni = FXCollections.observableArrayList();
+        searchIngr.setText("");
         tabIngr.setItems(null);
         tabIngr.setItems(ingredients);
     }

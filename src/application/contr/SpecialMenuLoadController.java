@@ -2,6 +2,7 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.Singleton;
+import application.details.SpecialDbDetails;
 import application.details.SpecialMenuDbDetails;
 import application.details.SpecialMenuGuiDetails;
 import application.gui.GuiNew;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 public class SpecialMenuLoadController implements Initializable{
 
     private ObservableList<SpecialMenuGuiDetails> specialMenu = FXCollections.observableArrayList();
+    private  ObservableList<SpecialMenuGuiDetails> searchedMenu = FXCollections.observableArrayList();
 
     private String[] selectedMenu = new String[8];
 
@@ -70,6 +72,15 @@ public class SpecialMenuLoadController implements Initializable{
 
     @FXML
     public TableView<SpecialMenuGuiDetails> tabSpecialMenu;
+
+    @FXML
+    public Button searchButton;
+
+    @FXML
+    public Button back;
+
+    @FXML
+    public TextField searchTF;
 
 
     @Override
@@ -172,5 +183,28 @@ public class SpecialMenuLoadController implements Initializable{
         }catch(RemoteException e){
             e.printStackTrace();
         }
+    }
+
+    public void search(){
+        searchedMenu = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0){
+            for(SpecialMenuGuiDetails x : specialMenu ){
+                if(x.getFC().contains(searchTF.getText()) || x.getAllergies().contains(searchTF.getText()) || x.getDrink().contains(searchTF.getText()) || x.getSide().contains(searchTF.getText()) || x.getMain().contains(searchTF.getText()) || x.getDessert().contains(searchTF.getText()) || x.getEntree().contains(searchTF.getText() ))
+                    searchedMenu.add(x);
+            }
+            tabSpecialMenu.setItems(null);
+            tabSpecialMenu.setItems(searchedMenu);
+        }
+        else{
+            tabSpecialMenu.setItems(null);
+            tabSpecialMenu.setItems(specialMenu);
+        }
+    }
+
+    public void reLoad(){
+        searchedMenu = FXCollections.observableArrayList();
+        searchTF.setText("");
+        tabSpecialMenu.setItems(null);
+        tabSpecialMenu.setItems(specialMenu);
     }
 }
