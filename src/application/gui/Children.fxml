@@ -62,7 +62,7 @@
             <TextField fx:id="txtAddress" layoutX="46.0" layoutY="291.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" />
             <TextField fx:id="txtCap" layoutX="172.0" layoutY="326.0" prefHeight="26.0" prefWidth="86.0" promptText="CAP" />
             <TextField fx:id="txtProvince" layoutX="47.0" layoutY="326.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" />
-            <Label fx:id="lblWarning" alignment="CENTER" layoutX="24.0" layoutY="610.0" prefHeight="35.0" prefWidth="615.0" text="Status" textAlignment="CENTER" textFill="RED">
+            <Label fx:id="lblWarning" alignment="CENTER" layoutX="-170.0" layoutY="744.0" prefHeight="35.0" prefWidth="615.0" text="Status" textAlignment="CENTER" textFill="RED">
               <font>
                 <Font name="Courier New" size="24.0" />
               </font>
