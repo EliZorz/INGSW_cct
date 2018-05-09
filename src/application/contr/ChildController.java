@@ -28,6 +28,7 @@ public class ChildController implements Initializable {
 
     private ObservableList<ContactsGuiDetails> searchedContacts = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> searchedAllergies = FXCollections.observableArrayList();
+    private ObservableList<ChildGuiDetails> searchedChildren = FXCollections.observableArrayList();
 
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
@@ -107,6 +108,15 @@ public class ChildController implements Initializable {
 
     @FXML
     public TextField searchAll;
+
+    @FXML
+    public TextField searchCH;
+
+    @FXML
+    public Button backChildren;
+
+    @FXML
+    public Button searchChild;
 
 
     @FXML
@@ -704,10 +714,35 @@ public class ChildController implements Initializable {
                     if(x.getIngr().contains(searchAll.getText()))
                         searchedAllergies.add(x);
                 }
-        }else{
             tableIngr.setItems(null);
             tableIngr.setItems(searchedAllergies);
+        }else{
+            tableIngr.setItems(null);
+            tableIngr.setItems(ingredientsObsList);
         }
+    }
+
+    public void searchChildren(){
+        searchedChildren = FXCollections.observableArrayList();
+        if(searchCH.getText().trim().length() != 0){
+            if(dataObsList != null)
+                for(ChildGuiDetails x : dataObsList){
+                if(x.getAddress().contains(searchCH.getText()) || x.getBornOn().contains(searchCH.getText()) || x.getBornWhere().contains(searchCH.getText()) || x.getCap().contains(searchCH.getText()) || x.getCf().contains(searchCH.getText()) || x.getName().contains(searchCH.getText()) || x.getProvince().contains(searchCH.getText()) || x.getResidence().contains(searchCH.getText() )|| x.getSurname().contains(searchCH.getText()))
+                    searchedChildren.add(x);
+                }
+                tableChild.setItems(null);
+                tableChild.setItems(searchedChildren);
+        }else{
+            tableChild.setItems(null);
+            tableChild.setItems(dataObsList);
+        }
+    }
+
+    public void reloadChildren(){
+        searchedChildren = FXCollections.observableArrayList();
+        searchCH.setText("");
+        tableChild.setItems(null);
+        tableChild.setItems(dataObsList);
     }
 
 }
