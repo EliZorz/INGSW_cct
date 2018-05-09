@@ -1193,12 +1193,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         PreparedStatement st = null;
         PreparedStatement stIngr = null;
+        PreparedStatement stAdd = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
         String queryUpdate = "UPDATE mydb.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
 
-        String queryDelete = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"' and dish_ingredients_nome_piatto != '"+entree+"' || dish_ingredients_nome_piatto !='"+side+"'||dish_ingredients_nome_piatto !=' "+dessert+"'||dish_ingredients_nome_piatto != '"+drink+"'|| dish_ingredients_nome_piatto != '"+main+"'";
+        String queryDelete = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"'";
 
-
+        String queryAdd = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients)"+"VALUES (?,?,?)";
 
         try {
 
@@ -1206,14 +1208,65 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.executeUpdate();
             stIngr = this.connHere().prepareStatement(queryDelete);
             stIngr.executeUpdate();
+            stAdd = this.connHere().prepareStatement(queryAdd);
+
+            if(!entree.isEmpty()) {
+                ingredients = searchIngredients(entree);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, entree);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+            if(!main.isEmpty()) {
+                ingredients = searchIngredients(main);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, main);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!side.isEmpty()) {
+                ingredients = searchIngredients(side);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, side);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!dessert.isEmpty()) {
+                ingredients = searchIngredients(dessert);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, dessert);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!drink.isEmpty()) {
+                ingredients = searchIngredients(drink);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(day));
+                    stAdd.setString(2, drink);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.executeUpdate();
+                }
+            }
 
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
             try {
-                if (st != null && stIngr != null) {
+                if (st != null && stIngr != null && stAdd != null) {
                     st.close();
                     stIngr.close();
+                    stAdd.close();
                 }
                 return true;
             } catch (Exception e) {
@@ -1289,9 +1342,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryAdd = "INSERT INTO mydb.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
+        String queryAddDish = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredients)"+"VALUES(?,?,?)";
+        PreparedStatement stDish = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+
         try {
             //add data new child into db
             st = this.connHere().prepareStatement(queryAdd);
+            stDish= this.connHere().prepareStatement(queryAddDish);
             st.setString(1, num);
             st.setString(2, entree);
             st.setString(3, mainCourse);
@@ -1300,6 +1358,56 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.setString(6, drink);
             st.setDate(7, Date.valueOf(date));
             st.executeUpdate();
+
+                if(!entree.isEmpty()) {
+                    ingredients = searchIngredients(entree);
+                    for(IngredientsDbDetails x : ingredients){
+                        stDish.setDate(1,Date.valueOf(date));
+                        stDish.setString(2, entree);
+                        stDish.setString(3,x.getIngr());
+                        stDish.executeUpdate();
+                    }
+                }
+
+                if(!mainCourse.isEmpty()) {
+                    ingredients = searchIngredients(mainCourse);
+                    for(IngredientsDbDetails x : ingredients){
+                        stDish.setDate(1,Date.valueOf(date));
+                        stDish.setString(2, mainCourse);
+                        stDish.setString(3,x.getIngr());
+                        stDish.executeUpdate();
+                    }
+                }
+
+                if(!sideDish.isEmpty()) {
+                    ingredients = searchIngredients(sideDish);
+                    for(IngredientsDbDetails x : ingredients){
+                        stDish.setDate(1,Date.valueOf(date));
+                        stDish.setString(2, sideDish);
+                        stDish.setString(3,x.getIngr());
+                        stDish.executeUpdate();
+                    }
+                }
+
+                if(!dessert.isEmpty()) {
+                    ingredients = searchIngredients(dessert);
+                    for(IngredientsDbDetails x : ingredients){
+                        stDish.setDate(1,Date.valueOf(date));
+                        stDish.setString(2, dessert);
+                        stDish.setString(3,x.getIngr());
+                        stDish.executeUpdate();
+                    }
+                }
+
+                if(!drink.isEmpty()) {
+                    ingredients = searchIngredients(drink);
+                    for(IngredientsDbDetails x : ingredients){
+                        stDish.setDate(1,Date.valueOf(date));
+                        stDish.setString(2, drink);
+                        stDish.setString(3,x.getIngr());
+                        stDish.executeUpdate();
+                    }
+                }
 
         } catch (SQLException e){
             e.printStackTrace();
@@ -1316,30 +1424,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
         }
     }
-    @Override
-    public boolean addMenuIngredients(LocalDate date, String name, ArrayList<IngredientsDbDetails> ingredients) throws RemoteException {
 
-        PreparedStatement stIngr = null;
-        for (IngredientsDbDetails x : ingredients) {
-            String queryAddIngr = "INSERT INTO `mydb`.`menu_base_has_dish_ingredients` (`menu_base_date`, `dish_ingredients_Nome_piatto`, `dish_ingredients_ingredients`) VALUES (?,?,?)";
-            try {
-                stIngr = this.connHere().prepareStatement(queryAddIngr);
-                stIngr.setDate(1, Date.valueOf(date));
-                stIngr.setString(2, name);
-                stIngr.setString(3, x.getIngr());
-                stIngr.executeUpdate();
-
-                if (stIngr != null)
-                    stIngr.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return true;
-
-
-        }
-        return false;
-    }
 
     @Override
     public boolean controllDate(LocalDate d) throws RemoteException {

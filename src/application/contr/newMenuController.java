@@ -4,6 +4,7 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.IngredientsDbDetails;
 import application.details.IngredientsGuiDetails;
+import application.gui.GuiNew;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -332,21 +334,12 @@ public class newMenuController implements Initializable {
             }
         }
 
-        try{
-            UserRemote u = Singleton.getInstance().methodRmi();
-            boolean result = false;
-            if(entree.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), entree, u.searchIngredients(entree));
-            if(side.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), side, u.searchIngredients(side));
-            if(main.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), main, u.searchIngredients(main));
-            if(drink.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), drink, u.searchIngredients(drink));
-            if(dessert.trim().length() != 0)result = u.addMenuIngredients(dayTF.getValue(), dessert, u.searchIngredients(dessert));
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void backHome(ActionEvent event) {
+    public void backHome(ActionEvent event) throws IOException {
+        selectedMenu = null;
+        tabIng.setItems(null);
         ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("MenuBasePlates");
     }
 }

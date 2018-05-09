@@ -66,5 +66,6 @@
           <TableColumn fx:id="All" prefWidth="150.3333740234375" text="Allergies" />
         </columns>
       </TableView>
+      <TextField fx:id="search" layoutX="47.0" layoutY="143.0" />
    </children>
 </AnchorPane>

@@ -113,6 +113,7 @@ public class MenuController implements Initializable {
             }}
         );
         tableMenu.getItems().clear();
+        handleLoad();
     }
 
 
@@ -132,7 +133,7 @@ public class MenuController implements Initializable {
                     }
                     tableMenu.setItems(null);
                     tableMenu.setItems(menu);
-                    //labelStatus.setText("Table loaded");
+                    selectedMenu = null; 
                 }
 
             } catch (RemoteException e) {
@@ -165,6 +166,7 @@ public class MenuController implements Initializable {
 
     @FXML
     public void openCreation(ActionEvent event) throws IOException {
+        ((Node) (event.getSource())).getScene().getWindow().hide();
         new GuiNew("newMenu");
     }
 
@@ -202,6 +204,7 @@ public class MenuController implements Initializable {
     public void update(ActionEvent event) throws IOException {
         if(selectedMenu != null) {
             newMenuController.selectedMenu = selectedMenu;
+            ((Node) (event.getSource())).getScene().getWindow().hide();
             new GuiNew("newMenu");
         }
         else labelStatus.setText("Please select a menu");

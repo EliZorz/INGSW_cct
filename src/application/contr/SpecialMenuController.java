@@ -115,6 +115,9 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public TableView<SpecialGuiDetails> tabInterni;
 
+    @FXML
+    public TextField search;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
