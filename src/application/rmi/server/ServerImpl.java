@@ -1692,14 +1692,81 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException{
        PreparedStatement st = null;
        PreparedStatement stIngr = null;
-       String queryUpdate = "UPDATE mydb.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
-        String queryDelete = "DELETE FROM  mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"' and menu_special_allergie =' "+special.getAllergie()+"' and (dish_ingredients_Nome_piatto != '"+entree+"' || dish_ingredients_Nome_piatto !='"+side+"'||dish_ingredients_Nome_piatto !=' "+dessert+"'||dish_ingredients_Nome_piatto != '"+drink+"'|| dish_ingredients_Nome_piatto != '"+main+"')";
+       PreparedStatement stAdd = null;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
+        String queryUpdate = "UPDATE mydb.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
+       String queryDelete = "DELETE FROM  mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
+       String queryAdd = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         try{
             st = this.connHere().prepareStatement(queryUpdate);
             stIngr = this.connHere().prepareStatement(queryDelete);
+            stAdd = this.connHere().prepareStatement(queryAdd);
             st.executeUpdate();
-            try {
+            stIngr.executeUpdate();
+            if(!entree.isEmpty()) {
+                ingredients = searchIngredients(entree);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, entree);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!main.isEmpty()) {
+                ingredients = searchIngredients(main);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, main);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!side.isEmpty()) {
+                ingredients = searchIngredients(side);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, side);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!dessert.isEmpty()) {
+                ingredients = searchIngredients(dessert);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, dessert);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+
+            if(!drink.isEmpty()) {
+                ingredients = searchIngredients(drink);
+                for(IngredientsDbDetails x : ingredients){
+                    stAdd.setDate(1,Date.valueOf(date));
+                    stAdd.setString(2, drink);
+                    stAdd.setString(3,x.getIngr());
+                    stAdd.setString(4, special.getCF());
+                    stAdd.setString(5, special.getAllergie());
+                    stAdd.executeUpdate();
+                }
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        try {
                 if (st != null && stIngr != null) {
                     st.close();
                     stIngr.close();
@@ -1709,12 +1776,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
                 return false;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-
-        return false;
     }
 
 
