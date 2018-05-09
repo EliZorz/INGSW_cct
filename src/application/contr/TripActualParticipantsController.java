@@ -5,12 +5,17 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.*;
 import application.gui.GuiNew;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -24,6 +29,7 @@ import java.util.stream.Collectors;
  * Created by ELISA on 23/04/2018.
  */
 public class TripActualParticipantsController implements Initializable {
+
     private ObservableList<TripTableGuiDetails> tripObsList = FXCollections.observableArrayList();
     private ObservableList<ChildSelectedTripGuiDetails> actualChildrenObsList = FXCollections.observableArrayList();
     private ObservableList<StaffSelectedTripGuiDetails> actualStaffObsList = FXCollections.observableArrayList();
@@ -96,10 +102,14 @@ public class TripActualParticipantsController implements Initializable {
     @FXML
     public Button btnBus;
     @FXML
+    public Button btnDeselect;
+    @FXML
     public Label lblWarning;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        btnBus.setDisable(true);
+
         colDepFrom.setCellValueFactory(cellData->cellData.getValue().depFromProperty());
         colDeparture.setCellValueFactory(cellData -> cellData.getValue().depProperty());
         colComeback.setCellValueFactory(cellData->cellData.getValue().comProperty());
@@ -190,6 +200,7 @@ public class TripActualParticipantsController implements Initializable {
             e.printStackTrace();
         }
 
+
     }
 
     public void handleLoadChildren() {
@@ -259,63 +270,71 @@ public class TripActualParticipantsController implements Initializable {
                     totStaff = totParticipantsSelectedArray[1];
                     this.renameLabelTotChildren(totChildren);
                     this.renameLabelTotStaff(totStaff);
+                    System.out.println("Your selection has been saved.");
 
 //ENABLE BUTTON CALCULATE BUS *****************************************************************************************************
+                    btnBus.setDisable(false);
+                    btnDoneSelection.setDisable(true);
 
                 } else {
-                        //highlight items into arrayList and tell user to reselect
-                        System.out.println("Changing colours for not available children in tableview...");
-                        ArrayList<String> notAvailableChildStrings = new ArrayList<>(notAvailableChildArrayList.size());
-                        for (CodRifChildDbDetails object : notAvailableChildArrayList) {
-                            notAvailableChildStrings.add(Objects.toString(object, null));
-                        }
-                        for (String s : notAvailableChildStrings)
-                            System.out.println("Change colour for: " + s);
-
-
-                            colCfChild.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
-                                @Override
-                                protected void updateItem(String item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    setText(empty ? "" : getItem());
-                                    setGraphic(null);
-                                    TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
-                                    for (CodRifChildDbDetails child : notAvailableChildArrayList) {
-                                        if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
-                                            currentRow.setStyle("-fx-background-color:lightcoral");
-                                        }
-                                    }
-                                }
-                            });
-
-
-                        System.out.println("Changing colours for not available staff members in tableview...");
-                        ArrayList<String> notAvailableStaffStrings = new ArrayList<>(notAvailableStaffArrayList.size());
-                        for (CodRifChildDbDetails object : notAvailableStaffArrayList) {
-                            notAvailableStaffStrings.add(Objects.toString(object, null));
-                        }
-                        for(String s : notAvailableStaffStrings)
-                            System.out.println("Change colour for: " + s);
-
-
-                            colCfStaff.setCellFactory(column -> new TableCell<StaffSelectedTripGuiDetails, String>() {
-                                @Override
-                                protected void updateItem(String item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    setText(empty ? "" : getItem());
-                                    setGraphic(null);
-                                    TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
-                                    for (CodRifChildDbDetails staff : notAvailableStaffArrayList) {
-                                        if (!currentRow.isEmpty() && item.equals(staff.getCodRif())) {
-                                            currentRow.setStyle("-fx-background-color:lightcoral");
-                                        }
-                                    }
-                                }
-                            });
-
-                        System.out.println("Reselect participants.");
-                        this.renameLabel("Red ones are not available during trip period. Reselect.");
+                    //highlight items into arrayList and tell user to reselect
+                    System.out.println("Changing colours for not available children in tableview...");
+                    ArrayList<String> notAvailableChildStrings = new ArrayList<>(notAvailableChildArrayList.size());
+                    for (CodRifChildDbDetails object : notAvailableChildArrayList) {
+                        notAvailableChildStrings.add(Objects.toString(object, null));
                     }
+                    for(String s : notAvailableChildStrings)
+                        System.out.println("Change colour for: " + s);
+
+                    colCfChild.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : getItem());
+                            setGraphic(null);
+                            TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
+                            for (CodRifChildDbDetails child : notAvailableChildArrayList) {
+                                if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
+                                    currentRow.setStyle("-fx-background-color:lightcoral");
+                                }
+                            }
+                        }
+                    });
+
+
+                    System.out.println("Changing colours for not available staff members in tableview...");
+                    ArrayList<String> notAvailableStaffStrings = new ArrayList<>(notAvailableStaffArrayList.size());
+                    for (CodRifChildDbDetails object : notAvailableStaffArrayList) {
+                        notAvailableStaffStrings.add(Objects.toString(object, null));
+                    }
+                    for(String s : notAvailableStaffStrings)
+                        System.out.println("Change colour for: " + s);
+
+                    colCfStaff.setCellFactory(column -> new TableCell<StaffSelectedTripGuiDetails, String>() {
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : getItem());
+                            setGraphic(null);
+                            TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
+                            for (CodRifChildDbDetails staff : notAvailableStaffArrayList) {
+                                if (!currentRow.isEmpty() && item.equals(staff.getCodRif())) {
+                                    currentRow.setStyle("-fx-background-color:lightcoral");
+                                }
+                            }
+                        }
+                    });
+
+                    System.out.println("Reselect participants.");
+                    this.renameLabel("Red ones are not available during trip period. Exit and redo.");
+//BLOCCA TUTTO TRANNE HOMEPAGE ************************************************************************************************************
+                btnBus.setDisable(true);
+                btnDoneSelection.setDisable(true);
+                btnLoadChildren.setDisable(true);
+                btnLoadStaff.setDisable(true);
+                btnLoadTrip.setDisable(true);
+                btnDeselect.setDisable(true);
+                }
 
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -352,40 +371,6 @@ public class TripActualParticipantsController implements Initializable {
         this.renameLabel("Status");
         this.renameLabelTotChildren(0);
         this.renameLabelTotStaff(0);
-
-        colCfChild.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-
-                setText(empty ? "" : getItem());
-                setGraphic(null);
-
-                TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
-
-                if (!currentRow.isEmpty()) {
-                    currentRow.setStyle("-fx-background-color:white");
-                }
-
-            }
-        });
-
-        colCfStaff.setCellFactory(column -> new TableCell<StaffSelectedTripGuiDetails, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-
-                setText(empty ? "" : getItem());
-                setGraphic(null);
-
-                TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
-
-                if (!currentRow.isEmpty()) {
-                    currentRow.setStyle("-fx-background-color:white");
-                }
-
-            }
-        });
 
     }
 

@@ -2,6 +2,8 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.Singleton;
+import application.details.CodRifChildDbDetails;
+import application.details.CodRifChildGuiDetails;
 import application.details.SupplierDbDetails;
 import application.details.SupplierGuiDetails;
 import application.gui.GuiNew;
@@ -24,6 +26,8 @@ import java.util.ResourceBundle;
  */
 public class SupplierController implements Initializable{
     private ObservableList<SupplierGuiDetails> dataObsList = FXCollections.observableArrayList();
+    private ObservableList<CodRifChildGuiDetails> ingrObsList = FXCollections.observableArrayList();
+
     ArrayList<String> selectedSupplier = new ArrayList<>();
     String oldPiva = null;
 
@@ -72,6 +76,17 @@ public class SupplierController implements Initializable{
     @FXML
     public TextField txtProvince;
 
+    @FXML
+    public TableView<CodRifChildGuiDetails> tableIngr;
+    @FXML
+    public TableColumn<CodRifChildGuiDetails, String> colIngr;
+    @FXML
+    public TextField txtIngr;
+    @FXML
+    public Button btnLoadIngr;
+    @FXML
+    public Button btnAddIngr;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colName.setCellValueFactory(cellData -> cellData.getValue().nameazProperty());
@@ -108,6 +123,11 @@ public class SupplierController implements Initializable{
         });
 
         tableSuppliers.getItems().clear();
+
+
+        colIngr.setCellValueFactory(cellData -> cellData.getValue().codRifProperty());
+
+        tableIngr.getItems().clear();
     }
 
     public void handleLoadSuppliers() {
@@ -224,6 +244,9 @@ public class SupplierController implements Initializable{
     public void handleDeselect(){
         tableSuppliers.getSelectionModel().clearSelection();
 
+        tableIngr.getSelectionModel().clearSelection();
+
+        txtIngr.clear();
         txtName.clear();
         txtPiva.clear();
         txtTel.clear();
@@ -232,6 +255,60 @@ public class SupplierController implements Initializable{
         txtProvince.clear();
         txtCap.clear();
     }
+
+    public void handleAddIngrToDb() {
+        String ingr = txtIngr.getText();
+
+        if (ingr.trim().isEmpty()) {
+            this.renameLabel("Insert data.");
+        } else {
+            System.out.println("Adding data to database...");
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+                boolean isEditOk = u.addIngrToDb(ingr, oldPiva);  //call method in Server Impl
+
+                if (isEditOk) {
+                    lblWarning.setText("Congrats! Ingredient added.");
+                    txtIngr.clear();
+                    selectedSupplier.clear();
+                } else {
+                    this.renameLabel("Ingredient already in database. Redo.");
+                    txtIngr.clear();
+                    selectedSupplier.clear();
+                }
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void handleLoadIngr() {
+        System.out.println("Loading data...");
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            ArrayList<CodRifChildDbDetails> staffDbArrayList = u.loadDataIngr(oldPiva);  //call method in Server Impl
+            ingrObsList.clear();
+
+            if (staffDbArrayList != null){
+                for(CodRifChildDbDetails c : staffDbArrayList){
+                    CodRifChildGuiDetails tmp = new CodRifChildGuiDetails(c);
+                    ingrObsList.add(tmp);
+                }
+                tableIngr.setItems(null);
+                tableIngr.setItems(ingrObsList);
+                this.renameLabel("Table loaded!");
+            }else{
+                this.renameLabel("Error.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     public void renameLabel(String st){
         lblWarning.setText(st);

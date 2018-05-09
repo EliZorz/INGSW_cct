@@ -7,12 +7,13 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="549.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
+<AnchorPane prefHeight="624.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
   <children>
-    <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="550.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="624.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="670.0">
           <children>
@@ -31,15 +32,15 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="392.0">
           <children>
-            <TextField fx:id="txtName" layoutX="29.0" layoutY="56.0" prefWidth="190.0" promptText="Name" />
-            <TextField fx:id="txtPiva" layoutX="23.0" layoutY="98.0" prefHeight="26.0" prefWidth="200.0" promptText="P. IVA" />
-            <TextField fx:id="txtTel" layoutX="23.0" layoutY="197.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
-            <TextField fx:id="txtAddress" layoutX="29.0" layoutY="249.0" prefHeight="26.0" prefWidth="209.0" promptText="Address" />
-            <TextField fx:id="txtCap" layoutX="29.0" layoutY="294.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
-            <TextField fx:id="txtProvince" layoutX="152.0" layoutY="294.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
-            <TextField fx:id="txtMail" layoutX="24.0" layoutY="155.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
-                  <Button fx:id="btnBack" layoutX="212.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="158.0" text="Homepage" />
-                  <ButtonBar layoutX="19.0" layoutY="407.0" prefHeight="40.0" prefWidth="343.0">
+            <TextField fx:id="txtName" layoutX="34.0" layoutY="27.0" prefHeight="26.0" prefWidth="158.0" promptText="Name" />
+            <TextField fx:id="txtPiva" layoutX="212.0" layoutY="27.0" prefHeight="26.0" prefWidth="158.0" promptText="P. IVA" />
+            <TextField fx:id="txtTel" layoutX="34.0" layoutY="109.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
+            <TextField fx:id="txtAddress" layoutX="34.0" layoutY="152.0" prefHeight="26.0" prefWidth="209.0" promptText="Address" />
+            <TextField fx:id="txtCap" layoutX="34.0" layoutY="194.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
+            <TextField fx:id="txtProvince" layoutX="160.0" layoutY="194.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
+            <TextField fx:id="txtMail" layoutX="34.0" layoutY="65.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
+                  <Button fx:id="btnBack" layoutX="265.0" layoutY="576.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="110.0" text="Homepage" />
+                  <ButtonBar layoutX="27.0" layoutY="528.0" prefHeight="40.0" prefWidth="343.0">
                     <buttons>
                       <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadSuppliers" text="Load table" />
                         <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
@@ -47,13 +48,28 @@
                         <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDeleteSupplier" text="Delete" />
                     </buttons>
                   </ButtonBar>
-                  <ButtonBar layoutX="14.0" layoutY="536.0" prefHeight="40.0" prefWidth="190.0" />
-                  <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="19.0" layoutY="350.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
+                  <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="19.0" layoutY="249.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Button fx:id="btnDeselect" layoutX="42.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
+                  <Button fx:id="btnDeselect" layoutX="34.0" layoutY="576.0" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
+                  <TableView fx:id="tableIngr" layoutX="34.0" layoutY="294.0" prefHeight="174.0" prefWidth="146.0">
+                    <columns>
+                      <TableColumn fx:id="colIngr" prefWidth="145.59986114501953" text="ingredient" />
+                    </columns>
+                  </TableView>
+                  <TextField fx:id="txtIngr" layoutX="217.0" layoutY="442.0" prefHeight="26.0" prefWidth="138.0" promptText="Ingredient provided" />
+                  <Button fx:id="btnLoadIngr" layoutX="74.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleLoadIngr" text="Load Ingredients">
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </Button>
+                  <Button fx:id="btnAddIngr" layoutX="291.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleAddIngrToDb" text="Add new">
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </Button>
           </children>
         </AnchorPane>
       </items>

@@ -38,12 +38,16 @@ public interface UserRemote extends Remote {
     boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
     boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
     boolean deleteSupplier(String piva) throws RemoteException;
+    ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException;
+    boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException;
 
 
     ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException;
     boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
     boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
     boolean deleteCoachOperator(String piva) throws RemoteException;
+    ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException;
+    boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException;
 
 
     DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException;
@@ -65,7 +69,7 @@ public interface UserRemote extends Remote {
 
 
     ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException;
-    boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String alloggio, LocalDateTime dateArr, String arr) throws RemoteException;
+    boolean deleteTrip(String dep, String dateDep, String dateCom, String alloggio, String dateArr, String arr) throws RemoteException;
     ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException;
     ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException;
     int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
@@ -78,5 +82,8 @@ public interface UserRemote extends Remote {
     int[] howManyActualParticipants(ArrayList<String> selectedChildCf, ArrayList<String> selectedStaffCf) throws RemoteException;
     HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff,
                                                                   String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
+    ArrayList<ChildSelectedTripDbDetails> loadWhoTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
+    ArrayList<CodRifChildDbDetails> loadBusTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
+
 
 }

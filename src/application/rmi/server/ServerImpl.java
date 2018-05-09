@@ -1034,6 +1034,108 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
+    @Override
+    public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException{
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<CodRifChildDbDetails> ingrArrayList = new ArrayList<>(1);
+
+        String queryLoad = "SELECT * FROM ingredients " +
+                "WHERE Fornitore_PIVA = '" + selectedSupplier + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No ingredient in DB");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        CodRifChildDbDetails prova = new CodRifChildDbDetails(result.getString(1));
+                        ingrArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return ingrArrayList;
+    }
+
+    @Override
+    public boolean addIngrToDb(String ingredient, String selectedSupplier) throws RemoteException {
+        PreparedStatement st = null;
+        ResultSet resultDuplicate =null;
+        String queryFindDuplicateIngredient = "SELECT ingredient " +
+                "FROM ingredients " +
+                "WHERE ingredient = '"+ ingredient +"';";
+        String queryAdd = "INSERT INTO ingredients(ingredient, Fornitore_PIVA)" +
+                " VALUES (?,?)";
+
+        try {
+            st = this.connHere().prepareStatement(queryFindDuplicateIngredient);
+            resultDuplicate = st.executeQuery();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        try{
+            if( !resultDuplicate.next() ) {
+                System.out.println("No duplicate ingredient in DB. Proceed...");
+                try{
+                    st = this.connHere().prepareStatement(queryAdd);
+                    st.setString(1, ingredient);
+                    st.setString(2, selectedSupplier);
+                    st.executeUpdate();
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultDuplicate != null)
+                    resultDuplicate.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return true;
+
+    }
+
 //COACH OPERATORS ---------------------------------------------------------------------------------------------
 
     @Override
@@ -1167,6 +1269,110 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
         return true;
+    }
+
+    @Override
+    public ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException{
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<BusPlateCapacityDbDetails> supplierDbArrayList = new ArrayList<>(2);
+
+        String queryLoad = "SELECT * FROM bus " +
+                "WHERE Noleggio_PIVA = '" + selectedSupplier + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No bus in DB");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        BusPlateCapacityDbDetails prova = new BusPlateCapacityDbDetails(result.getString(1),
+                                result.getString(2));
+                        supplierDbArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return supplierDbArrayList;
+    }
+
+    @Override
+    public boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException {
+        PreparedStatement st = null;
+        ResultSet resultDuplicate =null;
+        String queryFindDuplicateKey = "SELECT Targa " +
+                "FROM bus " +
+                "WHERE Targa = '"+ plate +"' AND Noleggio_PIVA = '"+ selectedSupplier +"';";
+        String queryAdd = "INSERT INTO bus(Targa, capienza, Noleggio_PIVA)" +
+                " VALUES (?,?,?)";
+
+        try {
+            st = this.connHere().prepareStatement(queryFindDuplicateKey);
+            resultDuplicate = st.executeQuery();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        try{
+            if( !resultDuplicate.next() ) {
+                System.out.println("No duplicate bus in DB. Proceed...");
+                try{
+                    st = this.connHere().prepareStatement(queryAdd);
+                    st.setString(1, plate);
+                    st.setInt(2, capacity);
+                    st.setString(3, selectedSupplier);
+                    st.executeUpdate();
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultDuplicate != null)
+                    resultDuplicate.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return true;
+
     }
 
 //MENU ---------------------------------------------------------------------------------------
@@ -2034,22 +2240,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
     @Override
-    public boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String staying, LocalDateTime dateArr, String arr) throws RemoteException {
+    public boolean deleteTrip(String dep, String dateDep, String dateCom, String staying, String dateArr, String arr) throws RemoteException {
         PreparedStatement st = null;
-
-        DateTimeFormatter dtfdep = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampDep = Timestamp.valueOf(dateDep.format(dtfdep));
-
-        DateTimeFormatter dtfarr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampArr = Timestamp.valueOf(dateArr.format(dtfarr));
-
-        DateTimeFormatter dtfcom = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampCom = Timestamp.valueOf(dateCom.format(dtfcom));
 
         System.out.println("You selected " + dep + "  " + arr + "  " + dateDep +"  "+ dateArr +"  "+ dateCom +"  "+ staying);
 
         String queryDelete = "DELETE FROM gita " +
-                "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ arr + "';";
+                "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ dateDep +"' AND DataOraRit ='"+ dateCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ dateArr +"' AND Destinazione ='"+ arr + "';";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
@@ -2897,6 +3094,212 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return busToPartecipantHashMap;
     }
 
+
+    @Override
+    public ArrayList<ChildSelectedTripDbDetails> loadWhoTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        //load children & staff that are effective participants related to the selected trip
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultParticipants = null;
+
+        ArrayList<ChildSelectedTripDbDetails> participantsArrayList = new ArrayList<>(3);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryLoadParticipants = "SELECT Cognome, Nome, CF" +
+                " FROM interni AS I INNER JOIN" +
+                " interni_has_gita AS IG ON (I.CF = IG.Interni_CF AND IG.gita_NumGita = '" + numGita + "')" +
+                " WHERE Partecipante_effettivo = '1'";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadParticipants);
+            resultParticipants = st.executeQuery(queryLoadParticipants);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultParticipants.next() ) {
+                System.out.println("No participant in DB");
+            } else {
+                resultParticipants.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultParticipants.next()) {
+                        ChildSelectedTripDbDetails prova = new ChildSelectedTripDbDetails(resultParticipants.getString(1),
+                                resultParticipants.getString(2),
+                                resultParticipants.getString(3));
+                        participantsArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultParticipants != null)
+                    resultParticipants.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return participantsArrayList;
+    }
+
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> loadBusTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        //load buses related to the selected trip
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultBus = null;
+
+        ArrayList<CodRifChildDbDetails> busArrayList = new ArrayList<>(1);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryLoadBus = "SELECT bus_Targa " +
+                "FROM gita_has_bus " +
+                "WHERE gita_NumGita = '" + numGita +"';";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadBus);
+            resultBus = st.executeQuery(queryLoadBus);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultBus.next() ) {
+                System.out.println("No bus in DB");
+            } else {
+                resultBus.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultBus.next()) {
+                        CodRifChildDbDetails prova = new CodRifChildDbDetails(resultBus.getString(1));
+                        busArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultBus != null)
+                    resultBus.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return busArrayList;
+    }
 
 //USEFUL EVERYWHERE------------------------------------------------------------------------------
 

@@ -7,12 +7,13 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="549.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CoachOperatorsController">
+<AnchorPane prefHeight="697.0" prefWidth="1080.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CoachOperatorsController">
   <children>
-    <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="550.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="697.0" prefWidth="1078.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-23.0" AnchorPane.topAnchor="0.0">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="670.0">
           <children>
@@ -29,17 +30,17 @@
             </TableView>
           </children>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="392.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="696.0" prefWidth="385.0">
           <children>
-            <TextField fx:id="txtName" layoutX="29.0" layoutY="56.0" prefWidth="190.0" promptText="Name" />
-            <TextField fx:id="txtPiva" layoutX="23.0" layoutY="98.0" prefHeight="26.0" prefWidth="200.0" promptText="P. IVA" />
-            <TextField fx:id="txtTel" layoutX="23.0" layoutY="197.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
-            <TextField fx:id="txtAddress" layoutX="29.0" layoutY="249.0" prefHeight="26.0" prefWidth="209.0" promptText="Address" />
-            <TextField fx:id="txtCap" layoutX="29.0" layoutY="294.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
-            <TextField fx:id="txtProvince" layoutX="152.0" layoutY="294.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
-            <TextField fx:id="txtMail" layoutX="24.0" layoutY="155.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
-                  <Button fx:id="btnBack" layoutX="212.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="158.0" text="Homepage" />
-                  <ButtonBar layoutX="19.0" layoutY="407.0" prefHeight="40.0" prefWidth="343.0">
+            <TextField fx:id="txtName" layoutX="34.0" layoutY="38.0" prefHeight="31.0" prefWidth="151.0" promptText="Name" />
+            <TextField fx:id="txtPiva" layoutX="204.0" layoutY="38.0" prefHeight="31.0" prefWidth="177.0" promptText="P. IVA" />
+            <TextField fx:id="txtTel" layoutX="34.0" layoutY="163.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
+            <TextField fx:id="txtAddress" layoutX="34.0" layoutY="203.0" prefHeight="26.0" prefWidth="200.0" promptText="Address" />
+            <TextField fx:id="txtCap" layoutX="34.0" layoutY="247.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
+            <TextField fx:id="txtProvince" layoutX="160.0" layoutY="247.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
+            <TextField fx:id="txtMail" layoutX="34.0" layoutY="76.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
+                  <Button fx:id="btnBack" layoutX="265.0" layoutY="650.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="110.0" text="Homepage" />
+                  <ButtonBar layoutX="29.0" layoutY="602.0" prefHeight="40.0" prefWidth="343.0">
                     <buttons>
                       <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadSuppliers" text="Load table" />
                         <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
@@ -47,13 +48,30 @@
                         <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDeleteSupplier" text="Delete" />
                     </buttons>
                   </ButtonBar>
-                  <ButtonBar layoutX="14.0" layoutY="536.0" prefHeight="40.0" prefWidth="190.0" />
-                  <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="19.0" layoutY="350.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
+                  <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="27.0" layoutY="312.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Button fx:id="btnDeselect" layoutX="42.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
+                  <Button fx:id="btnDeselect" layoutX="42.0" layoutY="650.0" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
+                  <TableView fx:id="tableBus" layoutX="44.0" layoutY="364.0" prefHeight="138.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="colPlate" prefWidth="111.19994735717773" text="plate" />
+                      <TableColumn fx:id="colCapacity" prefWidth="88.79998779296875" text="capacity" />
+                    </columns>
+                  </TableView>
+                  <TextField fx:id="txtPlate" layoutX="265.0" layoutY="433.0" prefHeight="26.0" prefWidth="110.0" promptText="Plate" />
+                  <TextField fx:id="txtCapacity" layoutX="265.0" layoutY="476.0" prefHeight="26.0" prefWidth="110.0" promptText="Capacity" />
+                  <Button fx:id="btnAddBus" layoutX="298.0" layoutY="523.0" mnemonicParsing="false" onAction="#handleAddBusToDb" prefHeight="26.0" prefWidth="75.0" text="Add bus">
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </Button>
+                  <Button fx:id="btnLoadBus" layoutX="162.0" layoutY="524.0" mnemonicParsing="false" onAction="#handleLoadBus" prefHeight="26.0" prefWidth="75.0" text="Load bus">
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </Button>
           </children>
         </AnchorPane>
       </items>
