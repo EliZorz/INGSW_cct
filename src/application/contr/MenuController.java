@@ -222,7 +222,6 @@ public class MenuController implements Initializable {
         searchedMenu = FXCollections.observableArrayList();
         if(searchTF.getText().trim().length() != 0) {
             for(DishesDetails x : menu){
-                System.out.println(x.getEntree());
                 if(!x.getEntree().equals(null))
                    if(x.getEntree().contains(searchTF.getText()))
                        searchedMenu.add(x);

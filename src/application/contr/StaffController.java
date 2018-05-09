@@ -29,6 +29,8 @@ public class StaffController implements Initializable {
 
     private ObservableList<StaffGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
+    private ObservableList<StaffGuiDetails> searchedStaff = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> searchedAllergies = FXCollections.observableArrayList();
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
     ArrayList<String> selectedStaff = new ArrayList<>();
@@ -96,6 +98,24 @@ public class StaffController implements Initializable {
     public Button btnDeselect;
     @FXML
     public TableColumn<IngredientsGuiDetails, String> colIngr;
+
+    @FXML
+    public TextField searchTF;
+
+    @FXML
+    public Button search;
+
+    @FXML
+    public Button back;
+
+    @FXML
+    public Button searchSt;
+
+    @FXML
+    public Button backStaff;
+
+    @FXML
+    public TextField searchSTF;
 
 
     @Override
@@ -352,6 +372,52 @@ public class StaffController implements Initializable {
 
     public void renameLabel(String st){
         lblWarning.setText(st);
+    }
+
+    public void reloadAll(){
+        searchedAllergies = FXCollections.observableArrayList();
+        searchTF.setText("");
+        tableIngr.setItems(null);
+        tableIngr.setItems(ingredientsObsList);
+    }
+
+    public void reloadStaff(){
+        searchedStaff = FXCollections.observableArrayList();
+        searchSTF.setText("");
+        tableStaff.setItems(null);
+        tableStaff.setItems(dataObsList);
+    }
+
+    public void searchAll(){
+        searchedAllergies = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0){
+            if(ingredientsObsList != null)
+                for(IngredientsGuiDetails x : ingredientsObsList){
+                    if(x.getIngr().contains(searchTF.getText()))
+                        searchedAllergies.add(x);
+                }
+                tableIngr.setItems(null);
+            tableIngr.setItems(searchedAllergies);
+        }else{
+            tableIngr.setItems(null);
+            tableIngr.setItems(ingredientsObsList);
+        }
+    }
+
+    public void searchStaff(){
+        searchedStaff = FXCollections.observableArrayList();
+        if(searchSTF.getText().trim().length() != 0){
+            if(dataObsList != null)
+                for(StaffGuiDetails x : dataObsList){
+                if(x.getCf().contains(searchSTF.getText()) || x.getAddress().contains(searchSTF.getText()) || x.getBornOn().contains(searchSTF.getText()) || x.getBornWhere().contains(searchSTF.getText()) || x.getCap().contains(searchSTF.getText()) || x.getMail().contains(searchSTF.getText()) || x.getName().contains(searchSTF.getText()) || x.getProvince().contains(searchSTF.getText()) || x.getResidence().contains(searchSTF.getText()) || x.getSurname().contains(searchSTF.getText()))
+                    searchedStaff.add(x);
+            }
+            tableStaff.setItems(null);
+            tableStaff.setItems(searchedStaff);
+        }else{
+            tableStaff.setItems(null);
+            tableStaff.setItems(dataObsList);
+        }
     }
 
 }
