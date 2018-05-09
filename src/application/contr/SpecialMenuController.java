@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
+import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -25,6 +26,10 @@ public class SpecialMenuController implements Initializable {
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
 
     private ObservableList<SpecialGuiDetails> specialInterni = FXCollections.observableArrayList();
+
+    private ObservableList<SpecialGuiDetails> searchedInterni = FXCollections.observableArrayList();
+
+    private ObservableList<IngredientsGuiDetails> searchedIngredients = FXCollections.observableArrayList();
 
     public ArrayList<String> selectedIngr = new ArrayList<>();
 
@@ -116,7 +121,58 @@ public class SpecialMenuController implements Initializable {
     public TableView<SpecialGuiDetails> tabInterni;
 
     @FXML
-    public TextField search;
+    public TextField searchTF;
+
+    @FXML
+    public Button search;
+
+    @FXML
+    public Button back;
+
+    @FXML
+    public TextField searchIngr;
+
+    @FXML
+    public Button searchIng;
+
+    @FXML
+    public Button backIngr;
+
+
+    public void search(){
+        searchedInterni = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0){
+            //FA LA RICERCA
+            for(SpecialGuiDetails x : specialInterni){
+                if(x.getCF().contains(searchTF.getText()) || x.getAllergie().contains(searchTF.getText()))
+                    searchedInterni.add(x);
+            }
+            tabInterni.setItems(null);
+            tabInterni.setItems(searchedInterni);
+        }else{
+            tabInterni.setItems(null);
+            tabInterni.setItems(specialInterni);
+        }
+    }
+
+    public void searchIngredients(){
+        searchedIngredients = FXCollections.observableArrayList();
+        if(searchIngr.getText().trim().length() != 0){
+            for(IngredientsGuiDetails x : ingredients){
+                if(x.getIngr().contains(searchIngr.getText()))
+                    searchedIngredients.add(x);
+            }
+            tabIngr.setItems(null);
+            tabIngr.setItems(searchedIngredients);
+        }
+        else{
+            tabIngr.setItems(null);
+            tabIngr.setItems(ingredients);
+        }
+    }
+
+
+
 
 
     @Override
@@ -389,12 +445,17 @@ public class SpecialMenuController implements Initializable {
                 if(selectedMenu == null){
                     for(SpecialDbDetails x : selectedInterno) {
                         boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
-                        if (addSuccess) status.setText("Success!!");
+                        if (addSuccess) {
+                            status.setText("Success!!");
+                            searchMenuDate();
+                        }
                     }
                 }
                 else {
                     boolean updateSuccess = u.updateSpecialMenu(entree, main, dessert, side, drink, date, selectedInterno.get(0));
-                    if(updateSuccess) status.setText("Success!!");
+                    if(updateSuccess) {
+                        status.setText("Success!!");
+                    }
                     else status.setText("ERROR!!");
                 }
             }catch(RemoteException e){
@@ -561,6 +622,15 @@ public class SpecialMenuController implements Initializable {
     }
 
 
+    public void reLoad(ActionEvent event) {
+        tabInterni.setItems(null);
+        tabInterni.setItems(specialInterni);
+    }
+
+    public void reLoadIngr(ActionEvent event){
+        tabIngr.setItems(null);
+        tabIngr.setItems(ingredients);
+    }
 }
 
 

@@ -66,6 +66,27 @@
           <TableColumn fx:id="All" prefWidth="150.3333740234375" text="Allergies" />
         </columns>
       </TableView>
-      <TextField fx:id="search" layoutX="47.0" layoutY="143.0" />
+      <TextField fx:id="searchTF" layoutX="47.0" layoutY="143.0" prefHeight="25.0" prefWidth="176.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="143.0" />
+      <Button fx:id="search" layoutX="241.0" layoutY="143.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.leftAnchor="241.0" AnchorPane.topAnchor="143.0" />
+      <Button fx:id="back" layoutX="300.0" layoutY="143.0" mnemonicParsing="false" onAction="#reLoad" prefHeight="25.0" prefWidth="24.0" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="143.0">
+         <graphic>
+            <ImageView fitHeight="22.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../if_back_322419.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TextField fx:id="searchIngr" layoutX="546.0" layoutY="143.0" prefHeight="25.0" prefWidth="112.0" />
+      <Button fx:id="searchIng" layoutX="672.0" layoutY="143.0" mnemonicParsing="false" onAction="#searchIngredients" text="Search" />
+      <Button fx:id="backIngr" layoutX="727.0" layoutY="143.0" mnemonicParsing="false" onAction="#reLoadIngr" prefHeight="25.0" prefWidth="24.0">
+         <graphic>
+            <ImageView fitHeight="22.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../if_back_322419.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>

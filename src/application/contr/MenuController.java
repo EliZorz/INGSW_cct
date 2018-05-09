@@ -133,7 +133,7 @@ public class MenuController implements Initializable {
                     }
                     tableMenu.setItems(null);
                     tableMenu.setItems(menu);
-                    selectedMenu = null; 
+                    selectedMenu = null;
                 }
 
             } catch (RemoteException e) {
