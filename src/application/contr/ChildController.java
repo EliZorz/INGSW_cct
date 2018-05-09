@@ -308,26 +308,26 @@ public class ChildController implements Initializable {
     public void handleAddChild() {
         System.out.println("Adding new child to database...");
 
-        String name = txtName.getText().toString();
-        String surname = txtSurname.getText().toString();
-        String cf = txtCf.getText().toString();
+        String name = txtName.getText();
+        String surname = txtSurname.getText();
+        String cf = txtCf.getText();
         LocalDate birthday = dpBirthday.getValue();
-        String bornWhere = txtBornWhere.getText().toString();
-        String residence = txtResidence.getText().toString();
-        String address = txtAddress.getText().toString();
-        String cap = txtCap.getText().toString();
-        String province = txtProvince.getText().toString();
+        String bornWhere = txtBornWhere.getText();
+        String residence = txtResidence.getText();
+        String address = txtAddress.getText();
+        String cap = txtCap.getText();
+        String province = txtProvince.getText();
 
-        String nameContact = txtNameContact.getText().toString();
-        String surnameContact = txtSurnameContact.getText().toString();
-        String cfContact = txtCfContact.getText().toString();
-        String mailContact = txtMailContact.getText().toString();
-        String telContact = txtTelContact.getText().toString();
+        String nameContact = txtNameContact.getText();
+        String surnameContact = txtSurnameContact.getText();
+        String cfContact = txtCfContact.getText();
+        String mailContact = txtMailContact.getText();
+        String telContact = txtTelContact.getText();
         LocalDate birthdayContact = dpBirthdayContact.getValue();
-        String bornWhereContact = txtBornWhereContact.getText().toString();
-        String addressContact = txtAddressContact.getText().toString();
-        String capContact = txtCapContact.getText().toString();
-        String provinceContact = txtProvince.getText().toString();
+        String bornWhereContact = txtBornWhereContact.getText();
+        String addressContact = txtAddressContact.getText();
+        String capContact = txtCapContact.getText();
+        String provinceContact = txtProvince.getText();
         boolean isDoc = cbDoc.isSelected();
         if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
         else { cbDoc.setSelected(false); }
@@ -380,6 +380,7 @@ public class ChildController implements Initializable {
             boolean deleted = u.deleteChild(oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
+                selectedChild.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -419,6 +420,7 @@ public class ChildController implements Initializable {
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Child edited.");
+                    selectedChild.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -541,7 +543,8 @@ public class ChildController implements Initializable {
                 boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl
 
                 if (isEditOk) {
-                    lblWarning.setText("Congrats! Child edited.");
+                    lblWarning.setText("Congrats! Contact edited.");
+                    selectedContact.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -556,6 +559,7 @@ public class ChildController implements Initializable {
             boolean deleted = u.deleteContact(oldcfContact);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
+                selectedContact.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -600,13 +604,39 @@ public class ChildController implements Initializable {
 
     public void handleDeselect() {
         tableIngr.getSelectionModel().clearSelection();
+
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        txtBornWhere.clear();
+        txtResidence.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtAddress.clear();
+        txtProvince.clear();
+        txtCap.clear();
+
+        txtProvinceContact.clear();
+        txtCapContact.clear();
+        txtAddressContact.clear();
+        txtBornWhereContact.clear();
+        dpBirthdayContact.setValue(LocalDate.now());
+        txtTelContact.clear();
+        txtMailContact.clear();
+        txtCfContact.clear();
+        txtNameContact.clear();
+        txtSurnameContact.clear();
     }
 
 
     public void handleBackHomepage() {
-        //exit window (the previous window was MenuIniziale.fxml
+        //exit window (the previous window was MenuIniziale.fxml)
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.close();
+        try {
+            new GuiNew("Information");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

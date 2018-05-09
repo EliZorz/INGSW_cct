@@ -4,6 +4,8 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.TripTableDbDetails;
 import application.details.TripTableGuiDetails;
+import application.gui.GuiNew;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,7 +13,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -32,13 +39,11 @@ public class TripTableController implements Initializable{
     @FXML
     public TableColumn<TripTableGuiDetails, String> colComeback;
     @FXML
-    public TableColumn<TripTableGuiDetails, String> colLayover;
-    @FXML
     public TableColumn<TripTableGuiDetails, String> colAccomodation;
     @FXML
-    public TableColumn<TripTableGuiDetails, String> colParticipants;
+    public TableColumn<TripTableGuiDetails, String> colDepFrom;
     @FXML
-    public TableColumn<TripTableGuiDetails, String> colStaff;
+    public TableColumn<TripTableGuiDetails, String> colArrivalTo;
     @FXML
     public Button btnLoadTrip;
     @FXML
@@ -51,30 +56,25 @@ public class TripTableController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        colDepFrom.setCellValueFactory(cellData->cellData.getValue().depFromProperty());
         colDeparture.setCellValueFactory(cellData -> cellData.getValue().depProperty());
-        colArrival.setCellValueFactory(cellData->cellData.getValue().arrProperty());
         colComeback.setCellValueFactory(cellData->cellData.getValue().comProperty());
-        colLayover.setCellValueFactory(cellData->cellData.getValue().layoverProperty());
         colAccomodation.setCellValueFactory(cellData->cellData.getValue().accomodationProperty());
-        //colParticipants.setCellValueFactory(cellData->cellData.getValue().numChildrenProperty());
-        //colStaff.setCellValueFactory(cellData->cellData.getValue().numStaffProperty());
-
-        //COME INIZIALIZZO COL_PARTICIPANTS, COL_STAFF???????
+        colArrival.setCellValueFactory(cellData->cellData.getValue().arrProperty());
+        colArrivalTo.setCellValueFactory(cellData->cellData.getValue().arrToProperty());
 
         tableTrip.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         tableTrip.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                selectedTrip.add(newSelection.getDepFrom());
                 selectedTrip.add(newSelection.getDep());
-                selectedTrip.add(newSelection.getArr());
                 selectedTrip.add(newSelection.getCom());
-                selectedTrip.add(newSelection.getLayover());
                 selectedTrip.add(newSelection.getAccomodation());
-                //selectedTrip.add(newSelection.getNumChildren());
-                //selectedTrip.add(newSelection.getNumStaff());
+                selectedTrip.add(newSelection.getArr());
+                selectedTrip.add(newSelection.getArrTo());
             }
         });
-
         tableTrip.getItems().clear();
     }
 
@@ -84,6 +84,7 @@ public class TripTableController implements Initializable{
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //call method in Server Impl
+
             dataObsList.clear();
 
             if (tripDbArrayList != null){
@@ -107,10 +108,39 @@ public class TripTableController implements Initializable{
     public void handleBack() {
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.close();
+        try{
+            new GuiNew("TripMenu");
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+
     }
 
     @FXML
     public void handleDelete() {
+        String stringDep = selectedTrip.get(1);
+        LocalDateTime localDateTimeDep = LocalDateTime.parse(stringDep.replace(" ","T"));
+
+        String stringArr = selectedTrip.get(4);
+        LocalDateTime localDateTimeArr = LocalDateTime.parse(stringArr.replace(" ","T"));
+
+        String stringCom = selectedTrip.get(2);
+        LocalDateTime localDateTimeCom = LocalDateTime.parse(stringCom.replace(" ","T"));
+
+        System.out.println("Loading data...");
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            boolean deleted = u.deleteTrip(selectedTrip.get(0), localDateTimeDep,localDateTimeCom, selectedTrip.get(3), localDateTimeArr, selectedTrip.get(5));
+            if(deleted){
+                this.renameLabel("Deleted.");
+                selectedTrip.clear();
+            } else {
+                this.renameLabel("Error deleting.");
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -8,49 +8,73 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="389.0" prefWidth="634.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripActualParticipantsController">
+<AnchorPane prefHeight="754.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripActualParticipantsController">
    <children>
-      <TableView layoutX="37.0" layoutY="95.0" prefHeight="208.0" prefWidth="258.0">
+      <TableView fx:id="tableActualChildren" layoutX="29.0" layoutY="398.0" prefHeight="250.0" prefWidth="314.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Name" />
-          <TableColumn prefWidth="75.0" text="Surname" />
-            <TableColumn prefWidth="75.0" text="CF" />
+          <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="colSurnameChild" prefWidth="93.5999755859375" text="Surname" />
+            <TableColumn fx:id="colCfChild" prefWidth="144.7999725341797" text="CF" />
         </columns>
       </TableView>
-      <TableView layoutX="336.0" layoutY="95.0" prefHeight="208.0" prefWidth="258.0">
+      <TableView fx:id="tableActualStaff" layoutX="390.0" layoutY="398.0" prefHeight="250.0" prefWidth="314.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Name" />
-          <TableColumn prefWidth="75.0" text="Surname" />
-            <TableColumn prefWidth="75.0" text="CF" />
+          <TableColumn fx:id="colNameStaff" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="colSurnameStaff" prefWidth="88.800048828125" text="Surname" />
+            <TableColumn fx:id="colCfStaff" prefWidth="149.59991455078125" text="CF" />
         </columns>
       </TableView>
-      <Text fill="#f00bb3" layoutX="37.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Actual participants">
+      <Text fill="#f00bb3" layoutX="29.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select actual participants">
          <font>
             <Font name="Courier New" size="20.0" />
          </font>
       </Text>
-      <Text fill="#e30bb0" layoutX="37.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Children">
+      <Text fill="#e30bb0" layoutX="29.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Children">
          <font>
             <Font name="Courier New" size="19.0" />
          </font>
       </Text>
-      <Text fill="#ed1ebd" layoutX="336.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Staff members">
+      <Text fill="#ed1ebd" layoutX="390.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Staff members">
          <font>
             <Font name="Courier New" size="19.0" />
          </font>
       </Text>
-      <Label layoutX="249.0" layoutY="76.0" text="Total">
+      <Label fx:id="lblTotChildren" layoutX="29.0" layoutY="663.0" text="Total">
          <font>
             <Font name="Courier New" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="545.0" layoutY="76.0" text="Total">
+      <Label fx:id="lblTotStaff" layoutX="386.0" layoutY="663.0" text="Total">
          <font>
             <Font name="Courier New" size="16.0" />
          </font>
       </Label>
-      <Button layoutX="37.0" layoutY="327.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="99.0" text="Load" />
-      <Button layoutX="376.0" layoutY="327.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="99.0" text="Done" />
-      <Button layoutX="495.0" layoutY="327.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="40.0" prefWidth="99.0" text="Homepage" />
+      <Button fx:id="btnLoadChildren" layoutX="245.0" layoutY="660.0" mnemonicParsing="false" onAction="#handleLoadChildren" prefHeight="19.0" prefWidth="99.0" text="Load" />
+      <Button fx:id="btnDoneSelection" layoutX="740.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleDoneSelection" prefHeight="40.0" prefWidth="99.0" text="Done selection" />
+      <Button fx:id="btnBack" layoutX="740.0" layoutY="608.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="40.0" prefWidth="99.0" text="Homepage" />
+      <Button fx:id="btnLoadStaff" layoutX="605.0" layoutY="660.0" mnemonicParsing="false" onAction="#handleLoadStaff" prefHeight="19.0" prefWidth="99.0" text="Load" />
+      <Label fx:id="lblWarning" layoutX="29.0" layoutY="705.0" prefHeight="23.0" prefWidth="810.0" text="Label" textFill="#ed0404">
+         <font>
+            <Font name="Courier New" size="18.0" />
+         </font>
+      </Label>
+      <Text fill="#f00bb3" layoutX="29.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select trip">
+         <font>
+            <Font name="Courier New" size="20.0" />
+         </font>
+      </Text>
+      <TableView fx:id="tableTrip" layoutX="27.0" layoutY="61.0" prefHeight="222.0" prefWidth="755.0">
+         <columns>
+            <TableColumn fx:id="colDepFrom" prefWidth="121.60003662109375" text="Departure from" />
+            <TableColumn fx:id="colDeparture" prefWidth="123.19997882843018" text="Departure date time" />
+            <TableColumn fx:id="colComeback" prefWidth="137.59994506835938" text="Come back date time" />
+            <TableColumn fx:id="colAccomodation" prefWidth="161.5999755859375" text="Accomodation" />
+            <TableColumn fx:id="colArrival" prefWidth="112.0" text="Arrival date time" />
+            <TableColumn fx:id="colArrivalTo" prefWidth="98.39996337890625" text="Arrival to" />
+         </columns>
+      </TableView>
+      <Button fx:id="btnLoadTrip" layoutX="684.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleLoadTrip" prefHeight="19.0" prefWidth="99.0" text="Load" />
+      <Button fx:id="btnDeselect" layoutX="740.0" layoutY="545.0" mnemonicParsing="false" onAction="#handleDeselectAll" prefHeight="40.0" prefWidth="99.0" text="Deselect all" />
+      <Button fx:id="btnBus" layoutX="740.0" layoutY="487.0" mnemonicParsing="false" onAction="#handleCalculateBus" prefHeight="40.0" prefWidth="99.0" text="Calculate buses" />
    </children>
 </AnchorPane>

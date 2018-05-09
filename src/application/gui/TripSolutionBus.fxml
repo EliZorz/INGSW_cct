@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripSolutionBusController">
+   <children>
+      <TableView fx:id="tableWho" layoutX="26.0" layoutY="84.0" prefHeight="282.0" prefWidth="383.0">
+         <columns>
+            <TableColumn fx:id="colName" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurname" prefWidth="75.0" text="Surname" />
+            <TableColumn fx:id="colCf" prefWidth="124.80000305175781" text="CF" />
+            <TableColumn fx:id="colPlate" prefWidth="106.4000244140625" text="Plate" />
+         </columns>
+      </TableView>
+      <Text fill="#31eb17" layoutX="26.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Solution:" textAlignment="CENTER" wrappingWidth="383.1999967992307">
+         <font>
+            <Font name="Courier New Bold" size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="btnHide" layoutX="432.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleHide" prefHeight="44.0" prefWidth="98.0" text="Hide" />
+   </children>
+</AnchorPane>

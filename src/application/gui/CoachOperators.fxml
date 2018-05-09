@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="549.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
+<AnchorPane prefHeight="549.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CoachOperatorsController">
   <children>
     <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="550.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>

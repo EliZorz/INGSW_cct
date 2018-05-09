@@ -6,12 +6,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class SocketUserManager implements UserRemote {
@@ -32,21 +33,8 @@ public class SocketUserManager implements UserRemote {
 
     }
 
-    @Override
-    public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {
-        return null;
-    }
 
-    @Override
-    public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException {
-        return null;
-    }
-
+    //LOGIN --------------------------------------------------------------------------------------------------
     @Override
     public boolean funzLog(String usr, String pwd) throws RemoteException {
 
@@ -71,6 +59,7 @@ public class SocketUserManager implements UserRemote {
     }
 
 
+    //CHILDREN ---------------------------------------------------------------------------
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
         ArrayList<ChildDbDetails> child = new ArrayList<>(1);
@@ -131,19 +120,8 @@ public class SocketUserManager implements UserRemote {
         return true;
     }
 
-
     @Override
-    public boolean addContact (ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
-        return true;
-    }
-
-    @Override
-    public boolean deleteContact (String oldcfContact) throws RemoteException{
-        return true;
-    }
-
-    @Override
-    public boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException{
+    public boolean deleteChild(String cf) throws RemoteException{
         return true;
     }
 
@@ -170,9 +148,21 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
+
+    //CONTACT --------------------------------------------------------------------------------
     @Override
-    public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day,  LocalDate oldDate) throws RemoteException {
-        return false;
+    public boolean addContact (ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+        return true;
+    }
+
+    @Override
+    public boolean deleteContact (String oldcfContact) throws RemoteException{
+        return true;
+    }
+
+    @Override
+    public boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException{
+        return true;
     }
 
     @Override
@@ -180,11 +170,8 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
-    @Override
-    public boolean deleteChild(String cf) throws RemoteException{
-        return true;
-    }
 
+    //STAFF ------------------------------------------------------------------------------------------
     @Override
     public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException{
         ArrayList<StaffDbDetails> staff = new ArrayList<>(1);
@@ -236,6 +223,7 @@ public class SocketUserManager implements UserRemote {
         return true;
     }
 
+    //SUPPLIERS ------------------------------------------------------------------------
     @Override
     public ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException {
         return null;
@@ -253,6 +241,47 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean deleteSupplier(String piva) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean deleteCoachOperator(String piva) throws RemoteException {
+        return false;
+    }
+
+    //MENU -------------------------------------------------------------------------------
+    @Override
+    public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, LocalDate oldDate) throws RemoteException {
         return false;
     }
 
@@ -285,14 +314,9 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
+
     @Override
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
-        return false;
-    }
-
-
-
-    public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date,ArrayList<String> selectedIngredients) throws RemoteException {
         String responce = null;
         String when = date.format(DateTimeFormatter.BASIC_ISO_DATE);
         String what = "addMenu "+ num + " " + entree +" " + mainCourse + " " + dessert+" "+ sideDish +" " + drink +" " + when;
@@ -331,7 +355,7 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
-
+    //SPECIAL MENU ------------------------------------------------------------------------------------
     @Override
     public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException {
         return null;
@@ -352,10 +376,61 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
-
+    //TRIP -------------------------------------------------------------------------------------
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
         return null;
     }
+
+    @Override
+    public boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String alloggio, LocalDateTime dateArr, String arr) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException{
+        return  null;
+    }
+
+    @Override
+    public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
+        return null;
+    }
+
+    @Override
+    public int[] addTrip(ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep, String timeArr, String timeCom, String departureFrom, String ArrivalTo, String staying) throws RemoteException {
+        return new int[0];
+    }
+
+    @Override
+    public ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> findNotAvailableStaff(ArrayList<String> selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> findNotAvailableChild(ArrayList<String> selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public int[] howManyActualParticipants(ArrayList<String> selectedChildCf, ArrayList<String> selectedStaffCf) throws RemoteException {
+        return new int[0];
+    }
+
+    @Override
+    public HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        return null;
+    }
+
 
 }

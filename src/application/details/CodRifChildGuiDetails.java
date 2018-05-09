@@ -9,8 +9,8 @@ import javafx.beans.property.StringProperty;
 public class CodRifChildGuiDetails {
     private StringProperty codRif;
 
-    public CodRifChildGuiDetails (IngredientsDbDetails codDb){
-        this.codRif = new SimpleStringProperty(codDb.getIngr());
+    public CodRifChildGuiDetails (CodRifChildDbDetails codDb){
+        this.codRif = new SimpleStringProperty(codDb.getCodRif());
     }
 
     public String getCodRif(){ return codRif.getValue(); }

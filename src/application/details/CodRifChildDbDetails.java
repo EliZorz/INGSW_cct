@@ -8,12 +8,10 @@ import java.io.Serializable;
 public class CodRifChildDbDetails implements Serializable{
     private String codRif;
 
-    public CodRifChildDbDetails (IngredientsGuiDetails codguiSp) {
-        this.codRif = codguiSp.getIngr();
-    }
+    public CodRifChildDbDetails (CodRifChildGuiDetails codguiSp) {this.codRif = codguiSp.getCodRif();}
 
-    public CodRifChildDbDetails (String ingredient) {
-        this.codRif = ingredient;
+    public CodRifChildDbDetails (String code) {
+        this.codRif = code;
     }
 
     public String getCodRif() { return codRif; }

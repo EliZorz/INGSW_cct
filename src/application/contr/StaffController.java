@@ -2,6 +2,7 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.Singleton;
+import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import application.details.StaffDbDetails;
@@ -13,6 +14,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -264,15 +267,31 @@ public class StaffController implements Initializable {
 
     public void handleDeselect() {
         tableIngr.getSelectionModel().clearSelection();
+
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        txtBornWhere.clear();
+        txtResidence.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtAddress.clear();
+        txtProvince.clear();
+        txtCap.clear();
+
     }
 
 
 
     @FXML
     public void handleBackHomepage() {
-        //exit window (the previous window was MenuIniziale.fxml
+        //exit window (the previous window was MenuIniziale.fxml)
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.close();
+        try {
+            new GuiNew("Information");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleUpdateStaff() {
@@ -303,6 +322,7 @@ public class StaffController implements Initializable {
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Staff member edited.");
+                    selectedStaff.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -319,6 +339,7 @@ public class StaffController implements Initializable {
             boolean deleted = u.deleteStaff(selectedStaff.get(2));
             if(deleted){
                 this.renameLabel("Deleted.");
+                selectedStaff.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
