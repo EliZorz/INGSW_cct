@@ -930,7 +930,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                                 result.getString(5),
                                 result.getString(6),
                                 result.getString(7));
-                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
                         supplierDbArrayList.add(prova);
                     }
                 } catch (SQLException e) {
@@ -1035,6 +1034,140 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
+//COACH OPERATORS ---------------------------------------------------------------------------------------------
+
+    @Override
+    public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<SupplierDbDetails> supplierDbArrayList = new ArrayList<>(7);
+
+        String queryLoad = "SELECT * FROM noleggio";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No coach operator in DB");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        SupplierDbDetails prova = new SupplierDbDetails(result.getString(1),
+                                result.getString(2),
+                                result.getString(3),
+                                result.getString(4),
+                                result.getString(5),
+                                result.getString(6),
+                                result.getString(7));
+                        supplierDbArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return supplierDbArrayList;
+    }
+
+    @Override
+    public boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        PreparedStatement st = null;
+        String queryAdd = "INSERT INTO noleggio(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
+                " VALUES (?,?,?,?,?,?,?)";
+
+        try {
+            st = this.connHere().prepareStatement(queryAdd);
+            st.setString(1, name);
+            st.setString(2, piva);
+            st.setString(3, mail);
+            st.setString(4, tel);
+            st.setString(5, address);
+            st.setString(6, cap);
+            st.setString(7, province);
+            st.executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException{
+        PreparedStatement st = null;
+
+        String queryEdit = "UPDATE noleggio SET PIVA ='" + piva + "', NomeAzienda ='" + name + "', Mail ='" + mail + "', " +
+                "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
+                "WHERE PIVA = '" + oldPiva + "';";
+
+        try {
+            st = this.connHere().prepareStatement(queryEdit);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteCoachOperator(String piva) throws RemoteException{
+        PreparedStatement st = null;
+        String queryDelete = "DELETE FROM noleggio WHERE PIVA = '" + piva + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryDelete);
+            st.executeUpdate(queryDelete);
+            System.out.println("Deleted from noleggio.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
 
 //MENU BASE---------------------------------------------------------------------------------------
 

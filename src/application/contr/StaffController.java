@@ -267,6 +267,17 @@ public class StaffController implements Initializable {
 
     public void handleDeselect() {
         tableIngr.getSelectionModel().clearSelection();
+
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        txtBornWhere.clear();
+        txtResidence.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtAddress.clear();
+        txtProvince.clear();
+        txtCap.clear();
+
     }
 
 

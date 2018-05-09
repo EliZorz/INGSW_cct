@@ -84,10 +84,16 @@ public class MenuInizialeController {
 
 
     @FXML
-
     void openSuppliers (ActionEvent event)throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
        new GuiNew("Suppliers");
+    }
+
+
+    @FXML
+    void handleOpenCoachOperators (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("CoachOperators");
     }
 
 

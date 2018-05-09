@@ -40,6 +40,12 @@ public interface UserRemote extends Remote {
     boolean deleteSupplier(String piva) throws RemoteException;
 
 
+    ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException;
+    boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
+    boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
+    boolean deleteCoachOperator(String piva) throws RemoteException;
+
+
     ArrayList<DishesDbDetails> loadMenu() throws RemoteException;
     boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date)throws RemoteException;
 

@@ -15,14 +15,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
- * Created by ELISA on 22/04/2018.
+ * Created by ELISA on 09/05/2018.
  */
-public class SupplierController implements Initializable{
+public class CoachOperatorsController implements Initializable {
     private ObservableList<SupplierGuiDetails> dataObsList = FXCollections.observableArrayList();
     ArrayList<String> selectedSupplier = new ArrayList<>();
     String oldPiva = null;
@@ -114,7 +113,7 @@ public class SupplierController implements Initializable{
         System.out.println("Loading data...");
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-            ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataSuppliers();  //call method in Server Impl
+            ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataCoachOperator();  //call method in Server Impl
             dataObsList.clear();
 
             if (staffDbArrayList != null){
@@ -134,7 +133,7 @@ public class SupplierController implements Initializable{
     }
 
     public void handleAddSupplier() {
-        System.out.println("Adding new supplier to database...");
+        System.out.println("Adding new staff member to database...");
 
         String name = txtName.getText();
         String piva = txtPiva.getText();
@@ -152,10 +151,10 @@ public class SupplierController implements Initializable{
             System.out.println("Adding data to database...");
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-                boolean isAddOk = u.addDataSupplier(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
+                boolean isAddOk = u.addDataCoachOperator(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isAddOk) {
-                    this.renameLabel("Congrats! Supplier added.");
+                    this.renameLabel("Congrats! Coach operator added.");
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -181,10 +180,10 @@ public class SupplierController implements Initializable{
             System.out.println("Adding data to database...");
             try {
                 UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-                boolean isEditOk = u.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
+                boolean isEditOk = u.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isEditOk) {
-                    lblWarning.setText("Congrats! Supplier edited.");
+                    lblWarning.setText("Congrats! Coach operator edited.");
                     selectedSupplier.clear();
                 }
             } catch (RemoteException e) {
@@ -198,7 +197,7 @@ public class SupplierController implements Initializable{
         System.out.println("Loading data...");
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-            boolean deleted = u.deleteSupplier(selectedSupplier.get(1));
+            boolean deleted = u.deleteCoachOperator(selectedSupplier.get(1));
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedSupplier.clear();
@@ -232,6 +231,7 @@ public class SupplierController implements Initializable{
         txtProvince.clear();
         txtCap.clear();
     }
+
 
     public void renameLabel(String st){
         lblWarning.setText(st);

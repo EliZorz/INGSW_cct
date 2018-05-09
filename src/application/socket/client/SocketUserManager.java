@@ -219,6 +219,26 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
+    @Override
+    public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean deleteCoachOperator(String piva) throws RemoteException {
+        return false;
+    }
+
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
