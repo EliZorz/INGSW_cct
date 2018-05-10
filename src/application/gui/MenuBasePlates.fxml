@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -21,13 +22,13 @@
             <TableColumn fx:id="colDessert" prefWidth="92.0" resizable="false" text="Dessert" />
             <TableColumn fx:id="colSide" prefWidth="88.333251953125" resizable="false" text="Side dish" />
             <TableColumn fx:id="colDrink" minWidth="0.0" prefWidth="82.22216796875" resizable="false" text="Drink" />
-            <TableColumn fx:id="colDay" prefWidth="86.0" resizable="false" text="Date" />
+            <TableColumn fx:id="colDay" prefWidth="90.0" resizable="false" text="Date" />
         </columns>
       </TableView>
       <Button fx:id="handleLoad" layoutX="932.0" layoutY="190.0" mnemonicParsing="false" onAction="#handleLoad" prefHeight="36.0" prefWidth="145.0" text="Load menu" AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
       <Button fx:id="createMenu" layoutX="932.0" layoutY="343.0" mnemonicParsing="false" onAction="#openCreation" prefHeight="36.0" prefWidth="145.0" text="Create a new menu " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="updateMenu" layoutX="932.0" layoutY="428.0" mnemonicParsing="false" onAction="#update" prefHeight="36.0" prefWidth="145.0" text="Modify the menu" AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="deleteMenu" layoutX="932.0" layoutY="513.0" mnemonicParsing="false" onAction="#delete" prefHeight="36.0" prefWidth="145.0" text="Delete the menu " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
+      <Button fx:id="updateMenu" layoutX="932.0" layoutY="428.0" mnemonicParsing="false" onAction="#update" prefHeight="36.0" prefWidth="145.0" text="Update meu" AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
+      <Button fx:id="deleteMenu" layoutX="932.0" layoutY="513.0" mnemonicParsing="false" onAction="#delete" prefHeight="36.0" prefWidth="145.0" text="Delete menu " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
       <Button fx:id="backHome" layoutX="62.0" layoutY="45.0" mnemonicParsing="false" onAction="#esc" prefHeight="36.0" prefWidth="44.0">
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -58,6 +59,7 @@
             </ImageView>
          </graphic>
       </Button>
+      <DatePicker fx:id="dateSearch" layoutX="709.0" layoutY="45.0" prefHeight="28.0" prefWidth="174.0" AnchorPane.topAnchor="45.0" />
 
    </children>
 </AnchorPane>

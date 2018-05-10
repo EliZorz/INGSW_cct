@@ -262,8 +262,8 @@ public class SupplierController implements Initializable{
                     if(x.getPiva().contains(searchTF.getText()) || x.getAddress().contains(searchTF.getText()) || x.getCap().contains(searchTF.getText()) || x.getMail().contains(searchTF.getText()) || x.getNameaz().contains(searchTF.getText()) || x.getProvince().contains(searchTF.getText()) || x.getTel().contains(searchTF.getText()))
                         searchedSuppliers.add(x);
                 }
-                tableSuppliers.setItems(null);
-                tableSuppliers.setItems(searchedSuppliers);
+            tableSuppliers.setItems(null);
+            tableSuppliers.setItems(searchedSuppliers);
         }else{
             tableSuppliers.setItems(null);
             tableSuppliers.setItems(dataObsList);

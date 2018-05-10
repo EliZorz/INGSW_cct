@@ -86,6 +86,9 @@ public class MenuController implements Initializable {
     @FXML
     public TextField searchTF;
 
+    @FXML
+    public DatePicker dateSearch;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -220,18 +223,11 @@ public class MenuController implements Initializable {
 
     public void search(){
         searchedMenu = FXCollections.observableArrayList();
-        if(searchTF.getText().trim().length() != 0) {
-            for(DishesDetails x : menu){
-                if(!x.getEntree().equals(null))
-                   if(x.getEntree().contains(searchTF.getText()))
-                       searchedMenu.add(x);
-                if(!x.getMainCourse().equals(null))
-                    if(x.getMainCourse().contains(searchTF.getText()) && !searchedMenu.contains(x))
-                        searchedMenu.add(x);
-                if(!x.getSideDish().equals(null))
-                    if(x.getSideDish().contains(searchTF.getText()) && !searchedMenu.contains(x))
-                        searchedMenu.add(x);
-
+        if(dateSearch.getValue() != null) {
+            if(menu != null) {
+                for (DishesDetails x : menu) {
+                    
+                }
             }
             tableMenu.setItems(null);
             tableMenu.setItems(searchedMenu);
