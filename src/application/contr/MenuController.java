@@ -84,9 +84,6 @@ public class MenuController implements Initializable {
     public Button back;
 
     @FXML
-    public TextField searchTF;
-
-    @FXML
     public DatePicker dateSearch;
 
 
@@ -224,14 +221,18 @@ public class MenuController implements Initializable {
     public void search(){
         searchedMenu = FXCollections.observableArrayList();
         if(dateSearch.getValue() != null) {
-            if(menu != null) {
+            if (menu != null) {
                 for (DishesDetails x : menu) {
-                    
+                    if (LocalDate.parse(x.getDay()).isEqual(dateSearch.getValue()))
+                        searchedMenu.add(x);
                 }
             }
             tableMenu.setItems(null);
             tableMenu.setItems(searchedMenu);
-        }else{
+        }
+
+
+        else{
             tableMenu.setItems(null);
             tableMenu.setItems(menu);
         }
@@ -239,7 +240,7 @@ public class MenuController implements Initializable {
 
     public void reLoad(){
         searchedMenu = FXCollections.observableArrayList();
-        searchTF.setText("");
+        dateSearch.setValue(null);
         tableMenu.setItems(null);
         tableMenu.setItems(menu);
     }
