@@ -138,6 +138,8 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public Button backIngr;
 
+    @FXML
+    public Button showWho;
 
     public void search(){
         searchedInterni = FXCollections.observableArrayList();

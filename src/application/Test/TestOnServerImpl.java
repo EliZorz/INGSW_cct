@@ -5,6 +5,7 @@ import application.rmi.server.ServerImpl;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,6 +23,18 @@ public class TestOnServerImpl {
         assertEquals(false, si.funzLog(null,"ludo123"));
     }
 
+    @Test
+    public void testLoadMenu() throws RemoteException{
+        ServerImpl si = new ServerImpl();
+        assertEquals(null, si.loadThisMenu(null));
+    }
+
+    @Test
+    public void testSearchIngredients() throws RemoteException{
+        ServerImpl si = new ServerImpl();
+        assertEquals(null, si.searchIngredients(null));
+       
+    }
 
 
 

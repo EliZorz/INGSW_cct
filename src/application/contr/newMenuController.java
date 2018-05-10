@@ -4,6 +4,7 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.IngredientsDbDetails;
 import application.details.IngredientsGuiDetails;
+import application.details.SpecialDbDetails;
 import application.gui.GuiNew;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -330,6 +331,7 @@ public class newMenuController implements Initializable {
                     boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day);
                     if (addSuccess) {
                         label1.setText("Success!!");
+
 
                     }
 

@@ -1638,21 +1638,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }catch (SQLException e){
             e.printStackTrace();
             return false;
-       /* }finally {
-            try {
-                if (st != null) {
-                    st.close();
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }*/
+
         }
 
 
 
     }
+
+
 
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
         PreparedStatement st;
@@ -1752,6 +1745,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+
 
             }
         } catch (SQLException e) {

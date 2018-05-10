@@ -80,7 +80,7 @@ public class SpecialMenuLoadController implements Initializable{
     public Button back;
 
     @FXML
-    public TextField searchTF;
+    public DatePicker dateSearch;
 
 
     @Override
@@ -187,9 +187,9 @@ public class SpecialMenuLoadController implements Initializable{
 
     public void search(){
         searchedMenu = FXCollections.observableArrayList();
-        if(searchTF.getText().trim().length() != 0){
+        if(dateSearch.getValue() != null){
             for(SpecialMenuGuiDetails x : specialMenu ){
-                if(x.getFC().contains(searchTF.getText()) || x.getAllergies().contains(searchTF.getText()) || x.getDrink().contains(searchTF.getText()) || x.getSide().contains(searchTF.getText()) || x.getMain().contains(searchTF.getText()) || x.getDessert().contains(searchTF.getText()) || x.getEntree().contains(searchTF.getText() ))
+                if(LocalDate.parse(x.getDate()).isEqual(dateSearch.getValue()))
                     searchedMenu.add(x);
             }
             tabSpecialMenu.setItems(null);
@@ -203,7 +203,7 @@ public class SpecialMenuLoadController implements Initializable{
 
     public void reLoad(){
         searchedMenu = FXCollections.observableArrayList();
-        searchTF.setText("");
+        dateSearch.setValue(null);
         tabSpecialMenu.setItems(null);
         tabSpecialMenu.setItems(specialMenu);
     }
