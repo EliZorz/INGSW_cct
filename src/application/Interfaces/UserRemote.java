@@ -84,6 +84,6 @@ public interface UserRemote extends Remote {
                                                                   String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
     ArrayList<ChildSelectedTripDbDetails> loadWhoTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
     ArrayList<CodRifChildDbDetails> loadBusTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException;
-
+    ArrayList<SolutionDbDetails> loadSolution (String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException;
 
 }

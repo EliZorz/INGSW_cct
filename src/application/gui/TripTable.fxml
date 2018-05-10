@@ -27,5 +27,6 @@
             <Font name="Courier New" size="20.0" />
          </font>
       </Label>
+      <Button fx:id="btnSolution" layoutX="428.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleOpenSolution" prefHeight="26.0" prefWidth="165.0" text="See participants and buses" />
    </children>
 </AnchorPane>

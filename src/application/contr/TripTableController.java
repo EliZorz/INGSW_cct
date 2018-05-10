@@ -51,6 +51,8 @@ public class TripTableController implements Initializable{
     @FXML
     public Button btnDeleteSelected;
     @FXML
+    public Button btnSolution;
+    @FXML
     public Label lblStatus;
 
 
@@ -137,6 +139,14 @@ public class TripTableController implements Initializable{
             e.printStackTrace();
         }
 
+    }
+
+    public void handleOpenSolution(){
+        try{
+            new GuiNew("TripSolutionBus");          //NOTA: IL CONTROLLER è PER TripSolutionBus
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
     }
 
     public void renameLabel(String st){

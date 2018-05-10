@@ -13,7 +13,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -81,6 +83,14 @@ public class TripBeforeController implements Initializable{
     public Button btnLoadWho;
     @FXML
     public Button btnLoadBus;
+    @FXML
+    public TableView<ChildSelectedTripGuiDetails> tableMissing;
+    @FXML
+    public TableColumn<ChildSelectedTripGuiDetails, String> colNameMissing;
+    @FXML
+    public TableColumn<ChildSelectedTripGuiDetails, String> colSurnameMissing;
+    @FXML
+    public TableColumn<ChildSelectedTripGuiDetails, String> colCfMissing;
 
 
     @Override
@@ -113,12 +123,17 @@ public class TripBeforeController implements Initializable{
         tableWho.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableWho.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                selectedChild.add(newSelection.getName());
-                selectedChild.add(newSelection.getSurname());
                 selectedChildCfArrayList.add(newSelection.getCf());
             }
         });
         tableWho.getItems().clear();
+
+
+        colNameMissing.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        colSurnameMissing.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
+        colCfMissing.setCellValueFactory(cellData -> cellData.getValue().cfProperty());
+
+        tableMissing.getItems().clear();
 
 
         colPlate.setCellValueFactory(cellData -> cellData.getValue().codRifProperty());
@@ -212,17 +227,79 @@ public class TripBeforeController implements Initializable{
 
 
     public void handleCheck() {
+/*        if(selectedChild == null || selectedBus == null){
+            this.renameLabel("Add at least one child AND one bus to check");
+        }
+        else {
+            System.out.println("Checking...");
+            try{
+                UserRemote u = Singleton.getInstance().methodRmi();
 
+                //chi è su questo bus ma non dovrebbe esserci
+                ArrayList<CodRifChildDbDetails> participantOnWrongBusArrayList = u.findParticipantOnWrongBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
+                //chi manca all'appello (e quindi su uno dei bus), cioè che ha is_here = 0 per questa gita ---> LOAD TABLE   *****************************
+                ArrayList<CodRifChildDbDetails> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(selectedChildCfArrayList, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
+                //find out if some participants the user selected are already used in a concurrent trip
+                if (participantOnWrongBusArrayList.isEmpty()){
+                    System.out.println("Your selection has been saved.");
 
+                    if( missingParticipantsArrayList != null ){
+                        //load missing table
+                        this.renameLabel("Participants on correct bus. Someone's missing.");
 
-    }
+                    } else {
+                        this.renameLabel("Participants on correct bus. No missing.");
+                    }
+
+                } else {
+                    //highlight items into arrayList and tell user to reselect
+                    System.out.println("Changing colours for not available children in tableview...");
+                    ArrayList<String> wrongBusParticipantStrings = new ArrayList<>(participantOnWrongBusArrayList.size());
+                    for (CodRifChildDbDetails object : participantOnWrongBusArrayList) {
+                        wrongBusParticipantStrings.add(Objects.toString(object, null));
+                    }
+                    for(String s : wrongBusParticipantStrings)
+                        System.out.println("Change colour for: " + s);
+
+                    colCf.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : getItem());
+                            setGraphic(null);
+                            TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
+                            for (CodRifChildDbDetails child : participantOnWrongBusArrayList) {
+                                if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
+                                    currentRow.setStyle("-fx-background-color:lightcoral");
+                                }
+                            }
+                        }
+                    });
+
+                    System.out.println("Reselect participants on this bus.");
+                    this.renameLabel("Red ones shouldn't be on this bus. Exit and redo.");
+
+//BLOCCA TUTTO TRANNE HOMEPAGE E SOLUTION  ************************************************************************************************************
+                    btnCheck.setDisable(true);
+                    btnLoadTrip.setDisable(true);
+                    btnDeselectBus.setDisable(true);
+                    btnDeselectWho.setDisable(true);
+                    btnLoadBus.setDisable(true);
+                    btnLoadWho.setDisable(true);
+                }
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+         }
+*/    }
 
 
     public void handleOpenSolutionGui() {
         try{
-            new GuiNew("TripSolutionBus");          //NOTA: IL CONTROLLER è LO STESSO ANCHE PER TripSolutionBus
+            new GuiNew("TripSolutionBus");          //NOTA: IL CONTROLLER è PER TripSolutionBus
         } catch (IOException ioe){
             ioe.printStackTrace();
         }

@@ -463,5 +463,10 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
+    @Override
+    public ArrayList<SolutionDbDetails> loadSolution(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        return null;
+    }
+
 
 }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -2978,6 +2979,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         everyParticipantArrayList.addAll(selectedChildCfArrayList);
         everyParticipantArrayList.addAll(selectedStaffCfArrayList);
 
+        for(String cf : everyParticipantArrayList){
+            System.out.println(cf + " has to be assigned");
+        }
+
         try {
             st = this.connHere().prepareStatement(queryFindAvailableBus);
             resultBus = st.executeQuery(queryFindAvailableBus);
@@ -3005,13 +3010,16 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             e.printStackTrace();
         }
 
+        String queryAddToInterniIsHere = "INSERT INTO interni_is_here (interni_CF, gita_NumGita, bus_Targa, is_here) VALUES (?,?,?,?)";
+
+
         busFromFirstLoop:
         for(int i=0; i < busAvailableArrayList.size(); i++){  //until the last bus in AL
             String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
             int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
             String plateString = busAvailableArrayList.get(i).getPlate();
 
-            if(capienzaPerBus >= totParticipants){      //if capacity >= totPart -> save that bus, we're done.
+            if(capienzaPerBus >= totParticipants) {      //if capacity >= totPart -> save that bus, we're done.
                 //everyParticipant goes on that bus -> save in hashmap <plate,everyoneAL<String>>
                 busToPartecipantHashMap.put(plateString, everyParticipantArrayList);
 
@@ -3019,10 +3027,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
                 try {
                     st = this.connHere().prepareStatement(queryMakeBusMine);
-                    st.setString(1,numGita);
-                    st.setString(2,plateString);
+                    st.setString(1, numGita);
+                    st.setString(2, plateString);
                     st.executeUpdate();
-                } catch (SQLException e){
+                } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
                     try {
@@ -3033,61 +3041,116 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                     }
                 }
 
-                break busFromFirstLoop;
-
-            } //else proseguo in for
-        }
-        //se arrivo a fine busAvailableAL senza trovare un bus, quindi se hashmap.isempty() -> salvo bus da fine AL tornando indietro, finchè
-        // o trovo che, arrivato a inizio AL, ho ancora dei partecipanti non assegnati -> bus non sufficienti -> ERR
-        // o trovo bus per tutte le persone (continuo ricerca finchè totPart - capienza > 0 )
-        if(busToPartecipantHashMap.isEmpty()){
-            ArrayList<String> participantsOnBus = new ArrayList<>();
-
-            busFromLastLoop:
-            for(int i = busAvailableArrayList.size(); i >= 0; i--){  //finchè non ho ripercorso tutti i bus dall'ultimo al primo (cioè da quello con capacità maggiore, DESC)
-                String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
-                int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
-                String plateString = busAvailableArrayList.get(i).getPlate();
-
-                int remainingParticipants = totParticipants - capienzaPerBus;
-
-                while (remainingParticipants > 0) { //finchè restano partecipanti da assegnare ai bus
-                    if(remainingParticipants > 0 && i==0) {  //se ho ancora partecipanti da assegnare ma non ho più bus assegnabili
-                        return null;    //null == ERRORE : NON HO ABBASTANZA BUS ASSEGNABILI
-
-                    } else {
-
-                        //salvo in AL chi sta su quel bus (fino alla capacità max)
-                        for (int pos = 0; pos <= everyParticipantArrayList.size(); pos++) {
-                            for (int k = everyParticipantArrayList.size(); k >= capienzaPerBus; k--) {
-                                //aggiungo quella persona a partOnBusAL da inizio AL
-                                participantsOnBus.add(pos, everyParticipantArrayList.get(k));
-                                //elimino quella persona da everyPartAL
-                                everyParticipantArrayList.remove(everyParticipantArrayList.get(k));
-                            }
-                        }
-                        busToPartecipantHashMap.put(plateString, participantsOnBus);
-
-                        // make bus mine
-                        String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
+                //add participant and related bus for every participant in interni_is_here
+                for (String who : everyParticipantArrayList) {
+                    try {
+                        st = this.connHere().prepareStatement(queryAddToInterniIsHere);
+                        st.setString(1, who);
+                        st.setString(2, numGita);
+                        st.setString(3, plateString);
+                        st.setInt(4, 0);
+                        st.executeUpdate();
+                        System.out.println("saved in interni_is_here");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }finally {
                         try {
-                            st = this.connHere().prepareStatement(queryMakeBusMine);
-                            st.setString(1,numGita);
-                            st.setString(2,plateString);
-                            st.executeUpdate();
-                        } catch (SQLException e){
+                            if (st != null)
+                                st.close();
+                        } catch (Exception e) {
                             e.printStackTrace();
-                        } finally {
-                            try {
-                                if (st != null)
-                                    st.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                         }
                     }
                 }
 
+                //quando ho trovato il bus giusto, esco
+                break busFromFirstLoop;
+            }
+
+        }
+        //se arrivo a fine busAvailableAL senza trovare un bus, quindi se hashmap.isempty() -> salvo bus da fine AL tornando indietro, finchè
+        // o trovo che, arrivato a inizio AL, ho ancora dei partecipanti non assegnati -> bus non sufficienti -> ERR
+        // o trovo bus per tutte le persone (continuo ricerca finchè totPart - capienza > 0 )
+
+        if(busToPartecipantHashMap.isEmpty()){
+            ArrayList<String> participantsOnBus = new ArrayList<>();
+            int capienzaTot = 0;
+            int pos = 0;
+            int k = everyParticipantArrayList.size() -1;
+            //finchè non ho ripercorso tutti i bus dall'ultimo al primo (cioè da quello con capacità maggiore, DESC)
+            for(int i = busAvailableArrayList.size() -1 ; i > 0; i--){
+                //se ho ancora partecipanti allora continuo, assegnando persone su un nuovo bus
+                if (totParticipants > 0) {
+                    String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
+                    int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
+                    String plateString = busAvailableArrayList.get(i).getPlate();
+
+                    capienzaTot += capienzaPerBus;  //sommo alla capienza totale la capienza di questo bus
+                    System.out.println(capienzaTot);
+
+                    //aggiungo persona a bus finchè restano posti disponibili sul bus
+
+                    // make bus mine
+                    String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
+                    try {
+                        st = this.connHere().prepareStatement(queryMakeBusMine);
+                        st.setString(1, numGita);
+                        st.setString(2, plateString);
+                        st.executeUpdate();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (st != null)
+                                st.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    for (int numSeat = capienzaPerBus; numSeat > 0; numSeat--) {
+                        System.out.println("I still have" + totParticipants);
+                        if (totParticipants > 0) {//se ho ancora partecipanti
+                            //salvo in AL chi sta su quel bus (da ultimo in everyParticipantAL a primo)
+                            participantsOnBus.add(pos, everyParticipantArrayList.get(k));
+                            System.out.println(participantsOnBus.get(pos) + " added to participants on bus");
+
+                            //aggiungo la persona interni_is_here, assegnandola al bus su cui dovrebbe trovarsi (per ogni persona assegnabile a quel bus)
+                            try {
+                                st = this.connHere().prepareStatement(queryAddToInterniIsHere);
+                                st.setString(1, participantsOnBus.get(pos));
+                                st.setString(2, numGita);
+                                st.setString(3, plateString);
+                                st.setInt(4, 0);
+                                st.executeUpdate();
+                                System.out.println("& is now in interni_is_here");
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                            //infine elimino quella persona da everyPartAL
+                            Iterator<String> it = everyParticipantArrayList.iterator();
+                            while (it.hasNext()) {
+                                if (it.next().equals(everyParticipantArrayList.get(k))) {
+                                    it.remove();
+                                    break;
+                                }
+                            }
+                            for(String cf : everyParticipantArrayList){
+                                System.out.println(cf +" still here");
+                            }
+
+                            pos++;
+                            k--;
+                        }
+
+                        totParticipants --;
+                        busToPartecipantHashMap.put(plateString, participantsOnBus);
+                    }
+                }
+            }
+            if(totParticipants - capienzaTot > 0){ //se esco dal for e ho ancora partecipanti non assegnati a bus
+                return null;
             }
         }
 
@@ -3299,6 +3362,114 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
         return busArrayList;
+    }
+
+
+    @Override
+    public ArrayList<SolutionDbDetails> loadSolution (String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException{
+        //load children & staff that are effective participants related to the selected trip
+        //AND bus connected to each of them
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultParticipantsAndBus = null;
+
+        ArrayList<SolutionDbDetails> participantsAndBusArrayList = new ArrayList<>(4);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedTripDepFrom + "' AND DataOraPar ='"+ selectedTripDep +"' AND DataOraRit ='"+ selectedTripCom +"' AND Alloggio ='"+ selectedTripAccomodation +"' AND DataOraArr ='"+ selectedTripArr +"' AND Destinazione ='"+ selectedTripArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryLoadParticipantsAndBus = "SELECT I.Nome, I.Cognome, I.CF, GB.bus_Targa " +
+                                            " FROM interni AS I INNER JOIN" +
+                                            " interni_is_here AS IH ON (I.CF = IH.interni_CF) INNER JOIN" +
+                                            " gita_has_bus AS GB ON (IH.bus_Targa = GB.bus_Targa AND GB.gita_NumGita = '" + numGita + "')";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadParticipantsAndBus);
+            resultParticipantsAndBus = st.executeQuery(queryLoadParticipantsAndBus);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultParticipantsAndBus.next() ) {
+                System.out.println("No participant in DB");
+            } else {
+                resultParticipantsAndBus.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultParticipantsAndBus.next()) {
+                        SolutionDbDetails prova = new SolutionDbDetails(resultParticipantsAndBus.getString(1),
+                                resultParticipantsAndBus.getString(2),
+                                resultParticipantsAndBus.getString(3),
+                                resultParticipantsAndBus.getString(4));
+                        participantsAndBusArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultParticipantsAndBus != null)
+                    resultParticipantsAndBus.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return participantsAndBusArrayList;
+
     }
 
 //USEFUL EVERYWHERE------------------------------------------------------------------------------
