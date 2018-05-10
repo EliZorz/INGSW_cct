@@ -26,6 +26,10 @@ public class ChildController implements Initializable {
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
     private ObservableList<ContactsGuiDetails> dataContactObsList = FXCollections.observableArrayList();
 
+    private ObservableList<ContactsGuiDetails> searchedContacts = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> searchedAllergies = FXCollections.observableArrayList();
+    private ObservableList<ChildGuiDetails> searchedChildren = FXCollections.observableArrayList();
+
 
     ArrayList<String> selectedAllergy = new ArrayList<>();
     ArrayList<String> selectedChild = new ArrayList<>();
@@ -143,6 +147,23 @@ public class ChildController implements Initializable {
     public TableView<IngredientsGuiDetails> tableIngr;
     @FXML
     public TableColumn<IngredientsGuiDetails, String> colIngr;
+
+    @FXML
+    public TextField searchContact;
+    @FXML
+    public Button searchC;
+    @FXML
+    public Button backAll;
+    @FXML
+    public Button searchA;
+    @FXML
+    public TextField searchAll;
+    @FXML
+    public TextField searchCH;
+    @FXML
+    public Button backChildren;
+    @FXML
+    public Button searchChild;
 
 
     @Override
@@ -642,6 +663,77 @@ public class ChildController implements Initializable {
 
     public void renameLabel(String st){
         lblWarning.setText(st);
+    }
+
+
+    public void reloadContact(){
+        searchedContacts = FXCollections.observableArrayList();
+        searchContact.setText("");
+        tableContacts.setItems(null);
+        tableContacts.setItems(dataContactObsList);
+    }
+
+    public void searchContact(){
+        searchedContacts = FXCollections.observableArrayList();
+        if(searchContact.getText().trim().length() != 0){
+            if(dataContactObsList != null)
+                for(ContactsGuiDetails x : dataContactObsList){
+                    if(x.getCf().contains(searchContact.getText()) || x.getSurname().contains(searchContact.getText()))
+                        searchedContacts.add(x);
+                }
+            tableContacts.setItems(null);
+            tableContacts.setItems(searchedContacts);
+        }
+        else{
+            tableContacts.setItems(null);
+            tableContacts.setItems(searchedContacts);
+        }
+    }
+
+    public void reloadAllergies(){
+        searchedAllergies = FXCollections.observableArrayList();
+        searchAll.setText("");
+        tableIngr.setItems(null);
+        tableIngr.setItems(ingredientsObsList);
+    }
+
+    public void searchAllergies(){
+        searchedAllergies = FXCollections.observableArrayList();
+        if(searchAll.getText().trim().length() != 0){
+            if(ingredientsObsList != null)
+                for(IngredientsGuiDetails x : ingredientsObsList){
+                    if(x.getIngr().contains(searchAll.getText()))
+                        searchedAllergies.add(x);
+                }
+            tableIngr.setItems(null);
+            tableIngr.setItems(searchedAllergies);
+        }else{
+            tableIngr.setItems(null);
+            tableIngr.setItems(ingredientsObsList);
+        }
+    }
+
+    public void searchChildren(){
+        searchedChildren = FXCollections.observableArrayList();
+        if(searchCH.getText().trim().length() != 0){
+            if(dataObsList != null)
+                for(ChildGuiDetails x : dataObsList){
+                    if(x.getAddress().contains(searchCH.getText()) || x.getBornOn().contains(searchCH.getText()) || x.getBornWhere().contains(searchCH.getText()) || x.getCap().contains(searchCH.getText()) || x.getCf().contains(searchCH.getText()) || x.getName().contains(searchCH.getText()) || x.getProvince().contains(searchCH.getText()) || x.getResidence().contains(searchCH.getText() )|| x.getSurname().contains(searchCH.getText()))
+                        searchedChildren.add(x);
+                }
+            tableChild.setItems(null);
+            tableChild.setItems(searchedChildren);
+        }else{
+            tableChild.setItems(null);
+            tableChild.setItems(dataObsList);
+        }
+    }
+
+    public void reloadChildren(){
+        searchedChildren = FXCollections.observableArrayList();
+        searchCH.setText("");
+        tableChild.setItems(null);
+        tableChild.setItems(dataObsList);
     }
 
 }

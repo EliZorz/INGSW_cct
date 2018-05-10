@@ -8,12 +8,14 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="624.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
+<AnchorPane prefHeight="704.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
   <children>
-    <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="624.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="704.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="670.0">
           <children>
@@ -39,8 +41,8 @@
             <TextField fx:id="txtCap" layoutX="34.0" layoutY="194.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
             <TextField fx:id="txtProvince" layoutX="160.0" layoutY="194.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
             <TextField fx:id="txtMail" layoutX="34.0" layoutY="65.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
-                  <Button fx:id="btnBack" layoutX="265.0" layoutY="576.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="110.0" text="Homepage" />
-                  <ButtonBar layoutX="27.0" layoutY="528.0" prefHeight="40.0" prefWidth="343.0">
+                  <Button fx:id="btnBack" layoutX="265.0" layoutY="645.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="110.0" text="Homepage" />
+                  <ButtonBar layoutX="27.0" layoutY="597.0" prefHeight="40.0" prefWidth="343.0">
                     <buttons>
                       <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadSuppliers" text="Load table" />
                         <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
@@ -53,19 +55,30 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Button fx:id="btnDeselect" layoutX="34.0" layoutY="576.0" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
-                  <TableView fx:id="tableIngr" layoutX="34.0" layoutY="294.0" prefHeight="174.0" prefWidth="146.0">
+                  <Button fx:id="btnDeselect" layoutX="34.0" layoutY="645.0" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
+              <TextField fx:id="searchTF" layoutX="33.0" layoutY="539.0" AnchorPane.leftAnchor="33.0" />
+              <Button fx:id="searchSupp" layoutX="196.0" layoutY="539.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.rightAnchor="144.0" AnchorPane.topAnchor="539.0" />
+              <Button fx:id="back" layoutX="258.0" layoutY="536.0" mnemonicParsing="false" onAction="#reload" prefHeight="31.0" prefWidth="26.0" AnchorPane.rightAnchor="102.0" AnchorPane.topAnchor="536.0">
+                  <graphic>
+                      <ImageView fitHeight="21.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../../../../../if_back_322419.png" />
+                          </image>
+                      </ImageView>
+                  </graphic>
+              </Button>
+              <TableView fx:id="tableIngr" layoutX="34.0" layoutY="294.0" prefHeight="138.0" prefWidth="146.0">
                     <columns>
                       <TableColumn fx:id="colIngr" prefWidth="145.59986114501953" text="ingredient" />
                     </columns>
                   </TableView>
-                  <TextField fx:id="txtIngr" layoutX="217.0" layoutY="442.0" prefHeight="26.0" prefWidth="138.0" promptText="Ingredient provided" />
-                  <Button fx:id="btnLoadIngr" layoutX="74.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleLoadIngr" text="Load Ingredients">
+                  <TextField fx:id="txtIngr" layoutX="205.0" layoutY="363.0" prefHeight="26.0" prefWidth="138.0" promptText="Ingredient provided" />
+                  <Button fx:id="btnLoadIngr" layoutX="74.0" layoutY="442.0" mnemonicParsing="false" onAction="#handleLoadIngr" text="Load Ingredients">
                      <effect>
                         <SepiaTone />
                      </effect>
                   </Button>
-                  <Button fx:id="btnAddIngr" layoutX="291.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleAddIngrToDb" text="Add new">
+                  <Button fx:id="btnAddIngr" layoutX="288.0" layoutY="442.0" mnemonicParsing="false" onAction="#handleAddIngrToDb" text="Add new">
                      <effect>
                         <SepiaTone />
                      </effect>

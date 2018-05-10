@@ -29,6 +29,8 @@ public class CoachOperatorsController implements Initializable {
     private ObservableList<SupplierGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<BusPlateCapacityGuiDetails> busObsList = FXCollections.observableArrayList();
 
+    private ObservableList<SupplierGuiDetails> searchedSuppliers = FXCollections.observableArrayList();
+
     ArrayList<String> selectedSupplier = new ArrayList<>();
     String oldPiva = null;
 
@@ -88,8 +90,14 @@ public class CoachOperatorsController implements Initializable {
     public TextField txtPlate;
     @FXML
     public TextField txtCapacity;
+
     @FXML
-    public Button btnLoadBus;
+    public Button back;
+    @FXML
+    public TextField searchTF;
+    @FXML
+    public Button search;
+
 
 
     @Override
@@ -326,5 +334,28 @@ public class CoachOperatorsController implements Initializable {
         lblWarning.setText(st);
     }
 
+    public void reload(){
+        searchedSuppliers = FXCollections.observableArrayList();
+        searchTF.setText("");
+        tableSuppliers.setItems(null);
+        tableSuppliers.setItems(dataObsList);
+    }
+
+    public void search(){
+        searchedSuppliers = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0){
+            if(dataObsList != null){
+                for(SupplierGuiDetails x : dataObsList){
+                    if(x.getProvince().contains(searchTF.getText()) || x.getNameaz().contains(searchTF.getText()) || x.getMail().contains(searchTF.getText()) || x.getCap().contains(searchTF.getText()) || x.getAddress().contains(searchTF.getText()) || x.getPiva().contains(searchTF.getText()) || x.getTel().contains(searchTF.getText()) )
+                        searchedSuppliers.add(x);
+                }
+            }
+            tableSuppliers.setItems(null);
+            tableSuppliers.setItems(searchedSuppliers);
+        }else{
+            tableSuppliers.setItems(null);
+            tableSuppliers.setItems(dataObsList);
+        }
+    }
 
 }

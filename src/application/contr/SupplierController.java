@@ -28,6 +28,8 @@ public class SupplierController implements Initializable{
     private ObservableList<SupplierGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<CodRifChildGuiDetails> ingrObsList = FXCollections.observableArrayList();
 
+    private ObservableList<SupplierGuiDetails> searchedSuppliers = FXCollections.observableArrayList();
+
     ArrayList<String> selectedSupplier = new ArrayList<>();
     String oldPiva = null;
 
@@ -86,6 +88,14 @@ public class SupplierController implements Initializable{
     public Button btnLoadIngr;
     @FXML
     public Button btnAddIngr;
+
+    @FXML
+    public Button back;
+    @FXML
+    public Button searchSupp;
+    @FXML
+    public TextField searchTF;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -313,4 +323,28 @@ public class SupplierController implements Initializable{
     public void renameLabel(String st){
         lblWarning.setText(st);
     }
+
+    public void reload(){
+        searchedSuppliers = FXCollections.observableArrayList();
+        searchTF.setText("");
+        tableSuppliers.setItems(null);
+        tableSuppliers.setItems(dataObsList);
+    }
+
+    public void search(){
+        searchedSuppliers = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0){
+            if(dataObsList!= null)
+                for(SupplierGuiDetails x : dataObsList){
+                    if(x.getPiva().contains(searchTF.getText()) || x.getAddress().contains(searchTF.getText()) || x.getCap().contains(searchTF.getText()) || x.getMail().contains(searchTF.getText()) || x.getNameaz().contains(searchTF.getText()) || x.getProvince().contains(searchTF.getText()) || x.getTel().contains(searchTF.getText()))
+                        searchedSuppliers.add(x);
+                }
+            tableSuppliers.setItems(null);
+            tableSuppliers.setItems(searchedSuppliers);
+        }else{
+            tableSuppliers.setItems(null);
+            tableSuppliers.setItems(dataObsList);
+        }
+    }
+
 }
