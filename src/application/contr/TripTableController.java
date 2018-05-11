@@ -29,7 +29,7 @@ public class TripTableController implements Initializable{
     private ObservableList<TripTableGuiDetails> dataObsList = FXCollections.observableArrayList();
 
     ArrayList<String> selectedTrip = new ArrayList<>();
-    
+
     @FXML
     public TableView<TripTableGuiDetails> tableTrip;
     @FXML
@@ -50,6 +50,8 @@ public class TripTableController implements Initializable{
     public Button btnBack;
     @FXML
     public Button btnDeleteSelected;
+    @FXML
+    public Button btnSolution;
     @FXML
     public Label lblStatus;
 
@@ -119,18 +121,13 @@ public class TripTableController implements Initializable{
     @FXML
     public void handleDelete() {
         String stringDep = selectedTrip.get(1);
-        LocalDateTime localDateTimeDep = LocalDateTime.parse(stringDep.replace(" ","T"));
-
         String stringArr = selectedTrip.get(4);
-        LocalDateTime localDateTimeArr = LocalDateTime.parse(stringArr.replace(" ","T"));
-
         String stringCom = selectedTrip.get(2);
-        LocalDateTime localDateTimeCom = LocalDateTime.parse(stringCom.replace(" ","T"));
 
         System.out.println("Loading data...");
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-            boolean deleted = u.deleteTrip(selectedTrip.get(0), localDateTimeDep,localDateTimeCom, selectedTrip.get(3), localDateTimeArr, selectedTrip.get(5));
+            boolean deleted = u.deleteTrip(selectedTrip.get(0), stringDep, stringCom, selectedTrip.get(3), stringArr, selectedTrip.get(5));
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedTrip.clear();
@@ -142,6 +139,14 @@ public class TripTableController implements Initializable{
             e.printStackTrace();
         }
 
+    }
+
+    public void handleOpenSolution(){
+        try{
+            new GuiNew("TripSolutionBus");          //NOTA: IL CONTROLLER è PER TripSolutionBus
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
     }
 
     public void renameLabel(String st){

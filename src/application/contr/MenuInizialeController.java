@@ -26,6 +26,7 @@ public class MenuInizialeController {
 
     @FXML
     void openChildren(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("Children");
     }
 
@@ -38,11 +39,13 @@ public class MenuInizialeController {
 
     @FXML
     void openMenuBasePlates (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
     }
 
     @FXML
     void openSpecialMenu (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("LoadSpecialMenu");
     }
 
@@ -81,10 +84,16 @@ public class MenuInizialeController {
 
 
     @FXML
-
     void openSuppliers (ActionEvent event)throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
-       new GuiNew("Suppliers");
+        new GuiNew("Suppliers");
+    }
+
+
+    @FXML
+    void handleOpenCoachOperators (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("CoachOperators");
     }
 
 
@@ -93,7 +102,7 @@ public class MenuInizialeController {
         //.setOnAction(e -> Platform.exit());
 
         //System.exit(0);  //in questo modo chiudo tutto
-       // Platform.exit(); altro modo per chiudere tutto
+        // Platform.exit(); altro modo per chiudere tutto
         ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuIniziale");
 
@@ -108,5 +117,3 @@ public class MenuInizialeController {
 
 
 }
-
-

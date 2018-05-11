@@ -104,7 +104,7 @@ CREATE TABLE `bus` (
 
 LOCK TABLES `bus` WRITE;
 /*!40000 ALTER TABLE `bus` DISABLE KEYS */;
-INSERT INTO `bus` VALUES ('BG456YU',3,456123789),('DB456ER',2,123456789),('EL987DA',8,456123789),('FF243RT',5,456231456),('IT678TT',14,123456789);
+INSERT INTO `bus` VALUES ('BG456YU',3,456123789),('DB456ER',2,123456789),('FF243RT',5,456231456),('RR786YT',3,456231456),('TR768YU',4,456231456);
 /*!40000 ALTER TABLE `bus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +189,7 @@ CREATE TABLE `gita` (
 
 LOCK TABLES `gita` WRITE;
 /*!40000 ALTER TABLE `gita` DISABLE KEYS */;
-INSERT INTO `gita` VALUES ('CR','2018-05-10','2018-05-11','via Foscolo 45','2018-05-10','MN','g1'),('CR','2018-05-09','2018-05-23','via Monterosso 45','2018-05-09','VE','g2');
+INSERT INTO `gita` VALUES ('CR','2018-05-17','2018-05-17','','2018-05-17','CR','g1');
 /*!40000 ALTER TABLE `gita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,37 +217,8 @@ CREATE TABLE `gita_has_bus` (
 
 LOCK TABLES `gita_has_bus` WRITE;
 /*!40000 ALTER TABLE `gita_has_bus` DISABLE KEYS */;
-INSERT INTO `gita_has_bus` VALUES ('g2','FF243RT');
+INSERT INTO `gita_has_bus` VALUES ('g1','FF243RT'),('g1','TR768YU');
 /*!40000 ALTER TABLE `gita_has_bus` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `gita_has_tappa`
---
-
-DROP TABLE IF EXISTS `gita_has_tappa`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gita_has_tappa` (
-  `interni_CF` char(16) NOT NULL,
-  `is_here` tinyint(4) NOT NULL,
-  `bus_Targa` varchar(7) NOT NULL,
-  `bus_noleggio_PIVA` int(11) NOT NULL,
-  PRIMARY KEY (`interni_CF`,`bus_Targa`,`bus_noleggio_PIVA`),
-  UNIQUE KEY `bus_Targa_UNIQUE` (`bus_Targa`),
-  KEY `fk_interni_has_gita1_interni1_idx` (`interni_CF`),
-  KEY `fk_gita_has_tappa_bus1_idx` (`bus_Targa`,`bus_noleggio_PIVA`),
-  CONSTRAINT `fk_interni_has_gita1_interni1` FOREIGN KEY (`interni_CF`) REFERENCES `interni` (`CF`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `gita_has_tappa`
---
-
-LOCK TABLES `gita_has_tappa` WRITE;
-/*!40000 ALTER TABLE `gita_has_tappa` DISABLE KEYS */;
-/*!40000 ALTER TABLE `gita_has_tappa` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -261,7 +232,6 @@ CREATE TABLE `ingredients` (
   `ingredient` varchar(15) NOT NULL,
   `Fornitore_PIVA` int(11) NOT NULL,
   PRIMARY KEY (`ingredient`),
-  UNIQUE KEY `ingredient_UNIQUE` (`ingredient`),
   KEY `fk_Ingredients_Fornitore1_idx` (`Fornitore_PIVA`),
   CONSTRAINT `fk_Ingredients_Fornitore1` FOREIGN KEY (`Fornitore_PIVA`) REFERENCES `fornitore` (`PIVA`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -306,7 +276,7 @@ CREATE TABLE `interni` (
 
 LOCK TABLES `interni` WRITE;
 /*!40000 ALTER TABLE `interni` DISABLE KEYS */;
-INSERT INTO `interni` VALUES ('Fieri','Mariapia','FRIMRP68C47D612B','1968-03-07','Firenze','Cremona','corso Garibaldi 51',26100,'CR','[fragole],'),('Eli','Ali','LAILEI10O45F130T','2010-05-10','Crema','Cremona','via Ritsa 5',26100,'CR','[pesce], '),('Rosa','Maggiore','MGGRSO10I09O987Y','2009-05-24','Cremona','Cremona','via Buoso 4',26100,'CR','[pesce], '),('Davide','Marini','MRNDVD94G56T586U','1994-05-04','Cremona','Cremona','via Migio 8',26100,'CR','none'),('Perera','Luca','PRRLCU09H10F205M','2009-06-10','Milano','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Ale','Rodi','RDOLAE34F45T578O','2009-10-16','Mantova','Cremona','via Rizzoli 3',26100,'CR','[pesce, pane], [pesce, pane], '),('Matteo','Rossi','RSSMTT32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 4',26100,'CR','none'),('Virginia','Rossi','RSSVRG32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 1',26100,'CR','none'),('Verdi','Anastasia','VRDNTS10P41D150R','2010-09-01','Cremona','Cremona','via Garibaldi 57',26100,'CR','none');
+INSERT INTO `interni` VALUES ('Eli','Ali','LAILEI10O45F130T','2010-05-10','Crema','Cremona','via Ritsa 5',26100,'CR','[pesce], '),('Rosa','Maggiore','MGGRSO10I09O987Y','2009-05-24','Cremona','Cremona','via Buoso 4',26100,'CR','[pesce], '),('Davide','Marini','MRNDVD94G56T586U','1994-05-04','Cremona','Cremona','via Migio 8',26100,'CR','none'),('Perera','Luca','PRRLCU09H10F205M','2009-06-10','Milano','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Ale','Rodi','RDOLAE34F45T578O','2009-10-16','Mantova','Cremona','via Rizzoli 3',26100,'CR','[pesce, pane], [pesce, pane], '),('Matteo','Rossi','RSSMTT32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 4',26100,'CR','none'),('Virginia','Rossi','RSSVRG32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 1',26100,'CR','none'),('Verdi','Anastasia','VRDNTS10P41D150R','2010-09-01','Cremona','Cremona','via Garibaldi 57',26100,'CR','none');
 /*!40000 ALTER TABLE `interni` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -334,7 +304,7 @@ CREATE TABLE `interni_has_gita` (
 
 LOCK TABLES `interni_has_gita` WRITE;
 /*!40000 ALTER TABLE `interni_has_gita` DISABLE KEYS */;
-INSERT INTO `interni_has_gita` VALUES ('FRIMRP68C47D612B','g2',1),('LAILEI10O45F130T','g2',1),('PRRLCU09H10F205M','g2',1),('RDOLAE34F45T578O','g2',1),('RSSVRG32R45T465O','g1',1),('VRDNTS10P41D150R','g1',1);
+INSERT INTO `interni_has_gita` VALUES ('LAILEI10O45F130T','g1',1),('MGGRSO10I09O987Y','g1',1),('PRRLCU09H10F205M','g1',1),('RDOLAE34F45T578O','g1',1),('RSSMTT32R45T465O','g1',1),('RSSVRG32R45T465O','g1',1),('VRDNTS10P41D150R','g1',1);
 /*!40000 ALTER TABLE `interni_has_gita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,14 +317,15 @@ DROP TABLE IF EXISTS `interni_is_here`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `interni_is_here` (
   `interni_CF` char(16) NOT NULL,
-  `gita_has_bus_gita_NumGita` varchar(8) NOT NULL,
-  `gita_has_bus_bus_Targa` varchar(7) NOT NULL,
+  `gita_NumGita` varchar(8) NOT NULL,
+  `bus_Targa` varchar(7) NOT NULL,
   `is_here` tinyint(4) NOT NULL,
-  PRIMARY KEY (`interni_CF`,`gita_has_bus_gita_NumGita`,`gita_has_bus_bus_Targa`),
-  KEY `fk_interni_has_gita_has_bus_gita_has_bus1_idx` (`gita_has_bus_gita_NumGita`,`gita_has_bus_bus_Targa`),
   KEY `fk_interni_has_gita_has_bus_interni1_idx` (`interni_CF`),
-  CONSTRAINT `fk_interni_has_gita_has_bus_gita_has_bus1` FOREIGN KEY (`gita_has_bus_gita_NumGita`, `gita_has_bus_bus_Targa`) REFERENCES `gita_has_bus` (`gita_NumGita`, `bus_Targa`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_interni_has_gita_has_bus_interni1` FOREIGN KEY (`interni_CF`) REFERENCES `interni` (`CF`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_interni_has_gita_has_bus_gita_has_bus1_idx` (`bus_Targa`),
+  KEY `fk_interni_has_gita_gita1_idx` (`gita_NumGita`),
+  KEY `fk_interni_is_here_gita_has_bus1_idx` (`bus_Targa`,`gita_NumGita`),
+  CONSTRAINT `fk_interni_is_here_gita_has_bus1` FOREIGN KEY (`bus_Targa`, `gita_NumGita`) REFERENCES `gita_has_bus` (`bus_Targa`, `gita_NumGita`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_interni_is_here_interni_has_gita1` FOREIGN KEY (`interni_CF`) REFERENCES `interni_has_gita` (`interni_CF`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -364,6 +335,7 @@ CREATE TABLE `interni_is_here` (
 
 LOCK TABLES `interni_is_here` WRITE;
 /*!40000 ALTER TABLE `interni_is_here` DISABLE KEYS */;
+INSERT INTO `interni_is_here` VALUES ('RSSMTT32R45T465O','g1','FF243RT',0),('RSSVRG32R45T465O','g1','FF243RT',0),('MGGRSO10I09O987Y','g1','FF243RT',0),('RDOLAE34F45T578O','g1','FF243RT',0),('LAILEI10O45F130T','g1','FF243RT',0),('VRDNTS10P41D150R','g1','TR768YU',0),('PRRLCU09H10F205M','g1','TR768YU',0);
 /*!40000 ALTER TABLE `interni_is_here` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -565,7 +537,7 @@ CREATE TABLE `personaleint` (
 
 LOCK TABLES `personaleint` WRITE;
 /*!40000 ALTER TABLE `personaleint` DISABLE KEYS */;
-INSERT INTO `personaleint` VALUES ('fieri.mariapia@cct.mailunion.com','s1','FRIMRP68C47D612B'),('rossi.virginia@mailunica.com','s2','RSSVRG32R45T465O'),('rossi.matteo@mailunica.com','s3','RSSMTT32R45T465O'),('marini.davide@mailcct.com','s4','MRNDVD94G56T586U');
+INSERT INTO `personaleint` VALUES ('rossi.virginia@mailunica.com','s2','RSSVRG32R45T465O'),('rossi.matteo@mailunica.com','s3','RSSMTT32R45T465O'),('marini.davide@mailcct.com','s4','MRNDVD94G56T586U');
 /*!40000 ALTER TABLE `personaleint` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -603,4 +575,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-08 23:43:49
+-- Dump completed on 2018-05-11 17:09:47

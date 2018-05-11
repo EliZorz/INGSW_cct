@@ -2,11 +2,14 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.Singleton;
+import application.details.BusPlateCapacityDbDetails;
+import application.details.BusPlateCapacityGuiDetails;
 import application.details.SupplierDbDetails;
 import application.details.SupplierGuiDetails;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -22,8 +25,12 @@ import java.util.ResourceBundle;
  * Created by ELISA on 09/05/2018.
  */
 public class CoachOperatorsController implements Initializable {
+
     private ObservableList<SupplierGuiDetails> dataObsList = FXCollections.observableArrayList();
+    private ObservableList<BusPlateCapacityGuiDetails> busObsList = FXCollections.observableArrayList();
+
     private ObservableList<SupplierGuiDetails> searchedSuppliers = FXCollections.observableArrayList();
+
     ArrayList<String> selectedSupplier = new ArrayList<>();
     String oldPiva = null;
 
@@ -58,6 +65,8 @@ public class CoachOperatorsController implements Initializable {
     @FXML
     public Button btnDeselect;
     @FXML
+    public Button btnAddBus;
+    @FXML
     public TextField txtName;
     @FXML
     public TextField txtPiva;
@@ -72,11 +81,24 @@ public class CoachOperatorsController implements Initializable {
     @FXML
     public TextField txtProvince;
     @FXML
+    public TableView<BusPlateCapacityGuiDetails> tableBus;
+    @FXML
+    public TableColumn<BusPlateCapacityGuiDetails, String> colPlate;
+    @FXML
+    public TableColumn<BusPlateCapacityGuiDetails, String> colCapacity;
+    @FXML
+    public TextField txtPlate;
+    @FXML
+    public TextField txtCapacity;
+
+    @FXML
     public Button back;
     @FXML
     public TextField searchTF;
     @FXML
     public Button search;
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -114,6 +136,12 @@ public class CoachOperatorsController implements Initializable {
         });
 
         tableSuppliers.getItems().clear();
+
+        colPlate.setCellValueFactory(cellData -> cellData.getValue().plateProperty());
+        colCapacity.setCellValueFactory(cellData -> cellData.getValue().capacityProperty());
+
+        tableBus.getItems().clear();
+
     }
 
     public void handleLoadSuppliers() {
@@ -200,6 +228,7 @@ public class CoachOperatorsController implements Initializable {
 
     }
 
+
     public void handleDeleteSupplier() {
         System.out.println("Loading data...");
         try {
@@ -230,6 +259,11 @@ public class CoachOperatorsController implements Initializable {
     public void handleDeselect(){
         tableSuppliers.getSelectionModel().clearSelection();
 
+        tableBus.getSelectionModel().clearSelection();
+
+        txtPlate.clear();
+        txtCapacity.clear();
+
         txtName.clear();
         txtPiva.clear();
         txtTel.clear();
@@ -239,6 +273,62 @@ public class CoachOperatorsController implements Initializable {
         txtCap.clear();
     }
 
+
+    public void handleAddBusToDb() {
+        String plate = txtPlate.getText();
+        int capacity = Integer.parseInt(txtCapacity.getText());
+
+        if (plate.trim().isEmpty() || txtCapacity.getText().isEmpty()) {
+            this.renameLabel("Insert data.");
+        } else {
+            System.out.println("Adding data to database...");
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+                boolean isEditOk = u.addBusToDb(plate, capacity, oldPiva);  //call method in Server Impl
+
+                if (isEditOk) {
+                    lblWarning.setText("Congrats! Bus added.");
+                    txtCapacity.clear();
+                    txtPlate.clear();
+                    selectedSupplier.clear();
+                } else {
+                    this.renameLabel("Plate already inserted. Redo.");
+                    txtCapacity.clear();
+                    txtPlate.clear();
+                    selectedSupplier.clear();
+                }
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void handleLoadBus() {
+        System.out.println("Loading data...");
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            ArrayList<BusPlateCapacityDbDetails> staffDbArrayList = u.loadDataBus(oldPiva);  //call method in Server Impl
+            busObsList.clear();
+
+            if (staffDbArrayList != null){
+                for(BusPlateCapacityDbDetails c : staffDbArrayList){
+                    BusPlateCapacityGuiDetails tmp = new BusPlateCapacityGuiDetails(c);
+                    busObsList.add(tmp);
+                }
+                tableBus.setItems(null);
+                tableBus.setItems(busObsList);
+                this.renameLabel("Table loaded!");
+            }else{
+                this.renameLabel("Error.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     public void renameLabel(String st){
         lblWarning.setText(st);
@@ -267,4 +357,5 @@ public class CoachOperatorsController implements Initializable {
             tableSuppliers.setItems(dataObsList);
         }
     }
+
 }

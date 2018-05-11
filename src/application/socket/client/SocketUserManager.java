@@ -245,6 +245,16 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException {
+        return false;
+    }
+
+    @Override
     public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
         return null;
     }
@@ -261,6 +271,16 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean deleteCoachOperator(String piva) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException {
         return false;
     }
 
@@ -383,9 +403,11 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String alloggio, LocalDateTime dateArr, String arr) throws RemoteException {
+    public boolean deleteTrip(String dep, String dateDep, String dateCom, String alloggio, String dateArr, String arr) throws RemoteException {
         return false;
     }
+
+
 
     @Override
     public ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException{
@@ -429,6 +451,21 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ChildSelectedTripDbDetails> loadWhoTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> loadBusTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<SolutionDbDetails> loadSolution(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         return null;
     }
 

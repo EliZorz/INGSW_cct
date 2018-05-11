@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -900,7 +901,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
-//SUPPLIER---------------------------------------------------------------------------------------
+    //SUPPLIER---------------------------------------------------------------------------------------
     @Override
     public ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException {
         PreparedStatement st = null;
@@ -992,8 +993,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
 
         String queryEdit = "UPDATE fornitore SET PIVA ='" + piva + "', NomeAzienda ='" + name + "', Mail ='" + mail + "', " +
-                            "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
-                            "WHERE PIVA = '" + oldPiva + "';";
+                "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
+                "WHERE PIVA = '" + oldPiva + "';";
 
         try {
             st = this.connHere().prepareStatement(queryEdit);
@@ -1014,17 +1015,22 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean deleteSupplier(String piva) throws RemoteException{
         PreparedStatement st = null;
+        PreparedStatement stIngr = null;
         String queryDelete = "DELETE FROM fornitore WHERE PIVA = '" + piva + "';";
+        String queryDeleteIngr = "DELETE FROM project.ingredients WHERE fornitore_PIVA = '"+piva+"'";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
+            stIngr = this.connHere().prepareStatement(queryDeleteIngr);
+            stIngr.executeUpdate(queryDeleteIngr);
             st.executeUpdate(queryDelete);
             System.out.println("Deleted from fornitore.");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (st != null)
+                if (st != null && stIngr != null)
+                    stIngr.close();
                     st.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1032,6 +1038,108 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
         return true;
+    }
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException{
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<CodRifChildDbDetails> ingrArrayList = new ArrayList<>(1);
+
+        String queryLoad = "SELECT * FROM ingredients " +
+                "WHERE Fornitore_PIVA = '" + selectedSupplier + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No ingredient in DB");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        CodRifChildDbDetails prova = new CodRifChildDbDetails(result.getString(1));
+                        ingrArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return ingrArrayList;
+    }
+
+    @Override
+    public boolean addIngrToDb(String ingredient, String selectedSupplier) throws RemoteException {
+        PreparedStatement st = null;
+        ResultSet resultDuplicate =null;
+        String queryFindDuplicateIngredient = "SELECT ingredient " +
+                "FROM ingredients " +
+                "WHERE ingredient = '"+ ingredient +"';";
+        String queryAdd = "INSERT INTO ingredients(ingredient, Fornitore_PIVA)" +
+                " VALUES (?,?)";
+
+        try {
+            st = this.connHere().prepareStatement(queryFindDuplicateIngredient);
+            resultDuplicate = st.executeQuery();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        try{
+            if( !resultDuplicate.next() ) {
+                System.out.println("No duplicate ingredient in DB. Proceed...");
+                try{
+                    st = this.connHere().prepareStatement(queryAdd);
+                    st.setString(1, ingredient);
+                    st.setString(2, selectedSupplier);
+                    st.executeUpdate();
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultDuplicate != null)
+                    resultDuplicate.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return true;
+
     }
 
 //COACH OPERATORS ---------------------------------------------------------------------------------------------
@@ -1169,6 +1277,110 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
     }
 
+    @Override
+    public ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException{
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<BusPlateCapacityDbDetails> supplierDbArrayList = new ArrayList<>(2);
+
+        String queryLoad = "SELECT * FROM bus " +
+                "WHERE Noleggio_PIVA = '" + selectedSupplier + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoad);
+            result = st.executeQuery(queryLoad);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !result.next() ) {
+                System.out.println("No bus in DB");
+            } else {
+                result.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (result.next()) {
+                        BusPlateCapacityDbDetails prova = new BusPlateCapacityDbDetails(result.getString(1),
+                                result.getString(2));
+                        supplierDbArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return supplierDbArrayList;
+    }
+
+    @Override
+    public boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException {
+        PreparedStatement st = null;
+        ResultSet resultDuplicate =null;
+        String queryFindDuplicateKey = "SELECT Targa " +
+                "FROM bus " +
+                "WHERE Targa = '"+ plate +"' AND Noleggio_PIVA = '"+ selectedSupplier +"';";
+        String queryAdd = "INSERT INTO bus(Targa, capienza, Noleggio_PIVA)" +
+                " VALUES (?,?,?)";
+
+        try {
+            st = this.connHere().prepareStatement(queryFindDuplicateKey);
+            resultDuplicate = st.executeQuery();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        try{
+            if( !resultDuplicate.next() ) {
+                System.out.println("No duplicate bus in DB. Proceed...");
+                try{
+                    st = this.connHere().prepareStatement(queryAdd);
+                    st.setString(1, plate);
+                    st.setInt(2, capacity);
+                    st.setString(3, selectedSupplier);
+                    st.executeUpdate();
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultDuplicate != null)
+                    resultDuplicate.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return true;
+
+    }
+
 //MENU ---------------------------------------------------------------------------------------
 
     @Override
@@ -1176,7 +1388,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st;
         ResultSet result = null;
         DishesDbDetails dishes  = null;
-        String queryLoad1 = "SELECT * FROM mydb.menu_base WHERE date ='"+date+"'";
+        String queryLoad1 = "SELECT * FROM project.menu_base WHERE date ='"+date+"'";
 
         try{
             st = this.connHere().prepareStatement(queryLoad1);
@@ -1220,7 +1432,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
         PreparedStatement st = null;
-        String querySearch = "SELECT ingredients_ingredient FROM mydb.dish_ingredients WHERE Nome_piatto='"+dish+"'";
+        String querySearch = "SELECT ingredients_ingredient FROM project.dish_ingredients WHERE Nome_piatto='"+dish+"'";
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
         try{
@@ -1270,7 +1482,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr(LocalDate d) throws RemoteException{
         PreparedStatement st = null;
-        String queryLoad = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date ='" + d+"'";
+        String queryLoad = "SELECT dish_ingredients_ingredients FROM project.menu_base_has_dish_ingredients WHERE menu_base_date ='" + d+"'";
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> resIngr = new ArrayList<>();
         try{
@@ -1322,11 +1534,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement stAdd = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
-        String queryUpdate = "UPDATE mydb.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
+        String queryUpdate = "UPDATE project.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
 
-        String queryDelete = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"'";
+        String queryDelete = "DELETE FROM project.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"'";
 
-        String queryAdd = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients)"+"VALUES (?,?,?)";
+        String queryAdd = "INSERT INTO project.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients)"+"VALUES (?,?,?)";
 
         try {
 
@@ -1412,7 +1624,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         ArrayList<DishesDbDetails> dishes = new ArrayList<>(4);
 
-        String queryLoad1 = "SELECT * FROM mydb.menu_base";
+        String queryLoad1 = "SELECT * FROM project.menu_base";
 
         try{
             st = this.connHere().prepareStatement(queryLoad1);
@@ -1462,10 +1674,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryAdd = "INSERT INTO mydb.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
+        String queryAdd = "INSERT INTO project.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
-        String queryAddDish = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredients)"+"VALUES(?,?,?)";
+        String queryAddDish = "INSERT INTO project.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient)"+"VALUES(?,?,?)";
         PreparedStatement stDish = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
@@ -1554,7 +1766,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean controllDate(LocalDate d) throws RemoteException {
         PreparedStatement st = null;
-        String queryControll = "SELECT date FROM mydb.menu_base WHERE date = '" + d + "';";
+        String queryControll = "SELECT date FROM project.menu_base WHERE date = '" + d + "';";
 
         ResultSet result = null;
 
@@ -1587,9 +1799,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         //PreparedStatement st1 = null;
 
-        String queryDelete = "DELETE FROM mydb.menu_base WHERE date = '" + d + "';";
+        String queryDelete = "DELETE FROM project.menu_base WHERE date = '" + d + "';";
 
-        String queryDeleteIngredients = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
+        String queryDeleteIngredients = "DELETE FROM project.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
@@ -1620,7 +1832,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         try {
             for (String x : selectedIngredients) {
-                String queryAddIngredients = "INSERT INTO mydb.dish_ingredients(Nome_piatto, ingredients_ingredient)" + " VALUES(?,?)";
+                String queryAddIngredients = "INSERT INTO project.dish_ingredients(Nome_piatto, ingredients_ingredient)" + " VALUES(?,?)";
                 st = this.connHere().prepareStatement(queryAddIngredients);
                 st.setString(1, dish);
                 st.setString(2, x);
@@ -1655,8 +1867,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<SpecialDbDetails> special = new ArrayList<>();
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
         ArrayList<SpecialDbDetails> specialInterni = new ArrayList<>();
-        String queryLoad = "SELECT CF,Allergie FROM mydb.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM mydb.menu_special where date ='"+date+"')";
-        String queryIngr = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
+        String queryLoad = "SELECT CF,Allergie FROM project.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM project.menu_special where date ='"+date+"')";
+        String queryIngr = "SELECT dish_ingredients_ingredients_ingredient FROM project.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
         try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
@@ -1708,7 +1920,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         ArrayList<SpecialMenuDbDetails> dishes = new ArrayList<>(4);
 
-        String queryLoad1 = "SELECT * FROM mydb.menu_special";
+        String queryLoad1 = "SELECT * FROM project.menu_special";
 
         try{
             Connection c = this.connHere();
@@ -1762,8 +1974,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException{
         PreparedStatement st = null;
 
-        String queryDelete = "DELETE FROM mydb.menu_special WHERE date = '" + date + "'and CF ='"+FC+"' and Allergie = '"+ allergies+"'";
-        String queryDeleteIngredients = "DELETE FROM mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and menu_special_CF ='"+FC+"' and menu_special_allergie='"+allergies+"'";
+        String queryDelete = "DELETE FROM project.menu_special WHERE date = '" + date + "'and CF ='"+FC+"' and Allergie = '"+ allergies+"'";
+        String queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and menu_special_CF ='"+FC+"' and menu_special_allergie='"+allergies+"'";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
@@ -1791,8 +2003,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date,SpecialDbDetails special) throws RemoteException{
-        String queryAdd = "INSERT INTO mydb.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
-        String queryAddDish = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
+        String queryAdd = "INSERT INTO project.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
+        String queryAddDish = "INSERT INTO project.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         PreparedStatement st = null;
         PreparedStatement stDish = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
@@ -1899,9 +2111,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement stAdd = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
-        String queryUpdate = "UPDATE mydb.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
-        String queryDelete = "DELETE FROM  mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
-        String queryAdd = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
+        String queryUpdate = "UPDATE project.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
+        String queryDelete = "DELETE FROM  project.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
+        String queryAdd = "INSERT INTO project.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         try{
             st = this.connHere().prepareStatement(queryUpdate);
             stIngr = this.connHere().prepareStatement(queryDelete);
@@ -2030,22 +2242,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
     @Override
-    public boolean deleteTrip(String dep, LocalDateTime dateDep, LocalDateTime dateCom, String staying, LocalDateTime dateArr, String arr) throws RemoteException {
+    public boolean deleteTrip(String dep, String dateDep, String dateCom, String staying, String dateArr, String arr) throws RemoteException {
         PreparedStatement st = null;
-
-        DateTimeFormatter dtfdep = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampDep = Timestamp.valueOf(dateDep.format(dtfdep));
-
-        DateTimeFormatter dtfarr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampArr = Timestamp.valueOf(dateArr.format(dtfarr));
-
-        DateTimeFormatter dtfcom = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestampCom = Timestamp.valueOf(dateCom.format(dtfcom));
 
         System.out.println("You selected " + dep + "  " + arr + "  " + dateDep +"  "+ dateArr +"  "+ dateCom +"  "+ staying);
 
         String queryDelete = "DELETE FROM gita " +
-                "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ timestampDep +"' AND DataOraRit ='"+ timestampCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ timestampArr +"' AND Destinazione ='"+ arr + "';";
+                "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ dateDep +"' AND DataOraRit ='"+ dateCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ dateArr +"' AND Destinazione ='"+ arr + "';";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
@@ -2176,8 +2379,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
-                            String localDateDep, String localDateArr, String localDateCom,
-                            String departureFrom, String arrivalTo, String staying) throws RemoteException {
+                          String localDateDep, String localDateArr, String localDateCom,
+                          String departureFrom, String arrivalTo, String staying) throws RemoteException {
         PreparedStatement st = null;
 
         String queryAddTrip = "INSERT INTO gita (Partenza, DataOraPar, DataOraRit, Alloggio, DataOraArr, Destinazione, NumGita)" +
@@ -2386,7 +2589,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         try{
             st = this.connHere().prepareStatement(queryLoadChildrenParticipant);
-                resultChildren = st.executeQuery(queryLoadChildrenParticipant);
+            resultChildren = st.executeQuery(queryLoadChildrenParticipant);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -2558,34 +2761,34 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "OR (G2.DataOraPar <= G1.DataOraPar AND G1.DataOraPar <= G2.DataOraRit)) " +
                 "AND G1.DataOraPar = '"+ selectedTripDep + "' AND G1.DataOraRit = '"+ selectedTripCom + "')";
 
-                System.out.println("Found NOT AVAILABLE staff members? YES/NO");
-                for(String staff : selectedStaffArray) {
+        System.out.println("Found NOT AVAILABLE staff members? YES/NO");
+        for(String staff : selectedStaffArray) {
+            try {
+                st = this.connHere().prepareStatement(queryFindNotAvailableStaff);
+                st.setString(1,staff);
+                resultStaff = st.executeQuery();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (!resultStaff.next()) {  //NON ho staff che partecipa a gite sovrapposte
+                    System.out.println("NO");
+                } else { //HO staff che partecipa a gite sovrapposte
+                    System.out.println("YES");
+                    resultStaff.beforeFirst();
                     try {
-                        st = this.connHere().prepareStatement(queryFindNotAvailableStaff);
-                        st.setString(1,staff);
-                        resultStaff = st.executeQuery();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        if (!resultStaff.next()) {  //NON ho staff che partecipa a gite sovrapposte
-                            System.out.println("NO");
-                        } else { //HO staff che partecipa a gite sovrapposte
-                            System.out.println("YES");
-                            resultStaff.beforeFirst();
-                            try {
-                                while (resultStaff.next()) {
-                                    CodRifChildDbDetails prova = new CodRifChildDbDetails(resultStaff.getString(1));
-                                    staffNotAvailableArrayList.add(prova);
-                                }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
+                        while (resultStaff.next()) {
+                            CodRifChildDbDetails prova = new CodRifChildDbDetails(resultStaff.getString(1));
+                            staffNotAvailableArrayList.add(prova);
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
         return staffNotAvailableArrayList;
     }
@@ -2777,6 +2980,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         everyParticipantArrayList.addAll(selectedChildCfArrayList);
         everyParticipantArrayList.addAll(selectedStaffCfArrayList);
 
+        for(String cf : everyParticipantArrayList){
+            System.out.println(cf + " has to be assigned");
+        }
+
         try {
             st = this.connHere().prepareStatement(queryFindAvailableBus);
             resultBus = st.executeQuery(queryFindAvailableBus);
@@ -2804,13 +3011,16 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             e.printStackTrace();
         }
 
+        String queryAddToInterniIsHere = "INSERT INTO interni_is_here (interni_CF, gita_NumGita, bus_Targa, is_here) VALUES (?,?,?,?)";
+
+
         busFromFirstLoop:
         for(int i=0; i < busAvailableArrayList.size(); i++){  //until the last bus in AL
             String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
             int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
             String plateString = busAvailableArrayList.get(i).getPlate();
 
-            if(capienzaPerBus >= totParticipants){      //if capacity >= totPart -> save that bus, we're done.
+            if(capienzaPerBus >= totParticipants) {      //if capacity >= totPart -> save that bus, we're done.
                 //everyParticipant goes on that bus -> save in hashmap <plate,everyoneAL<String>>
                 busToPartecipantHashMap.put(plateString, everyParticipantArrayList);
 
@@ -2818,10 +3028,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
                 try {
                     st = this.connHere().prepareStatement(queryMakeBusMine);
-                    st.setString(1,numGita);
-                    st.setString(2,plateString);
+                    st.setString(1, numGita);
+                    st.setString(2, plateString);
                     st.executeUpdate();
-                } catch (SQLException e){
+                } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
                     try {
@@ -2832,67 +3042,436 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                     }
                 }
 
-                break busFromFirstLoop;
-
-            } //else proseguo in for
-        }
-        //se arrivo a fine busAvailableAL senza trovare un bus, quindi se hashmap.isempty() -> salvo bus da fine AL tornando indietro, finchè
-        // o trovo che, arrivato a inizio AL, ho ancora dei partecipanti non assegnati -> bus non sufficienti -> ERR
-        // o trovo bus per tutte le persone (continuo ricerca finchè totPart - capienza > 0 )
-        if(busToPartecipantHashMap.isEmpty()){
-            ArrayList<String> participantsOnBus = new ArrayList<>();
-
-            busFromLastLoop:
-            for(int i = busAvailableArrayList.size(); i >= 0; i--){  //finchè non ho ripercorso tutti i bus dall'ultimo al primo (cioè da quello con capacità maggiore, DESC)
-                String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
-                int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
-                String plateString = busAvailableArrayList.get(i).getPlate();
-
-                int remainingParticipants = totParticipants - capienzaPerBus;
-
-                while (remainingParticipants > 0) { //finchè restano partecipanti da assegnare ai bus
-                    if(remainingParticipants > 0 && i==0) {  //se ho ancora partecipanti da assegnare ma non ho più bus assegnabili
-                        return null;    //null == ERRORE : NON HO ABBASTANZA BUS ASSEGNABILI
-
-                    } else {
-
-                        //salvo in AL chi sta su quel bus (fino alla capacità max)
-                        for (int pos = 0; pos <= everyParticipantArrayList.size(); pos++) {
-                            for (int k = everyParticipantArrayList.size(); k >= capienzaPerBus; k--) {
-                                //aggiungo quella persona a partOnBusAL da inizio AL
-                                participantsOnBus.add(pos, everyParticipantArrayList.get(k));
-                                //elimino quella persona da everyPartAL
-                                everyParticipantArrayList.remove(everyParticipantArrayList.get(k));
-                            }
-                        }
-                        busToPartecipantHashMap.put(plateString, participantsOnBus);
-
-                        // make bus mine
-                        String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
+                //add participant and related bus for every participant in interni_is_here
+                for (String who : everyParticipantArrayList) {
+                    try {
+                        st = this.connHere().prepareStatement(queryAddToInterniIsHere);
+                        st.setString(1, who);
+                        st.setString(2, numGita);
+                        st.setString(3, plateString);
+                        st.setInt(4, 0);
+                        st.executeUpdate();
+                        System.out.println("saved in interni_is_here");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }finally {
                         try {
-                            st = this.connHere().prepareStatement(queryMakeBusMine);
-                            st.setString(1,numGita);
-                            st.setString(2,plateString);
-                            st.executeUpdate();
-                        } catch (SQLException e){
+                            if (st != null)
+                                st.close();
+                        } catch (Exception e) {
                             e.printStackTrace();
-                        } finally {
-                            try {
-                                if (st != null)
-                                    st.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                         }
                     }
                 }
 
+                //quando ho trovato il bus giusto, esco
+                break busFromFirstLoop;
+            }
+
+        }
+        //se arrivo a fine busAvailableAL senza trovare un bus, quindi se hashmap.isempty() -> salvo bus da fine AL tornando indietro, finchè
+        // o trovo che, arrivato a inizio AL, ho ancora dei partecipanti non assegnati -> bus non sufficienti -> ERR
+        // o trovo bus per tutte le persone (continuo ricerca finchè totPart - capienza > 0 )
+
+        if(busToPartecipantHashMap.isEmpty()){
+            ArrayList<String> participantsOnBus = new ArrayList<>();
+            int capienzaTot = 0;
+            int pos = 0;
+            int k = everyParticipantArrayList.size() -1;
+            //finchè non ho ripercorso tutti i bus dall'ultimo al primo (cioè da quello con capacità maggiore, DESC)
+            for(int i = busAvailableArrayList.size() -1 ; i > 0; i--){
+                //se ho ancora partecipanti allora continuo, assegnando persone su un nuovo bus
+                if (totParticipants > 0) {
+                    String capienzaPerBusString = busAvailableArrayList.get(i).getCapacity();  //get capacity of the bus
+                    int capienzaPerBus = Integer.parseInt(capienzaPerBusString);        //convert capacity to int
+                    String plateString = busAvailableArrayList.get(i).getPlate();
+
+                    capienzaTot += capienzaPerBus;  //sommo alla capienza totale la capienza di questo bus
+                    System.out.println(capienzaTot);
+
+                    //aggiungo persona a bus finchè restano posti disponibili sul bus
+
+                    // make bus mine
+                    String queryMakeBusMine = "INSERT INTO gita_has_bus (gita_NumGita, bus_Targa) VALUES(?,?)";
+                    try {
+                        st = this.connHere().prepareStatement(queryMakeBusMine);
+                        st.setString(1, numGita);
+                        st.setString(2, plateString);
+                        st.executeUpdate();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (st != null)
+                                st.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    for (int numSeat = capienzaPerBus; numSeat > 0; numSeat--) {
+                        System.out.println("I still have" + totParticipants);
+                        if (totParticipants > 0) {//se ho ancora partecipanti
+                            //salvo in AL chi sta su quel bus (da ultimo in everyParticipantAL a primo)
+                            participantsOnBus.add(pos, everyParticipantArrayList.get(k));
+                            System.out.println(participantsOnBus.get(pos) + " added to participants on bus");
+
+                            //aggiungo la persona interni_is_here, assegnandola al bus su cui dovrebbe trovarsi (per ogni persona assegnabile a quel bus)
+                            try {
+                                st = this.connHere().prepareStatement(queryAddToInterniIsHere);
+                                st.setString(1, participantsOnBus.get(pos));
+                                st.setString(2, numGita);
+                                st.setString(3, plateString);
+                                st.setInt(4, 0);
+                                st.executeUpdate();
+                                System.out.println("& is now in interni_is_here");
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                            //infine elimino quella persona da everyPartAL
+                            Iterator<String> it = everyParticipantArrayList.iterator();
+                            while (it.hasNext()) {
+                                if (it.next().equals(everyParticipantArrayList.get(k))) {
+                                    it.remove();
+                                    break;
+                                }
+                            }
+                            for(String cf : everyParticipantArrayList){
+                                System.out.println(cf +" still here");
+                            }
+
+                            pos++;
+                            k--;
+                        }
+
+                        totParticipants --;
+                        busToPartecipantHashMap.put(plateString, participantsOnBus);
+                    }
+                }
+            }
+            if(totParticipants - capienzaTot > 0){ //se esco dal for e ho ancora partecipanti non assegnati a bus
+                return null;
             }
         }
 
         return busToPartecipantHashMap;
     }
 
+
+    @Override
+    public ArrayList<ChildSelectedTripDbDetails> loadWhoTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        //load children & staff that are effective participants related to the selected trip
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultParticipants = null;
+
+        ArrayList<ChildSelectedTripDbDetails> participantsArrayList = new ArrayList<>(3);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryLoadParticipants = "SELECT Cognome, Nome, CF" +
+                " FROM interni AS I INNER JOIN" +
+                " interni_has_gita AS IG ON (I.CF = IG.Interni_CF AND IG.gita_NumGita = '" + numGita + "')" +
+                " WHERE Partecipante_effettivo = '1'";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadParticipants);
+            resultParticipants = st.executeQuery(queryLoadParticipants);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultParticipants.next() ) {
+                System.out.println("No participant in DB");
+            } else {
+                resultParticipants.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultParticipants.next()) {
+                        ChildSelectedTripDbDetails prova = new ChildSelectedTripDbDetails(resultParticipants.getString(1),
+                                resultParticipants.getString(2),
+                                resultParticipants.getString(3));
+                        participantsArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultParticipants != null)
+                    resultParticipants.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return participantsArrayList;
+    }
+
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> loadBusTrip (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        //load buses related to the selected trip
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultBus = null;
+
+        ArrayList<CodRifChildDbDetails> busArrayList = new ArrayList<>(1);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryLoadBus = "SELECT bus_Targa " +
+                "FROM gita_has_bus " +
+                "WHERE gita_NumGita = '" + numGita +"';";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadBus);
+            resultBus = st.executeQuery(queryLoadBus);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultBus.next() ) {
+                System.out.println("No bus in DB");
+            } else {
+                resultBus.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultBus.next()) {
+                        CodRifChildDbDetails prova = new CodRifChildDbDetails(resultBus.getString(1));
+                        busArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultBus != null)
+                    resultBus.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return busArrayList;
+    }
+
+
+    @Override
+    public ArrayList<SolutionDbDetails> loadSolution (String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException{
+        //load children & staff that are effective participants related to the selected trip
+        //AND bus connected to each of them
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultParticipantsAndBus = null;
+
+        ArrayList<SolutionDbDetails> participantsAndBusArrayList = new ArrayList<>(4);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedTripDepFrom + "' AND DataOraPar ='"+ selectedTripDep +"' AND DataOraRit ='"+ selectedTripCom +"' AND Alloggio ='"+ selectedTripAccomodation +"' AND DataOraArr ='"+ selectedTripArr +"' AND Destinazione ='"+ selectedTripArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+        String queryLoadParticipantsAndBus = "SELECT I.Nome, I.Cognome, I.CF, GB.bus_Targa " +
+                " FROM interni AS I INNER JOIN" +
+                " interni_is_here AS IH ON (I.CF = IH.interni_CF) INNER JOIN" +
+                " gita_has_bus AS GB ON (IH.bus_Targa = GB.bus_Targa AND GB.gita_NumGita = '" + numGita + "')";
+
+        try{
+            st = this.connHere().prepareStatement(queryLoadParticipantsAndBus);
+            resultParticipantsAndBus = st.executeQuery(queryLoadParticipantsAndBus);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultParticipantsAndBus.next() ) {
+                System.out.println("No participant in DB");
+            } else {
+                resultParticipantsAndBus.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultParticipantsAndBus.next()) {
+                        SolutionDbDetails prova = new SolutionDbDetails(resultParticipantsAndBus.getString(1),
+                                resultParticipantsAndBus.getString(2),
+                                resultParticipantsAndBus.getString(3),
+                                resultParticipantsAndBus.getString(4));
+                        participantsAndBusArrayList.add(prova);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultParticipantsAndBus != null)
+                    resultParticipantsAndBus.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return participantsAndBusArrayList;
+
+    }
 
 //USEFUL EVERYWHERE------------------------------------------------------------------------------
 

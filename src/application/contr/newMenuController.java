@@ -253,20 +253,20 @@ public class newMenuController implements Initializable {
         if(label1.getText().equals("Select the ingredients for the entree")){
             saveIngredientsForThisDish(entreeTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
 
         }
         else if(label1.getText().equals("Select the ingredients for the main course")){
             saveIngredientsForThisDish(mainTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
         else if(label1.getText().equals("Select the ingredients for the dessert")){
             saveIngredientsForThisDish(dessertTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
         else if(label1.getText().equals("Select the ingredients for the drink")){
@@ -278,13 +278,13 @@ public class newMenuController implements Initializable {
         else if(label1.getText().equals("Select the ingredients for the side")) {
             saveIngredientsForThisDish(sideTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
         else {
             label1.getText().equals("This plate already exists");
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
     }
