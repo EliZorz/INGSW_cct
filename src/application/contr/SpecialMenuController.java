@@ -525,7 +525,6 @@ public class SpecialMenuController implements Initializable {
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);
-
                 }
                tabInterni.setItems(null);
                tabInterni.setItems(specialInterni);
