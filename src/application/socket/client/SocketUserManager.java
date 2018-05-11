@@ -468,5 +468,25 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
+    @Override
+    public ArrayList<CodRifChildDbDetails> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<CodRifChildDbDetails> findMissingParticipantsOnThisBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public void makeIsHereFalse(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+
+    }
+
+    @Override
+    public void makeIsHereTrue(String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+
+    }
+
 
 }

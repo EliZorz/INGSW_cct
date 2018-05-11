@@ -30,7 +30,7 @@ public class TripBeforeController implements Initializable{
 
     private ArrayList<String> selectedChild = new ArrayList<>();
     private ArrayList<String> selectedChildCfArrayList  = new ArrayList<>();
-    private ArrayList<String> selectedBus = new ArrayList<>();
+    private String selectedBus = new String();
 
     private String selectedTripDepFrom = new String();
     private String selectedTripDep = new String();
@@ -141,7 +141,7 @@ public class TripBeforeController implements Initializable{
         tableBus.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tableBus.getSelectionModel().selectedItemProperty().addListener((obsBus, oldSelectionBus, newSelectionBus) -> {
             if(newSelectionBus != null) {
-                selectedBus.add(newSelectionBus.getCodRif());
+                selectedBus = newSelectionBus.getCodRif();
             }
         });
         tableBus.getItems().clear();
@@ -227,19 +227,21 @@ public class TripBeforeController implements Initializable{
 
 
     public void handleCheck() {
-/*        if(selectedChild == null || selectedBus == null){
+        if(selectedChild == null || selectedBus == null){
             this.renameLabel("Add at least one child AND one bus to check");
         }
         else {
             System.out.println("Checking...");
             try{
                 UserRemote u = Singleton.getInstance().methodRmi();
+                //azzero is_here per la gita corrente
+                u.makeIsHereFalse(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
                 //chi è su questo bus ma non dovrebbe esserci
                 ArrayList<CodRifChildDbDetails> participantOnWrongBusArrayList = u.findParticipantOnWrongBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
                 //chi manca all'appello (e quindi su uno dei bus), cioè che ha is_here = 0 per questa gita ---> LOAD TABLE   *****************************
-                ArrayList<CodRifChildDbDetails> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(selectedChildCfArrayList, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+                ArrayList<CodRifChildDbDetails> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
                 //find out if some participants the user selected are already used in a concurrent trip
                 if (participantOnWrongBusArrayList.isEmpty()){
@@ -250,6 +252,7 @@ public class TripBeforeController implements Initializable{
                         this.renameLabel("Participants on correct bus. Someone's missing.");
 
                     } else {
+                        u.makeIsHereTrue(selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
                         this.renameLabel("Participants on correct bus. No missing.");
                     }
 
@@ -294,7 +297,7 @@ public class TripBeforeController implements Initializable{
                 e.printStackTrace();
             }
          }
-*/    }
+    }
 
 
     public void handleOpenSolutionGui() {
