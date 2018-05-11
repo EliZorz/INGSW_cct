@@ -33,7 +33,7 @@ public class TestOnServerImpl {
     public void testSearchIngredients() throws RemoteException{
         ServerImpl si = new ServerImpl();
         assertEquals(null, si.searchIngredients(null));
-       
+
     }
 
 
