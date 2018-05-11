@@ -469,12 +469,12 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public ArrayList<CodRifChildDbDetails> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+    public ArrayList<String> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         return null;
     }
 
     @Override
-    public ArrayList<CodRifChildDbDetails> findMissingParticipantsOnThisBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+    public ArrayList<String> findMissingParticipantsOnThisBus(ArrayList<String> peopleOnWrongBus, ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         return null;
     }
 
@@ -486,6 +486,11 @@ public class SocketUserManager implements UserRemote {
     @Override
     public void makeIsHereTrue(String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
 
+    }
+
+    @Override
+    public ArrayList<ChildSelectedTripDbDetails> loadMissing(ArrayList<String> missingArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        return null;
     }
 
 

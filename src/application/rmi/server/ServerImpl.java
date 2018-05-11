@@ -5,6 +5,8 @@ import application.contr.Database;
 import application.details.*;
 import application.details.ChildDbDetails;
 import com.mysql.jdbc.Connection;
+import javafx.beans.property.StringProperty;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
@@ -14,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 
 /**
@@ -3544,7 +3547,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
     @Override
-    public ArrayList<CodRifChildDbDetails> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+    public ArrayList<String> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         PreparedStatement st = null;
         ResultSet resultNumGita = null;
         ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>();
@@ -3593,12 +3596,71 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String numGita = numGitaFoundArrayList.get(0).getNumGita();
 
-    return null;
+        ResultSet resultPeopleOnBus = null;
+        ArrayList<CodRifChildDbDetails> peopleOnBusArrayList = new ArrayList<>();
+        ArrayList<String> correctArrayList = new ArrayList<>();
+
+        String queryFindPeopleOnThisBus = "SELECT interni_CF" +
+                " FROM interni_is_here" +
+                " WHERE bus_Targa = '"+ selectedBus +"'" +
+                " AND gita_NumGita = '"+numGita +"';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindPeopleOnThisBus);
+            resultPeopleOnBus = st.executeQuery(queryFindPeopleOnThisBus);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultPeopleOnBus.next() ) {
+                System.out.println("No people for this trip in DB");
+            } else {
+                resultPeopleOnBus.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultPeopleOnBus.next()) {
+                        CodRifChildDbDetails personCf = new CodRifChildDbDetails(resultPeopleOnBus.getString(1));
+                        peopleOnBusArrayList.add(personCf);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        for(String child : selectedChildCfArrayList){
+            for(CodRifChildDbDetails childOnBus : peopleOnBusArrayList){
+                if(child.equals(childOnBus.getCodRif())){
+                    correctArrayList.add(child);
+                }
+            }
+        }
+
+        //delete from who is here who should be on the bus to find who is on the wrong bus -> null or someone, I return -> Controller will highlight
+        selectedChildCfArrayList.removeAll(correctArrayList);
+
+        return selectedChildCfArrayList;  //contains now just who shouldn't be here
+
     }
 
 
     @Override
-    public ArrayList<CodRifChildDbDetails> findMissingParticipantsOnThisBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+    public ArrayList<String> findMissingParticipantsOnThisBus(ArrayList<String> participantOnWrongBusArrayList, ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         PreparedStatement st = null;
         ResultSet resultNumGita = null;
         ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>();
@@ -3647,7 +3709,82 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String numGita = numGitaFoundArrayList.get(0).getNumGita();
 
-        return null;
+        ResultSet resultPeopleOnBus = null;
+        ArrayList<CodRifChildDbDetails> peopleOnBusArrayList = new ArrayList<>();
+
+
+        String queryFindPeopleOnThisBus = "SELECT interni_CF" +
+                " FROM interni_is_here" +
+                " WHERE bus_Targa = '"+ selectedBus +"'" +
+                " AND gita_NumGita = '"+numGita +"';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindPeopleOnThisBus);
+            resultPeopleOnBus = st.executeQuery(queryFindPeopleOnThisBus);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultPeopleOnBus.next() ) {
+                System.out.println("No people for this trip in DB");
+            } else {
+                resultPeopleOnBus.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultPeopleOnBus.next()) {
+                        CodRifChildDbDetails personCf = new CodRifChildDbDetails(resultPeopleOnBus.getString(1));
+                        peopleOnBusArrayList.add(personCf);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        selectedChildCfArrayList.removeAll(participantOnWrongBusArrayList);
+        for(String notWrong : selectedChildCfArrayList){
+            System.out.println(notWrong + " is not wrong");
+        }
+
+        ArrayList<String> notMissingArrayList = new ArrayList<>();
+        ArrayList<String> peopleOnBusArrayListString = new ArrayList<>();
+        for (CodRifChildDbDetails object : peopleOnBusArrayList) {
+            peopleOnBusArrayListString.add(Objects.toString(object.getCodRif(), null));
+        }
+
+        for(String childOnBus : peopleOnBusArrayListString){
+            System.out.println("NEXT who should be on is " + childOnBus);
+            for(String childNotWrong : selectedChildCfArrayList){
+                System.out.println("searching...");
+                if(childNotWrong.equals(childOnBus)){
+                    notMissingArrayList.add(childNotWrong);
+                    System.out.println("And here he/she is!");
+                }
+            }
+        }
+
+        //delete from who is here who is selected (not missing) to find who is on the wrong bus -> null or someone, I return -> Controller will highlight
+        peopleOnBusArrayListString.removeAll(notMissingArrayList);
+        for(String voila : peopleOnBusArrayListString) {
+            System.out.println(voila + " IS NOT HERE! HELP!");
+        }
+
+        return peopleOnBusArrayListString;  //contains now just who is missing
 
     }
 
@@ -3720,6 +3857,104 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
             }
         }
+
+    }
+
+
+    @Override
+    public ArrayList<ChildSelectedTripDbDetails> loadMissing (ArrayList<String> missingCf, String selectedBus, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException{
+        PreparedStatement st = null;
+        ResultSet resultNumGita = null;
+        ResultSet resultParticipants = null;
+
+        ArrayList<ChildSelectedTripDbDetails> missingParticipantsArrayList = new ArrayList<>(3);
+        ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        String queryFindNumGita = "SELECT NumGita" +
+                " FROM gita" +
+                " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
+
+        try{
+            st = this.connHere().prepareStatement(queryFindNumGita);
+            resultNumGita = st.executeQuery(queryFindNumGita);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if( !resultNumGita.next() ) {
+                System.out.println("No trip in DB");
+                return null;
+            } else {
+                resultNumGita.beforeFirst();
+                System.out.println("Processing ResultSet");
+                try {
+                    while (resultNumGita.next()) {
+                        NumGitaDbDetails numGitaFound = new NumGitaDbDetails(resultNumGita.getString(1));
+                        numGitaFoundArrayList.add(numGitaFound);
+                    }
+                    System.out.println(numGitaFoundArrayList.get(0).getNumGita());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultNumGita != null)
+                    resultNumGita.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String numGita = numGitaFoundArrayList.get(0).getNumGita();
+
+
+
+        String queryLoadParticipants = "SELECT I.Cognome, I.Nome, I.CF" +
+                " FROM interni AS I INNER JOIN" +
+                " interni_is_here AS IH ON (I.CF = IH.interni_CF AND IH.gita_NumGita = '" + numGita + "')" +
+                " WHERE IH.interni_CF = ? ";
+
+        for(String missing : missingCf) {
+            try {
+                st = this.connHere().prepareStatement(queryLoadParticipants);
+                st.setString(1, missing);
+                resultParticipants = st.executeQuery();
+                System.out.println("No one saw " + resultParticipants);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (!resultParticipants.next()) {
+                    System.out.println("No missing participant found");
+                } else {
+                    resultParticipants.beforeFirst();
+                    System.out.println("Processing ResultSet");
+                    try {
+                        while (resultParticipants.next()) {
+                            ChildSelectedTripDbDetails prova = new ChildSelectedTripDbDetails(resultParticipants.getString(1),
+                                    resultParticipants.getString(2),
+                                    resultParticipants.getString(3));
+                            missingParticipantsArrayList.add(prova);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return missingParticipantsArrayList;
 
     }
 

@@ -27,6 +27,7 @@ public class TripBeforeController implements Initializable{
     private ObservableList<TripTableGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<ChildSelectedTripGuiDetails> whoObsList = FXCollections.observableArrayList();
     private ObservableList<CodRifChildGuiDetails> busObsList = FXCollections.observableArrayList();
+    private ObservableList<ChildSelectedTripGuiDetails> missingObsList = FXCollections.observableArrayList();
 
     private ArrayList<String> selectedChild = new ArrayList<>();
     private ArrayList<String> selectedChildCfArrayList  = new ArrayList<>();
@@ -238,10 +239,10 @@ public class TripBeforeController implements Initializable{
                 u.makeIsHereFalse(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
                 //chi è su questo bus ma non dovrebbe esserci
-                ArrayList<CodRifChildDbDetails> participantOnWrongBusArrayList = u.findParticipantOnWrongBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+                ArrayList<String> participantOnWrongBusArrayList = u.findParticipantOnWrongBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
                 //chi manca all'appello (e quindi su uno dei bus), cioè che ha is_here = 0 per questa gita ---> LOAD TABLE   *****************************
-                ArrayList<CodRifChildDbDetails> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+                ArrayList<String> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(participantOnWrongBusArrayList, selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
                 //find out if some participants the user selected are already used in a concurrent trip
                 if (participantOnWrongBusArrayList.isEmpty()){
@@ -249,6 +250,21 @@ public class TripBeforeController implements Initializable{
 
                     if( missingParticipantsArrayList != null ){
                         //load missing table
+                        ArrayList<ChildSelectedTripDbDetails> missingDbArrayList = u.loadMissing(missingParticipantsArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
+                        missingObsList.clear();
+
+                        if (missingDbArrayList != null){
+                            for(ChildSelectedTripDbDetails c : missingDbArrayList){
+                                ChildSelectedTripGuiDetails tmp = new ChildSelectedTripGuiDetails(c);
+                                missingObsList.add(tmp);
+                            }
+                            tableMissing.setItems(null);
+                            tableMissing.setItems(missingObsList);
+                            this.renameLabel("Table loaded!");
+                        }else{
+                            this.renameLabel("Error.");
+                        }
+
                         this.renameLabel("Participants on correct bus. Someone's missing.");
 
                     } else {
@@ -259,11 +275,7 @@ public class TripBeforeController implements Initializable{
                 } else {
                     //highlight items into arrayList and tell user to reselect
                     System.out.println("Changing colours for not available children in tableview...");
-                    ArrayList<String> wrongBusParticipantStrings = new ArrayList<>(participantOnWrongBusArrayList.size());
-                    for (CodRifChildDbDetails object : participantOnWrongBusArrayList) {
-                        wrongBusParticipantStrings.add(Objects.toString(object, null));
-                    }
-                    for(String s : wrongBusParticipantStrings)
+                    for(String s : participantOnWrongBusArrayList)
                         System.out.println("Change colour for: " + s);
 
                     colCf.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
@@ -273,16 +285,38 @@ public class TripBeforeController implements Initializable{
                             setText(empty ? "" : getItem());
                             setGraphic(null);
                             TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
-                            for (CodRifChildDbDetails child : participantOnWrongBusArrayList) {
-                                if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
+                            for (String child : participantOnWrongBusArrayList) {
+                                if (!currentRow.isEmpty() && item.equals(child)) {
                                     currentRow.setStyle("-fx-background-color:lightcoral");
                                 }
                             }
                         }
                     });
 
+                    if( missingParticipantsArrayList != null ){
+                        //load missing table
+                        ArrayList<ChildSelectedTripDbDetails> missingDbArrayList = u.loadMissing(missingParticipantsArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
+                        missingObsList.clear();
+
+                        if (missingDbArrayList != null){
+                            for(ChildSelectedTripDbDetails c : missingDbArrayList){
+                                ChildSelectedTripGuiDetails tmp = new ChildSelectedTripGuiDetails(c);
+                                missingObsList.add(tmp);
+                            }
+                            tableMissing.setItems(null);
+                            tableMissing.setItems(missingObsList);
+                            this.renameLabel("Table loaded!");
+                        }else{
+                            this.renameLabel("Error.");
+                        }
+
+                        this.renameLabel("Red ones shouldn't be here. Someone's missing. Exit and redo.");
+                    } else {
+                        u.makeIsHereTrue(selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+                        this.renameLabel("Red ones shouldn't be here. No missing.");
+                    }
+
                     System.out.println("Reselect participants on this bus.");
-                    this.renameLabel("Red ones shouldn't be on this bus. Exit and redo.");
 
 //BLOCCA TUTTO TRANNE HOMEPAGE E SOLUTION  ************************************************************************************************************
                     btnCheck.setDisable(true);
