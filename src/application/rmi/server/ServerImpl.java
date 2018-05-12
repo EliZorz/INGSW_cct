@@ -1174,13 +1174,15 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                             query = "SELECT * from project.menu_base where date IN (SELECT menu_base_date FROM project.menu_base_has_dish_ingredients where dish_ingredients_Nome_piatto ='" +y.getNomePiatto()+"')";
                             statement = this.connHere().prepareStatement(query);
                             result = statement.executeQuery();
-                            if(!menu.isEmpty())
-                                if(!menu.contains(result.getString(6)))
+                            if(result.next()) {
+                                if (!menu.isEmpty()) {
+                                    if (!menu.contains(result.getString(6))) {
+                                        menu.add(new DishesDbDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6), result.getString(7)));
+                                    }
+                                } else
                                     menu.add(new DishesDbDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6), result.getString(7)));
-                            else
-                                menu.add(new DishesDbDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6), result.getString(7)));
 
-
+                            }
                         }
                 } catch (SQLException e) {
                     e.printStackTrace();
