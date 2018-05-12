@@ -255,6 +255,11 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException {
+        return null;
+    }
+
+    @Override
     public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
         return null;
     }

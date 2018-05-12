@@ -226,6 +226,7 @@ public class SupplierController implements Initializable{
 
     public void handleDeleteSupplier() throws IOException {
         System.out.println("Loading data...");
+         deleteSupplierController.selectedSupplier = txtPiva.getText();
         new GuiNew("deleteSupplier");
      /*  try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup

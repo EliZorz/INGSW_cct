@@ -1142,6 +1142,73 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     }
 
+    public ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException {
+        PreparedStatement st = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ResultSet res = null;
+        ArrayList<DishesDbDetails> menu = new ArrayList<>();
+        ArrayList<PlatesDbDetails> plates = new ArrayList<>();
+        DishesDbDetails dishes;
+        String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.ingredients JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
+        String query;
+
+
+        try {
+            st = this.connHere().prepareStatement(queryNomePiatto);
+            result = st.executeQuery(queryNomePiatto);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (!result.next()) {
+                System.out.println("no ingredients");
+            } else {
+                result.beforeFirst();
+                try {
+                    while (result.next()) {
+                        PlatesDbDetails plate = new PlatesDbDetails(result.getString(1), result.getString(2));
+                        plates.add(plate);
+                    }
+                        for (PlatesDbDetails y : plates) {
+                            query = "SELECT * from project.menu_base where date IN (SELECT menu_base_date FROM project.menu_base_has_dish_ingredients where dish_ingredients_Nome_piatto ='" +y.getNomePiatto()+"')";
+                            statement = this.connHere().prepareStatement(query);
+                            result = statement.executeQuery();
+                            if(!menu.isEmpty())
+                                if(!menu.contains(result.getString(6)))
+                                    menu.add(new DishesDbDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6), result.getString(7)));
+                            else
+                                menu.add(new DishesDbDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6), result.getString(7)));
+
+
+                        }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null && res != null) {
+                    result.close();
+                    res.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return menu;
+
+
+        }
+    }
+
 //COACH OPERATORS ---------------------------------------------------------------------------------------------
 
     @Override
