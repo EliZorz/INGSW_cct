@@ -4,6 +4,8 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.DishesDbDetails;
 import application.details.DishesDetails;
+import application.details.IngredientsDbDetails;
+import application.details.IngredientsGuiDetails;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,6 +21,7 @@ import java.util.ResourceBundle;
 public class deleteSupplierController implements Initializable{
 
     private ObservableList<DishesDetails> dishes = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> ingredientsNo = FXCollections.observableArrayList();
     private String[] selectedMenu = new String[7];
     public static String selectedSupplier;
 
@@ -58,6 +61,10 @@ public class deleteSupplierController implements Initializable{
     public TableColumn<DishesDetails, String> colDessert;
     @FXML
     public TableColumn<DishesDetails, String> colDate;
+    @FXML
+    public TableView<IngredientsGuiDetails> tabNoIngr;
+    @FXML
+    public TableColumn<IngredientsGuiDetails, String> colIngrNO;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,6 +75,7 @@ public class deleteSupplierController implements Initializable{
         colDessert.setCellValueFactory(cellData -> cellData.getValue().dessertProperty());
         colDrink.setCellValueFactory(cellData -> cellData.getValue().drinkProperty());
         colDate.setCellValueFactory(cellData -> cellData.getValue().dayProperty());
+        colIngrNO.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
         tabMenu.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabMenu.getSelectionModel().setCellSelectionEnabled(false);
         tabMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -79,9 +87,16 @@ public class deleteSupplierController implements Initializable{
             selectedMenu[4] = newSelection.getDessert();
             selectedMenu[5] = newSelection.getDrink();
             selectedMenu[6] = newSelection.getDay();
+            entreeTF.setText(selectedMenu[1]);
+            mainTF.setText(selectedMenu[2]);
+            sideTF.setText(selectedMenu[3]);
+            dessertTF.setText(selectedMenu[4]);
+            drinkTF.setText(selectedMenu[5]);
         });
         tabMenu.getItems().clear();
+        tabNoIngr.getItems().clear();
         handleLoad();
+        loadNoIngr();
     }
 
     public void handleLoad(){
@@ -98,6 +113,24 @@ public class deleteSupplierController implements Initializable{
                 tabMenu.setItems(dishes);
             }
 
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadNoIngr()  {
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();
+            ArrayList<IngredientsDbDetails> ingrNo = u.loadNoIngr(selectedSupplier);
+            ingredientsNo.clear();
+            if (ingrNo != null) {
+                for (IngredientsDbDetails x : ingrNo) {
+                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                    ingredientsNo.add(tmp);
+                }
+                tabNoIngr.setItems(null);
+                tabNoIngr.setItems(ingredientsNo);
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         }

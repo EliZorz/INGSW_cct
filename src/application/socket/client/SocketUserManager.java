@@ -260,6 +260,11 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
+        return null;
+    }
+
+    @Override
     public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
         return null;
     }

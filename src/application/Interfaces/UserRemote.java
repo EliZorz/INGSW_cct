@@ -41,6 +41,7 @@ public interface UserRemote extends Remote {
     ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException;
     boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException;
     ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException;
+    ArrayList<IngredientsDbDetails> loadNoIngr (String selectedSupplier) throws RemoteException;
 
 
     ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException;

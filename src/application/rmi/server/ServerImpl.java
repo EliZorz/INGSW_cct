@@ -1149,11 +1149,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet res = null;
         ArrayList<DishesDbDetails> menu = new ArrayList<>();
         ArrayList<PlatesDbDetails> plates = new ArrayList<>();
-        DishesDbDetails dishes;
         String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.ingredients JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
         String query;
-
-
         try {
             st = this.connHere().prepareStatement(queryNomePiatto);
             result = st.executeQuery(queryNomePiatto);
@@ -1173,17 +1170,19 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         for (PlatesDbDetails y : plates) {
                             query = "SELECT * from project.menu_base where date IN (SELECT menu_base_date FROM project.menu_base_has_dish_ingredients where dish_ingredients_Nome_piatto ='" +y.getNomePiatto()+"')";
                             statement = this.connHere().prepareStatement(query);
-                            result = statement.executeQuery();
-                            if(result.next()) {
-                                if (!menu.isEmpty()) {
-                                    if (!menu.contains(result.getString(6))) {
-                                        menu.add(new DishesDbDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6), result.getString(7)));
-                                    }
-                                } else
-                                    menu.add(new DishesDbDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6), result.getString(7)));
+                            res = statement.executeQuery();
+                            if(!res.next()) {
+                                return null;
+                            }else{
+                                res.beforeFirst();
+                                while(res.next())
+                                    menu.add(new DishesDbDetails(res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6), res.getString(7)));
 
                             }
                         }
+
+
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -1211,7 +1210,36 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
     }
 
-//COACH OPERATORS ---------------------------------------------------------------------------------------------
+    @Override
+    public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
+        String queryNomePiatto = "SELECT ingredients_ingredient FROM project.ingredients JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<IngredientsDbDetails> ingrNo = new ArrayList<>();
+        try {
+            st = this.connHere().prepareStatement(queryNomePiatto);
+            result = st.executeQuery(queryNomePiatto);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (!result.next()) {
+                System.out.println("no ingredients");
+            } else {
+                result.beforeFirst();
+                while (result.next()) {
+                    IngredientsDbDetails ingr = new IngredientsDbDetails(result.getString(1));
+                    ingrNo.add(ingr);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ingrNo;
+    }
+
+    //COACH OPERATORS ---------------------------------------------------------------------------------------------
 
     @Override
     public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
