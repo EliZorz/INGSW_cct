@@ -22,6 +22,7 @@ public class deleteSupplierController implements Initializable{
 
     private ObservableList<DishesDetails> dishes = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsNo = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
     private String[] selectedMenu = new String[7];
     public static String selectedSupplier;
 
@@ -65,6 +66,12 @@ public class deleteSupplierController implements Initializable{
     public TableView<IngredientsGuiDetails> tabNoIngr;
     @FXML
     public TableColumn<IngredientsGuiDetails, String> colIngrNO;
+    @FXML
+    public TableColumn<IngredientsGuiDetails, String> colIngr;
+    @FXML
+    public TableView<IngredientsGuiDetails> tabIngr;
+    @FXML
+    public Label status;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,6 +83,9 @@ public class deleteSupplierController implements Initializable{
         colDrink.setCellValueFactory(cellData -> cellData.getValue().drinkProperty());
         colDate.setCellValueFactory(cellData -> cellData.getValue().dayProperty());
         colIngrNO.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
+        colIngr.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
+        tabNoIngr.setEditable(false);
+        tabNoIngr.setSelectionModel(null);
         tabMenu.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabMenu.getSelectionModel().setCellSelectionEnabled(false);
         tabMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -93,8 +103,15 @@ public class deleteSupplierController implements Initializable{
             dessertTF.setText(selectedMenu[4]);
             drinkTF.setText(selectedMenu[5]);
         });
+        tabIngr.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tabIngr.setEditable(false);
+        tabIngr.getSelectionModel().setCellSelectionEnabled(false);
+        tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection)->{
+
+        });
         tabMenu.getItems().clear();
         tabNoIngr.getItems().clear();
+        tabIngr.getItems().clear();
         handleLoad();
         loadNoIngr();
     }
@@ -131,6 +148,66 @@ public class deleteSupplierController implements Initializable{
                 tabNoIngr.setItems(null);
                 tabNoIngr.setItems(ingredientsNo);
             }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showEntreeIngr(){
+        if(!entreeTF.getText().equals(null)){
+            controllIngr(entreeTF.getText());
+        }
+    }
+    public void showMainIngr(){
+        if(!mainTF.getText().equals(null))
+            controllIngr(mainTF.getText());
+    }
+    public void showSideIngr(){
+        if(!sideTF.getText().equals(null))
+            controllIngr(sideTF.getText());
+    }
+    public void showDrinkIngr(){
+        if(!drinkTF.getText().equals(null))
+            controllIngr(drinkTF.getText());
+    }
+    public void showDessertIngr(){
+        if(!dessertTF.getText().equals(null))
+            controllIngr(dessertTF.getText());
+    }
+
+    public void controllIngr(String dish){
+        boolean controll = false;
+        try{
+            UserRemote u = Singleton.getInstance().methodRmi();
+            ArrayList<IngredientsDbDetails> ingredientsDbArray = u.searchIngredients(dish);
+            for(IngredientsDbDetails x :ingredientsDbArray){
+                for(IngredientsGuiDetails y : ingredientsNo) {
+                    if (!x.getIngr().equals(y.getIngr()))
+                        controll = true;
+                }
+                if(controll)
+                    ingredients.add(new IngredientsGuiDetails(x));
+            }
+            tabIngr.setItems(null);
+            tabIngr.setItems(ingredients);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void loadIngredients(){
+        try{
+            UserRemote u = Singleton.getInstance().methodRmi();
+            ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
+            ingredients.clear();
+                for(IngredientsDbDetails x : ingArray){
+                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                    ingredients.add(tmp);
+                }
+                tabIngr.setItems(null);
+                tabIngr.setItems(ingredients);
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }

@@ -1176,7 +1176,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                             }else{
                                 res.beforeFirst();
                                 while(res.next())
-                                    menu.add(new DishesDbDetails(res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6), res.getString(7)));
+                                    menu.add(new DishesDbDetails(res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(7), res.getString(6)));
 
                             }
                         }
