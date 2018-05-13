@@ -154,57 +154,95 @@ public class deleteSupplierController implements Initializable{
     }
 
     public void showEntreeIngr(){
+        tabIngr.setItems(null);
         if(!entreeTF.getText().equals(null)){
-            controllIngr(entreeTF.getText());
+            if(controllIngr(entreeTF.getText())) {
+                entreeTF.setText("");
+                status.setText("Change this dish");
+            }else
+                status.setText("Loaded");
+
         }
     }
     public void showMainIngr(){
+        tabIngr.setItems(null);
         if(!mainTF.getText().equals(null))
-            controllIngr(mainTF.getText());
+            if(controllIngr(mainTF.getText())){
+                mainTF.setText("");
+                status.setText("Change this dish");
+            }else
+                status.setText("Loaded");
     }
     public void showSideIngr(){
+        tabIngr.setItems(null);
         if(!sideTF.getText().equals(null))
-            controllIngr(sideTF.getText());
+            if(controllIngr(sideTF.getText())){
+                sideTF.setText("");
+                status.setText("Change this dish");
+            }else
+                status.setText("Loaded");
     }
     public void showDrinkIngr(){
+        tabIngr.setItems(null);
         if(!drinkTF.getText().equals(null))
-            controllIngr(drinkTF.getText());
+            if(controllIngr(drinkTF.getText())){
+                drinkTF.setText("");
+                status.setText("Change this dish");
+            }else
+                status.setText("Loaded");
     }
     public void showDessertIngr(){
+        tabIngr.setItems(null);
         if(!dessertTF.getText().equals(null))
-            controllIngr(dessertTF.getText());
+            if(controllIngr(dessertTF.getText())){
+                dessertTF.setText("");
+                status.setText("Change this dish");
+            }else
+                status.setText("Loaded");
     }
 
-    public void controllIngr(String dish){
-        boolean controll = false;
+    public boolean controllIngr(String dish){
+
         try{
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsDbArray = u.searchIngredients(dish);
-            for(IngredientsDbDetails x :ingredientsDbArray){
-                for(IngredientsGuiDetails y : ingredientsNo) {
-                    if (!x.getIngr().equals(y.getIngr()))
-                        controll = true;
-                }
-                if(controll)
+            if(ingredientsDbArray == null)
+                loadIngredients();
+            else {
+                for (IngredientsDbDetails x : ingredientsDbArray) {
+                    for (IngredientsGuiDetails y : ingredientsNo) {
+                        if (x.getIngr().equals(y.getIngr()))
+                            return true;
+                    }
+
                     ingredients.add(new IngredientsGuiDetails(x));
+
+                }
+                tabIngr.setItems(null);
+                tabIngr.setItems(ingredients);
             }
-            tabIngr.setItems(null);
-            tabIngr.setItems(ingredients);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        return false;
 
     }
 
-    private void loadIngredients(){
+    private void loadIngredients(){  // cosi non va bene perché non fa il controllo
+        boolean controll = false;
         try{
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
                 for(IngredientsDbDetails x : ingArray){
-                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
-                    ingredients.add(tmp);
+                    for(IngredientsGuiDetails y : ingredientsNo) {
+                        if (x.getIngr().equals(y.getIngr())) {
+                        }
+                    }
+
+                    ingredients.add(new IngredientsGuiDetails(x));
                 }
+
                 tabIngr.setItems(null);
                 tabIngr.setItems(ingredients);
 
