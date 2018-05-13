@@ -118,6 +118,18 @@ public class StaffController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(true);
+        btnDelete.setDisable(true);
+        btnDeselect.setDisable(true);
+        btnUpdate.setDisable(true);
+        btnLoadIngredients.setDisable(false);
+        search.setDisable(true);
+        searchSt.setDisable(true);
+        back.setDisable(true);
+        backStaff.setDisable(true);
+
         colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSurname.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
         colCf.setCellValueFactory(cellData -> cellData.getValue().cfProperty());
@@ -174,37 +186,37 @@ public class StaffController implements Initializable {
 
     @FXML
     public void handleLoadStaff() {
-
         System.out.println("Loading data...");
-
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
             ArrayList<StaffDbDetails> staffDbArrayList = u.loadDataStaff();  //call method in Server Impl
-
             dataObsList.clear();
 
             if (staffDbArrayList != null){
                 for(StaffDbDetails c : staffDbArrayList){
                     StaffGuiDetails tmp = new StaffGuiDetails(c);
                     dataObsList.add(tmp);
-
                 }
-
                 tableStaff.setItems(null);
                 tableStaff.setItems(dataObsList);
-
                 this.renameLabel("Table loaded!");
-
             }else{
                 this.renameLabel("Error.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        search.setDisable(false);
+        searchSt.setDisable(false);
+        back.setDisable(false);
+        backStaff.setDisable(false);
     }
 
 
@@ -253,12 +265,9 @@ public class StaffController implements Initializable {
 
     public void handleLoadIngredients(){
         System.out.println("Loading data...");
-
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
             ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
-
             ingredientsObsList.clear();
 
             if (ingrArrayList != null){
@@ -266,19 +275,25 @@ public class StaffController implements Initializable {
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(c);
                     ingredientsObsList.add(tmp);
                 }
-
                 tableIngr.setItems(null);
                 tableIngr.setItems(ingredientsObsList);
-
-
             } else {
                 System.out.println("Error loading Ingredients");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        search.setDisable(false);
+        searchSt.setDisable(false);
+        back.setDisable(false);
+        backStaff.setDisable(false);
     }
 
 

@@ -47,7 +47,7 @@
                       <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadSuppliers" text="Load table" />
                         <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
                         <Button fx:id="btnUpdate" minWidth="38.0" mnemonicParsing="false" onAction="#handleUpdateSupplier" prefHeight="26.0" text="Update" />
-                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDeleteSupplier" text="Delete" />
+                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="26.0" prefWidth="75.0" text="Delete" />
                     </buttons>
                   </ButtonBar>
                   <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="251.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
@@ -81,6 +81,11 @@
                      </effect>
                   </Button>
                   <Button fx:id="btnLoadBus" layoutX="162.0" layoutY="492.0" mnemonicParsing="false" onAction="#handleLoadBus" prefHeight="26.0" prefWidth="75.0" text="Load bus">
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </Button>
+                  <Button fx:id="btnDeleteBus" layoutX="79.0" layoutY="492.0" mnemonicParsing="false" onAction="#handleDeleteBus" prefHeight="26.0" prefWidth="75.0" text="Delete">
                      <effect>
                         <SepiaTone />
                      </effect>

@@ -275,6 +275,26 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public boolean deleteCoachOperatorBus(String plate) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean zeroActualParticipants(String plate) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean deleteIsHere(String plate) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public void deleteFromGitaHasBus(String plate) throws RemoteException {
+
+    }
+
+    @Override
     public ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException {
         return null;
     }

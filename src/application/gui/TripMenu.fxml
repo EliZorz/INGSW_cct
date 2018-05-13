@@ -22,11 +22,15 @@
                   <Image url="@Movie_Brainy.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="76.0" layoutY="238.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@if_House_by_Artdesigner.lv_83154.png" />
-               </image>
-            </ImageView>
+            <Button layoutX="77.0" layoutY="226.0" mnemonicParsing="false" onAction="#backHome">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@if_House_by_Artdesigner.lv_83154.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
          </children>
       </AnchorPane>
    </children>

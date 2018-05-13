@@ -46,6 +46,10 @@ public interface UserRemote extends Remote {
     boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
     boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
     boolean deleteCoachOperator(String piva) throws RemoteException;
+    boolean deleteCoachOperatorBus(String plate) throws RemoteException;
+    boolean zeroActualParticipants(String plate) throws RemoteException;
+    boolean deleteIsHere(String plate) throws RemoteException;
+    void deleteFromGitaHasBus(String plate) throws RemoteException;
     ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException;
     boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException;
 

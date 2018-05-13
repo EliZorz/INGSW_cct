@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ChildController implements Initializable {
+
     private ObservableList<ChildGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
     private ObservableList<ContactsGuiDetails> dataContactObsList = FXCollections.observableArrayList();
@@ -164,10 +165,30 @@ public class ChildController implements Initializable {
     public Button backChildren;
     @FXML
     public Button searchChild;
+    @FXML
+    public Button backContact;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(true);
+        btnDelete.setDisable(true);
+        btnDeselect.setDisable(true);
+        btnUpdate.setDisable(true);
+        btnLoadIngredients.setDisable(true);
+        btnLoadContact.setDisable(true);
+        btnAddContact.setDisable(true);
+        btnUpdateContact.setDisable(true);
+        btnDeleteContact.setDisable(true);
+        searchC.setDisable(true);
+        searchA.setDisable(true);
+        searchChild.setDisable(true);
+        backChildren.setDisable(true);
+        backAll.setDisable(true);
+        backContact.setDisable(true);
 
         colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSurname.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
@@ -290,36 +311,44 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleLoadData() {
-
         System.out.println("Loading data...");
-
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
-
             dataObsList.clear();
 
             if (childDbArrayList != null){
                 for(ChildDbDetails c : childDbArrayList){
                     ChildGuiDetails tmp = new ChildGuiDetails(c);
                     dataObsList.add(tmp);
-
                 }
-
                 tableChild.setItems(null);
                 tableChild.setItems(dataObsList);
 
                 this.renameLabel("Table loaded!");
-
             }else{
                 this.renameLabel("Error.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        btnDeselect.setDisable(true);
+        btnLoadContact.setDisable(false);
+        btnAddContact.setDisable(true);
+        btnUpdateContact.setDisable(true);
+        btnDeleteContact.setDisable(true);
+        searchC.setDisable(false);
+        searchA.setDisable(false);
+        searchChild.setDisable(false);
+        backChildren.setDisable(false);
+        backAll.setDisable(false);
+        backContact.setDisable(false);
 
     }
 
@@ -452,12 +481,9 @@ public class ChildController implements Initializable {
 
     public void handleLoadContacts() {
         System.out.println("Loading data contacts...");
-
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
             ArrayList<ContactsDbDetails> contactsDbArrayList = u.loadDataContacts(oldcf); //carico i contatti del selezionato!
-
             dataContactObsList.clear();
 
             if (contactsDbArrayList != null){
@@ -465,10 +491,8 @@ public class ChildController implements Initializable {
                     ContactsGuiDetails tmpc = new ContactsGuiDetails(c);
                     dataContactObsList.add(tmpc);
                 }
-
                 tableContacts.setItems(null);
                 tableContacts.setItems(dataContactObsList);
-
                 this.renameLabel("Table loaded!");
             }else{
                 this.renameLabel("Error.");
@@ -476,6 +500,24 @@ public class ChildController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        btnDeselect.setDisable(true);
+        btnLoadContact.setDisable(false);
+        btnAddContact.setDisable(false);
+        btnUpdateContact.setDisable(false);
+        btnDeleteContact.setDisable(false);
+        searchC.setDisable(false);
+        searchA.setDisable(false);
+        searchChild.setDisable(false);
+        backChildren.setDisable(false);
+        backAll.setDisable(false);
+        backContact.setDisable(false);
+
     }
 
 
@@ -619,6 +661,23 @@ public class ChildController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnLoadContact.setDisable(false);
+        btnAddContact.setDisable(true);
+        btnUpdateContact.setDisable(true);
+        btnDeleteContact.setDisable(true);
+        searchC.setDisable(false);
+        searchA.setDisable(false);
+        searchChild.setDisable(false);
+        backChildren.setDisable(false);
+        backAll.setDisable(false);
+        backContact.setDisable(false);
 
     }
 
