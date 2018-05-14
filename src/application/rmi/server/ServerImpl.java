@@ -1212,7 +1212,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
-        String queryNomePiatto = "SELECT ingredients_ingredient FROM project.ingredients JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
+        String queryNomePiatto = "SELECT ingredient FROM project.ingredients  where fornitore_PIVA = '" + selectedSupplier + "'";
         PreparedStatement st = null;
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> ingrNo = new ArrayList<>();

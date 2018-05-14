@@ -155,7 +155,8 @@ public class deleteSupplierController implements Initializable{
 
     public void showEntreeIngr(){
         tabIngr.setItems(null);
-        if(!entreeTF.getText().equals(null)){
+        ingredients = FXCollections.observableArrayList();
+        if(entreeTF.getText().trim().length() != 0){
             if(controllIngr(entreeTF.getText())) {
                 entreeTF.setText("");
                 status.setText("Change this dish");
@@ -166,7 +167,8 @@ public class deleteSupplierController implements Initializable{
     }
     public void showMainIngr(){
         tabIngr.setItems(null);
-        if(!mainTF.getText().equals(null))
+        ingredients = FXCollections.observableArrayList();
+        if(mainTF.getText().trim().length() != 0)
             if(controllIngr(mainTF.getText())){
                 mainTF.setText("");
                 status.setText("Change this dish");
@@ -175,7 +177,8 @@ public class deleteSupplierController implements Initializable{
     }
     public void showSideIngr(){
         tabIngr.setItems(null);
-        if(!sideTF.getText().equals(null))
+        ingredients = FXCollections.observableArrayList();
+        if(sideTF.getText().trim().length() != 0)
             if(controllIngr(sideTF.getText())){
                 sideTF.setText("");
                 status.setText("Change this dish");
@@ -184,7 +187,8 @@ public class deleteSupplierController implements Initializable{
     }
     public void showDrinkIngr(){
         tabIngr.setItems(null);
-        if(!drinkTF.getText().equals(null))
+        ingredients = FXCollections.observableArrayList();
+        if(drinkTF.getText().trim().length() != 0)
             if(controllIngr(drinkTF.getText())){
                 drinkTF.setText("");
                 status.setText("Change this dish");
@@ -193,7 +197,8 @@ public class deleteSupplierController implements Initializable{
     }
     public void showDessertIngr(){
         tabIngr.setItems(null);
-        if(!dessertTF.getText().equals(null))
+        ingredients = FXCollections.observableArrayList();
+        if(dessertTF.getText().trim().length() != 0)
             if(controllIngr(dessertTF.getText())){
                 dessertTF.setText("");
                 status.setText("Change this dish");
@@ -229,19 +234,23 @@ public class deleteSupplierController implements Initializable{
     }
 
     private void loadIngredients(){  // cosi non va bene perché non fa il controllo
-        boolean controll = false;
         try{
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
-                for(IngredientsDbDetails x : ingArray){
-                    for(IngredientsGuiDetails y : ingredientsNo) {
-                        if (x.getIngr().equals(y.getIngr())) {
-                        }
-                    }
+               /* for(IngredientsDbDetails x : ingArray) {
+                    for (IngredientsGuiDetails y : ingredientsNo)
+                        if(y.getIngr().trim().length() != 0 )
+                        if (!y.getIngr().equals(x.getIngr()))
+                            x.setIngr(null);
+                    ingredients.add(new IngredientsGuiDetails(x));*/
+               for(IngredientsDbDetails x : ingArray)
+                   ingredients.add(new IngredientsGuiDetails(x));
+               for(int i = 0; i<ingredients.size(); i++)
+                   for(IngredientsGuiDetails y : ingredientsNo)
+                       if(ingredients.get(i).getIngr().equals(y.getIngr()))
+                           ingredients.remove(i);
 
-                    ingredients.add(new IngredientsGuiDetails(x));
-                }
 
                 tabIngr.setItems(null);
                 tabIngr.setItems(ingredients);
