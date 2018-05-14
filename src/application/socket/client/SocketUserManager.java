@@ -240,9 +240,11 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public boolean deleteSupplier(String piva) throws RemoteException {
+    public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException {
         return false;
     }
+
+
 
     @Override
     public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException {

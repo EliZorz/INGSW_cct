@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class deleteSupplierController implements Initializable{
+public class deleteSupplierController implements Initializable {
 
     private ObservableList<DishesDetails> dishes = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsNo = FXCollections.observableArrayList();
@@ -125,8 +125,8 @@ public class deleteSupplierController implements Initializable{
         tabIngr.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tabIngr.setEditable(false);
         tabIngr.getSelectionModel().setCellSelectionEnabled(false);
-        tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection)->{
-            if(newSelection != null){
+        tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
                 selectedIngredients.add(newSelection.getIngr());
             }
         });
@@ -135,14 +135,16 @@ public class deleteSupplierController implements Initializable{
         tabIngr.getItems().clear();
         handleLoad();
         loadNoIngr();
+        if(dishes.isEmpty())
+            back.setDisable(false);
     }
 
-    public void handleLoad(){
-        try{
+    public void handleLoad() {
+        try {
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<DishesDbDetails> menuDbArray = u.loadMenuWithThisSupplier(selectedSupplier);
             dishes.clear();
-            if(menuDbArray != null) {
+            if (menuDbArray != null) {
                 for (DishesDbDetails x : menuDbArray) {
                     DishesDetails tmp = new DishesDetails(x);
                     dishes.add(tmp);
@@ -152,12 +154,13 @@ public class deleteSupplierController implements Initializable{
                 back.setDisable(true);
             }
 
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public void loadNoIngr()  {
+    public void loadNoIngr() {
         try {
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingrNo = u.loadNoIngr(selectedSupplier);
@@ -175,89 +178,93 @@ public class deleteSupplierController implements Initializable{
         }
     }
 
-    public void showEntreeIngr(){
+    public void showEntreeIngr() {
         dishesStatus.setText("Entree");
         selectedIngredients = new ArrayList<>();
         tabIngr.setItems(null);
         ingredients = FXCollections.observableArrayList();
-        if(entreeTF.getText().trim().length() != 0){
-            if(controllIngr(entreeTF.getText())) {
+        if (entreeTF.getText().trim().length() != 0) {
+            if (controllIngr(entreeTF.getText())) {
                 entreeTF.setText("");
                 status.setText("Change this dish");
                 controllAddIngredients = true;
-            }else {
+            } else {
                 status.setText("Loaded");
                 controllAddIngredients = true;
             }
 
         }
     }
-    public void showMainIngr(){
+
+    public void showMainIngr() {
         dishesStatus.setText("Main course");
         selectedIngredients = new ArrayList<>();
         tabIngr.setItems(null);
         ingredients = FXCollections.observableArrayList();
-        if(mainTF.getText().trim().length() != 0)
-            if(controllIngr(mainTF.getText())){
+        if (mainTF.getText().trim().length() != 0)
+            if (controllIngr(mainTF.getText())) {
                 mainTF.setText("");
                 status.setText("Change this dish");
                 controllAddIngredients = true;
-            }else {
-                status.setText("Loaded");
-                controllAddIngredients = true;
-            }
-    }
-    public void showSideIngr(){
-        dishesStatus.setText("Side dish");
-        tabIngr.setItems(null);
-        selectedIngredients = new ArrayList<>();
-        ingredients = FXCollections.observableArrayList();
-        if(sideTF.getText().trim().length() != 0)
-            if(controllIngr(sideTF.getText())){
-                sideTF.setText("");
-                status.setText("Change this dish");
-                controllAddIngredients = true;
-            }else {
-                status.setText("Loaded");
-                controllAddIngredients = true;
-            }
-    }
-    public void showDrinkIngr(){
-        dishesStatus.setText("Drink");
-        tabIngr.setItems(null);
-        selectedIngredients = new ArrayList<>();
-        ingredients = FXCollections.observableArrayList();
-        if(drinkTF.getText().trim().length() != 0)
-            if(controllIngr(drinkTF.getText())){
-                drinkTF.setText("");
-                status.setText("Change this dish");
-                controllAddIngredients = true;
-            }else {
-                status.setText("Loaded");
-                controllAddIngredients = true;
-            }
-    }
-    public void showDessertIngr(){
-        dishesStatus.setText("Dessert");
-        tabIngr.setItems(null);
-        selectedIngredients = new ArrayList<>();
-        ingredients = FXCollections.observableArrayList();
-        if(dessertTF.getText().trim().length() != 0)
-            if(controllIngr(dessertTF.getText())){
-                dessertTF.setText("");
-                status.setText("Change this dish");
-                controllAddIngredients = true;
-            }else {
+            } else {
                 status.setText("Loaded");
                 controllAddIngredients = true;
             }
     }
 
-    private boolean controllIngr(String dish){
-        try{
+    public void showSideIngr() {
+        dishesStatus.setText("Side dish");
+        tabIngr.setItems(null);
+        selectedIngredients = new ArrayList<>();
+        ingredients = FXCollections.observableArrayList();
+        if (sideTF.getText().trim().length() != 0)
+            if (controllIngr(sideTF.getText())) {
+                sideTF.setText("");
+                status.setText("Change this dish");
+                controllAddIngredients = true;
+            } else {
+                status.setText("Loaded");
+                controllAddIngredients = true;
+            }
+    }
+
+    public void showDrinkIngr() {
+        dishesStatus.setText("Drink");
+        tabIngr.setItems(null);
+        selectedIngredients = new ArrayList<>();
+        ingredients = FXCollections.observableArrayList();
+        if (drinkTF.getText().trim().length() != 0)
+            if (controllIngr(drinkTF.getText())) {
+                drinkTF.setText("");
+                status.setText("Change this dish");
+                controllAddIngredients = true;
+            } else {
+                status.setText("Loaded");
+                controllAddIngredients = true;
+            }
+    }
+
+    public void showDessertIngr() {
+        dishesStatus.setText("Dessert");
+        tabIngr.setItems(null);
+        selectedIngredients = new ArrayList<>();
+        ingredients = FXCollections.observableArrayList();
+        if (dessertTF.getText().trim().length() != 0)
+            if (controllIngr(dessertTF.getText())) {
+                dessertTF.setText("");
+                status.setText("Change this dish");
+                controllAddIngredients = true;
+            } else {
+                status.setText("Loaded");
+                controllAddIngredients = true;
+            }
+    }
+
+    private boolean controllIngr(String dish) {
+        try {
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsDbArray = u.searchIngredients(dish);
-            if(ingredientsDbArray == null)
+            if (ingredientsDbArray == null)
                 loadIngredients();
             else {
                 for (IngredientsDbDetails x : ingredientsDbArray) {
@@ -280,94 +287,94 @@ public class deleteSupplierController implements Initializable{
 
     }
 
-    private void loadIngredients(){
+    private void loadIngredients() {
         controllAddIngredients = false;
 
-        try{
+        try {
             UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
-               for(IngredientsDbDetails x : ingArray)
-                   ingredients.add(new IngredientsGuiDetails(x));
-               for(int i = 0; i<ingredients.size(); i++)
-                   for(IngredientsGuiDetails y : ingredientsNo)
-                       if(ingredients.get(i).getIngr().equals(y.getIngr()))
-                           ingredients.remove(i);
+            for (IngredientsDbDetails x : ingArray)
+                ingredients.add(new IngredientsGuiDetails(x));
+            for (int i = 0; i < ingredients.size(); i++)
+                for (IngredientsGuiDetails y : ingredientsNo)
+                    if (ingredients.get(i).getIngr().equals(y.getIngr()))
+                        ingredients.remove(i);
 
 
-                tabIngr.setItems(null);
-                tabIngr.setItems(ingredients);
+            tabIngr.setItems(null);
+            tabIngr.setItems(ingredients);
 
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public void search(){
+    public void search() {
         searchedIngredients = FXCollections.observableArrayList();
-        if(searchTF.getText().trim().length() != 0){
-            for(IngredientsGuiDetails x : ingredients){
-                if(x.getIngr().contains(searchTF.getText()))
+        if (searchTF.getText().trim().length() != 0) {
+            for (IngredientsGuiDetails x : ingredients) {
+                if (x.getIngr().contains(searchTF.getText()))
                     searchedIngredients.add(x);
             }
             tabIngr.setItems(null);
             tabIngr.setItems(searchedIngredients);
-        }else{
+        } else {
             tabIngr.setItems(null);
             tabIngr.setItems(ingredients);
         }
     }
 
-    public void reload(){
+    public void reload() {
         searchedIngredients = FXCollections.observableArrayList();
         searchTF.setText("");
         tabIngr.setItems(null);
         tabIngr.setItems(ingredients);
     }
 
-    private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
-        try{
+    private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients) {
+        try {
             UserRemote u = Singleton.getInstance().methodRmi();
-            if(u.saveIngredients(dishName, ingredients)){
+            if (u.saveIngredients(dishName, ingredients)) {
                 status.setText("Success!!");
                 selectedIngredients = new ArrayList<>();
-            }else{
+            } else {
                 status.setText("There is a problem with this dish");
             }
-           // controllIngredients = true;
-        }catch(RemoteException e){
+            // controllIngredients = true;
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
     public void saveIngredients(ActionEvent event) {
-        if(dishesStatus.getText().equals("Entree")){
+        if (dishesStatus.getText().equals("Entree")) {
             saveIngredientsForThisDish(entreeTF.getText(), selectedIngredients);
             deselect();
             selectedIngredients = new ArrayList<>();
             controllAddIngredients = true;
-        }else if(dishesStatus.getText().equals("Main course")){
+        } else if (dishesStatus.getText().equals("Main course")) {
             saveIngredientsForThisDish(mainTF.getText(), selectedIngredients);
             deselect();
             selectedIngredients = new ArrayList<>();
             controllAddIngredients = true;
-        }else if(dishesStatus.getText().equals("Side dish")){
+        } else if (dishesStatus.getText().equals("Side dish")) {
             saveIngredientsForThisDish(sideTF.getText(), selectedIngredients);
             deselect();
             selectedIngredients = new ArrayList<>();
             controllAddIngredients = true;
-        }else if(dishesStatus.getText().equals("Dessert")){
+        } else if (dishesStatus.getText().equals("Dessert")) {
             saveIngredientsForThisDish(dessertTF.getText(), selectedIngredients);
             deselect();
             selectedIngredients = new ArrayList<>();
             controllAddIngredients = true;
-        }else if(dishesStatus.getText().equals("Drink")){
+        } else if (dishesStatus.getText().equals("Drink")) {
             saveIngredientsForThisDish(drinkTF.getText(), selectedIngredients);
             deselect();
             selectedIngredients = new ArrayList<>();
             controllAddIngredients = true;
-        }else{
+        } else {
             dishesStatus.setText("This plate already exists");
             deselect();
             selectedIngredients = new ArrayList<>();
@@ -376,24 +383,30 @@ public class deleteSupplierController implements Initializable{
     }
 
     @FXML
-    public void deselect(){
+    public void deselect() {
         tabIngr.getSelectionModel().clearSelection();
         selectedIngredients = new ArrayList<>();
     }
 
     @FXML
-    public void save(){
-        if(entreeTF.getText().trim().isEmpty() && mainTF.getText().trim().isEmpty()) status.setText("Insert an entree or a main course");
-        else if(drinkTF.getText().trim().isEmpty()) status.setText("Insert a drink");
-        else if(dessertTF.getText().trim().isEmpty()) status.setText("Insert a dessert");
-        else if(!controllAddIngredients) status.setText("Make sure you have added all the ingredients");
-        else{
-            try{
+    public void save() {
+        String entree = entreeTF.getText();
+        String main = mainTF.getText();
+        String drink = drinkTF.getText();
+        String dessert = dessertTF.getText();
+        String side = sideTF.getText();
+        if (entree.trim().isEmpty() && main.trim().isEmpty())
+            status.setText("Insert an entree or a main course");
+        else if (drink.trim().isEmpty()) status.setText("Insert a drink");
+        else if (dessert.trim().isEmpty()) status.setText("Insert a dessert");
+        else if (!controllAddIngredients) status.setText("Make sure you have added all the ingredients");
+        else {
+            try {
                 UserRemote u = Singleton.getInstance().methodRmi();
-                if(u.updateMenu(selectedMenu[0], entreeTF.getText(), mainTF.getText(), dessertTF.getText(), sideTF.getText(), drinkTF.getText(), LocalDate.parse(selectedMenu[6]), LocalDate.parse(selectedMenu[6])))
+                if (u.updateMenu(selectedMenu[0], entreeTF.getText(), mainTF.getText(), dessertTF.getText(), sideTF.getText(), drinkTF.getText(), LocalDate.parse(selectedMenu[6]), LocalDate.parse(selectedMenu[6])))
                     status.setText("Success");
                 handleLoad();
-                if(dishes.isEmpty())
+                if (dishes.isEmpty())
                     back.setDisable(false);
 
             } catch (RemoteException e) {
@@ -403,5 +416,21 @@ public class deleteSupplierController implements Initializable{
     }
 
     @FXML
-    public void backHome(){}
+    public void backHome() {
+        try {
+            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            ArrayList<IngredientsDbDetails> ingr = new ArrayList<>();
+            for(IngredientsGuiDetails x : ingredientsNo)
+                ingr.add(new IngredientsDbDetails(x.getIngr()));
+            boolean deleted = u.deleteSupplier(selectedSupplier, ingr);
+            if (deleted) {
+                selectedSupplier = null;
+                status.setText("Deleted!!");
+            } else {
+                status.setText("Error");
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 }

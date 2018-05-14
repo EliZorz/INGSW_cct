@@ -1,6 +1,8 @@
 package application.Interfaces;
 
 import application.details.*;
+import javafx.collections.FXCollections;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -37,7 +39,7 @@ public interface UserRemote extends Remote {
     ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException;
     boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
     boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
-    boolean deleteSupplier(String piva) throws RemoteException;
+    boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException;
     ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException;
     boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException;
     ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException;

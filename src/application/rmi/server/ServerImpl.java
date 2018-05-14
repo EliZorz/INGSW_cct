@@ -1013,11 +1013,46 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
-    public boolean deleteSupplier(String piva) throws RemoteException{
+    public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException{
         PreparedStatement st = null;
         PreparedStatement stIngr = null;
         String queryDelete = "DELETE FROM fornitore WHERE PIVA = '" + piva + "';";
         String queryDeleteIngr = "DELETE FROM project.ingredients WHERE fornitore_PIVA = '"+piva+"'";
+        String queryDeleteSpecialMenu;
+        String queryDeleteDishes;
+        ResultSet result = null;
+        ArrayList<SpecialMenuDbDetails> special = new ArrayList<>();
+
+        for(IngredientsDbDetails x : ingrNO) {
+            queryDeleteDishes = "DELETE FROM project.dish_ingredients where ingredients_ingredient ='" + x.getIngr() + "'";
+            queryDeleteSpecialMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie from project.menu_special_has_dish_ingredients where dihs_ingredients_ingredients_ingredient =' "+x.getIngr()+"'";
+            try {
+                st = this.connHere().prepareStatement(queryDeleteDishes);
+                stIngr = this.connHere().prepareStatement(queryDeleteSpecialMenu);
+                result  = stIngr.executeQuery(queryDeleteSpecialMenu);
+                if( !result.next() ) {
+                    System.out.println("No special menu");
+                } else {
+                    result.beforeFirst();
+                    System.out.println("Processing ResultSet");
+                    try {
+                        while (result.next()) {
+                            SpecialMenuDbDetails prova = new SpecialMenuDbDetails(result.getString(1), null,null, null, null, null, result.getString(2), result.getString(3) );
+                            special.add(prova);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+
+
+        }
+
+        for(SpecialMenuDbDetails x : special)
+            deleteSpecialMenu(LocalDate.parse(x.getDate()), x.getFC(), x.getAllergies());
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
@@ -1635,7 +1670,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryDelete = "DELETE FROM project.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"'";
 
-        String queryAdd = "INSERT INTO project.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients)"+"VALUES (?,?,?)";
+        String queryAdd = "INSERT INTO project.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient)"+"VALUES (?,?,?)";
 
         try {
 
@@ -1746,7 +1781,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         prova = new DishesDbDetails(result.getString(1),result.getString(2),
                                 result.getString(3),
                                 result.getString(4),
-                                result.getString(5),result.getString(6),result.getString(7));
+                                result.getString(5),result.getString(7),result.getString(6));
 
 
                         //get string from db, put into list of ChildGuiData, ready to put it into GUI

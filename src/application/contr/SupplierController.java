@@ -228,19 +228,6 @@ public class SupplierController implements Initializable{
         System.out.println("Loading data...");
          deleteSupplierController.selectedSupplier = txtPiva.getText();
         new GuiNew("deleteSupplier");
-     /*  try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-            boolean deleted = u.deleteSupplier(selectedSupplier.get(1));
-            if(deleted){
-                this.renameLabel("Deleted.");
-                selectedSupplier.clear();
-            } else {
-                this.renameLabel("Error deleting.");
-            }
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }*/
     }
 
     public void handleBackHomepage() {
