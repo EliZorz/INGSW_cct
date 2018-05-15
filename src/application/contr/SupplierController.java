@@ -138,6 +138,7 @@ public class SupplierController implements Initializable{
         colIngr.setCellValueFactory(cellData -> cellData.getValue().codRifProperty());
 
         tableIngr.getItems().clear();
+        handleLoadSuppliers();
     }
 
     public void handleLoadSuppliers() {

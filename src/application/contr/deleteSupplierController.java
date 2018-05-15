@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
 
@@ -416,7 +417,7 @@ public class deleteSupplierController implements Initializable {
     }
 
     @FXML
-    public void backHome() {
+    public void backHome(ActionEvent event) {
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<IngredientsDbDetails> ingr = new ArrayList<>();
@@ -426,6 +427,7 @@ public class deleteSupplierController implements Initializable {
             if (deleted) {
                 selectedSupplier = null;
                 status.setText("Deleted!!");
+                ((Node) (event.getSource())).getScene().getWindow().hide();
             } else {
                 status.setText("Error");
             }
