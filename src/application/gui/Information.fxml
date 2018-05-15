@@ -6,17 +6,17 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #fff0f5;" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #fff0f5;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
     <children>
     <AnchorPane layoutX="404.0" layoutY="31.0" prefHeight="292.0" prefWidth="197.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffd700;">
         <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="38.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="124.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="35.599998474121094" AnchorPane.topAnchor="21.0">
                 <image>
-                    <Image url="@Movie_Brainy.png" />
+                    <Image url="@../../../2257dd4fc102954.jpg" />
                 </image>
             </ImageView>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="55.0" layoutY="187.0" prefHeight="28.0" prefWidth="114.0" text="USERNAME" />
-            <Button layoutX="88.0" layoutY="225.0" mnemonicParsing="false" onAction="#backHome" AnchorPane.bottomAnchor="31.0" AnchorPane.rightAnchor="88.0">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="186.0" prefHeight="28.0" prefWidth="114.0" text="USERNAME" />
+            <Button layoutX="88.0" layoutY="225.0" mnemonicParsing="false" onAction="#backHome" AnchorPane.bottomAnchor="31.0" AnchorPane.rightAnchor="75.0">
                 <graphic>
                     <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -27,7 +27,7 @@
             </Button>
         </children>
     </AnchorPane>
-        <AnchorPane layoutX="55.0" layoutY="31.0" prefHeight="407.0" prefWidth="256.0" style="-fx-background-color: #e6e6fa; -fx-border-color: #9370db;">
+        <AnchorPane layoutX="55.0" layoutY="31.0" prefHeight="407.0" prefWidth="256.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #9370db;">
             <children>
                 <Button layoutX="44.0" layoutY="55.0" mnemonicParsing="false" onAction="#openChildren" prefHeight="42.0" prefWidth="168.0" text="CHILDREN" AnchorPane.topAnchor="55.0" />
                 <Button layoutX="44.0" layoutY="138.0" mnemonicParsing="false" onAction="#openStaff" prefHeight="42.0" prefWidth="168.0" text="STAFF" AnchorPane.bottomAnchor="228.0" AnchorPane.topAnchor="137.0" />

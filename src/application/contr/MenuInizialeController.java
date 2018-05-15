@@ -116,4 +116,7 @@ public class MenuInizialeController {
     private URL location;
 
 
+    public void logout(ActionEvent event) {
+
+    }
 }

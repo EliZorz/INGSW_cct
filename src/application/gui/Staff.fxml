@@ -59,7 +59,14 @@
             <TextField fx:id="txtProvince" layoutX="185.0" layoutY="294.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
             <TextField fx:id="txtMail" layoutX="28.0" layoutY="111.0" prefHeight="26.0" prefWidth="343.0" promptText="e-mail" />
                   <DatePicker fx:id="dpBirthday" layoutX="28.0" layoutY="157.0" prefHeight="26.0" prefWidth="126.0" promptText="Birthday" />
-                  <Button fx:id="btnBack" layoutX="213.0" layoutY="696.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="158.0" text="Homepage" />
+                  <Button fx:id="btnBack" layoutX="271.0" layoutY="692.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="35.0" prefWidth="34.0">
+                     <graphic>
+                        <ImageView fitHeight="27.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../if_House_by_Artdesigner.lv_83154.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                   <ButtonBar layoutX="20.0" layoutY="634.0" prefHeight="40.0" prefWidth="343.0">
                     <buttons>
                       <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadStaff" text="Load table" />
@@ -93,7 +100,7 @@
                      <graphic>
                         <ImageView fitHeight="18.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../if_back_322419.png" />
+                              <Image url="@../../../../if_back_322419.png" />
                            </image>
                         </ImageView>
                      </graphic>

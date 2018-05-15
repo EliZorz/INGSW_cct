@@ -1909,11 +1909,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryDelete = "DELETE FROM project.menu_base WHERE date = '" + d + "';";
 
-        String queryDeleteIngredients = "DELETE FROM project.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
+       // String queryDeleteIngredients = "DELETE FROM project.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
-            st.executeUpdate(queryDeleteIngredients);
+          //  st.executeUpdate(queryDeleteIngredients);
             st.executeUpdate(queryDelete);
             System.out.println("Menu deleted.");
 
@@ -2081,13 +2081,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException{
         PreparedStatement st = null;
-        ResultSet result = null;
-        String queryLoadIngredients = "SELECT * FROM project.menu_special WHERE date = '"+date +"' and interni_CF = '"+FC+"' and interni_Allergie ='"+allergies+"'";
+        //ResultSet result = null;
+       // String queryLoadIngredients = "SELECT * FROM project.menu_special WHERE date = '"+date +"' and interni_CF = '"+FC+"' and interni_Allergie ='"+allergies+"'";
         String queryDelete = "DELETE FROM project.menu_special WHERE date = '" + date + "'and interni_CF ='"+FC+"' and interni_Allergie = '"+ allergies+"'";
-        String queryDeleteIngredients;
-        SpecialMenuDbDetails specialCourses;
-        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
-        try{
+        //String queryDeleteIngredients;
+        //SpecialMenuDbDetails specialCourses;
+        //ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+      /*  try{
             st = this.connHere().prepareStatement(queryLoadIngredients);
             result = st.executeQuery(queryLoadIngredients);
             while(result.next())
@@ -2127,7 +2127,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         try{

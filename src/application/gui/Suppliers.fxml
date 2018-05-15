@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="704.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
+<AnchorPane prefHeight="704.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
     <children>
         <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="704.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -41,7 +41,14 @@
                         <TextField fx:id="txtCap" layoutX="34.0" layoutY="194.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
                         <TextField fx:id="txtProvince" layoutX="160.0" layoutY="194.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
                         <TextField fx:id="txtMail" layoutX="34.0" layoutY="65.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
-                        <Button fx:id="btnBack" layoutX="265.0" layoutY="645.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="110.0" text="Homepage" />
+                        <Button fx:id="btnBack" layoutX="265.0" layoutY="645.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="32.0">
+                     <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../if_House_by_Artdesigner.lv_83154.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                         <ButtonBar layoutX="27.0" layoutY="597.0" prefHeight="40.0" prefWidth="343.0">
                             <buttons>
                                 <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadSuppliers" text="Load table" />
@@ -62,7 +69,7 @@
                             <graphic>
                                 <ImageView fitHeight="21.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../../../../if_back_322419.png" />
+                                        <Image url="@../../../../if_back_322419.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
