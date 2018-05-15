@@ -1014,65 +1014,41 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException{
-        PreparedStatement st = null;
-        PreparedStatement stIngr = null;
-        String queryDelete = "DELETE FROM fornitore WHERE PIVA = '" + piva + "';";
-        String queryDeleteIngr = "DELETE FROM project.ingredients WHERE fornitore_PIVA = '"+piva+"'";
-        String queryDeleteSpecialMenu;
-        String queryDeleteDishes;
-        ResultSet result = null;
-        ArrayList<SpecialMenuDbDetails> special = new ArrayList<>();
+      PreparedStatement st = null;
+      PreparedStatement stSpecialMenu = null;
+      String query = "DELETE FROM project.fornitore WHERE PIVA ='"+piva+"'";
+      String querySearchMenu;
+      ArrayList<SpecialMenuDbDetails> special = new ArrayList<>();
+      ResultSet res = null;
+      for(IngredientsDbDetails x : ingrNO){
+          querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
+          try {
+              stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
+              res = stSpecialMenu.executeQuery(querySearchMenu);
+              res.beforeFirst();
+              while(res.next()) {
+                  SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
+                    special.add(sp);
+              }
+          } catch (SQLException e) {
+              e.printStackTrace();
+          }
+      }
 
-        for(IngredientsDbDetails x : ingrNO) {
-            queryDeleteDishes = "DELETE FROM project.dish_ingredients where ingredients_ingredient ='" + x.getIngr() + "'";
-            queryDeleteSpecialMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie from project.menu_special_has_dish_ingredients where dihs_ingredients_ingredients_ingredient =' "+x.getIngr()+"'";
-            try {
-                st = this.connHere().prepareStatement(queryDeleteDishes);
-                stIngr = this.connHere().prepareStatement(queryDeleteSpecialMenu);
-                result  = stIngr.executeQuery(queryDeleteSpecialMenu);
-                if( !result.next() ) {
-                    System.out.println("No special menu");
-                } else {
-                    result.beforeFirst();
-                    System.out.println("Processing ResultSet");
-                    try {
-                        while (result.next()) {
-                            SpecialMenuDbDetails prova = new SpecialMenuDbDetails(result.getString(1), null,null, null, null, null, result.getString(2), result.getString(3) );
-                            special.add(prova);
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }catch(SQLException e){
-                e.printStackTrace();
-            }
-
-
-        }
-
-        for(SpecialMenuDbDetails x : special)
-            deleteSpecialMenu(LocalDate.parse(x.getDate()), x.getFC(), x.getAllergies());
-
-        try{
-            st = this.connHere().prepareStatement(queryDelete);
-            stIngr = this.connHere().prepareStatement(queryDeleteIngr);
-            stIngr.executeUpdate(queryDeleteIngr);
-            st.executeUpdate(queryDelete);
-            System.out.println("Deleted from fornitore.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (st != null && stIngr != null)
-                    stIngr.close();
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return true;
+    String queryDelete;
+      try{
+          st = this.connHere().prepareStatement(query);
+          st.executeUpdate(query);
+          for(SpecialMenuDbDetails x : special) {
+              queryDelete= "DELETE FROM menu_special WHERE date = '"+x.getDate()+"' and interni_CF ='"+x.getFC()+"' and interni_Allergie ='"+x.getAllergies()+"'";
+              stSpecialMenu = this.connHere().prepareStatement(queryDelete);
+              stSpecialMenu.executeUpdate(queryDelete);
+          }
+          return true;
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+      return false;
     }
 
     @Override
@@ -2105,13 +2081,57 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException{
         PreparedStatement st = null;
+        ResultSet result = null;
+        String queryLoadIngredients = "SELECT * FROM project.menu_special WHERE date = '"+date +"' and interni_CF = '"+FC+"' and interni_Allergie ='"+allergies+"'";
+        String queryDelete = "DELETE FROM project.menu_special WHERE date = '" + date + "'and interni_CF ='"+FC+"' and interni_Allergie = '"+ allergies+"'";
+        String queryDeleteIngredients;
+        SpecialMenuDbDetails specialCourses;
+        ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+        try{
+            st = this.connHere().prepareStatement(queryLoadIngredients);
+            result = st.executeQuery(queryLoadIngredients);
+            while(result.next())
+            ingredients = searchIngredients(result.getString(2));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(2)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(1));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(1)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(4));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(4)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(3));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(3)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(5));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(5)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
 
-        String queryDelete = "DELETE FROM project.menu_special WHERE date = '" + date + "'and CF ='"+FC+"' and Allergie = '"+ allergies+"'";
-        String queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and menu_special_CF ='"+FC+"' and menu_special_allergie='"+allergies+"'";
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
-            st.executeUpdate(queryDeleteIngredients);
             st.executeUpdate(queryDelete);
             System.out.println("Menu deleted.");
 
