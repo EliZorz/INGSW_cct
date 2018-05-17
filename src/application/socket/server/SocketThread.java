@@ -161,6 +161,10 @@ public class SocketThread extends Thread {
             Boolean save = impl.saveIngredients(dish, selection);
             outputToClient.writeBoolean(save);
             return save;
+        }else if(line.equals("loadSuppliers")){
+            System.out.println("Loading suppliers...");
+            outputToClient.writeObject(impl.loadDataSuppliers());
+            return true;
         }
         return false;
 

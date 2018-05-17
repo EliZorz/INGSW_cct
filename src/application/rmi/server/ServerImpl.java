@@ -8,12 +8,11 @@ import com.mysql.jdbc.Connection;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 
 /**
@@ -1158,7 +1157,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement statement = null;
         ResultSet result = null;
         ResultSet res = null;
-        ArrayList<DishesDbDetails> menu = new ArrayList<>();
+        List<DishesDbDetails> menu = new ArrayList<>();
         ArrayList<PlatesDbDetails> plates = new ArrayList<>();
         String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.ingredients JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
         String query;
@@ -1215,7 +1214,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return menu;
+
+            Set<DishesDbDetails> set = new HashSet<DishesDbDetails>(menu);
+            return new ArrayList<DishesDbDetails>(set);
 
 
         }

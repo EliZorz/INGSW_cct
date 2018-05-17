@@ -92,6 +92,8 @@ public class deleteSupplierController implements Initializable {
     public Label dishesStatus;
     @FXML
     public Button back;
+    @FXML
+    public Button deleteButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -150,6 +152,7 @@ public class deleteSupplierController implements Initializable {
                     DishesDetails tmp = new DishesDetails(x);
                     dishes.add(tmp);
                 }
+
                 tabMenu.setItems(null);
                 tabMenu.setItems(dishes);
                 back.setDisable(true);
@@ -434,5 +437,26 @@ public class deleteSupplierController implements Initializable {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void deleteMenu() {
+        if (selectedMenu != null) {
+            UserRemote u;
+            if (MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
+            try {
+                if (u.deleteMenu(LocalDate.parse(selectedMenu[6]))) {
+                    status.setText("Deleted");
+                    handleLoad();
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            selectedMenu = new String[7];
+        } else
+            status.setText("Select a menu");
     }
 }

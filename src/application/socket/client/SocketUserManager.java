@@ -139,6 +139,21 @@ public class SocketUserManager implements UserRemote {
     //SUPPLIERS ------------------------------------------------------------------------
     @Override
     public ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException {
+        System.out.println("sending a message to load suppliers");
+        try {
+            toServer.writeUTF("loadSuppliers");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<SupplierDbDetails>) fromServer.readObject();
+        }catch(Exception e){
+            System.out.println("OMG ERROR LISTENING");
+            e.printStackTrace();
+        }
+
         return null;
     }
 
