@@ -251,10 +251,6 @@ public class SocketUserManager implements UserRemote {
         System.out.println("sending a message to open menu");
         try {
             toServer.writeUTF("loadmenu");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -262,8 +258,6 @@ public class SocketUserManager implements UserRemote {
 
         try{
             return (ArrayList<DishesDbDetails>) fromServer.readObject();
-
-
         }catch(Exception e){
             System.out.println("OMG ERROR LISTENING");
             e.printStackTrace();
@@ -275,12 +269,56 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
+        System.out.println("sending a message to add the menu");
+        try{
+            toServer.writeUTF("addMenu");
+            toServer.flush();
+            toServer.writeUTF(num);
+            toServer.flush();
+            toServer.writeUTF(entree);
+            toServer.flush();
+            toServer.writeUTF(mainCourse);
+            toServer.flush();
+            toServer.writeUTF(dessert);
+            toServer.flush();
+            toServer.writeUTF(sideDish);
+            toServer.flush();
+            toServer.writeUTF(drink);
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean controllDate(LocalDate d) throws RemoteException {
+        System.out.println("sending a message to controll the date");
+        try {
+            toServer.writeUTF("controllDate");
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(d));
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return fromServer.readBoolean();
+
+        }catch(Exception e){
+            System.out.println("OMG ERROR LISTENING");
+            e.printStackTrace();
+        }
         return false;
     }
 

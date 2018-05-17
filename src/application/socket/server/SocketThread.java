@@ -118,6 +118,24 @@ public class SocketThread extends Thread {
             System.out.println("Looking for ingredients...");
             String dish = inputFromClient.readUTF();
             outputToClient.writeObject(impl.searchIngredients(dish));
+        }else if(line.equals("controllDate")){
+            System.out.println("Controlling the date...");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            Boolean controll = impl.controllDate(date);
+            outputToClient.writeBoolean(controll);
+            return controll;
+        }else if(line.equals("addMenu")){
+            System.out.println("adding the mnu...");
+            String num = inputFromClient.readUTF();
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            Boolean add = impl.addMenu(num, entree, main, dessert, side, drink, date);
+            outputToClient.writeBoolean(add);
+            return add;
         }
         return false;
 
