@@ -165,8 +165,38 @@ public class SocketThread extends Thread {
             System.out.println("Loading suppliers...");
             outputToClient.writeObject(impl.loadDataSuppliers());
             return true;
+        }else if(line.equals("addSupplier")){
+            System.out.println("Adding supplier...");
+            String name = inputFromClient.readUTF();
+            String piva = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean add = impl.addDataSupplier(name, piva,mail, tel, address, cap, province );
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("updateSupplier")) {
+            System.out.println("Updating supplier...");
+            String name = inputFromClient.readUTF();
+            String oldPiva = inputFromClient.readUTF();
+            String piva = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean update = impl.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("loadDataIngr")){
+            System.out.println("Loading ingredients...");
+            String selection = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadDataIngr(selection));
+            return true;
         }
-        return false;
+            return false;
 
     }
 }

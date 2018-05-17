@@ -273,8 +273,12 @@ public class SupplierController implements Initializable{
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 boolean isEditOk = u.addIngrToDb(ingr, oldPiva);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -296,8 +300,12 @@ public class SupplierController implements Initializable{
 
     public void handleLoadIngr() {
         System.out.println("Loading data...");
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<CodRifChildDbDetails> staffDbArrayList = u.loadDataIngr(oldPiva);  //call method in Server Impl
             ingrObsList.clear();
 

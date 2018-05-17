@@ -159,11 +159,64 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        System.out.println("sending a message to add supplier");
+        try{
+            toServer.writeUTF("addSupplier");
+            toServer.flush();
+            toServer.writeUTF(name);
+            toServer.flush();
+            toServer.writeUTF(piva);
+            toServer.flush();
+            toServer.writeUTF(mail);
+            toServer.flush();
+            toServer.writeUTF(tel);
+            toServer.flush();
+            toServer.writeUTF(address);
+            toServer.flush();
+            toServer.writeUTF(cap);
+            toServer.flush();
+            toServer.writeUTF(province);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        System.out.println("sending a message to update supplier");
+        try{
+            toServer.writeUTF("updateSupplier");
+            toServer.flush();
+            toServer.writeUTF(name);
+            toServer.flush();
+            toServer.writeUTF(oldPiva);
+            toServer.flush();
+            toServer.writeUTF(piva);
+            toServer.flush();
+            toServer.writeUTF(mail);
+            toServer.flush();
+            toServer.writeUTF(tel);
+            toServer.flush();
+            toServer.writeUTF(address);
+            toServer.flush();
+            toServer.writeUTF(cap);
+            toServer.flush();
+            toServer.writeUTF(province);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -176,6 +229,23 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException {
+        System.out.println("sending a message to load ingredients");
+        try {
+            toServer.writeUTF("loadDataIngr");
+            toServer.flush();
+            toServer.writeUTF(selectedSupplier);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<CodRifChildDbDetails>) fromServer.readObject();
+        }catch(Exception e){
+            System.out.println("OMG ERROR LISTENING");
+            e.printStackTrace();
+        }
+
         return null;
     }
 
@@ -280,9 +350,9 @@ public class SocketUserManager implements UserRemote {
        } catch (IOException e) {
            e.printStackTrace();
        }
-        try{
+       try{
             return fromServer.readBoolean();
-        } catch (IOException e) {
+        }  catch (IOException e) {
             e.printStackTrace();
         }
         return false;
