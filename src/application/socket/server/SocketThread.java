@@ -1,10 +1,11 @@
 package application.socket.server;
 
+import application.details.DishesDbDetails;
+import application.details.IngredientsDbDetails;
 import application.rmi.server.ServerImpl;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+
+import java.io.*;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class SocketThread extends Thread {
     private BufferedReader in = null;  //uso questo e non Scanner perché è synchronized
     private PrintWriter out = null;
     private Socket s = null;
+    private ObjectOutputStream output = null;
     private ServerImpl impl;  //mi serve per poter chiamare le funzioni  ESSENZIALE!!!!!
 
     //devo considerare che per chiamare  i metodi devo mandare dei messaggi
@@ -25,6 +27,7 @@ public class SocketThread extends Thread {
     public SocketThread(Socket s, ServerImpl impl) throws RemoteException {
         this.impl = impl;
         this.s = s;
+
     }
 
     @Override
@@ -34,6 +37,7 @@ public class SocketThread extends Thread {
             in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 
             out = new PrintWriter(s.getOutputStream());
+            output = new ObjectOutputStream(s.getOutputStream());
 
         } catch (IOException e) {
             System.out.println("IO error in server thread");
@@ -111,9 +115,11 @@ public class SocketThread extends Thread {
 
         } else if(credentials[0].equals("loadmenu")){
             System.out.println("Asking for menu opening");
-            if(impl.loadMenu() != null)
-
-                ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getSideDish()+" "+impl.loadMenu().get(0).getDrink()+" "+impl.loadMenu().get(0).getDay();
+            ArrayList<DishesDbDetails> menu = impl.loadMenu();
+            if(menu == null)
+                return null;
+            else
+                output.writeObject(menu);
 
 
             return ret;
@@ -193,6 +199,12 @@ public class SocketThread extends Thread {
                         +impl.loadDataStaff().get(0).getProvince()+" "+impl.loadIngr().get(0).getIngr();
 
             return ret;
+        }
+        else if(credentials[0].equals("loadIngredients")){
+            ArrayList<IngredientsDbDetails> ingredients = impl.loadIngr();
+            ObjectOutputStream objectOutput = new ObjectOutputStream(s.getOutputStream());
+
+            objectOutput.writeObject(ingredients);
         }
 
 

@@ -127,6 +127,7 @@ public class MenuController implements Initializable {
 
     @FXML
     public void handleLoad() {
+        tableMenu.getItems().clear();
         if (MainControllerLogin.selected.equals("RMI")) {
             System.out.println("oper RMI menu");
             try {
@@ -159,6 +160,7 @@ public class MenuController implements Initializable {
                     }
                     tableMenu.setItems(null);
                     tableMenu.setItems(menu);
+                    selectedMenu = null;
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();

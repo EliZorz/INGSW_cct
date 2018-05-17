@@ -130,23 +130,44 @@ public class newMenuController implements Initializable {
     
     private void loadIngredients(){
         controllIngredients = false;
-        try{
-            UserRemote u = Singleton.getInstance().methodRmi();
-            ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
-            ingredients.clear();
-            if( ingredients != null){
-                for(IngredientsDbDetails x : ingArray){
-                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
-                    ingredients.add(tmp);
+        if(MainControllerLogin.selected.equals("RMI")) {
+            try {
+                UserRemote u = Singleton.getInstance().methodRmi();
+                ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
+                ingredients.clear();
+                if (ingredients != null) {
+                    for (IngredientsDbDetails x : ingArray) {
+                        IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                        ingredients.add(tmp);
+                    }
+                    tabIng.setItems(null);
+                    tabIng.setItems(ingredients);
+                    label1.setText("Loaded");
+                } else {
+                    label1.setText("No ingredients");
                 }
-                tabIng.setItems(null);
-                tabIng.setItems(ingredients);
-                label1.setText("Loaded");
-            }else{
-                label1.setText("No ingredients");
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        }else{
+            try{
+                UserRemote u = Singleton.getInstance().methodSocket();
+                ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
+                ingredients.clear();
+                if (ingredients != null) {
+                    for (IngredientsDbDetails x : ingArray) {
+                        IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                        ingredients.add(tmp);
+                    }
+                    tabIng.setItems(null);
+                    tabIng.setItems(ingredients);
+                    label1.setText("Loaded");
+                } else {
+                    label1.setText("No ingredients");
+                }
+            }catch (RemoteException e){
+                e.printStackTrace();
+            }
         }
     }
 

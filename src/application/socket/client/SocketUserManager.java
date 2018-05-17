@@ -2,10 +2,8 @@ package application.socket.client;
 
 import application.Interfaces.UserRemote;
 import application.details.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -19,6 +17,7 @@ public class SocketUserManager implements UserRemote {
     private final Socket socket;  //socket del client
     private BufferedReader in;
     private PrintWriter out;
+    private ObjectInputStream input;
 
 
     public SocketUserManager(Socket s) {
@@ -26,6 +25,7 @@ public class SocketUserManager implements UserRemote {
         try{
             in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             out =new PrintWriter(s.getOutputStream());
+            input = new ObjectInputStream(s.getInputStream());
 
         }catch(IOException e){
             System.out.println("IO error in server thread");
@@ -128,7 +128,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
         ArrayList<IngredientsDbDetails> ingr = new ArrayList<>(1);
-        String responce = null;
+        /*String responce = null;
         IngredientsDbDetails dIngr;
         System.out.println("sending a message to load the ingredients");
         out.println("loadIngr");
@@ -145,7 +145,17 @@ public class SocketUserManager implements UserRemote {
             ingr.add(dIngr);
             return ingr;
         }
-        return null;
+        return null;*/
+        try {
+            ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream());
+            Object object = objectInput.readObject();
+            ingr = (ArrayList<IngredientsDbDetails>) object;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ingr;
     }
 
 
@@ -328,8 +338,9 @@ public class SocketUserManager implements UserRemote {
         out.flush();
 
         try{
-            responce = in.readLine();
-
+           // responce = in.readLine();
+            dish = (ArrayList<DishesDbDetails>) input.readObject();
+            return dish;
 
         }catch(Exception e){
             System.out.println("OMG ERROR LISTENING");
