@@ -39,13 +39,11 @@ public class MenuInizialeController {
 
     @FXML
     void openMenuBasePlates (ActionEvent event)throws Exception{
-        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
     }
 
     @FXML
     void openSpecialMenu (ActionEvent event)throws Exception{
-        ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("LoadSpecialMenu");
     }
 
