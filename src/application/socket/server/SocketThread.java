@@ -136,6 +136,31 @@ public class SocketThread extends Thread {
             Boolean add = impl.addMenu(num, entree, main, dessert, side, drink, date);
             outputToClient.writeBoolean(add);
             return add;
+        }else if(line.equals("updateMenu")){
+            System.out.println("updating the menu...");
+            String num = inputFromClient.readUTF();
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            LocalDate oldDate = LocalDate.parse(inputFromClient.readUTF());
+            Boolean update = impl.updateMenu(num, entree, main, dessert, side, drink, date, oldDate);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("saveIngredients")){
+            System.out.println("saving ingredients...");
+            String dish = inputFromClient.readUTF();
+            ArrayList<String> selection = new ArrayList<>();
+            try {
+                 selection = (ArrayList<String>)inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean save = impl.saveIngredients(dish, selection);
+            outputToClient.writeBoolean(save);
+            return save;
         }
         return false;
 

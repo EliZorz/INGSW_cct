@@ -240,8 +240,12 @@ public class newMenuController implements Initializable {
 
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             if(u.saveIngredients(dishName, ingredients)){
                 label1.setText("Success!!");
                 selectedIngredients = new ArrayList<>();
@@ -352,7 +356,6 @@ public class newMenuController implements Initializable {
 
 
                     }
-
                 }
                 else
                     if(u.updateMenu(num, entree, main, dessert, side, drink, day, LocalDate.parse(selectedMenu[6]))){

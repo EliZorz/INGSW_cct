@@ -242,6 +242,34 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, LocalDate oldDate) throws RemoteException {
+       System.out.println("sendiang a message to update menu");
+       try{
+           toServer.writeUTF("updateMenu");
+           toServer.flush();
+           toServer.writeUTF(num);
+           toServer.flush();
+           toServer.writeUTF(entree);
+           toServer.flush();
+           toServer.writeUTF(main);
+           toServer.flush();
+           toServer.writeUTF(dessert);
+           toServer.flush();
+           toServer.writeUTF(side);
+           toServer.flush();
+           toServer.writeUTF(drink);
+           toServer.flush();
+           toServer.writeUTF(String.valueOf(day));
+           toServer.flush();
+           toServer.writeUTF(String.valueOf(oldDate));
+           toServer.flush();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -347,6 +375,21 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException {
+        try{
+            toServer.writeUTF("saveIngredients");
+            toServer.flush();
+            toServer.writeUTF(dish);
+            toServer.flush();
+            toServer.writeObject(selectedIngredients);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
