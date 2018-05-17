@@ -32,7 +32,7 @@
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
+                  <Image url="@../../../../if_House_by_Artdesigner.lv_83154.png" />
                </image>
             </ImageView>
          </graphic></Button>
@@ -52,7 +52,7 @@
          <graphic>
             <ImageView fitHeight="20.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../if_back_322419.png" />
+                  <Image url="@../../../../if_back_322419.png" />
                </image>
             </ImageView>
          </graphic>
