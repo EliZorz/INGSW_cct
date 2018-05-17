@@ -29,7 +29,7 @@
             <Button fx:id="dessertOk" layoutX="185.0" layoutY="123.0" mnemonicParsing="false" onAction="#dessertIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
             <Button fx:id="sideOk" layoutX="185.0" layoutY="167.0" mnemonicParsing="false" onAction="#sideIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
             <Button fx:id="drinkOk" layoutX="185.0" layoutY="210.0" mnemonicParsing="false" onAction="#drinkIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
-            <Label fx:id="label1" layoutX="24.0" layoutY="444.0" prefHeight="30.0" prefWidth="323.0" text="Status">
+            <Label fx:id="label1" layoutX="24.0" layoutY="473.0" prefHeight="35.0" prefWidth="543.0" text="Status">
                <font>
                   <Font size="24.0" />
                </font>
@@ -40,7 +40,7 @@
                <graphic>
                   <ImageView fitHeight="17.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../if_back_322419.png" />
+                        <Image url="@../../../../if_back_322419.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -52,7 +52,7 @@
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
+                  <Image url="@../../../../if_House_by_Artdesigner.lv_83154.png" />
                </image>
             </ImageView>
          </graphic></Button>

@@ -78,8 +78,9 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
-
         try{
+            toServer.writeUTF("loadIngredients");
+            toServer.flush();
             return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
         } catch (IOException e) {
             e.printStackTrace();
@@ -216,6 +217,21 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
+        try{
+            toServer.writeUTF("searchIngredients");
+            toServer.flush();
+            toServer.writeUTF(dish);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -232,9 +248,6 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
-        ArrayList<DishesDbDetails> dish = new ArrayList<>(1);
-        String responce = null ;
-        DishesDbDetails dMenu;
         System.out.println("sending a message to open menu");
         try {
             toServer.writeUTF("loadmenu");
@@ -248,9 +261,8 @@ public class SocketUserManager implements UserRemote {
         }
 
         try{
-           // responce = in.readLine();
-            dish = (ArrayList<DishesDbDetails>) fromServer.readObject();
-            return dish;
+            return (ArrayList<DishesDbDetails>) fromServer.readObject();
+
 
         }catch(Exception e){
             System.out.println("OMG ERROR LISTENING");

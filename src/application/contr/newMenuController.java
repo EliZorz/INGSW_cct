@@ -130,51 +130,40 @@ public class newMenuController implements Initializable {
     
     private void loadIngredients(){
         controllIngredients = false;
+        UserRemote u;
         if(MainControllerLogin.selected.equals("RMI")) {
-            try {
-                UserRemote u = Singleton.getInstance().methodRmi();
-                ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
-                ingredients.clear();
-                if (ingredients != null) {
-                    for (IngredientsDbDetails x : ingArray) {
-                        IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
-                        ingredients.add(tmp);
-                    }
-                    tabIng.setItems(null);
-                    tabIng.setItems(ingredients);
-                    label1.setText("Loaded");
-                } else {
-                    label1.setText("No ingredients");
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }else{
-            try{
-                UserRemote u = Singleton.getInstance().methodSocket();
-                ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
-                ingredients.clear();
-                if (ingredients != null) {
-                    for (IngredientsDbDetails x : ingArray) {
-                        IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
-                        ingredients.add(tmp);
-                    }
-                    tabIng.setItems(null);
-                    tabIng.setItems(ingredients);
-                    label1.setText("Loaded");
-                } else {
-                    label1.setText("No ingredients");
-                }
-            }catch (RemoteException e){
-                e.printStackTrace();
-            }
+            u = Singleton.getInstance().methodRmi();
+        }else {
+            u = Singleton.getInstance().methodSocket();
         }
+        try {
+            ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
+            ingredients.clear();
+            if (ingredients != null) {
+                for (IngredientsDbDetails x : ingArray) {
+                    IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
+                    ingredients.add(tmp);
+                }
+                tabIng.setItems(null);
+                tabIng.setItems(ingredients);
+                label1.setText("Loaded");
+            } else {
+                label1.setText("No ingredients");
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private boolean showSelection(String selection) throws RemoteException {
         controllIngredients = true;
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
             if(ingredientsForThisDish != null) {

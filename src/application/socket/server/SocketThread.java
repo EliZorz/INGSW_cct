@@ -110,6 +110,14 @@ public class SocketThread extends Thread {
             Boolean isDeleted = impl.deleteMenu(date);
             outputToClient.writeBoolean(isDeleted);
             return isDeleted;
+        }else if(line.equals("loadIngredients")){
+            System.out.println("Loading ingredients...");
+            outputToClient.writeObject(impl.loadIngr());
+            return true;
+        }else if(line.equals("searchIngredients")){
+            System.out.println("Looking for ingredients...");
+            String dish = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.searchIngredients(dish));
         }
         return false;
 
