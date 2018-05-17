@@ -201,10 +201,15 @@ public class SocketThread extends Thread {
             return ret;
         }
         else if(credentials[0].equals("loadIngredients")){
-            ArrayList<IngredientsDbDetails> ingredients = impl.loadIngr();
-            ObjectOutputStream objectOutput = new ObjectOutputStream(s.getOutputStream());
+            System.out.println("Asking for ingredients loading");
+            ArrayList<IngredientsDbDetails> ingredientsDbDetails = impl.loadIngr();
+            if(ingredientsDbDetails == null)
+                return null;
+            else
+                output.writeObject(ingredientsDbDetails);
 
-            objectOutput.writeObject(ingredients);
+
+            return ret;
         }
 
 
