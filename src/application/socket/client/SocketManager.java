@@ -12,7 +12,7 @@ public class SocketManager implements ServicesManager{
     private UserRemote user;
 
     public  SocketManager(){
-            Socket s = null;
+            Socket s;
           try {
                 System.out.println("opening socket");
                 s = new Socket("localhost", 1092);

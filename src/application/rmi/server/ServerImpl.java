@@ -10,13 +10,11 @@ import javafx.beans.property.StringProperty;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -35,27 +33,20 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean funzLog(String usr, String pwd) {
 
         PreparedStatement st = null;
-
         ResultSet result = null;
-
         String queryLog = "SELECT * FROM project.UserIn WHERE Username = ? AND Password = ? ";//"SELECT * FROM sys.login WHERE Username = ? AND Password = ? " ;
-
         boolean res = false;
 
         try {
-
             st = this.connHere().prepareStatement(queryLog);
             st.setString(1, usr);
             st.setString(2, pwd);
-
             result = st.executeQuery();
-
 
         } catch (SQLException e) {
             System.out.println("Error during search in DB");
             e.printStackTrace();
         }
-
 
         try {
             if (!result.next()) {
@@ -69,7 +60,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                     String pwdFound = result.getString("Password");
                     System.out.println("PASSWORD: " + pwdFound);
                 }
-
                 res = true;
             }
         } catch (SQLException e) {
@@ -90,9 +80,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         }
 
-
         return res;
-
 
     }
 
@@ -102,9 +90,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
 
         PreparedStatement st = null;
-
         ResultSet result = null;
-
         ArrayList<ChildDbDetails> childDbArrayList = new ArrayList<>(9);
 
         String queryLoad = "SELECT Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia" +
@@ -911,14 +897,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryLoad = "SELECT * FROM fornitore";
 
-        try {
+        try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            if (!result.next()) {
+        try{
+            if( !result.next() ) {
                 System.out.println("No supplier in DB");
             } else {
                 result.beforeFirst();
@@ -975,7 +961,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             st.setString(7, province);
             st.executeUpdate();
 
-        } catch (SQLException e) {
+        } catch (SQLException e){
             e.printStackTrace();
         } finally {
             try {
@@ -990,7 +976,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
-    public boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+    public boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException{
         PreparedStatement st = null;
 
         String queryEdit = "UPDATE fornitore SET PIVA ='" + piva + "', NomeAzienda ='" + name + "', Mail ='" + mail + "', " +
@@ -1014,30 +1000,46 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
-    public boolean deleteSupplier(String piva) throws RemoteException {
+    public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException{
         PreparedStatement st = null;
-        String queryDelete = "DELETE FROM fornitore WHERE PIVA = '" + piva + "';";
-
-        try {
-            st = this.connHere().prepareStatement(queryDelete);
-            st.executeUpdate(queryDelete);
-            System.out.println("Deleted from fornitore.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+        PreparedStatement stSpecialMenu = null;
+        String query = "DELETE FROM project.fornitore WHERE PIVA ='"+piva+"'";
+        String querySearchMenu;
+        ArrayList<SpecialMenuDbDetails> special = new ArrayList<>();
+        ResultSet res = null;
+        for(IngredientsDbDetails x : ingrNO){
+            querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
             try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
+                stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
+                res = stSpecialMenu.executeQuery(querySearchMenu);
+                res.beforeFirst();
+                while(res.next()) {
+                    SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
+                    special.add(sp);
+                }
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-        return true;
+        String queryDelete;
+        try{
+            st = this.connHere().prepareStatement(query);
+            st.executeUpdate(query);
+            for(SpecialMenuDbDetails x : special) {
+                queryDelete= "DELETE FROM menu_special WHERE date = '"+x.getDate()+"' and interni_CF ='"+x.getFC()+"' and interni_Allergie ='"+x.getAllergies()+"'";
+                stSpecialMenu = this.connHere().prepareStatement(queryDelete);
+                stSpecialMenu.executeUpdate(queryDelete);
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
-    public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException {
+    public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException{
         PreparedStatement st = null;
         ResultSet result = null;
         ArrayList<CodRifChildDbDetails> ingrArrayList = new ArrayList<>(1);
@@ -1045,14 +1047,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryLoad = "SELECT * FROM ingredients " +
                 "WHERE Fornitore_PIVA = '" + selectedSupplier + "';";
 
-        try {
+        try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            if (!result.next()) {
+        try{
+            if( !result.next() ) {
                 System.out.println("No ingredient in DB");
             } else {
                 result.beforeFirst();
@@ -1089,28 +1091,28 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean addIngrToDb(String ingredient, String selectedSupplier) throws RemoteException {
         PreparedStatement st = null;
-        ResultSet resultDuplicate = null;
+        ResultSet resultDuplicate =null;
         String queryFindDuplicateIngredient = "SELECT ingredient " +
                 "FROM ingredients " +
-                "WHERE ingredient = '" + ingredient + "';";
+                "WHERE ingredient = '"+ ingredient +"';";
         String queryAdd = "INSERT INTO ingredients(ingredient, Fornitore_PIVA)" +
                 " VALUES (?,?)";
 
         try {
             st = this.connHere().prepareStatement(queryFindDuplicateIngredient);
             resultDuplicate = st.executeQuery();
-        } catch (SQLException e) {
+        } catch (SQLException e){
             e.printStackTrace();
         }
-        try {
-            if (!resultDuplicate.next()) {
+        try{
+            if( !resultDuplicate.next() ) {
                 System.out.println("No duplicate ingredient in DB. Proceed...");
-                try {
+                try{
                     st = this.connHere().prepareStatement(queryAdd);
                     st.setString(1, ingredient);
                     st.setString(2, selectedSupplier);
                     st.executeUpdate();
-                } catch (SQLException e) {
+                } catch (SQLException e){
                     e.printStackTrace();
                 }
             } else {
@@ -1136,6 +1138,105 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         return true;
 
+    }
+
+    public ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException {
+        PreparedStatement st = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ResultSet res = null;
+        List<DishesDbDetails> menu = new ArrayList<>();
+        ArrayList<PlatesDbDetails> plates = new ArrayList<>();
+        String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.ingredients JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
+        String query;
+        try {
+            st = this.connHere().prepareStatement(queryNomePiatto);
+            result = st.executeQuery(queryNomePiatto);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (!result.next()) {
+                System.out.println("no ingredients");
+            } else {
+                result.beforeFirst();
+                try {
+                    while (result.next()) {
+                        PlatesDbDetails plate = new PlatesDbDetails(result.getString(1), result.getString(2));
+                        plates.add(plate);
+                    }
+                    for (PlatesDbDetails y : plates) {
+                        query = "SELECT * from project.menu_base where date IN (SELECT menu_base_date FROM project.menu_base_has_dish_ingredients where dish_ingredients_Nome_piatto ='" +y.getNomePiatto()+"')";
+                        statement = this.connHere().prepareStatement(query);
+                        res = statement.executeQuery();
+                        if(!res.next()) {
+                            return null;
+                        }else{
+                            res.beforeFirst();
+                            while(res.next())
+                                menu.add(new DishesDbDetails(res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(7), res.getString(6)));
+
+                        }
+                    }
+
+
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null && res != null) {
+                    result.close();
+                    res.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Set<DishesDbDetails> set = new HashSet<DishesDbDetails>(menu);
+            return new ArrayList<DishesDbDetails>(set);
+
+
+        }
+    }
+
+    @Override
+    public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
+        String queryNomePiatto = "SELECT ingredient FROM project.ingredients  where fornitore_PIVA = '" + selectedSupplier + "'";
+        PreparedStatement st = null;
+        ResultSet result = null;
+        ArrayList<IngredientsDbDetails> ingrNo = new ArrayList<>();
+        try {
+            st = this.connHere().prepareStatement(queryNomePiatto);
+            result = st.executeQuery(queryNomePiatto);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (!result.next()) {
+                System.out.println("no ingredients");
+            } else {
+                result.beforeFirst();
+                while (result.next()) {
+                    IngredientsDbDetails ingr = new IngredientsDbDetails(result.getString(1));
+                    ingrNo.add(ingr);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ingrNo;
     }
 
 //COACH OPERATORS ---------------------------------------------------------------------------------------------
@@ -1656,7 +1757,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st;
         ResultSet result = null;
         DishesDbDetails dishes  = null;
-        String queryLoad1 = "SELECT * FROM mydb.menu_base WHERE date ='"+date+"'";
+        String queryLoad1 = "SELECT * FROM project.menu_base WHERE date ='"+date+"'";
 
         try{
             st = this.connHere().prepareStatement(queryLoad1);
@@ -1700,7 +1801,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
         PreparedStatement st = null;
-        String querySearch = "SELECT ingredients_ingredient FROM mydb.dish_ingredients WHERE Nome_piatto='"+dish+"'";
+        String querySearch = "SELECT ingredients_ingredient FROM project.dish_ingredients WHERE Nome_piatto='"+dish+"'";
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
         try{
@@ -1750,7 +1851,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr(LocalDate d) throws RemoteException{
         PreparedStatement st = null;
-        String queryLoad = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date ='" + d+"'";
+        String queryLoad = "SELECT dish_ingredients_ingredients FROM project.menu_base_has_dish_ingredients WHERE menu_base_date ='" + d+"'";
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> resIngr = new ArrayList<>();
         try{
@@ -1802,11 +1903,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement stAdd = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
-        String queryUpdate = "UPDATE mydb.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
+        String queryUpdate = "UPDATE project.menu_base SET NumPiatti='" + num +"', entrees ='"+ entree +"', main_courses ='"+ main+ "', dessert = '" + dessert+"', side_dish = '"+ side+"', drink = '"+ drink +"', date ='"+ day +"' WHERE date = '"+ oldDate+"'";
 
-        String queryDelete = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"'";
+        String queryDelete = "DELETE FROM project.menu_base_has_dish_ingredients WHERE menu_base_date = '"+day+"'";
 
-        String queryAdd = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients)"+"VALUES (?,?,?)";
+        String queryAdd = "INSERT INTO project.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient)"+"VALUES (?,?,?)";
 
         try {
 
@@ -1892,7 +1993,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         ArrayList<DishesDbDetails> dishes = new ArrayList<>(4);
 
-        String queryLoad1 = "SELECT * FROM mydb.menu_base";
+        String queryLoad1 = "SELECT * FROM project.menu_base";
 
         try{
             st = this.connHere().prepareStatement(queryLoad1);
@@ -1917,7 +2018,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         prova = new DishesDbDetails(result.getString(1),result.getString(2),
                                 result.getString(3),
                                 result.getString(4),
-                                result.getString(5),result.getString(6),result.getString(7));
+                                result.getString(5),result.getString(7),result.getString(6));
 
 
                         //get string from db, put into list of ChildGuiData, ready to put it into GUI
@@ -1942,10 +2043,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryAdd = "INSERT INTO mydb.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
+        String queryAdd = "INSERT INTO project.menu_base(NumPiatti,entrees, main_courses,dessert, side_dish, drink, date)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
-        String queryAddDish = "INSERT INTO mydb.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredients)"+"VALUES(?,?,?)";
+        String queryAddDish = "INSERT INTO project.menu_base_has_dish_ingredients (menu_base_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient)"+"VALUES(?,?,?)";
         PreparedStatement stDish = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
@@ -2013,6 +2114,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
 
         } catch (SQLException e){
+            if(loadThisMenu(date) != null)
+                deleteMenu(date);
             e.printStackTrace();
         } finally {
             try {
@@ -2032,7 +2135,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean controllDate(LocalDate d) throws RemoteException {
         PreparedStatement st = null;
-        String queryControll = "SELECT date FROM mydb.menu_base WHERE date = '" + d + "';";
+        String queryControll = "SELECT date FROM project.menu_base WHERE date = '" + d + "';";
 
         ResultSet result = null;
 
@@ -2065,13 +2168,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         //PreparedStatement st1 = null;
 
-        String queryDelete = "DELETE FROM mydb.menu_base WHERE date = '" + d + "';";
+        String queryDelete = "DELETE FROM project.menu_base WHERE date = '" + d + "';";
 
-        String queryDeleteIngredients = "DELETE FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
+        // String queryDeleteIngredients = "DELETE FROM project.menu_base_has_dish_ingredients WHERE menu_base_date = '"+d+"'";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
-            st.executeUpdate(queryDeleteIngredients);
+            //  st.executeUpdate(queryDeleteIngredients);
             st.executeUpdate(queryDelete);
             System.out.println("Menu deleted.");
 
@@ -2098,7 +2201,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         try {
             for (String x : selectedIngredients) {
-                String queryAddIngredients = "INSERT INTO mydb.dish_ingredients(Nome_piatto, ingredients_ingredient)" + " VALUES(?,?)";
+                String queryAddIngredients = "INSERT INTO project.dish_ingredients(Nome_piatto, ingredients_ingredient)" + " VALUES(?,?)";
                 st = this.connHere().prepareStatement(queryAddIngredients);
                 st.setString(1, dish);
                 st.setString(2, x);
@@ -2116,21 +2219,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }catch (SQLException e){
             e.printStackTrace();
             return false;
-       /* }finally {
-            try {
-                if (st != null) {
-                    st.close();
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }*/
+
         }
 
 
 
     }
+
+
 
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
         PreparedStatement st;
@@ -2140,8 +2236,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<SpecialDbDetails> special = new ArrayList<>();
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
         ArrayList<SpecialDbDetails> specialInterni = new ArrayList<>();
-        String queryLoad = "SELECT CF,Allergie FROM mydb.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM mydb.menu_special where date ='"+date+"')";
-        String queryIngr = "SELECT dish_ingredients_ingredients FROM mydb.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
+        String queryLoad = "SELECT CF,Allergie FROM project.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM project.menu_special where date ='"+date+"')";
+        String queryIngr = "SELECT dish_ingredients_ingredients_ingredient FROM project.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
         try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
@@ -2193,7 +2289,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         ArrayList<SpecialMenuDbDetails> dishes = new ArrayList<>(4);
 
-        String queryLoad1 = "SELECT * FROM mydb.menu_special";
+        String queryLoad1 = "SELECT * FROM project.menu_special";
 
         try{
             Connection c = this.connHere();
@@ -2231,6 +2327,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                     e.printStackTrace();
                 }
 
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -2245,13 +2342,53 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException{
         PreparedStatement st = null;
+        //ResultSet result = null;
+        // String queryLoadIngredients = "SELECT * FROM project.menu_special WHERE date = '"+date +"' and interni_CF = '"+FC+"' and interni_Allergie ='"+allergies+"'";
+        String queryDelete = "DELETE FROM project.menu_special WHERE date = '" + date + "'and interni_CF ='"+FC+"' and interni_Allergie = '"+ allergies+"'";
+        //String queryDeleteIngredients;
+        //SpecialMenuDbDetails specialCourses;
+        //ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+      /*  try{
+            st = this.connHere().prepareStatement(queryLoadIngredients);
+            result = st.executeQuery(queryLoadIngredients);
+            while(result.next())
+            ingredients = searchIngredients(result.getString(2));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(2)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(1));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(1)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(4));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(4)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(3));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(3)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+            ingredients = searchIngredients(result.getString(5));
+            for(IngredientsDbDetails x : ingredients) {
+                queryDeleteIngredients = "DELETE FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '" + date + "' and menu_special_CF ='" + FC + "' and menu_special_allergie='" + allergies + "' and dish_ingredients_Nome_piatto = '"+ result.getString(5)+"' and dish_ingredients_ingredients_ingredient='"+ x.getIngr()+"'";
+                st = this.connHere().prepareStatement(queryDeleteIngredients);
+                st.executeUpdate(queryDeleteIngredients);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }*/
 
-        String queryDelete = "DELETE FROM mydb.menu_special WHERE date = '" + date + "'and CF ='"+FC+"' and Allergie = '"+ allergies+"'";
-        String queryDeleteIngredients = "DELETE FROM mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and menu_special_CF ='"+FC+"' and menu_special_allergie='"+allergies+"'";
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
-            st.executeUpdate(queryDeleteIngredients);
             st.executeUpdate(queryDelete);
             System.out.println("Menu deleted.");
 
@@ -2275,8 +2412,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date,SpecialDbDetails special) throws RemoteException{
-        String queryAdd = "INSERT INTO mydb.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
-        String queryAddDish = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
+        String queryAdd = "INSERT INTO project.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
+        String queryAddDish = "INSERT INTO project.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         PreparedStatement st = null;
         PreparedStatement stDish = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
@@ -2383,9 +2520,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement stAdd = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
-        String queryUpdate = "UPDATE mydb.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
-        String queryDelete = "DELETE FROM  mydb.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
-        String queryAdd = "INSERT INTO mydb.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
+        String queryUpdate = "UPDATE project.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
+        String queryDelete = "DELETE FROM  project.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
+        String queryAdd = "INSERT INTO project.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         try{
             st = this.connHere().prepareStatement(queryUpdate);
             stIngr = this.connHere().prepareStatement(queryDelete);
@@ -2466,7 +2603,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
     }
-
 
 
     //TRIP---------------------------------------------------------------------------------------------

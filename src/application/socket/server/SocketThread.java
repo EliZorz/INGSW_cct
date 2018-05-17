@@ -1,21 +1,19 @@
 package application.socket.server;
 
+import application.details.DishesDbDetails;
+import application.details.StaffDbDetails;
 import application.rmi.server.ServerImpl;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 //quello corretto
 public class SocketThread extends Thread {
 
     private String line = null;
-    private BufferedReader in = null;  //uso questo e non Scanner perché è synchronized
-    private PrintWriter out = null;
+    private ObjectOutputStream outputToClient;
+    private ObjectInputStream inputFromClient;
     private Socket s = null;
     private ServerImpl impl;  //mi serve per poter chiamare le funzioni  ESSENZIALE!!!!!
 
@@ -30,50 +28,42 @@ public class SocketThread extends Thread {
     public void run() {
         try {
             //creo in e out per la comunicazione con il client
-            in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-
-            out = new PrintWriter(s.getOutputStream());
+            outputToClient = new ObjectOutputStream(s.getOutputStream());
+            inputFromClient = new ObjectInputStream(s.getInputStream());
 
         } catch (IOException e) {
             System.out.println("IO error in server thread");
         }
 
         try {
-
             while (true) {
-                System.out.println("Ready to recieve a message");
+                System.out.println("Ready to receive a message");
+                line = inputFromClient.readUTF();   //attende fino a quando arriva un messaggio
 
-                line = in.readLine();   //attende fino a quando arriva un messaggio
+                System.out.println("Received " + line);
 
-                System.out.println("recieved " + line);
+                boolean responce = doAction(line);  //passo il messaggio al doAction che decide cosa fare
+                System.out.println("Sending back : " + responce);
 
-                String responce = this.doAction(line);  //passo il messaggio al doAction che decide cosa fare
-
-                System.out.println("sending back : " + responce);
-
-                out.println(responce);  //manda al socket client la risposta
-
-                out.flush();
+                //outputToClient.writeBoolean(responce);  //manda al socket client la risposta
+                //outputToClient.flush();
             }
 
-
         } catch (IOException e) {
-
             line = this.getName();  //salva in line il nome del thread che sta eseguendo
             System.out.println("IO Error/ Client " + line + " terminated abruptly");
         } catch (NullPointerException e) {
             line = this.getName();
-            System.out.println("Client " + line + " Closed");  //stampa nel server che tale client è chiuso
+            System.out.println("Client " + line + " closed");  //stampa nel server che tale client è chiuso
         } finally {
             try {
                 System.out.println("Connection Closing..");
-                if (in != null) {
-                    in.close();
-                    System.out.println(" Socket Input Stream Closed");
+                if (inputFromClient != null) {
+                    inputFromClient.close();
+                    System.out.println("Socket Input Stream Closed");
                 }
-
-                if (out != null) {
-                    out.close();
+                if (outputToClient != null) {
+                    outputToClient.close();
                     System.out.println("Socket Out Closed");
                 }
                 if (s != null) {
@@ -88,83 +78,126 @@ public class SocketThread extends Thread {
         }
     }
 
-    private String doAction(String line) throws IOException {
+    private boolean doAction(String line) throws IOException {
 
-        String[] credentials = line.split("\\s+");
-        String ret = null;
+        //String[] credentials = line.split("\\s+");
 
-        if (credentials[0].equals("login")){
+        if (line.equals("login")){
+            System.out.println("Logging in...");
+            String usr = inputFromClient.readUTF();
+            String pwd = inputFromClient.readUTF();
 
-            System.out.println("Username: " + credentials[1]);
-            System.out.println("Password: " + credentials[2]);
+            boolean isLogged = impl.funzLog(usr, pwd);
 
-            if (impl.funzLog(credentials[1], credentials[2])) {
+            outputToClient.writeBoolean(isLogged);
+            return isLogged;
 
-                return "ok";
-            } else {
-                System.out.println("OMG SOMETHING WENT WRONG");
-                return "no";
-            }
-
-        } else if(credentials[0].equals("loadmenu")){
-            System.out.println("Asking for menu opening");
-            if(impl.loadMenu() != null)
-                ret = impl.loadMenu().get(0).getNumber()+" "+impl.loadMenu().get(0).getEntree()+" "+impl.loadMenu().get(0).getMainCourse()+ " "+impl.loadMenu().get(0).getDessert()+" "+ impl.loadMenu().get(0).getSideDish()+" "+impl.loadMenu().get(0).getDrink()+" "+impl.loadMenu().get(0).getDay();
-                return ret;
-
-        } else if(credentials[0].equals("addMenu")){
-            System.out.println("Sending menu to database again");
-            System.out.println(credentials[7]);
-            LocalDate d = LocalDate.parse(credentials[7],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            System.out.println(d);
-
-            if(impl.addMenu(credentials[1],credentials[2],credentials[3],credentials[4],credentials[5],credentials[6], d))
-                return "Ok";
-
-        } else if(credentials[0].equals("loadchildren")) {
-            System.out.println("Asking for children's table opening");
-            if(impl.loadData() != null)
-                ret = impl.loadData().get(0).getName()+" "+impl.loadData().get(0).getSurname()+" "
-                        +impl.loadData().get(0).getCf()+ " "+impl.loadData().get(0).getBornOn()+" "
-                        + impl.loadData().get(0).getBornWhere()+" "+impl.loadData().get(0).getResidence()+" "
-                        +impl.loadData().get(0).getAddress()+" "+impl.loadData().get(0).getCap()+" "
-                        +impl.loadData().get(0).getProvince()+" "+impl.loadIngr().get(0).getIngr();
-
-            return ret;
-
-        } else if(credentials[0].equals("addchild")){
-            System.out.println("Sending menu to database again");
-            System.out.println(credentials[10]);
-            LocalDate d = LocalDate.parse(credentials[4],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            LocalDate dContact = LocalDate.parse(credentials[16],DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            boolean doc = Boolean.parseBoolean(credentials[21]);
-            boolean guardian = Boolean.parseBoolean(credentials[22]);
-            boolean contact = Boolean.parseBoolean(credentials[23]);
-            ArrayList<String> allergy = new ArrayList<>();
-            allergy.add(credentials[10]);
-            System.out.println(d);
-
-            if(impl.addData(credentials[1],credentials[2],credentials[3], d, credentials[5],credentials[6], credentials[7], credentials[8], credentials[9], allergy,
-                    credentials[10], credentials[11], credentials[13], credentials[14], credentials[15], dContact, credentials[17], credentials[18], credentials[19], credentials[20],
-                    doc, guardian, contact))
-                return "Ok";
-
-        } else if(credentials[0].equals("loadstaff")) {
-            System.out.println("Asking for staff's table opening");
-            if(impl.loadDataStaff() != null)
-                ret = impl.loadDataStaff().get(0).getName()+" "+impl.loadDataStaff().get(0).getSurname()+" "
-                        +impl.loadDataStaff().get(0).getCf()+" "+impl.loadDataStaff().get(0).getMail() + " "+impl.loadDataStaff().get(0).getBornOn()+" "
-                        + impl.loadDataStaff().get(0).getBornWhere()+" "+impl.loadDataStaff().get(0).getResidence()+" "
-                        +impl.loadDataStaff().get(0).getAddress()+" "+impl.loadDataStaff().get(0).getCap()+" "
-                        +impl.loadDataStaff().get(0).getProvince()+" "+impl.loadIngr().get(0).getIngr();
-
-            return ret;
         }
 
 
+        //CHILDREN -----------------------------------------------------------------------
+        else if(line.equals("loadchildren")) {
+            System.out.println("Loading children table");
+
+        } else if(line.equals("addchild")){
+            System.out.println("Adding menu");
+
+        } else if(line.equals("deletechild")){
+            System.out.println("Deleting child");
+
+        } else if(line.equals("editchild")){
+            System.out.println("Editing child");
+        }
 
 
+        //STAFF -------------------------------------------------------------------------
+        else if(line.equals("loadstaff")){
+            System.out.println("Loading staff");
+            ArrayList<StaffDbDetails> staff = impl.loadDataStaff();
+            if(staff == null)
+                return false;
+            else
+                outputToClient.writeObject(staff);
+            return true;
 
-        return "no";
+        } else if(line.equals("addstaff")){
+            // 11 par passati :
+            // String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere,
+            // String residence, String address, String cap, String province, ArrayList<String> selectedAllergy
+            // da serverImpl ritorna boolean
+
+            System.out.println("Adding data...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residence = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+                ArrayList<String> allergy = null;
+            try {
+                allergy = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            boolean isAdded = impl.addDataStaff(name, surname, cf, mail, birthday, bornWhere, residence, address, cap, province, allergy);
+
+            outputToClient.writeBoolean(isAdded);
+            return isAdded;
+
+        } else if(line.equals("deletestaff")){
+            System.out.println("Deleting data...");
+            String cf = inputFromClient.readUTF();
+            boolean isDeleted = impl.deleteStaff(cf);
+
+            outputToClient.writeBoolean(isDeleted);
+            return isDeleted;
+
+        } else if(line.equals("editstaff")){
+            System.out.println("Adding data...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String oldcf = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residence = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            ArrayList<String> allergy = null;
+            try {
+                allergy = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            boolean isEdited = impl.updateStaff(name, surname, oldcf, cf, mail, birthday, bornWhere, residence, address, cap, province, allergy);
+
+            outputToClient.writeBoolean(isEdited);
+            return isEdited;
+
+        }
+
+
+        //MENU -------------------------------------------------------------------------------
+        else if(line.equals("loadmenu")){
+            System.out.println("Loading menu");
+            ArrayList<DishesDbDetails> menu = impl.loadMenu();
+            if(menu == null)
+                return false;
+            else
+                outputToClient.writeObject(menu);
+            return true;
+
+        } else if(line.equals("addMenu")){
+            System.out.println("Sending menu to database again");
+
+        }
+
+        return false;
     }
 }

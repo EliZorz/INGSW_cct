@@ -41,12 +41,10 @@ public class MainControllerLogin {
 
 
     public void handleLogin() throws SQLException {
-
         String usr = txtUsername.getText().toString();
         String pwd = txtPassword.getText().toString();
 
         selected = (String) select.getSelectionModel().getSelectedItem();
-
 
         try {
              if (selected == null){
@@ -61,9 +59,7 @@ public class MainControllerLogin {
 
                 //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
 
-
                 UserRemote u = Singleton.getInstance().methodRmi();
-
 
                 boolean result = u.funzLog(usr, pwd);
 
@@ -76,9 +72,6 @@ public class MainControllerLogin {
                 } else{
                     this.renameLabel("Insert correct data.");
                 }
-
-                //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza
-                //this.isLogged(ch.getUserService().funzLog(usr, pwd));
 
 
                 /* da mettere nel logOut !!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -98,13 +91,11 @@ public class MainControllerLogin {
                 }
                 */
 
-
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
               //  ch = new SocketManager();
                // UserRemote u = ch.getUserService();
                 UserRemote u = Singleton.getInstance().methodSocket();
-
 
                 boolean result = u.funzLog(usr, pwd);
 
@@ -113,26 +104,14 @@ public class MainControllerLogin {
                     this.renameLabel("Loggato");
                     new GuiNew("MenuIniziale");
 
-
                 }else{
                     this.renameLabel("Credenziali sbagliate");
                 }
-
                // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
 
             } else {
-                lblStatus.setText("RMI or SOCKET?");
+                    lblStatus.setText("RMI or SOCKET?");
             }
-
-
-
-
-
-
-
-
-
-
 
         } catch (Exception se) {
             se.printStackTrace();

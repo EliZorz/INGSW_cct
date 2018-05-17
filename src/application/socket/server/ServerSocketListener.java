@@ -1,11 +1,9 @@
 package application.socket.server;
 
 import application.rmi.server.ServerImpl;
-import application.socket.server.SocketThread;
-
 import java.net.ServerSocket;
 import java.net.Socket;
-//fondamentale!!! è il server che si occupa dell'accettare i diversi client 
+//fondamentale!!! è il server che si occupa dell'accettare i diversi client
 public class ServerSocketListener extends Thread{
 
     private final ServerSocket serverSocket;

@@ -4,6 +4,7 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.IngredientsDbDetails;
 import application.details.IngredientsGuiDetails;
+import application.details.SpecialDbDetails;
 import application.gui.GuiNew;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ import java.util.ResourceBundle;
 public class newMenuController implements Initializable {
 
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
+    private ObservableList<IngredientsGuiDetails> searchedIngredients = FXCollections.observableArrayList();
     public ArrayList<String> selectedIngredients = new ArrayList<>();
 
     private String selectedDish = null;
@@ -89,6 +91,15 @@ public class newMenuController implements Initializable {
     @FXML
     public Button drinkOk;
 
+    @FXML
+    public TextField searchTF;
+
+    @FXML
+    public Button search;
+
+    @FXML
+    public Button back;
+
 
 
     @Override
@@ -119,30 +130,40 @@ public class newMenuController implements Initializable {
 
     private void loadIngredients(){
         controllIngredients = false;
-        try{
-            UserRemote u = Singleton.getInstance().methodRmi();
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI")) {
+            u = Singleton.getInstance().methodRmi();
+        }else {
+            u = Singleton.getInstance().methodSocket();
+        }
+        try {
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
-            if( ingredients != null){
-                for(IngredientsDbDetails x : ingArray){
+            if (ingredients != null) {
+                for (IngredientsDbDetails x : ingArray) {
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
                     ingredients.add(tmp);
                 }
                 tabIng.setItems(null);
                 tabIng.setItems(ingredients);
                 label1.setText("Loaded");
-            }else{
+            } else {
                 label1.setText("No ingredients");
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+
     }
 
     private boolean showSelection(String selection) throws RemoteException {
         controllIngredients = true;
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
             if(ingredientsForThisDish != null) {
@@ -219,8 +240,12 @@ public class newMenuController implements Initializable {
 
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             if(u.saveIngredients(dishName, ingredients)){
                 label1.setText("Success!!");
                 selectedIngredients = new ArrayList<>();
@@ -242,20 +267,20 @@ public class newMenuController implements Initializable {
         if(label1.getText().equals("Select the ingredients for the entree")){
             saveIngredientsForThisDish(entreeTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
 
         }
         else if(label1.getText().equals("Select the ingredients for the main course")){
             saveIngredientsForThisDish(mainTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
         else if(label1.getText().equals("Select the ingredients for the dessert")){
             saveIngredientsForThisDish(dessertTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
         else if(label1.getText().equals("Select the ingredients for the drink")){
@@ -267,13 +292,13 @@ public class newMenuController implements Initializable {
         else if(label1.getText().equals("Select the ingredients for the side")) {
             saveIngredientsForThisDish(sideTF.getText(),selectedIngredients);
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
         else {
             label1.getText().equals("This plate already exists");
             deselect();
-            selectedIngredients = null;
+            selectedIngredients = new ArrayList<>();
             controllIngredients = true;
         }
     }
@@ -285,8 +310,12 @@ public class newMenuController implements Initializable {
 
     //CONTROLLO SULLA DATA INSERITA
     private boolean controllData(LocalDate day){
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             return u.controllDate(day);
 
         }catch(RemoteException e){
@@ -314,15 +343,19 @@ public class newMenuController implements Initializable {
         else if(!controllIngredients && selectedMenu == null)label1.setText("Make sure you have added all the ingredients");
         else if(day.isBefore(LocalDate.now()) && selectedMenu == null) label1.setText("This date is already past");
         else{
+            UserRemote u ;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             try{
-                UserRemote u = Singleton.getInstance().methodRmi();
                 if(selectedMenu == null) {
                     boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day);
                     if (addSuccess) {
                         label1.setText("Success!!");
 
-                    }
 
+                    }
                 }
                 else
                 if(u.updateMenu(num, entree, main, dessert, side, drink, day, LocalDate.parse(selectedMenu[6]))){
@@ -341,5 +374,27 @@ public class newMenuController implements Initializable {
         tabIng.setItems(null);
         ((Node)(event.getSource())).getScene().getWindow().hide();
         new GuiNew("MenuBasePlates");
+    }
+
+    public void reLoad(){
+        searchedIngredients = FXCollections.observableArrayList();
+        searchTF.setText("");
+        tabIng.setItems(null);
+        tabIng.setItems(ingredients);
+    }
+
+    public void searchIngr(){
+        searchedIngredients = FXCollections.observableArrayList();
+        if(searchTF.getText().trim().length() != 0){
+            for(IngredientsGuiDetails x : ingredients){
+                if(x.getIngr().contains(searchTF.getText()))
+                    searchedIngredients.add(x);
+            }
+            tabIng.setItems(null);
+            tabIng.setItems(searchedIngredients);
+        }else{
+            tabIng.setItems(null);
+            tabIng.setItems(ingredients);
+        }
     }
 }
