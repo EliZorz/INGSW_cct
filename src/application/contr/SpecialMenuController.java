@@ -223,8 +223,12 @@ public class SpecialMenuController implements Initializable {
     @FXML
     private void loadIngredients(){
         controlIngredients = false;
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
             if( ingredients != null){
@@ -292,8 +296,12 @@ public class SpecialMenuController implements Initializable {
     }
 
     private boolean showSelection(String selection) throws RemoteException {
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
             if(ingredientsForThisDish != null) {
@@ -442,8 +450,12 @@ public class SpecialMenuController implements Initializable {
         else if(tabInterni.getItems() == null) status.setText("No allergical");
         else if(controllAllergicals()) status.setText("A person is allergic to this menu");
         else{
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             try{
-                UserRemote u = Singleton.getInstance().methodRmi();
                 if(selectedMenu == null){
                     for(SpecialDbDetails x : selectedInterno) {
                         boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
@@ -468,8 +480,12 @@ public class SpecialMenuController implements Initializable {
 
     public boolean controllAllergicals(){
         ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             if(entreeTF.getText().trim().length() != 0) {
                 ingredientsForThisDish = u.searchIngredients(entreeTF.getText());
                 for(SpecialDbDetails x : selectedInterno)
@@ -516,8 +532,12 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void showAllergical(){
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
@@ -551,8 +571,12 @@ public class SpecialMenuController implements Initializable {
 
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             if(u.saveIngredients(dishName, ingredients)){
                 status.setText("Success!!");
                 selectedIngr = new ArrayList<>();

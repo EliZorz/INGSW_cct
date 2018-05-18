@@ -147,8 +147,12 @@ public class SpecialMenuLoadController implements Initializable{
         if (selectedMenu == null)
             labelStatus.setText("Please select a menu");
         else {
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();
                 boolean deleted = u.deleteSpecialMenu(LocalDate.parse(selectedMenu[0]), selectedMenu[6], selectedMenu[7]);
                 if (deleted) {
                     labelStatus.setText("Delete success!!");
@@ -163,8 +167,12 @@ public class SpecialMenuLoadController implements Initializable{
     }
 
     public void loadMenu() {
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<SpecialMenuDbDetails> specialDbArrayList = u.loadSpecialMenu();
             specialMenu.clear();
             if(specialDbArrayList != null) {

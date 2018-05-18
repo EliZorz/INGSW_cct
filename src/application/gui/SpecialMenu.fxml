@@ -33,7 +33,7 @@
       </TableView>
       <Button fx:id="deselect" layoutX="546.0" layoutY="583.0" mnemonicParsing="false" onAction="#deselect" prefHeight="40.0" prefWidth="212.0" text="Deselect all" />
       <Button fx:id="saveIngr" layoutX="547.0" layoutY="642.0" mnemonicParsing="false" onAction="#saveIngredients" prefHeight="40.0" prefWidth="212.0" text="Save ingredients for this plate " AnchorPane.bottomAnchor="118.0" />
-      <Button fx:id="deselectElements" layoutX="47.0" layoutY="583.0" mnemonicParsing="false" onAction="#deselectInterni" prefHeight="40.0" prefWidth="212.0" text="Deselect all" />
+      <Button fx:id="deselectElements" layoutX="47.0" layoutY="583.0" mnemonicParsing="false" onAction="#deselectInterni" prefHeight="40.0" prefWidth="248.0" text="Deselect all" />
       <Button fx:id="save" layoutX="1027.0" layoutY="453.0" mnemonicParsing="false" onAction="#saveSpecialMenu" prefHeight="40.0" prefWidth="115.0" text="Save " />
       <Label fx:id="status" layoutX="930.0" layoutY="521.0" prefHeight="123.0" prefWidth="352.0" text="Status">
          <font>
@@ -44,7 +44,7 @@
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../if_House_by_Artdesigner.lv_83154.png" />
+                  <Image url="@../../../../if_House_by_Artdesigner.lv_83154.png" />
                </image>
             </ImageView>
          </graphic>
@@ -59,7 +59,7 @@
       <Button fx:id="showDessert" layoutX="1160.0" layoutY="276.0" mnemonicParsing="false" onAction="#showDessertIngredients" text="Show Ingredients" />
       <Button fx:id="showSide" layoutX="1160.0" layoutY="321.0" mnemonicParsing="false" onAction="#showSideIngredients" text="Show Ingredients" />
       <Button fx:id="showDrink" layoutX="1160.0" layoutY="366.0" mnemonicParsing="false" onAction="#showDrinkIngredients" text="Show Ingredients" />
-      <Button fx:id="showWho" layoutX="47.0" layoutY="634.0" mnemonicParsing="false" onAction="#showAllergical" prefHeight="40.0" prefWidth="212.0" text="Show allergicals" />
+      <Button fx:id="showWho" layoutX="47.0" layoutY="634.0" mnemonicParsing="false" onAction="#showAllergical" prefHeight="40.0" prefWidth="248.0" text="Show allergicals" />
       <TableView fx:id="tabInterni" layoutX="47.0" layoutY="189.0" prefHeight="384.0" prefWidth="248.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="183.0">
         <columns>
           <TableColumn fx:id="FC" prefWidth="97.6666259765625" text="Fiscal Code" />
@@ -72,7 +72,7 @@
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../if_back_322419.png" />
+                  <Image url="@../../../../if_back_322419.png" />
                </image>
             </ImageView>
          </graphic>
@@ -83,7 +83,7 @@
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../if_back_322419.png" />
+                  <Image url="@../../../../if_back_322419.png" />
                </image>
             </ImageView>
          </graphic>

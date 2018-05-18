@@ -2,6 +2,7 @@ package application.socket.server;
 
 import application.details.DishesDbDetails;
 import application.details.IngredientsDbDetails;
+import application.details.SpecialDbDetails;
 import application.rmi.server.ServerImpl;
 
 import java.io.*;
@@ -225,6 +226,58 @@ public class SocketThread extends Thread {
             Boolean delete = impl.deleteSupplier(piva, ingredients);
             outputToClient.writeBoolean(delete);
             return delete;
+        }else if(line.equals("addSpecialMenu")){
+            System.out.println("Adding special menu...");
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            SpecialDbDetails special = null;
+            try {
+                 special = (SpecialDbDetails) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean add = impl.addSpecialMenu(entree, main, dessert, side, drink, date, special);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("loadAllergicalInterni")){
+            System.out.println("Loading allergical interni...");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            outputToClient.writeObject(impl.loadInterniWithAllergies(date));
+            return true;
+        }else if(line.equals("deleteSpecialMenu")){
+            System.out.println("Deleting special menu....");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            String FC = inputFromClient.readUTF();
+            String allergies = inputFromClient.readUTF();
+            Boolean delete = impl.deleteSpecialMenu(date, FC, allergies);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("loadSpecialMenu")){
+            System.out.println("Loading special menu...");
+            outputToClient.writeObject(impl.loadSpecialMenu());
+            return true;
+        }else if(line.equals("updateSpecialMenu")){
+            System.out.println("Updating special menu...");
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            SpecialDbDetails special = null;
+            try{
+                special = (SpecialDbDetails) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean update = impl.updateSpecialMenu(entree, main, dessert,side, drink, date, special);
+            outputToClient.writeBoolean(update);
+            return update;
+
         }
             return false;
 

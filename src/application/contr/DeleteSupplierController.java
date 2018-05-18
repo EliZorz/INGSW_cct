@@ -136,10 +136,10 @@ public class DeleteSupplierController implements Initializable {
         tabMenu.getItems().clear();
         tabNoIngr.getItems().clear();
         tabIngr.getItems().clear();
-        handleLoad();
+
         loadNoIngr();
-        if(dishes.isEmpty())
-            back.setDisable(false);
+        handleLoad();
+        
     }
 
     public void handleLoad() {
@@ -166,6 +166,8 @@ public class DeleteSupplierController implements Initializable {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        if(dishes.isEmpty())
+            back.setDisable(false);
     }
 
     public void loadNoIngr() {
@@ -483,7 +485,6 @@ public class DeleteSupplierController implements Initializable {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            selectedMenu = null;
         } else
             status.setText("Select a menu");
     }

@@ -521,6 +521,22 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
+        System.out.println("Loading interni with allergies...");
+        try{
+            toServer.writeUTF("loadAllergicalInterni");
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (ArrayList<SpecialDbDetails>) fromServer.readObject();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -547,21 +563,106 @@ public class SocketUserManager implements UserRemote {
     //SPECIAL MENU ------------------------------------------------------------------------------------
     @Override
     public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException {
+        try{
+            toServer.writeUTF("loadSpecialMenu");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<SpecialMenuDbDetails>)fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException {
+        try{
+            toServer.writeUTF("deleteSpecialMenu");
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+            toServer.writeUTF(FC);
+            toServer.flush();
+            toServer.writeUTF(allergies);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        try{
+            toServer.writeUTF("addSpecialMenu");
+            toServer.flush();
+            toServer.writeUTF(entree);
+            toServer.flush();
+            toServer.writeUTF(main);
+            toServer.flush();
+            toServer.writeUTF(dessert);
+            toServer.flush();
+            toServer.writeUTF(side);
+            toServer.flush();
+            toServer.writeUTF(drink);
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+            toServer.writeObject(special);
+            toServer.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
     @Override
     public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        try{
+            toServer.writeUTF("updateSpecialMenu");
+            toServer.flush();
+            toServer.writeUTF(entree);
+            toServer.flush();
+            toServer.writeUTF(main);
+            toServer.flush();
+            toServer.writeUTF(dessert);
+            toServer.flush();
+            toServer.writeUTF(side);
+            toServer.flush();
+            toServer.writeUTF(drink);
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+            toServer.writeObject(special);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
