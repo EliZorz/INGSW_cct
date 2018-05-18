@@ -7,7 +7,6 @@ import application.details.CodRifChildGuiDetails;
 import application.details.SupplierDbDetails;
 import application.details.SupplierGuiDetails;
 import application.gui.GuiNew;
-import com.sun.javafx.image.BytePixelSetter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,7 +17,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -237,7 +235,7 @@ public class SupplierController implements Initializable{
 
     public void handleDeleteSupplier() throws IOException {
         System.out.println("Loading data...");
-         deleteSupplierController.selectedSupplier = txtPiva.getText();
+         DeleteSupplierController.selectedSupplier = txtPiva.getText();
         new GuiNew("deleteSupplier");
     }
 

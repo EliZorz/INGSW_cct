@@ -176,6 +176,7 @@ public class SocketUserManager implements UserRemote {
             toServer.writeUTF(cap);
             toServer.flush();
             toServer.writeUTF(province);
+            toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -222,6 +223,22 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException {
+        System.out.println("Deleting supplier...");
+        try{
+            toServer.writeUTF("deleteSupplier");
+            toServer.flush();
+            toServer.writeUTF(piva);
+            toServer.flush();
+            toServer.writeObject(ingrNO);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -251,16 +268,65 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException {
+        System.out.println("Adding ingredient to db...");
+        try{
+            toServer.writeUTF("addIngredientSupplier");
+            toServer.flush();
+            toServer.writeUTF(ingr);
+            toServer.flush();
+            toServer.writeUTF(selectedSupplier);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException {
+        System.out.println("Loading menu with the ingredients of this supplier...");
+        try{
+            toServer.writeUTF("loadMenuWithThisSupplier");
+            toServer.flush();
+            toServer.writeUTF(selectedSupplier);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<DishesDbDetails>) fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
+        System.out.println("Loading no available ingredients...");
+        try{
+            toServer.writeUTF("loadNoIngr");
+            toServer.flush();
+            toServer.writeUTF(selectedSupplier);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

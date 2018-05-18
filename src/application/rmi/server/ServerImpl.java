@@ -959,7 +959,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
         PreparedStatement st = null;
-        String queryAdd = "INSERT INTO fornitore(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
+        String queryAdd = "INSERT INTO project.fornitore(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
         try {

@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class deleteSupplierController implements Initializable {
+public class DeleteSupplierController implements Initializable {
 
     private ObservableList<DishesDetails> dishes = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsNo = FXCollections.observableArrayList();
@@ -143,8 +143,12 @@ public class deleteSupplierController implements Initializable {
     }
 
     public void handleLoad() {
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<DishesDbDetails> menuDbArray = u.loadMenuWithThisSupplier(selectedSupplier);
             dishes.clear();
             if (menuDbArray != null) {
@@ -165,8 +169,12 @@ public class deleteSupplierController implements Initializable {
     }
 
     public void loadNoIngr() {
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingrNo = u.loadNoIngr(selectedSupplier);
             ingredientsNo.clear();
             if (ingrNo != null) {
@@ -265,8 +273,12 @@ public class deleteSupplierController implements Initializable {
     }
 
     private boolean controllIngr(String dish) {
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+             u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsDbArray = u.searchIngredients(dish);
             if (ingredientsDbArray == null)
                 loadIngredients();
@@ -293,9 +305,13 @@ public class deleteSupplierController implements Initializable {
 
     private void loadIngredients() {
         controllAddIngredients = false;
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
             for (IngredientsDbDetails x : ingArray)
@@ -337,8 +353,12 @@ public class deleteSupplierController implements Initializable {
     }
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients) {
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             if (u.saveIngredients(dishName, ingredients)) {
                 status.setText("Success!!");
                 selectedIngredients = new ArrayList<>();
@@ -405,8 +425,12 @@ public class deleteSupplierController implements Initializable {
         else if (dessert.trim().isEmpty()) status.setText("Insert a dessert");
         else if (!controllAddIngredients) status.setText("Make sure you have added all the ingredients");
         else {
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();
                 if (u.updateMenu(selectedMenu[0], entreeTF.getText(), mainTF.getText(), dessertTF.getText(), sideTF.getText(), drinkTF.getText(), LocalDate.parse(selectedMenu[6]), LocalDate.parse(selectedMenu[6])))
                     status.setText("Success");
                 handleLoad();
@@ -421,8 +445,12 @@ public class deleteSupplierController implements Initializable {
 
     @FXML
     public void backHome(ActionEvent event) {
+        UserRemote u;
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<IngredientsDbDetails> ingr = new ArrayList<>();
             for(IngredientsGuiDetails x : ingredientsNo)
                 ingr.add(new IngredientsDbDetails(x.getIngr()));
@@ -455,7 +483,7 @@ public class deleteSupplierController implements Initializable {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            selectedMenu = new String[7];
+            selectedMenu = null;
         } else
             status.setText("Select a menu");
     }

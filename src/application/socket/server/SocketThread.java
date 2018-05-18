@@ -195,6 +195,36 @@ public class SocketThread extends Thread {
             String selection = inputFromClient.readUTF();
             outputToClient.writeObject(impl.loadDataIngr(selection));
             return true;
+        }else if(line.equals("addIngredientSupplier")){
+            System.out.println("Adding ingredient...");
+            String ingr = inputFromClient.readUTF();
+            String selectedSupplier = inputFromClient.readUTF();
+            Boolean add = impl.addIngrToDb(ingr, selectedSupplier);
+            outputToClient.writeBoolean(add);
+            return add;
+
+        }else if(line.equals("loadMenuWithThisSupplier")){
+            System.out.println("Loading these menus...");
+            String selectedSupplier = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadMenuWithThisSupplier(selectedSupplier));
+            return true;
+        }else if(line.equals("loadNoIngr")){
+            System.out.println("Loading no available ingredients...");
+            String selectedSupplier = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadNoIngr(selectedSupplier));
+            return true;
+        }else if(line.equals("deleteSupplier")){
+            System.out.println("Deleting supplier...");
+            String piva = inputFromClient.readUTF();
+            ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+            try {
+                ingredients = (ArrayList<IngredientsDbDetails>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean delete = impl.deleteSupplier(piva, ingredients);
+            outputToClient.writeBoolean(delete);
+            return delete;
         }
             return false;
 
