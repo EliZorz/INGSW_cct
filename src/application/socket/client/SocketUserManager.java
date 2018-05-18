@@ -284,6 +284,7 @@ public class SocketUserManager implements UserRemote {
             toServer.writeUTF(cap);
             toServer.flush();
             toServer.writeUTF(province);
+            toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -330,6 +331,22 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException {
+        System.out.println("Deleting supplier...");
+        try{
+            toServer.writeUTF("deleteSupplier");
+            toServer.flush();
+            toServer.writeUTF(piva);
+            toServer.flush();
+            toServer.writeObject(ingrNO);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -357,19 +374,67 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
-
     @Override
     public boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException {
+        System.out.println("Adding ingredient to db...");
+        try{
+            toServer.writeUTF("addIngredientSupplier");
+            toServer.flush();
+            toServer.writeUTF(ingr);
+            toServer.flush();
+            toServer.writeUTF(selectedSupplier);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException {
+        System.out.println("Loading menu with the ingredients of this supplier...");
+        try{
+            toServer.writeUTF("loadMenuWithThisSupplier");
+            toServer.flush();
+            toServer.writeUTF(selectedSupplier);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<DishesDbDetails>) fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
+        System.out.println("Loading no available ingredients...");
+        try{
+            toServer.writeUTF("loadNoIngr");
+            toServer.flush();
+            toServer.writeUTF(selectedSupplier);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
     //COACH OPERATOR -------------------------------------------------------------------
@@ -560,6 +625,22 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
+        System.out.println("Loading interni with allergies...");
+        try{
+            toServer.writeUTF("loadAllergicalInterni");
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (ArrayList<SpecialDbDetails>) fromServer.readObject();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -583,25 +664,107 @@ public class SocketUserManager implements UserRemote {
         return false;
     }
 
-
     //SPECIAL MENU ------------------------------------------------------------------------------------
     @Override
     public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException {
+        try{
+            toServer.writeUTF("loadSpecialMenu");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<SpecialMenuDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException {
+        try{
+            toServer.writeUTF("deleteSpecialMenu");
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+            toServer.writeUTF(FC);
+            toServer.flush();
+            toServer.writeUTF(allergies);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        try{
+            toServer.writeUTF("addSpecialMenu");
+            toServer.flush();
+            toServer.writeUTF(entree);
+            toServer.flush();
+            toServer.writeUTF(main);
+            toServer.flush();
+            toServer.writeUTF(dessert);
+            toServer.flush();
+            toServer.writeUTF(side);
+            toServer.flush();
+            toServer.writeUTF(drink);
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+            toServer.writeObject(special);
+            toServer.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
     @Override
     public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        try{
+            toServer.writeUTF("updateSpecialMenu");
+            toServer.flush();
+            toServer.writeUTF(entree);
+            toServer.flush();
+            toServer.writeUTF(main);
+            toServer.flush();
+            toServer.writeUTF(dessert);
+            toServer.flush();
+            toServer.writeUTF(side);
+            toServer.flush();
+            toServer.writeUTF(drink);
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(date));
+            toServer.flush();
+            toServer.writeObject(special);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
@@ -634,28 +797,121 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
+        try{
+            toServer.writeUTF("loadDataTrip");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<TripTableDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public boolean deleteTrip(String dep, String dateDep, String dateCom, String alloggio, String dateArr, String arr) throws RemoteException {
+        System.out.println("Deleting trip...");
+        try{
+            toServer.writeUTF("deleteTrip");
+            toServer.flush();
+            //String dep, String dateDep, String dateCom, String staying, String dateArr, String arr
+            toServer.writeUTF(dep);
+            toServer.flush();
+            toServer.writeObject(dateDep);
+            toServer.flush();
+            toServer.writeObject(dateCom);
+            toServer.flush();
+            toServer.writeObject(alloggio);
+            toServer.flush();
+            toServer.writeObject(dateArr);
+            toServer.flush();
+            toServer.writeObject(arr);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
 
     @Override
     public ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException{
-        return  null;
-    }
+        try{
+            toServer.writeUTF("loadChildTrip");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    @Override
-    public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
+        try{
+            return (ArrayList<ChildTripDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    public int[] addTrip(ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep, String timeArr, String timeCom, String departureFrom, String ArrivalTo, String staying) throws RemoteException {
-        return new int[0];
+    public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
+        try{
+            toServer.writeUTF("loadStaffTtrip");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<StaffTripDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int[] addTrip(ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep, String timeArr, String timeCom, String departureFrom, String arrivalTo, String staying) throws RemoteException {
+        System.out.println("sending a message to add supplier");
+        int[] participantsFromServer = new int[2];
+
+        try{
+            toServer.writeUTF("addSupplier");
+            toServer.flush();
+            toServer.writeObject(selectedChild);
+            toServer.flush();
+            toServer.writeObject(selectedStaff);
+            toServer.flush();
+            toServer.writeUTF(timeDep);
+            toServer.flush();
+            toServer.writeUTF(timeArr);
+            toServer.flush();
+            toServer.writeUTF(timeCom);
+            toServer.flush();
+            toServer.writeUTF(departureFrom);
+            toServer.flush();
+            toServer.writeUTF(arrivalTo);
+            toServer.flush();
+            toServer.writeUTF(staying);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            for(int i = 0; i<2 ; i++){
+                participantsFromServer[i] = fromServer.readInt();
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
+        return participantsFromServer;
     }
 
     @Override

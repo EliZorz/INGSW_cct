@@ -521,7 +521,7 @@ public class SpecialMenuController implements Initializable {
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
-            if(specialInterni != null && loadInterni != null){
+            if(specialInterni.isEmpty() && loadInterni != null){
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);

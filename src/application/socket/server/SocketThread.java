@@ -1,6 +1,8 @@
 package application.socket.server;
 
 import application.details.DishesDbDetails;
+import application.details.IngredientsDbDetails;
+import application.details.SpecialDbDetails;
 import application.details.StaffDbDetails;
 import application.rmi.server.ServerImpl;
 import java.io.*;
@@ -137,7 +139,7 @@ public class SocketThread extends Thread {
             String address = inputFromClient.readUTF();
             String cap = inputFromClient.readUTF();
             String province = inputFromClient.readUTF();
-                ArrayList<String> allergy = null;
+            ArrayList<String> allergy = null;
             try {
                 allergy = (ArrayList<String>) inputFromClient.readObject();
             } catch (ClassNotFoundException e) {
@@ -185,18 +187,243 @@ public class SocketThread extends Thread {
 
         //MENU -------------------------------------------------------------------------------
         else if(line.equals("loadmenu")){
-            System.out.println("Loading menu");
-            ArrayList<DishesDbDetails> menu = impl.loadMenu();
-            if(menu == null)
-                return false;
-            else
-                outputToClient.writeObject(menu);
+            System.out.println("Loading menu...");
+            outputToClient.writeObject(impl.loadMenu());
             return true;
-
-        } else if(line.equals("addMenu")){
-            System.out.println("Sending menu to database again");
-
+        }else if(line.equals("deleteMenu")){
+            System.out.println("Deleting menu...");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            Boolean isDeleted = impl.deleteMenu(date);
+            outputToClient.writeBoolean(isDeleted);
+            return isDeleted;
+        }else if(line.equals("loadIngredients")){
+            System.out.println("Loading ingredients...");
+            outputToClient.writeObject(impl.loadIngr());
+            return true;
+        }else if(line.equals("searchIngredients")){
+            System.out.println("Looking for ingredients...");
+            String dish = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.searchIngredients(dish));
+        }else if(line.equals("controllDate")){
+            System.out.println("Controlling the date...");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            Boolean controll = impl.controllDate(date);
+            outputToClient.writeBoolean(controll);
+            return controll;
+        }else if(line.equals("addMenu")){
+            System.out.println("adding the mnu...");
+            String num = inputFromClient.readUTF();
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            Boolean add = impl.addMenu(num, entree, main, dessert, side, drink, date);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("updateMenu")){
+            System.out.println("updating the menu...");
+            String num = inputFromClient.readUTF();
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            LocalDate oldDate = LocalDate.parse(inputFromClient.readUTF());
+            Boolean update = impl.updateMenu(num, entree, main, dessert, side, drink, date, oldDate);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("saveIngredients")){
+            System.out.println("saving ingredients...");
+            String dish = inputFromClient.readUTF();
+            ArrayList<String> selection = new ArrayList<>();
+            try {
+                selection = (ArrayList<String>)inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean save = impl.saveIngredients(dish, selection);
+            outputToClient.writeBoolean(save);
+            return save;
         }
+
+
+        //SUPPLIER ------------------------------------------------------------
+        else if(line.equals("loadSuppliers")){
+            System.out.println("Loading suppliers...");
+            outputToClient.writeObject(impl.loadDataSuppliers());
+            return true;
+        }else if(line.equals("addSupplier")){
+            System.out.println("Adding supplier...");
+            String name = inputFromClient.readUTF();
+            String piva = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean add = impl.addDataSupplier(name, piva,mail, tel, address, cap, province );
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("updateSupplier")) {
+            System.out.println("Updating supplier...");
+            String name = inputFromClient.readUTF();
+            String oldPiva = inputFromClient.readUTF();
+            String piva = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean update = impl.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("loadDataIngr")){
+            System.out.println("Loading ingredients...");
+            String selection = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadDataIngr(selection));
+            return true;
+        }else if(line.equals("addIngredientSupplier")){
+            System.out.println("Adding ingredient...");
+            String ingr = inputFromClient.readUTF();
+            String selectedSupplier = inputFromClient.readUTF();
+            Boolean add = impl.addIngrToDb(ingr, selectedSupplier);
+            outputToClient.writeBoolean(add);
+            return add;
+
+        }else if(line.equals("loadMenuWithThisSupplier")){
+            System.out.println("Loading these menus...");
+            String selectedSupplier = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadMenuWithThisSupplier(selectedSupplier));
+            return true;
+        }else if(line.equals("loadNoIngr")){
+            System.out.println("Loading no available ingredients...");
+            String selectedSupplier = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadNoIngr(selectedSupplier));
+            return true;
+        }else if(line.equals("deleteSupplier")){
+            System.out.println("Deleting supplier...");
+            String piva = inputFromClient.readUTF();
+            ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
+            try {
+                ingredients = (ArrayList<IngredientsDbDetails>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean delete = impl.deleteSupplier(piva, ingredients);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }
+
+
+        //SPECIAL MENU --------------------------------------------------------------
+        else if(line.equals("addSpecialMenu")){
+            System.out.println("Adding special menu...");
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            SpecialDbDetails special = null;
+            try {
+                special = (SpecialDbDetails) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean add = impl.addSpecialMenu(entree, main, dessert, side, drink, date, special);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("loadAllergicalInterni")){
+            System.out.println("Loading allergical interni...");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            outputToClient.writeObject(impl.loadInterniWithAllergies(date));
+            return true;
+        }else if(line.equals("deleteSpecialMenu")){
+            System.out.println("Deleting special menu....");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            String FC = inputFromClient.readUTF();
+            String allergies = inputFromClient.readUTF();
+            Boolean delete = impl.deleteSpecialMenu(date, FC, allergies);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("loadSpecialMenu")){
+            System.out.println("Loading special menu...");
+            outputToClient.writeObject(impl.loadSpecialMenu());
+            return true;
+        }else if(line.equals("updateSpecialMenu")){
+            System.out.println("Updating special menu...");
+            String entree = inputFromClient.readUTF();
+            String main = inputFromClient.readUTF();
+            String dessert = inputFromClient.readUTF();
+            String side = inputFromClient.readUTF();
+            String drink = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            SpecialDbDetails special = null;
+            try{
+                special = (SpecialDbDetails) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean update = impl.updateSpecialMenu(entree, main, dessert,side, drink, date, special);
+            outputToClient.writeBoolean(update);
+            return update;
+        }
+
+
+        //TRIP -------------------------------------------
+        else if(line.equals("loadDataTrip")){
+            System.out.println("Loading data trip...");
+            outputToClient.writeObject(impl.loadDataTrip());
+            return true;
+        } else if(line.equals("deleteTrip")){
+            System.out.println("Deleting supplier...");
+            String dep = inputFromClient.readUTF();
+            String dateDep = inputFromClient.readUTF();
+            String dateCom = inputFromClient.readUTF();
+            String staying = inputFromClient.readUTF();
+            String dateArr = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            Boolean delete = impl.deleteTrip(dep, dateDep, dateCom, staying, dateArr, arr);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        } else if(line.equals("loadChildTrip")){
+            System.out.println("Loading child for trip...");
+            outputToClient.writeObject(impl.loadChildTrip());
+            return true;
+        } else if(line.equals("loadStaffTrip")) {
+            System.out.println("Loading staff for trip...");
+            outputToClient.writeObject(impl.loadStaffTrip());
+            return true;
+        } else if (line.equals("addTrip")){
+            System.out.println("Adding trip...");
+            int[] returnedPart = new int[2];
+            //ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep,
+            //String timeArr, String timeCom, String departureFrom, String arrivalTo, String staying
+            ArrayList<String> children = null;
+            ArrayList<String> staff = null;
+            try {
+                children = (ArrayList<String>) inputFromClient.readObject();
+                staff = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String timeDep = inputFromClient.readUTF();
+            String timeArr = inputFromClient.readUTF();
+            String timeCom = inputFromClient.readUTF();
+            String depFrom = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            returnedPart = impl.addTrip(children, staff, timeDep, timeArr, timeCom, depFrom, arrTo, arr);
+            for(int i=0; i<2; i++){
+                outputToClient.writeInt(returnedPart[i]);
+            }
+            return true;
+        }
+
+
 
         return false;
     }

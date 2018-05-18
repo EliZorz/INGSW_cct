@@ -26,12 +26,11 @@ import java.util.ArrayList;
 
 public class MenuController implements Initializable {
 
-    // private ArrayList<String> selectedMenu = new ArrayList<>();
     private String[] selectedMenu = new String[7];
     private String dateSelected;
 
-
     private ObservableList<DishesDetails> menu = FXCollections.observableArrayList();
+    private ObservableList<DishesDetails> searchedMenu = FXCollections.observableArrayList();
 
     @FXML
     public Button deselect;
@@ -78,6 +77,15 @@ public class MenuController implements Initializable {
     @FXML
     public TableView<DishesDetails> tableMenu;
 
+    @FXML
+    public Button searchButton;
+
+    @FXML
+    public Button back;
+
+    @FXML
+    public DatePicker dateSearch;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -92,14 +100,6 @@ public class MenuController implements Initializable {
         tableMenu.getSelectionModel().setCellSelectionEnabled(false);
         tableMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                /*selectedMenu.add(newSelection.getNumber());
-                selectedMenu.add(newSelection.getEntree());
-                selectedMenu.add(newSelection.getMainCourse());
-                selectedMenu.add(newSelection.getDessert());
-                selectedMenu.add(newSelection.getSideDish());
-                selectedMenu.add(newSelection.getDrink());
-                selectedMenu.add(newSelection.getDay());
-                dateSelected = newSelection.getDay();*/
                 selectedMenu = new String[7];
                 selectedMenu[0] = newSelection.getNumber();
                 selectedMenu[1] = newSelection.getEntree();
@@ -119,43 +119,32 @@ public class MenuController implements Initializable {
 
     @FXML
     public void handleLoad() {
+        tableMenu.getItems().clear();
+        UserRemote u;
+        ArrayList<DishesDbDetails> dishesDbArrayList;
         if (MainControllerLogin.selected.equals("RMI")) {
             System.out.println("oper RMI menu");
-            try {
-                UserRemote u = Singleton.getInstance().methodRmi();
-                ArrayList<DishesDbDetails> dishesDbArrayList = u.loadMenu();
-                menu.clear();
-
-                if (dishesDbArrayList != null) {
-                    for (DishesDbDetails d : dishesDbArrayList) {
-                        DishesDetails tmp = new DishesDetails(d);
-                        menu.add(tmp);
-                    }
-                    tableMenu.setItems(null);
-                    tableMenu.setItems(menu);
-                    selectedMenu = null;
-                }
-
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            u = Singleton.getInstance().methodRmi();
         } else {
             System.out.println("open SOCKET menu");
-            try {
-                UserRemote u = Singleton.getInstance().methodSocket(); //devo modificarla perché così crea solo nuove socket inutilmente
-                ArrayList<DishesDbDetails> dishesDbArrayList = u.loadMenu();
-                if (dishesDbArrayList != null) {
-                    for (DishesDbDetails d : dishesDbArrayList) {
-                        DishesDetails tmp = new DishesDetails(d);
-                        menu.add(tmp);
-                    }
-                    tableMenu.setItems(null);
-                    tableMenu.setItems(menu);
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            u = Singleton.getInstance().methodSocket();
         }
+        menu.clear();
+        try {
+            dishesDbArrayList = u.loadMenu();
+            if (dishesDbArrayList != null) {
+                for (DishesDbDetails d : dishesDbArrayList) {
+                    DishesDetails tmp = new DishesDetails(d);
+                    menu.add(tmp);
+                }
+                tableMenu.setItems(null);
+                tableMenu.setItems(menu);
+                selectedMenu = null;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @FXML
@@ -173,7 +162,6 @@ public class MenuController implements Initializable {
 
     @FXML
     public void esc(ActionEvent event) {
-
         selectedMenu = null;
         ((Node) (event.getSource())).getScene().getWindow().hide();
     }
@@ -183,11 +171,14 @@ public class MenuController implements Initializable {
         if (selectedMenu == null)
             labelStatus.setText("Please select a menu");
         else {
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();
                 System.out.println(LocalDate.parse(dateSelected));
                 boolean deleted = u.deleteMenu(LocalDate.parse(dateSelected));
-
                 if (deleted) {
                     labelStatus.setText("Delete success!!");
                     handleLoad();
@@ -208,5 +199,32 @@ public class MenuController implements Initializable {
             new GuiNew("newMenu");
         }
         else labelStatus.setText("Please select a menu");
+    }
+
+    public void search(){
+        searchedMenu = FXCollections.observableArrayList();
+        if(dateSearch.getValue() != null) {
+            if (menu != null) {
+                for (DishesDetails x : menu) {
+                    if (LocalDate.parse(x.getDay()).isEqual(dateSearch.getValue()))
+                        searchedMenu.add(x);
+                }
+            }
+            tableMenu.setItems(null);
+            tableMenu.setItems(searchedMenu);
+        }
+
+
+        else{
+            tableMenu.setItems(null);
+            tableMenu.setItems(menu);
+        }
+    }
+
+    public void reLoad(){
+        searchedMenu = FXCollections.observableArrayList();
+        dateSearch.setValue(null);
+        tableMenu.setItems(null);
+        tableMenu.setItems(menu);
     }
 }

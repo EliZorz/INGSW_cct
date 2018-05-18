@@ -2015,13 +2015,16 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 try {
                     while (result.next()) {
                         DishesDbDetails prova  = null;
-                        prova = new DishesDbDetails(result.getString(1),result.getString(2),
+                        prova = new DishesDbDetails(result.getString(1),
+                                result.getString(2),
                                 result.getString(3),
                                 result.getString(4),
-                                result.getString(5),result.getString(7),result.getString(6));
+                                result.getString(5),
+                                result.getString(6),
+                                result.getString(7));
 
+//String number, String entree, String mainCourse, String dessert, String sideDish,String drink,String day
 
-                        //get string from db, put into list of ChildGuiData, ready to put it into GUI
                         dishes.add(prova);
 
                     }
@@ -2236,7 +2239,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<SpecialDbDetails> special = new ArrayList<>();
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
         ArrayList<SpecialDbDetails> specialInterni = new ArrayList<>();
-        String queryLoad = "SELECT CF,Allergie FROM project.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM project.menu_special where date ='"+date+"')";
+        String queryLoad = "SELECT DISTINCT CF,Allergie FROM project.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM project.menu_special where date ='"+date+"')";
         String queryIngr = "SELECT dish_ingredients_ingredients_ingredient FROM project.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
         try{
             st = this.connHere().prepareStatement(queryLoad);
