@@ -1521,7 +1521,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         dishes = new DishesDbDetails(result.getString(1),result.getString(2),
                                 result.getString(3),
                                 result.getString(4),
-                                result.getString(5),result.getString(6),result.getString(7));
+                                result.getString(5),result.getString(7),result.getString(6));
 
 
                     }
@@ -2156,7 +2156,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date,SpecialDbDetails special) throws RemoteException{
-        String queryAdd = "INSERT INTO project.menu_special (entrees, main_courses, dessert, side_dish, drink, date, CF, Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
+        String queryAdd = "INSERT INTO project.menu_special (entrees, main_courses, dessert, side_dish, drink, date, interni_CF, interni_Allergie) " +"VALUES (?,?,?,?,?,?,?,?)";
         String queryAddDish = "INSERT INTO project.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         PreparedStatement st = null;
         PreparedStatement stDish = null;
@@ -2264,7 +2264,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement stAdd = null;
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
 
-        String queryUpdate = "UPDATE project.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
+        String queryUpdate = "UPDATE project.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and interni_CF = '"+special.getCF()+"' and interni_Allergie = '"+special.getAllergie()+"'";
         String queryDelete = "DELETE FROM  project.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
         String queryAdd = "INSERT INTO project.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         try{

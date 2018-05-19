@@ -119,6 +119,7 @@ public class SocketThread extends Thread {
             System.out.println("Looking for ingredients...");
             String dish = inputFromClient.readUTF();
             outputToClient.writeObject(impl.searchIngredients(dish));
+            return true;
         }else if(line.equals("controllDate")){
             System.out.println("Controlling the date...");
             LocalDate date = LocalDate.parse(inputFromClient.readUTF());

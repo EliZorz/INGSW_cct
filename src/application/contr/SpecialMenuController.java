@@ -255,7 +255,7 @@ public class SpecialMenuController implements Initializable {
             correctDate = true;
         }
         //load this menu
-       else {
+        else {
             selectedInterno = new ArrayList<>();
             selectedIngr = new ArrayList<>();
             selectedDish = null;
@@ -268,7 +268,11 @@ public class SpecialMenuController implements Initializable {
             drinkTF.setText("");
             sideTF.setText("");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();
+                UserRemote u;
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();
+                else
+                    u = Singleton.getInstance().methodSocket();
                 //controll date
                 if (!u.controllDate(dateSpecialMenu)) {
                     controllSearchedDate.setText("Loading");
@@ -296,12 +300,12 @@ public class SpecialMenuController implements Initializable {
     }
 
     private boolean showSelection(String selection) throws RemoteException {
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try {
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u= Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
             if(ingredientsForThisDish != null) {
@@ -450,12 +454,12 @@ public class SpecialMenuController implements Initializable {
         else if(tabInterni.getItems() == null) status.setText("No allergical");
         else if(controllAllergicals()) status.setText("A person is allergic to this menu");
         else{
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             try{
+                UserRemote u;
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();
+                else
+                    u = Singleton.getInstance().methodSocket();
                 if(selectedMenu == null){
                     for(SpecialDbDetails x : selectedInterno) {
                         boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
@@ -486,6 +490,7 @@ public class SpecialMenuController implements Initializable {
         else
             u = Singleton.getInstance().methodSocket();
         try{
+
             if(entreeTF.getText().trim().length() != 0) {
                 ingredientsForThisDish = u.searchIngredients(entreeTF.getText());
                 for(SpecialDbDetails x : selectedInterno)
@@ -532,28 +537,28 @@ public class SpecialMenuController implements Initializable {
 
     @FXML
     public void showAllergical(){
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try {
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
-           if(specialInterni != null && loadInterni != null){
+            if(specialInterni.isEmpty() && loadInterni != null){
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);
                 }
-               tabInterni.setItems(null);
-               tabInterni.setItems(specialInterni);
+                tabInterni.setItems(null);
+                tabInterni.setItems(specialInterni);
 
-           }
-           else {
-               controllSearchedDate.setText("No allergicals for this menu");
-               tabInterni.setItems(null);
-           }
+            }
+            else {
+                controllSearchedDate.setText("No allergicals for this menu");
+                tabInterni.setItems(null);
+            }
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -571,12 +576,12 @@ public class SpecialMenuController implements Initializable {
 
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try{
+            UserRemote u;
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             if(u.saveIngredients(dishName, ingredients)){
                 status.setText("Success!!");
                 selectedIngr = new ArrayList<>();
@@ -661,8 +666,3 @@ public class SpecialMenuController implements Initializable {
         tabIngr.setItems(ingredients);
     }
 }
-
-
-    
-
-
