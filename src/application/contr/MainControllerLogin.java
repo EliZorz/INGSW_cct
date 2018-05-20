@@ -25,6 +25,7 @@ public class MainControllerLogin {
     public static String selected = null;  //per la scelta tra rmi e socket
 
 
+
     @FXML
     private TextField txtUsername;
 

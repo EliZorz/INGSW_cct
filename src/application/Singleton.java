@@ -9,6 +9,7 @@ public class Singleton {
 
     private static Singleton instance = null;
 
+
     //private constructor, prevents other class from instantiating
     private Singleton(){}
 
@@ -47,4 +48,5 @@ public class Singleton {
 
         return u;
     }
+
 }

@@ -4,6 +4,8 @@ import application.details.DishesDbDetails;
 import application.details.IngredientsDbDetails;
 import application.details.SpecialDbDetails;
 import application.rmi.server.ServerImpl;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import javafx.beans.property.StringProperty;
 
 import java.io.*;
 import java.lang.reflect.Array;
@@ -279,6 +281,126 @@ public class SocketThread extends Thread {
             outputToClient.writeBoolean(update);
             return update;
 
+        }else if(line.equals("loadThisMenu")){
+            System.out.println("Loading a specific menu...");
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            outputToClient.writeObject(impl.loadThisMenu(date));
+            return true;
+        }else if(line.equals("loadChild")){
+            System.out.println("Loading children...");
+            outputToClient.writeObject(impl.loadData());
+            return true;
+        }else if(line.equals("addChild")){
+            System.out.println("Adding child...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            LocalDate bornOn = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residence = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            ArrayList<String> allergies = null;
+            try {
+                 allergies = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String nameContact = inputFromClient.readUTF();
+            String surnameContact = inputFromClient.readUTF();
+            String cfContact = inputFromClient.readUTF();
+            String mailContact = inputFromClient.readUTF();
+            String telContact = inputFromClient.readUTF();
+            LocalDate birthContact = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhereContact = inputFromClient.readUTF();
+            String addressContact = inputFromClient.readUTF();
+            String capContact = inputFromClient.readUTF();
+            String provinceContact = inputFromClient.readUTF();
+            Boolean isDoc = inputFromClient.readBoolean();
+            Boolean isGuardian = inputFromClient.readBoolean();
+            Boolean isContact = inputFromClient.readBoolean();
+            Boolean add = impl.addData(name, surname, cf, bornOn, bornWhere, residence, address, cap, province, allergies, nameContact, surnameContact, cfContact, mailContact,telContact, birthContact,bornWhereContact, addressContact, capContact, provinceContact, isDoc, isGuardian, isContact);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("updateChild")){
+            System.out.println("Updating child...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String oldCf = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            LocalDate bornOn = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residence = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            ArrayList<String> allergies = null;
+            try {
+                allergies = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean update = impl.updateChild(name, surname,oldCf, cf, bornOn, bornWhere, residence, address, cap, province, allergies);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("deleteChild")){
+            System.out.println("Deleting child...");
+            String cf = inputFromClient.readUTF();
+            Boolean delete = impl.deleteChild(cf);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("addContact")){
+            System.out.println("Adding contact...");
+            ArrayList<String> selectedChild = null;
+            try{
+                selectedChild = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String surname = inputFromClient.readUTF();
+            String name = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean isDoc = inputFromClient.readBoolean();
+            Boolean isGuardian = inputFromClient.readBoolean();
+            Boolean isContact = inputFromClient.readBoolean();
+            Boolean add = impl.addContact(selectedChild, surname,name, cf, mail, tel, birthday, bornWhere, address,cap, province, isDoc, isGuardian, isContact);
+           outputToClient.writeBoolean(add);
+           return add;
+        }else if(line.equals("deleteContact")){
+            String oldcf = inputFromClient.readUTF();
+            Boolean delete = impl.deleteContact(oldcf);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("updateContact")){
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String oldcf = inputFromClient.readUTF();
+            String cf =inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            int isDoc = inputFromClient.read();
+            int isGuardian = inputFromClient.read();
+            int isContact = inputFromClient.read();
+            Boolean update = impl.updateContact(name, surname, oldcf, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("loadDataContacts")){
+            String rif = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadDataContacts(rif));
+            return true;
         }
             return false;
 

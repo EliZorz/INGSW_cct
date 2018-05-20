@@ -40,7 +40,7 @@
                      <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../if_back_322419.png" />
+                              <Image url="@../../../../if_back_322419.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -162,7 +162,7 @@
                      <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../if_back_322419.png" />
+                              <Image url="@../../../../if_back_322419.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -171,7 +171,7 @@
                      <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../if_back_322419.png" />
+                              <Image url="@../../../../if_back_322419.png" />
                            </image>
                         </ImageView>
                      </graphic>

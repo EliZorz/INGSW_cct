@@ -300,11 +300,13 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleLoadData() {
-
+        UserRemote u;
         System.out.println("Loading data...");
-
+        if(MainControllerLogin.selected.equals("RMI"))
+            u = Singleton.getInstance().methodRmi();
+        else
+            u = Singleton.getInstance().methodSocket();
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
 
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
 
@@ -386,9 +388,13 @@ public class ChildController implements Initializable {
             //il sistema vede tale scelta come se non ci fossero allergie da segnalare. Modificare il campo in seguito se necessario (i.g. per dimenticanza)
 
         } else {
+            UserRemote u;
             System.out.println("Adding data to database...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();
+                else
+                    u = Singleton.getInstance().methodSocket();
 
                 boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy,
                         nameContact, surnameContact, cfContact, mailContact, telContact, birthdayContact, bornWhereContact, addressContact, capContact, provinceContact, isDoc, isGuardian, isContact);  //call method in Server Impl
@@ -406,9 +412,12 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleDelete() {
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-            boolean deleted = u.deleteChild(oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();            boolean deleted = u.deleteChild(oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedChild.clear();
@@ -426,6 +435,7 @@ public class ChildController implements Initializable {
     @FXML
     public void handleUpdate() {
         System.out.println("Loading data...");
+        UserRemote u;
 
         String name = txtName.getText().toString();
         String surname = txtSurname.getText().toString();
@@ -445,8 +455,10 @@ public class ChildController implements Initializable {
         } else {
             System.out.println("Adding data to database...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();
+                else
+                    u = Singleton.getInstance().methodSocket();
                 boolean isEditOk = u.updateChild(surname, name, oldcf, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -462,10 +474,13 @@ public class ChildController implements Initializable {
 
     public void handleLoadContacts() {
         System.out.println("Loading data contacts...");
+        UserRemote u;
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             ArrayList<ContactsDbDetails> contactsDbArrayList = u.loadDataContacts(oldcf); //carico i contatti del selezionato!
 
             dataContactObsList.clear();
@@ -491,7 +506,7 @@ public class ChildController implements Initializable {
 
     public void handleAddContact() {
         System.out.println("Adding new contact to database...");
-
+        UserRemote u;
         String name = txtNameContact.getText().toString();
         String surname = txtSurnameContact.getText().toString();
         String cf = txtCfContact.getText().toString();
@@ -522,8 +537,10 @@ public class ChildController implements Initializable {
 
             System.out.println("Adding data to database...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();
+                else
+                    u = Singleton.getInstance().methodSocket();
                 boolean isAddOk = u.addContact(selectedChild, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
 
                 if (isAddOk) {
@@ -539,7 +556,7 @@ public class ChildController implements Initializable {
 
     public void handleUpdateContact() {
         System.out.println("Loading data...");
-
+        UserRemote u;
         String name = txtNameContact.getText().toString();
         String surname = txtSurnameContact.getText().toString();
         String cf = txtCfContact.getText().toString();
@@ -569,8 +586,10 @@ public class ChildController implements Initializable {
         } else {
             System.out.println("Adding data to database...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();
+                else
+                    u = Singleton.getInstance().methodSocket();
                 boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -585,8 +604,12 @@ public class ChildController implements Initializable {
     }
 
     public void handleDeleteContact() {
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             boolean deleted = u.deleteContact(oldcfContact);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
@@ -604,10 +627,12 @@ public class ChildController implements Initializable {
 
     public void handleLoadIngredients(){
         System.out.println("Loading data...");
-
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();
+            else
+                u = Singleton.getInstance().methodSocket();
             ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
 
             ingredientsObsList.clear();
