@@ -29,7 +29,6 @@ public class SocketThread extends Thread {
     @Override
     public void run() {
         try {
-            //creo in e out per la comunicazione con il client
             outputToClient = new ObjectOutputStream(s.getOutputStream());
             inputFromClient = new ObjectInputStream(s.getInputStream());
 
@@ -38,14 +37,18 @@ public class SocketThread extends Thread {
         }
 
         try {
-            while (true) {
-                System.out.println("Socket Thread ready to receive a message");
-                line = inputFromClient.readUTF();   //attende fino a quando arriva un messaggio
 
-                System.out.println("Received " + line);
+            while (true) {
+                System.out.println("Ready to recieve a message");
+                line = inputFromClient.readUTF();
+
+                System.out.println("recieved " + line);
 
                 boolean responce = doAction(line);  //passo il messaggio al doAction che decide cosa fare
-                System.out.println("Sending back : " + responce);
+
+                System.out.println("sending back : " + responce);
+                outputToClient.writeBoolean(responce);
+                outputToClient.flush();
             }
 
         } catch (IOException e) {
@@ -81,104 +84,190 @@ public class SocketThread extends Thread {
 
         //String[] credentials = line.split("\\s+");
 
-        if (line.equals("login")){
+        if(line.equals("login")) {
             System.out.println("Logging in...");
+
             String usr = inputFromClient.readUTF();
             String pwd = inputFromClient.readUTF();
-
             boolean isLogged = impl.funzLog(usr, pwd);
-
             outputToClient.writeBoolean(isLogged);
             return isLogged;
-
         }
 
 
         //CHILDREN -----------------------------------------------------------------------
-        else if(line.equals("loadchildren")) {
-            System.out.println("Loading children table");
-
-        } else if(line.equals("addchild")){
-            System.out.println("Adding menu");
-
-        } else if(line.equals("deletechild")){
-            System.out.println("Deleting child");
-
-        } else if(line.equals("editchild")){
-            System.out.println("Editing child");
-        }
-
-
-        //STAFF -------------------------------------------------------------------------
-        else if(line.equals("loadstaff")){
-            System.out.println("Loading staff");
-            ArrayList<StaffDbDetails> staff = impl.loadDataStaff();
-            if(staff == null)
-                return false;
-            else
-                outputToClient.writeObject(staff);
+        else if(line.equals("loadChild")){
+            System.out.println("Loading children...");
+            outputToClient.writeObject(impl.loadData());
             return true;
-
-        } else if(line.equals("addstaff")){
-            // 11 par passati :
-            // String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere,
-            // String residence, String address, String cap, String province, ArrayList<String> selectedAllergy
-            // da serverImpl ritorna boolean
-
-            System.out.println("Adding data...");
+        }else if(line.equals("addChild")){
+            System.out.println("Adding child...");
             String name = inputFromClient.readUTF();
             String surname = inputFromClient.readUTF();
             String cf = inputFromClient.readUTF();
-            String mail = inputFromClient.readUTF();
-            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            LocalDate bornOn = LocalDate.parse(inputFromClient.readUTF());
             String bornWhere = inputFromClient.readUTF();
             String residence = inputFromClient.readUTF();
             String address = inputFromClient.readUTF();
             String cap = inputFromClient.readUTF();
             String province = inputFromClient.readUTF();
-            ArrayList<String> allergy = null;
+            ArrayList<String> allergies = null;
             try {
-                allergy = (ArrayList<String>) inputFromClient.readObject();
+                allergies = (ArrayList<String>) inputFromClient.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            boolean isAdded = impl.addDataStaff(name, surname, cf, mail, birthday, bornWhere, residence, address, cap, province, allergy);
-
-            outputToClient.writeBoolean(isAdded);
-            return isAdded;
-
-        } else if(line.equals("deletestaff")){
-            System.out.println("Deleting data...");
+            String nameContact = inputFromClient.readUTF();
+            String surnameContact = inputFromClient.readUTF();
+            String cfContact = inputFromClient.readUTF();
+            String mailContact = inputFromClient.readUTF();
+            String telContact = inputFromClient.readUTF();
+            LocalDate birthContact = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhereContact = inputFromClient.readUTF();
+            String addressContact = inputFromClient.readUTF();
+            String capContact = inputFromClient.readUTF();
+            String provinceContact = inputFromClient.readUTF();
+            Boolean isDoc = inputFromClient.readBoolean();
+            Boolean isGuardian = inputFromClient.readBoolean();
+            Boolean isContact = inputFromClient.readBoolean();
+            Boolean add = impl.addData(name, surname, cf, bornOn, bornWhere, residence, address, cap, province, allergies, nameContact, surnameContact, cfContact, mailContact,telContact, birthContact,bornWhereContact, addressContact, capContact, provinceContact, isDoc, isGuardian, isContact);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("updateChild")){
+            System.out.println("Updating child...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String oldCf = inputFromClient.readUTF();
             String cf = inputFromClient.readUTF();
-            boolean isDeleted = impl.deleteStaff(cf);
+            LocalDate bornOn = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residence = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            ArrayList<String> allergies = null;
+            try {
+                allergies = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean update = impl.updateChild(name, surname,oldCf, cf, bornOn, bornWhere, residence, address, cap, province, allergies);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("deleteChild")){
+            System.out.println("Deleting child...");
+            String cf = inputFromClient.readUTF();
+            Boolean delete = impl.deleteChild(cf);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("addContact")){
+            System.out.println("Adding contact...");
+            ArrayList<String> selectedChild = null;
+            try{
+                selectedChild = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String surname = inputFromClient.readUTF();
+            String name = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean isDoc = inputFromClient.readBoolean();
+            Boolean isGuardian = inputFromClient.readBoolean();
+            Boolean isContact = inputFromClient.readBoolean();
+            Boolean add = impl.addContact(selectedChild, surname,name, cf, mail, tel, birthday, bornWhere, address,cap, province, isDoc, isGuardian, isContact);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("deleteContact")){
+            String oldcf = inputFromClient.readUTF();
+            Boolean delete = impl.deleteContact(oldcf);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("updateContact")){
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String oldcf = inputFromClient.readUTF();
+            String cf =inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            int isDoc = inputFromClient.read();
+            int isGuardian = inputFromClient.read();
+            int isContact = inputFromClient.read();
+            Boolean update = impl.updateContact(name, surname, oldcf, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("loadDataContacts")){
+            String rif = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadDataContacts(rif));
+            return true;
+        }
 
-            outputToClient.writeBoolean(isDeleted);
-            return isDeleted;
 
-        } else if(line.equals("editstaff")){
-            System.out.println("Adding data...");
+        //STAFF -------------------------------------------------------------------------
+        else if(line.equals("loadDataStaff")){
+            System.out.println("Loading staff...");
+            outputToClient.writeObject(impl.loadDataStaff());
+            return true;
+        }else if(line.equals("addDataStaff")){
+            System.out.println("Adding staff...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residece = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            ArrayList<String> selectedAllergies = null;
+            try{
+                selectedAllergies = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean add = impl.addDataStaff(name, surname, cf, mail, date, bornWhere, residece, address, cap, province, selectedAllergies);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("deleteStaff")){
+            System.out.println("Deleting staff...");
+            String cf = inputFromClient.readUTF();
+            Boolean delete = impl.deleteStaff(cf);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("updateStaff")){
+            System.out.println("Updating staff...");
             String name = inputFromClient.readUTF();
             String surname = inputFromClient.readUTF();
             String oldcf = inputFromClient.readUTF();
             String cf = inputFromClient.readUTF();
             String mail = inputFromClient.readUTF();
-            LocalDate birthday = LocalDate.parse(inputFromClient.readUTF());
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
             String bornWhere = inputFromClient.readUTF();
-            String residence = inputFromClient.readUTF();
+            String residece = inputFromClient.readUTF();
             String address = inputFromClient.readUTF();
             String cap = inputFromClient.readUTF();
             String province = inputFromClient.readUTF();
-            ArrayList<String> allergy = null;
-            try {
-                allergy = (ArrayList<String>) inputFromClient.readObject();
+            ArrayList<String> selectedAllergies = null;
+            try{
+                selectedAllergies = (ArrayList<String>) inputFromClient.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            boolean isEdited = impl.updateStaff(name, surname, oldcf, cf, mail, birthday, bornWhere, residence, address, cap, province, allergy);
-
-            outputToClient.writeBoolean(isEdited);
-            return isEdited;
-
+            Boolean update = impl.updateStaff(name, surname, oldcf, cf, mail, date, bornWhere, residece, address, cap, province, selectedAllergies);
+            outputToClient.writeBoolean(update);
+            return update;
         }
 
 
@@ -403,6 +492,10 @@ public class SocketThread extends Thread {
             ArrayList<String> staff = null;
             try {
                 children = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
                 staff = (ArrayList<String>) inputFromClient.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -471,6 +564,10 @@ public class SocketThread extends Thread {
             ArrayList<String> staff = null;
             try {
                 children = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
                 staff = (ArrayList<String>) inputFromClient.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -530,10 +627,14 @@ public class SocketThread extends Thread {
         } else if(line.equals("findMissingParticipantsOnThisBus")) {
             System.out.println("Searching for missing participants on this bus...");
             ArrayList<String> peopleOnWrongBus = null;
-            ArrayList<String> participants = null;
+            ArrayList<String> selectedChild = null;
             try {
                 peopleOnWrongBus = (ArrayList<String>) inputFromClient.readObject();
-                participants = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                selectedChild = (ArrayList<String>) inputFromClient.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -544,7 +645,7 @@ public class SocketThread extends Thread {
             String accomodation = inputFromClient.readUTF();
             String arr = inputFromClient.readUTF();
             String arrTo = inputFromClient.readUTF();
-            outputToClient.writeObject(impl.findMissingParticipantsOnThisBus(peopleOnWrongBus, participants, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
+            outputToClient.writeObject(impl.findMissingParticipantsOnThisBus(peopleOnWrongBus, selectedChild, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
             return true;
         } else if(line.equals("loadMissing")){
             System.out.println("Loading missing participants on this bus...");

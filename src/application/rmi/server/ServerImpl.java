@@ -3837,7 +3837,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryLoadParticipantsAndBus = "SELECT I.Nome, I.Cognome, I.CF, GB.bus_Targa " +
                                             " FROM interni AS I INNER JOIN" +
                                             " interni_is_here AS IH ON (I.CF = IH.interni_CF) INNER JOIN" +
-                                            " gita_has_bus AS GB ON (IH.bus_Targa = GB.bus_Targa AND GB.gita_NumGita = '" + numGita + "')";
+                                            " gita_has_bus AS GB ON (IH.bus_Targa = GB.bus_Targa AND GB.gita_NumGita = '" + numGita + "')" +
+                                            " WHERE IH.gita_NumGita = '" + numGita + "';";
 
         try{
             st = this.connHere().prepareStatement(queryLoadParticipantsAndBus);
