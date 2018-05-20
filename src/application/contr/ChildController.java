@@ -311,6 +311,16 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleLoadData() {
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtBornWhere.clear();
+        txtResidence.clear();
+        txtAddress.clear();
+        txtCap.clear();
+        txtProvince.clear();
+
         System.out.println("Loading data...");
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
@@ -416,6 +426,15 @@ public class ChildController implements Initializable {
 
                 if (isAddOk) {
                     lblWarning.setText("Congrats! Child added.");
+                    txtName.clear();
+                    txtSurname.clear();
+                    txtCf.clear();
+                    dpBirthday.setValue(LocalDate.now());
+                    txtBornWhere.clear();
+                    txtResidence.clear();
+                    txtAddress.clear();
+                    txtCap.clear();
+                    txtProvince.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -431,6 +450,15 @@ public class ChildController implements Initializable {
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedChild.clear();
+                txtName.clear();
+                txtSurname.clear();
+                txtCf.clear();
+                dpBirthday.setValue(LocalDate.now());
+                txtBornWhere.clear();
+                txtResidence.clear();
+                txtAddress.clear();
+                txtCap.clear();
+                txtProvince.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -471,6 +499,15 @@ public class ChildController implements Initializable {
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Child edited.");
                     selectedChild.clear();
+                    txtName.clear();
+                    txtSurname.clear();
+                    txtCf.clear();
+                    dpBirthday.setValue(LocalDate.now());
+                    txtBornWhere.clear();
+                    txtResidence.clear();
+                    txtAddress.clear();
+                    txtCap.clear();
+                    txtProvince.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -481,6 +518,16 @@ public class ChildController implements Initializable {
 
     public void handleLoadContacts() {
         System.out.println("Loading data contacts...");
+        txtNameContact.clear();
+        txtSurnameContact.clear();
+        txtCfContact.clear();
+        txtMailContact.clear();
+        txtTelContact.clear();
+        dpBirthdayContact.setValue(LocalDate.now());
+        txtBornWhereContact.clear();
+        txtAddressContact.clear();
+        txtCapContact.clear();
+        txtProvinceContact.clear();
         try {
             UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<ContactsDbDetails> contactsDbArrayList = u.loadDataContacts(oldcf); //carico i contatti del selezionato!
@@ -560,6 +607,16 @@ public class ChildController implements Initializable {
 
                 if (isAddOk) {
                     this.renameLabel("Congrats! Contact added.");
+                    txtNameContact.clear();
+                    txtSurnameContact.clear();
+                    txtCfContact.clear();
+                    txtMailContact.clear();
+                    txtTelContact.clear();
+                    dpBirthdayContact.setValue(LocalDate.now());
+                    txtBornWhereContact.clear();
+                    txtAddressContact.clear();
+                    txtCapContact.clear();
+                    txtProvinceContact.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -608,6 +665,17 @@ public class ChildController implements Initializable {
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Contact edited.");
                     selectedContact.clear();
+
+                    txtNameContact.clear();
+                    txtSurnameContact.clear();
+                    txtCfContact.clear();
+                    txtMailContact.clear();
+                    txtTelContact.clear();
+                    dpBirthdayContact.setValue(LocalDate.now());
+                    txtBornWhereContact.clear();
+                    txtAddressContact.clear();
+                    txtCapContact.clear();
+                    txtProvinceContact.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -623,6 +691,17 @@ public class ChildController implements Initializable {
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedContact.clear();
+
+                txtNameContact.clear();
+                txtSurnameContact.clear();
+                txtCfContact.clear();
+                txtMailContact.clear();
+                txtTelContact.clear();
+                dpBirthdayContact.setValue(LocalDate.now());
+                txtBornWhereContact.clear();
+                txtAddressContact.clear();
+                txtCapContact.clear();
+                txtProvinceContact.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
