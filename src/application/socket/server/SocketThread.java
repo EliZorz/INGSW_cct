@@ -4,6 +4,7 @@ import application.details.DishesDbDetails;
 import application.details.IngredientsDbDetails;
 import application.details.SpecialDbDetails;
 import application.rmi.server.ServerImpl;
+import com.mysql.jdbc.jdbc2.optional.SuspendableXAConnection;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.StringProperty;
 
@@ -401,6 +402,61 @@ public class SocketThread extends Thread {
             String rif = inputFromClient.readUTF();
             outputToClient.writeObject(impl.loadDataContacts(rif));
             return true;
+        }else if(line.equals("loadDataStaff")){
+            System.out.println("Loading staff...");
+            outputToClient.writeObject(impl.loadDataStaff());
+            return true;
+        }else if(line.equals("addDataStaff")){
+            System.out.println("Adding staff...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residece = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            ArrayList<String> selectedAllergies = null;
+            try{
+                selectedAllergies = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean add = impl.addDataStaff(name, surname, cf, mail, date, bornWhere, residece, address, cap, province, selectedAllergies);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("deleteStaff")){
+            System.out.println("Deleting staff...");
+            String cf = inputFromClient.readUTF();
+            Boolean delete = impl.deleteStaff(cf);
+            outputToClient.writeBoolean(delete);
+            return delete;
+        }else if(line.equals("updateStaff")){
+            System.out.println("Updating staff...");
+            String name = inputFromClient.readUTF();
+            String surname = inputFromClient.readUTF();
+            String oldcf = inputFromClient.readUTF();
+            String cf = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            LocalDate date = LocalDate.parse(inputFromClient.readUTF());
+            String bornWhere = inputFromClient.readUTF();
+            String residece = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            ArrayList<String> selectedAllergies = null;
+            try{
+                selectedAllergies = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            Boolean update = impl.updateStaff(name, surname, oldcf, cf, mail, date, bornWhere, residece, address, cap, province, selectedAllergies);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("loadDataCoachOperator")){
+            
         }
             return false;
 

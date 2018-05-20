@@ -179,9 +179,12 @@ public class StaffController implements Initializable {
     public void handleLoadStaff() {
 
         System.out.println("Loading data...");
-
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();  //lookup
+            else
+                u = Singleton.getInstance().methodSocket();
 
             ArrayList<StaffDbDetails> staffDbArrayList = u.loadDataStaff();  //call method in Server Impl
 
@@ -238,9 +241,12 @@ public class StaffController implements Initializable {
 
         } else {
             System.out.println("Adding data to database...");
+            UserRemote u;
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();  //lookup
+                else
+                    u = Singleton.getInstance().methodSocket();
                 boolean isAddOk = u.addDataStaff(surname, name, cf, mail, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
                 //IN SERVERIMPL: pick every field content and save into list (1 list for staff -> interni + 1 list for allergy)
@@ -256,10 +262,13 @@ public class StaffController implements Initializable {
 
     public void handleLoadIngredients(){
         System.out.println("Loading data...");
+        UserRemote u;
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();  //lookup
+            else
+                u = Singleton.getInstance().methodSocket();
             ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
 
             ingredientsObsList.clear();
@@ -335,9 +344,12 @@ public class StaffController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
+            UserRemote u;
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();  //lookup
+                else
+                    u = Singleton.getInstance().methodSocket();
                 boolean isEditOk = u.updateStaff(surname, name, oldcf, cf, mail, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -353,9 +365,12 @@ public class StaffController implements Initializable {
 
     public void handleDeleteStaff() {
         System.out.println("Loading data...");
-
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();  //lookup
+            else
+                u = Singleton.getInstance().methodSocket();
             boolean deleted = u.deleteStaff(selectedStaff.get(2));
             if(deleted){
                 this.renameLabel("Deleted.");

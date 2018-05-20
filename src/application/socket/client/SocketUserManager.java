@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 
 public class SocketUserManager implements UserRemote {
@@ -338,23 +339,116 @@ public class SocketUserManager implements UserRemote {
     //STAFF ------------------------------------------------------------------------------------------
     @Override
     public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException{
-
+        try{
+            toServer.writeUTF("loadDataStaff");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (ArrayList<StaffDbDetails>) fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }
 
     @Override
     public boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+        try{
+            toServer.writeUTF("addDataStaff");
+            toServer.flush();
+            toServer.writeUTF(name);
+            toServer.flush();
+            toServer.writeUTF(surname);
+            toServer.flush();
+            toServer.writeUTF(cf);
+            toServer.flush();
+            toServer.writeUTF(mail);
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(birthday));
+            toServer.flush();
+            toServer.writeUTF(bornWhere);
+            toServer.flush();
+            toServer.writeUTF(residence);
+            toServer.flush();
+            toServer.writeUTF(address);
+            toServer.flush();
+            toServer.writeUTF(cap);
+            toServer.flush();
+            toServer.writeUTF(province);
+            toServer.flush();
+            toServer.writeObject(selectedAllergy);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
     @Override
     public boolean deleteStaff(String cf) throws RemoteException {
+        try{
+            toServer.writeUTF("deleteStaff");
+            toServer.flush();
+            toServer.writeUTF(cf);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
     @Override
     public boolean updateStaff(String name, String surname, String oldcf, String cf, String mail, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException{
+        try{
+            toServer.writeUTF("updateStaff");
+            toServer.flush();
+            toServer.writeUTF(name);
+            toServer.flush();
+            toServer.writeUTF(surname);
+            toServer.flush();
+            toServer.writeUTF(oldcf);
+            toServer.flush();
+            toServer.writeUTF(cf);
+            toServer.flush();
+            toServer.writeUTF(mail);
+            toServer.flush();
+            toServer.writeUTF(String.valueOf(bornOn));
+            toServer.flush();
+            toServer.writeUTF(bornWhere);
+            toServer.flush();
+            toServer.writeUTF(residence);
+            toServer.flush();
+            toServer.writeUTF(address);
+            toServer.flush();
+            toServer.writeUTF(cap);
+            toServer.flush();
+            toServer.writeUTF(province);
+            toServer.flush();
+            toServer.writeObject(selectedAllergy);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -554,6 +648,19 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
+        try{
+            toServer.writeUTF("loadDataCoachOperator");
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (ArrayList<SupplierDbDetails>) fromServer.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

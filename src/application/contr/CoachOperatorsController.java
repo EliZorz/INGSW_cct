@@ -146,9 +146,12 @@ public class CoachOperatorsController implements Initializable {
 
     public void handleLoadSuppliers() {
         System.out.println("Loading data...");
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-            ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataCoachOperator();  //call method in Server Impl
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();  //lookup
+            else
+                u = Singleton.getInstance().methodSocket();             ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataCoachOperator();  //call method in Server Impl
             dataObsList.clear();
 
             if (staffDbArrayList != null){
@@ -184,9 +187,12 @@ public class CoachOperatorsController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
+            UserRemote u;
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-                boolean isAddOk = u.addDataCoachOperator(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();  //lookup
+                else
+                    u = Singleton.getInstance().methodSocket();                 boolean isAddOk = u.addDataCoachOperator(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isAddOk) {
                     this.renameLabel("Congrats! Coach operator added.");
@@ -213,9 +219,12 @@ public class CoachOperatorsController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
+            UserRemote u;
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
-                boolean isEditOk = u.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();  //lookup
+                else
+                    u = Singleton.getInstance().methodSocket();                 boolean isEditOk = u.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Coach operator edited.");
@@ -231,8 +240,12 @@ public class CoachOperatorsController implements Initializable {
 
     public void handleDeleteSupplier() {
         System.out.println("Loading data...");
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();  //lookup
+            else
+                u = Singleton.getInstance().methodSocket();
             boolean deleted = u.deleteCoachOperator(selectedSupplier.get(1));
             if(deleted){
                 this.renameLabel("Deleted.");
@@ -282,8 +295,12 @@ public class CoachOperatorsController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
+            UserRemote u;
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+                if(MainControllerLogin.selected.equals("RMI"))
+                    u = Singleton.getInstance().methodRmi();  //lookup
+                else
+                    u = Singleton.getInstance().methodSocket();
                 boolean isEditOk = u.addBusToDb(plate, capacity, oldPiva);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -307,8 +324,12 @@ public class CoachOperatorsController implements Initializable {
 
     public void handleLoadBus() {
         System.out.println("Loading data...");
+        UserRemote u;
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            if(MainControllerLogin.selected.equals("RMI"))
+                u = Singleton.getInstance().methodRmi();  //lookup
+            else
+                u = Singleton.getInstance().methodSocket();
             ArrayList<BusPlateCapacityDbDetails> staffDbArrayList = u.loadDataBus(oldPiva);  //call method in Server Impl
             busObsList.clear();
 
