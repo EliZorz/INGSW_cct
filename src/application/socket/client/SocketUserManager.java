@@ -916,71 +916,399 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("loadTripSelectedChildren");
+            toServer.flush();
+            toServer.writeUTF(selectedDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedDep);
+            toServer.flush();
+            toServer.writeUTF(selectedCom);
+            toServer.flush();
+            toServer.writeUTF(selectedAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedArr);
+            toServer.flush();
+            toServer.writeUTF(selectedArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<ChildSelectedTripDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("loadTripSelectedStaff");
+            toServer.flush();
+            toServer.writeUTF(selectedDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedDep);
+            toServer.flush();
+            toServer.writeUTF(selectedCom);
+            toServer.flush();
+            toServer.writeUTF(selectedAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedArr);
+            toServer.flush();
+            toServer.writeUTF(selectedArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<StaffSelectedTripDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<CodRifChildDbDetails> findNotAvailableStaff(ArrayList<String> selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+        try{
+            toServer.writeUTF("findNotAvailableStaff");
+            toServer.flush();
+            toServer.writeObject(selectedStaffCf);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<CodRifChildDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<CodRifChildDbDetails> findNotAvailableChild(ArrayList<String> selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+        try{
+            toServer.writeUTF("findNotAvailableChild");
+            toServer.flush();
+            toServer.writeObject(selectedChildCf);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<CodRifChildDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public int[] howManyActualParticipants(ArrayList<String> selectedChildCf, ArrayList<String> selectedStaffCf) throws RemoteException {
-        return new int[0];
+        int[] participants = new int[2];
+
+        try{
+            toServer.writeUTF("howManyActualParticipants");
+            toServer.flush();
+            toServer.writeObject(selectedChildCf);
+            toServer.flush();
+            toServer.writeObject(selectedStaffCf);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            for(int i = 0; i<2 ; i++){
+                participants[i] = fromServer.readInt();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return participants;
     }
 
     @Override
     public HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("associateBusToParticipants");
+            toServer.flush();
+            toServer.writeObject(selectedChildCfArrayList);
+            toServer.writeInt(totChildren);
+            toServer.flush();
+            toServer.writeObject(selectedStaffCfArrayList);
+            toServer.flush();
+            toServer.writeInt(totStaff);
+            toServer.flush();
+            toServer.writeUTF(selectedDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedDep);
+            toServer.flush();
+            toServer.writeUTF(selectedCom);
+            toServer.flush();
+            toServer.writeUTF(selectedAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedArr);
+            toServer.flush();
+            toServer.writeUTF(selectedArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return (HashMap<String, ArrayList<String>>) fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadWhoTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("loadWhoTrip");
+            toServer.flush();
+            toServer.writeUTF(selectedDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedDep);
+            toServer.flush();
+            toServer.writeUTF(selectedCom);
+            toServer.flush();
+            toServer.writeUTF(selectedAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedArr);
+            toServer.flush();
+            toServer.writeUTF(selectedArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<ChildSelectedTripDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<CodRifChildDbDetails> loadBusTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("loadBusTrip");
+            toServer.flush();
+            toServer.writeUTF(selectedDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedDep);
+            toServer.flush();
+            toServer.writeUTF(selectedCom);
+            toServer.flush();
+            toServer.writeUTF(selectedAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedArr);
+            toServer.flush();
+            toServer.writeUTF(selectedArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<CodRifChildDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<SolutionDbDetails> loadSolution(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("loadSolution");
+            toServer.flush();
+            toServer.writeUTF(selectedTripDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArr);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<SolutionDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<String> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("findParticipantOnWrongBus");
+            toServer.flush();
+            toServer.writeObject(selectedChildCfArrayList);
+            toServer.flush();
+            toServer.writeUTF(selectedBus);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArr);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<String>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ArrayList<String> findMissingParticipantsOnThisBus(ArrayList<String> peopleOnWrongBus, ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("findMissingParticipantsOnThisBus");
+            toServer.flush();
+            toServer.writeObject(peopleOnWrongBus);
+            toServer.flush();
+            toServer.writeObject(selectedChildCfArrayList);
+            toServer.flush();
+            toServer.writeUTF(selectedBus);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArr);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<String>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public void makeIsHereFalse(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
-
+        try{
+            toServer.writeUTF("makeIsHereFalse");
+            toServer.flush();
+            toServer.writeUTF(selectedTripDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArr);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void makeIsHereTrue(String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
-
+        try{
+            toServer.writeUTF("makeIsHereTrue");
+            toServer.flush();
+            toServer.writeUTF(selectedBus);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArr);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadMissing(ArrayList<String> missingArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        try{
+            toServer.writeUTF("loadMissing");
+            toServer.flush();
+            toServer.writeObject(missingArrayList);
+            toServer.flush();
+            toServer.writeUTF(selectedBus);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDepFrom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripDep);
+            toServer.flush();
+            toServer.writeUTF(selectedTripCom);
+            toServer.flush();
+            toServer.writeUTF(selectedTripAccomodation);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArr);
+            toServer.flush();
+            toServer.writeUTF(selectedTripArrTo);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            return (ArrayList<ChildSelectedTripDbDetails>)fromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

@@ -39,16 +39,13 @@ public class SocketThread extends Thread {
 
         try {
             while (true) {
-                System.out.println("Ready to receive a message");
+                System.out.println("Socket Thread ready to receive a message");
                 line = inputFromClient.readUTF();   //attende fino a quando arriva un messaggio
 
                 System.out.println("Received " + line);
 
                 boolean responce = doAction(line);  //passo il messaggio al doAction che decide cosa fare
                 System.out.println("Sending back : " + responce);
-
-                //outputToClient.writeBoolean(responce);  //manda al socket client la risposta
-                //outputToClient.flush();
             }
 
         } catch (IOException e) {
@@ -399,7 +396,7 @@ public class SocketThread extends Thread {
             return true;
         } else if (line.equals("addTrip")){
             System.out.println("Adding trip...");
-            int[] returnedPart = new int[2];
+            int[] returnedPart;
             //ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep,
             //String timeArr, String timeCom, String departureFrom, String arrivalTo, String staying
             ArrayList<String> children = null;
@@ -421,8 +418,195 @@ public class SocketThread extends Thread {
                 outputToClient.writeInt(returnedPart[i]);
             }
             return true;
-        }
+        } else if(line.equals("loadTripSelectedChildren")){
+            System.out.println("Loading effective child for trip...");
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadTripSelectedChildren(depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("loadTripSelectedStaff")) {
+            System.out.println("Loading effective staff for trip...");
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadTripSelectedStaff(depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("findNotAvailableStaff")){
+            System.out.println("Loading not available staff for trip...");
+            ArrayList<String> staff = null;
+            try {
+                staff = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
 
+            outputToClient.writeObject(impl.findNotAvailableStaff(staff, dep, com));
+            return true;
+        } else if(line.equals("findNotAvailableChild")){
+            System.out.println("Loading not available children for trip...");
+            ArrayList<String> child = null;
+            try {
+                child = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+
+            outputToClient.writeObject(impl.findNotAvailableStaff(child, dep, com));
+            return true;
+        } else if(line.equals("howManyActualParticipants")){
+            System.out.println("Calculating number of participants...");
+            int[] returnedPart;
+            ArrayList<String> children = null;
+            ArrayList<String> staff = null;
+            try {
+                children = (ArrayList<String>) inputFromClient.readObject();
+                staff = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            returnedPart = impl.howManyActualParticipants(children, staff);
+            for(int i=0; i<2; i++){
+                outputToClient.writeInt(returnedPart[i]);
+            }
+            return true;
+        } else if(line.equals("loadWhoTrip")){
+            System.out.println("Loading who participates to this trip...");
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadWhoTrip(depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("loadBusTrip")){
+            System.out.println("Loading bus to this trip...");
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadBusTrip(depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("loadSolution")) {
+            System.out.println("Loading solution...");
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadSolution(depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("findParticipantsOnWrongBus")) {
+            System.out.println("Searching for participants on wrong bus...");
+            ArrayList<String> participants = null;
+            try {
+                participants = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String selectedBus = inputFromClient.readUTF();
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.findParticipantOnWrongBus(participants, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("findMissingParticipantsOnThisBus")) {
+            System.out.println("Searching for missing participants on this bus...");
+            ArrayList<String> peopleOnWrongBus = null;
+            ArrayList<String> participants = null;
+            try {
+                peopleOnWrongBus = (ArrayList<String>) inputFromClient.readObject();
+                participants = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String selectedBus = inputFromClient.readUTF();
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.findMissingParticipantsOnThisBus(peopleOnWrongBus, participants, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("loadMissing")){
+            System.out.println("Loading missing participants on this bus...");
+            ArrayList<String> missing = null;
+            try {
+                missing = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            String selectedBus = inputFromClient.readUTF();
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.loadMissing(missing, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("associateBusToParticipants")){
+            System.out.println("Associating participants to bus...");
+            ArrayList<String> children = null;
+            ArrayList<String> staff = null;
+            try {
+                children = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            int totChildren = inputFromClient.readInt();
+            try {
+                staff = (ArrayList<String>) inputFromClient.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            int totStaff = inputFromClient.readInt();
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            outputToClient.writeObject(impl.associateBusToParticipants(children, totChildren, staff, totStaff, depFrom, dep, com, accomodation, arr, arrTo));
+            return true;
+        } else if(line.equals("makeIsHereTrue")){
+            String selectedBus = inputFromClient.readUTF();
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            impl.makeIsHereTrue(selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
+            return true;
+        } else if(line.equals("makeIsHereFalse")){
+            String depFrom = inputFromClient.readUTF();
+            String dep = inputFromClient.readUTF();
+            String com = inputFromClient.readUTF();
+            String accomodation = inputFromClient.readUTF();
+            String arr = inputFromClient.readUTF();
+            String arrTo = inputFromClient.readUTF();
+            impl.makeIsHereFalse(depFrom, dep, com, accomodation, arr, arrTo);
+            return true;
+        }
 
 
         return false;

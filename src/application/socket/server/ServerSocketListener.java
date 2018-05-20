@@ -21,7 +21,7 @@ public class ServerSocketListener extends Thread{
         while (true) {
             try {
                 s = serverSocket.accept();  //gestione i vari client
-                System.out.println("Connection Established!!");
+                System.out.println("Connection Established from Server Socket Listener");
                 SocketThread st = new SocketThread(s, new ServerImpl()); // crea un thread per la gestione dei vari client
                 st.start();
 
