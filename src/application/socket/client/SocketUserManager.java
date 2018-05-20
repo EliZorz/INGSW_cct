@@ -666,16 +666,81 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        try {
+            toServer.writeUTF("addCoachOperator");
+            toServer.flush();
+            toServer.writeUTF(name);
+            toServer.flush();
+            toServer.writeUTF(piva);
+            toServer.flush();
+            toServer.writeUTF(mail);
+            toServer.flush();
+            toServer.writeUTF(tel);
+            toServer.flush();
+            toServer.writeUTF(address);
+            toServer.flush();
+            toServer.writeUTF(cap);
+            toServer.flush();
+            toServer.writeUTF(province);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
+        try {
+            toServer.writeUTF("updateCoachOperator");
+            toServer.flush();
+            toServer.writeUTF(name);
+            toServer.flush();
+            toServer.writeUTF(oldPiva);
+            toServer.flush();
+            toServer.writeUTF(piva);
+            toServer.flush();
+            toServer.writeUTF(mail);
+            toServer.flush();
+            toServer.writeUTF(tel);
+            toServer.flush();
+            toServer.writeUTF(address);
+            toServer.flush();
+            toServer.writeUTF(cap);
+            toServer.flush();
+            toServer.writeUTF(province);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean deleteCoachOperator(String piva) throws RemoteException {
+        try{
+            toServer.writeUTF("deleteCoachOperator");
+            toServer.flush();
+            toServer.writeUTF(piva);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 

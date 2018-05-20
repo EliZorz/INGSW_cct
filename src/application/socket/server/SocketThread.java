@@ -456,7 +456,37 @@ public class SocketThread extends Thread {
             outputToClient.writeBoolean(update);
             return update;
         }else if(line.equals("loadDataCoachOperator")){
-            
+            System.out.println("Loading coach operator...");
+            outputToClient.writeObject(impl.loadDataCoachOperator());
+            return true;
+        }else if(line.equals("addCoachOperator")){
+            String name = inputFromClient.readUTF();
+            String piva = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean add = impl.addDataCoachOperator( name,  piva,  mail,  tel,  address,  cap,  province);
+            outputToClient.writeBoolean(add);
+            return add;
+        }else if(line.equals("updateCoachOperator")){
+            String name = inputFromClient.readUTF();
+            String oldpiva = inputFromClient.readUTF();
+            String piva = inputFromClient.readUTF();
+            String mail = inputFromClient.readUTF();
+            String tel = inputFromClient.readUTF();
+            String address = inputFromClient.readUTF();
+            String cap = inputFromClient.readUTF();
+            String province = inputFromClient.readUTF();
+            Boolean update = impl.updateCoachOperator( name,oldpiva,   piva,  mail,  tel,  address,  cap,  province);
+            outputToClient.writeBoolean(update);
+            return update;
+        }else if(line.equals("deleteCoachOperator")){
+            String piva = inputFromClient.readUTF();
+            Boolean delete = impl.deleteCoachOperator(piva);
+            outputToClient.writeBoolean(delete);
+            return delete;
         }
             return false;
 
