@@ -100,7 +100,6 @@ public class newMenuController implements Initializable {
     @FXML
     public Button back;
 
-
     UserRemote  u;
 
     public newMenuController(){
@@ -109,6 +108,7 @@ public class newMenuController implements Initializable {
         else
             u= Singleton.getInstance().methodSocket();
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -237,11 +237,6 @@ public class newMenuController implements Initializable {
 
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try{
             if(u.saveIngredients(dishName, ingredients)){
                 label1.setText("Success!!");
@@ -256,11 +251,8 @@ public class newMenuController implements Initializable {
     }
 
 
-
-
-
     @FXML
-    public void saveIngredients(ActionEvent event) {
+    public void saveIngredients() {
         if(label1.getText().equals("Select the ingredients for the entree")){
             saveIngredientsForThisDish(entreeTF.getText(),selectedIngredients);
             deselect();
@@ -307,11 +299,6 @@ public class newMenuController implements Initializable {
 
     //CONTROLLO SULLA DATA INSERITA
     private boolean controllData(LocalDate day){
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try {
             return u.controllDate(day);
 
@@ -321,7 +308,7 @@ public class newMenuController implements Initializable {
         return false;
     }
 
-    public void saveMenu(ActionEvent event) {
+    public void saveMenu() {
         System.out.println("Adding the info to db");
         String num = numTF.getText();
         String entree = entreeTF.getText();
@@ -340,18 +327,11 @@ public class newMenuController implements Initializable {
         else if(!controllIngredients && selectedMenu == null)label1.setText("Make sure you have added all the ingredients");
         else if(day.isBefore(LocalDate.now()) && selectedMenu == null) label1.setText("This date is already past");
         else{
-            UserRemote u ;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             try{
                 if(selectedMenu == null) {
                     boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day);
                     if (addSuccess) {
                         label1.setText("Success!!");
-
-
                     }
                 }
                 else
