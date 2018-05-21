@@ -2,6 +2,7 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.Singleton;
+import application.details.SpecialDbDetails;
 import application.details.SpecialMenuDbDetails;
 import application.details.SpecialMenuGuiDetails;
 import application.gui.GuiNew;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 public class SpecialMenuLoadController implements Initializable{
 
     private ObservableList<SpecialMenuGuiDetails> specialMenu = FXCollections.observableArrayList();
+    private  ObservableList<SpecialMenuGuiDetails> searchedMenu = FXCollections.observableArrayList();
 
     private String[] selectedMenu = new String[8];
 
@@ -71,6 +73,24 @@ public class SpecialMenuLoadController implements Initializable{
     @FXML
     public TableView<SpecialMenuGuiDetails> tabSpecialMenu;
 
+    @FXML
+    public Button searchButton;
+
+    @FXML
+    public Button back;
+
+    @FXML
+    public DatePicker dateSearch;
+
+
+    UserRemote  u;
+
+    public SpecialMenuLoadController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -137,7 +157,6 @@ public class SpecialMenuLoadController implements Initializable{
             labelStatus.setText("Please select a menu");
         else {
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();
                 boolean deleted = u.deleteSpecialMenu(LocalDate.parse(selectedMenu[0]), selectedMenu[6], selectedMenu[7]);
                 if (deleted) {
                     labelStatus.setText("Delete success!!");
@@ -153,7 +172,6 @@ public class SpecialMenuLoadController implements Initializable{
 
     public void loadMenu() {
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<SpecialMenuDbDetails> specialDbArrayList = u.loadSpecialMenu();
             specialMenu.clear();
             if(specialDbArrayList != null) {
@@ -172,5 +190,28 @@ public class SpecialMenuLoadController implements Initializable{
         }catch(RemoteException e){
             e.printStackTrace();
         }
+    }
+
+    public void search(){
+        searchedMenu = FXCollections.observableArrayList();
+        if(dateSearch.getValue() != null){
+            for(SpecialMenuGuiDetails x : specialMenu ){
+                if(LocalDate.parse(x.getDate()).isEqual(dateSearch.getValue()))
+                    searchedMenu.add(x);
+            }
+            tabSpecialMenu.setItems(null);
+            tabSpecialMenu.setItems(searchedMenu);
+        }
+        else{
+            tabSpecialMenu.setItems(null);
+            tabSpecialMenu.setItems(specialMenu);
+        }
+    }
+
+    public void reLoad(){
+        searchedMenu = FXCollections.observableArrayList();
+        dateSearch.setValue(null);
+        tabSpecialMenu.setItems(null);
+        tabSpecialMenu.setItems(specialMenu);
     }
 }
