@@ -720,105 +720,110 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         //divide items from arraylist selectedAllergy into string to put into database
         StringBuilder allAllergies = new StringBuilder();
-        if(! selectedAllergy.isEmpty()){
-            for(String s : selectedAllergy){
-                allAllergies.append(selectedAllergy.toString()+ ", ");
+        if(name == null || surname == null || cf == null || mail == null || birthday == null || bornWhere == null || residence == null ||address == null || cap == null || province == null )
+            return false;
+        else {
+            if (!selectedAllergy.isEmpty()) {
+                for (String s : selectedAllergy) {
+                    allAllergies.append(selectedAllergy.toString() + ", ");
+                }
+                System.out.println(allAllergies.toString());
+            } else {
+                allAllergies.append("none");
             }
-            System.out.println(allAllergies.toString());
-        } else {
-            allAllergies.append("none");
-        }
 
 
-        try {
-            st = this.connHere().prepareStatement(queryAdd);
-            st.setString(1, surname);
-            st.setString(2, name);
-            st.setString(3, cf);
-            st.setDate(4, java.sql.Date.valueOf(birthday));
-            st.setString(5, bornWhere);
-            st.setString(6, residence);
-            st.setString(7, address);
-            st.setString(8, cap);
-            st.setString(9, province);
-            st.setString(10, allAllergies.toString());
-            st.executeUpdate();
-
-        } catch (SQLException e){
-            e.printStackTrace();
-        } finally {
             try {
-                if (st != null)
-                    st.close();
+                st = this.connHere().prepareStatement(queryAdd);
+                st.setString(1, surname);
+                st.setString(2, name);
+                st.setString(3, cf);
+                st.setDate(4, java.sql.Date.valueOf(birthday));
+                st.setString(5, bornWhere);
+                st.setString(6, residence);
+                st.setString(7, address);
+                st.setString(8, cap);
+                st.setString(9, province);
+                st.setString(10, allAllergies.toString());
+                st.executeUpdate();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (st != null)
+                        st.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                //  assign code number to new staff member
+                st = this.connHere().prepareStatement(queryLastCodRif);
+                result = st.executeQuery(queryLastCodRif);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+            try {
+                if (!result.next()) {
+                    System.out.println("No CodID in DB");
+                    //then new CodID is 1
+                    String newCod = "s1";
 
-        try {
-            //  assign code number to new staff member
-            st = this.connHere().prepareStatement(queryLastCodRif);
-            result = st.executeQuery(queryLastCodRif);
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        try{
-            if( !result.next() ) {
-                System.out.println("No CodID in DB");
-                //then new CodID is 1
-                String newCod = "s1";
-
-                //add to DB
-                st = this.connHere().prepareStatement(queryAddCf);
-                st.setString(1, mail);
-                st.setString(2, newCod);
-                st.setString(3, cf);
-                st.executeUpdate();
-
-            } else {
-                result.beforeFirst();
-                System.out.println("Processing ResultSet");
-
-                try {
-                    while (result.next()) {
-                        CodRifChildDbDetails lastCod = new CodRifChildDbDetails(result.getString(1));
-                        codRifArrayList.add(lastCod);
-                    }
-
-                    String currentLast = codRifArrayList.get(0).getCodRif();
-                    String newCod = "s" + (Integer.parseInt(currentLast.substring(1, currentLast.length()))+1);
+                    //add to DB
                     st = this.connHere().prepareStatement(queryAddCf);
                     st.setString(1, mail);
                     st.setString(2, newCod);
                     st.setString(3, cf);
                     st.executeUpdate();
 
-                } catch (SQLException e) {
+                } else {
+                    result.beforeFirst();
+                    System.out.println("Processing ResultSet");
+
+                    try {
+                        while (result.next()) {
+                            CodRifChildDbDetails lastCod = new CodRifChildDbDetails(result.getString(1));
+                            codRifArrayList.add(lastCod);
+                        }
+
+                        String currentLast = codRifArrayList.get(0).getCodRif();
+                        String newCod = "s" + (Integer.parseInt(currentLast.substring(1, currentLast.length())) + 1);
+                        st = this.connHere().prepareStatement(queryAddCf);
+                        st.setString(1, mail);
+                        st.setString(2, newCod);
+                        st.setString(3, cf);
+                        st.executeUpdate();
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (result != null)
+                        result.close();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+                try {
+                    if (st != null)
+                        st.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null)
-                    result.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            return true;
         }
-
-        return true;
     }
+
 
 
 
@@ -830,29 +835,32 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryDeleteCodID = "DELETE FROM personaleint WHERE Interni_CF = '" + cf + "';";
 
         //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
-
-        try{
-            st = this.connHere().prepareStatement(queryDeleteCodID);
-            st.executeUpdate(queryDeleteCodID);
-            System.out.println("Deleted CodRif.");
-
-            st = this.connHere().prepareStatement(queryDelete);
-            st.executeUpdate(queryDelete);
-            System.out.println("Deleted from interni.");
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+        if(cf == null)
+            return false;
+        else {
             try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+                st = this.connHere().prepareStatement(queryDeleteCodID);
+                st.executeUpdate(queryDeleteCodID);
+                System.out.println("Deleted CodRif.");
 
-        return true;
+                st = this.connHere().prepareStatement(queryDelete);
+                st.executeUpdate(queryDelete);
+                System.out.println("Deleted from interni.");
+
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (st != null)
+                        st.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return true;
+        }
     }
 
     @Override
