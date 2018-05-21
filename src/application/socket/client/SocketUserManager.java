@@ -24,6 +24,7 @@ public class SocketUserManager implements UserRemote {
         this.socket = s;
         try{
             toServer = new ObjectOutputStream(s.getOutputStream());
+            toServer.flush();
             fromServer = new ObjectInputStream(s.getInputStream());
             System.out.println("Created streams I/O for socket user manager");
         }catch(IOException e){
@@ -38,11 +39,11 @@ public class SocketUserManager implements UserRemote {
     public boolean funzLog(String usr, String pwd) throws RemoteException {
         boolean isLogged = false;
         try{
-            toServer.writeUTF("login");
+            toServer.writeObject("login");
             toServer.flush();
-            toServer.writeUTF(usr);
+            toServer.writeObject(usr);
             toServer.flush();
-            toServer.writeUTF(pwd);
+            toServer.writeObject(pwd);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,7 +61,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
         try{
-            toServer.writeUTF("loadChild");
+            toServer.writeObject("loadChild");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,47 +77,47 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean addData(String name, String surname, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy, String nameContact, String surnameContact, String cfContact, String mailContact, String telContact, LocalDate birthdayContact, String bornWhereContact, String addressContact, String capContact, String provinceContact, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         try{
-            toServer.writeUTF("addChild");
+            toServer.writeObject("addChild");
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(surname);
+            toServer.writeObject(surname);
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(bornOn));
+            toServer.writeObject(String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeUTF(bornWhere);
+            toServer.writeObject(bornWhere);
             toServer.flush();
-            toServer.writeUTF(residence);
+            toServer.writeObject(residence);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
             toServer.writeObject(selectedAllergy);
             toServer.flush();
-            toServer.writeUTF(nameContact);
+            toServer.writeObject(nameContact);
             toServer.flush();
-            toServer.writeUTF(surnameContact);
+            toServer.writeObject(surnameContact);
             toServer.flush();
-            toServer.writeUTF(cfContact);
+            toServer.writeObject(cfContact);
             toServer.flush();
-            toServer.writeUTF(mailContact);
+            toServer.writeObject(mailContact);
             toServer.flush();
-            toServer.writeUTF(telContact);
+            toServer.writeObject(telContact);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(birthdayContact));
+            toServer.writeObject(String.valueOf(birthdayContact));
             toServer.flush();
-            toServer.writeUTF(bornWhereContact);
+            toServer.writeObject(bornWhereContact);
             toServer.flush();
-            toServer.writeUTF(addressContact);
+            toServer.writeObject(addressContact);
             toServer.flush();
-            toServer.writeUTF(capContact);
+            toServer.writeObject(capContact);
             toServer.flush();
-            toServer.writeUTF(provinceContact);
+            toServer.writeObject(provinceContact);
             toServer.flush();
             toServer.writeBoolean(isDoc);
             toServer.flush();
@@ -139,27 +140,27 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean updateChild(String name, String surname, String oldcf, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException{
         try {
-            toServer.writeUTF("updateChild");
+            toServer.writeObject("updateChild");
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(surname);
+            toServer.writeObject(surname);
             toServer.flush();
-            toServer.writeUTF(oldcf);
+            toServer.writeObject(oldcf);
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(bornOn));
+            toServer.writeObject(String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeUTF(bornWhere);
+            toServer.writeObject(bornWhere);
             toServer.flush();
-            toServer.writeUTF(residence);
+            toServer.writeObject(residence);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
             toServer.writeObject(selectedAllergy);
             toServer.flush();
@@ -177,9 +178,9 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean deleteChild(String cf) throws RemoteException{
         try{
-            toServer.writeUTF("deleteChild");
+            toServer.writeObject("deleteChild");
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -195,7 +196,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
         try{
-            toServer.writeUTF("loadIngredients");
+            toServer.writeObject("loadIngredients");
             toServer.flush();
             return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
         } catch (IOException e) {
@@ -211,29 +212,29 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean addContact (ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         try{
-            toServer.writeUTF("addContact");
+            toServer.writeObject("addContact");
             toServer.flush();
             toServer.writeObject(selectedChild);
             toServer.flush();
-            toServer.writeUTF(surname);
+            toServer.writeObject(surname);
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
-            toServer.writeUTF(mail);
+            toServer.writeObject(mail);
             toServer.flush();
-            toServer.writeUTF(tel);
+            toServer.writeObject(tel);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(birthday));
+            toServer.writeObject(String.valueOf(birthday));
             toServer.flush();
-            toServer.writeUTF(bornWhere);
+            toServer.writeObject(bornWhere);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
             toServer.writeBoolean(isDoc);
             toServer.flush();
@@ -255,9 +256,9 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean deleteContact (String oldcfContact) throws RemoteException{
         try{
-            toServer.writeUTF("deleteContact");
+            toServer.writeObject("deleteContact");
             toServer.flush();
-            toServer.writeUTF(oldcfContact);
+            toServer.writeObject(oldcfContact);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -273,29 +274,29 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException{
         try{
-            toServer.writeUTF("updateContact");
+            toServer.writeObject("updateContact");
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(surname);
+            toServer.writeObject(surname);
             toServer.flush();
-            toServer.writeUTF(oldcf);
+            toServer.writeObject(oldcf);
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
-            toServer.writeUTF(mail);
+            toServer.writeObject(mail);
             toServer.flush();
-            toServer.writeUTF(tel);
+            toServer.writeObject(tel);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(bornOn));
+            toServer.writeObject(String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeUTF(bornWhere);
+            toServer.writeObject(bornWhere);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
             toServer.write(isDoc);
             toServer.flush();
@@ -317,9 +318,9 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException {
         try{
-            toServer.writeUTF("loadDataContacts");
+            toServer.writeObject("loadDataContacts");
             toServer.flush();
-            toServer.writeUTF(cfChild);
+            toServer.writeObject(cfChild);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -340,7 +341,7 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException {
         System.out.println("sending a message to open staff");
         try {
-            toServer.writeUTF("loadDataStaff");
+            toServer.writeObject("loadDataStaff");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -357,27 +358,27 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
         try{
-            toServer.writeUTF("addDataStaff");
+            toServer.writeObject("addDataStaff");
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(surname);
+            toServer.writeObject(surname);
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
-            toServer.writeUTF(mail);
+            toServer.writeObject(mail);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(birthday));
+            toServer.writeObject(String.valueOf(birthday));
             toServer.flush();
-            toServer.writeUTF(bornWhere);
+            toServer.writeObject(bornWhere);
             toServer.flush();
-            toServer.writeUTF(residence);
+            toServer.writeObject(residence);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
             toServer.writeObject(selectedAllergy);
             toServer.flush();
@@ -395,9 +396,9 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean deleteStaff(String cf) throws RemoteException {
         try{
-            toServer.writeUTF("deleteStaff");
+            toServer.writeObject("deleteStaff");
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -413,29 +414,29 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean updateStaff(String name, String surname, String oldcf, String cf, String mail, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException{
         try{
-            toServer.writeUTF("updateStaff");
+            toServer.writeObject("updateStaff");
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(surname);
+            toServer.writeObject(surname);
             toServer.flush();
-            toServer.writeUTF(oldcf);
+            toServer.writeObject(oldcf);
             toServer.flush();
-            toServer.writeUTF(cf);
+            toServer.writeObject(cf);
             toServer.flush();
-            toServer.writeUTF(mail);
+            toServer.writeObject(mail);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(bornOn));
+            toServer.writeObject(String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeUTF(bornWhere);
+            toServer.writeObject(bornWhere);
             toServer.flush();
-            toServer.writeUTF(residence);
+            toServer.writeObject(residence);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
             toServer.writeObject(selectedAllergy);
             toServer.flush();
@@ -455,7 +456,7 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException {
         System.out.println("sending a message to load suppliers");
         try {
-            toServer.writeUTF("loadSuppliers");
+            toServer.writeObject("loadSuppliers");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -475,21 +476,21 @@ public class SocketUserManager implements UserRemote {
     public boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
         System.out.println("sending a message to add supplier");
         try{
-            toServer.writeUTF("addSupplier");
+            toServer.writeObject("addSupplier");
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(piva);
+            toServer.writeObject(piva);
             toServer.flush();
-            toServer.writeUTF(mail);
+            toServer.writeObject(mail);
             toServer.flush();
-            toServer.writeUTF(tel);
+            toServer.writeObject(tel);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -506,23 +507,23 @@ public class SocketUserManager implements UserRemote {
     public boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
         System.out.println("sending a message to update supplier");
         try{
-            toServer.writeUTF("updateSupplier");
+            toServer.writeObject("updateSupplier");
             toServer.flush();
-            toServer.writeUTF(name);
+            toServer.writeObject(name);
             toServer.flush();
-            toServer.writeUTF(oldPiva);
+            toServer.writeObject(oldPiva);
             toServer.flush();
-            toServer.writeUTF(piva);
+            toServer.writeObject(piva);
             toServer.flush();
-            toServer.writeUTF(mail);
+            toServer.writeObject(mail);
             toServer.flush();
-            toServer.writeUTF(tel);
+            toServer.writeObject(tel);
             toServer.flush();
-            toServer.writeUTF(address);
+            toServer.writeObject(address);
             toServer.flush();
-            toServer.writeUTF(cap);
+            toServer.writeObject(cap);
             toServer.flush();
-            toServer.writeUTF(province);
+            toServer.writeObject(province);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -539,9 +540,9 @@ public class SocketUserManager implements UserRemote {
     public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException {
         System.out.println("Deleting supplier...");
         try{
-            toServer.writeUTF("deleteSupplier");
+            toServer.writeObject("deleteSupplier");
             toServer.flush();
-            toServer.writeUTF(piva);
+            toServer.writeObject(piva);
             toServer.flush();
             toServer.writeObject(ingrNO);
             toServer.flush();
@@ -562,9 +563,9 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException {
         System.out.println("sending a message to load ingredients");
         try {
-            toServer.writeUTF("loadDataIngr");
+            toServer.writeObject("loadDataIngr");
             toServer.flush();
-            toServer.writeUTF(selectedSupplier);
+            toServer.writeObject(selectedSupplier);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -584,11 +585,11 @@ public class SocketUserManager implements UserRemote {
     public boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException {
         System.out.println("Adding ingredient to db...");
         try{
-            toServer.writeUTF("addIngredientSupplier");
+            toServer.writeObject("addIngredientSupplier");
             toServer.flush();
-            toServer.writeUTF(ingr);
+            toServer.writeObject(ingr);
             toServer.flush();
-            toServer.writeUTF(selectedSupplier);
+            toServer.writeObject(selectedSupplier);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -605,9 +606,9 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException {
         System.out.println("Loading menu with the ingredients of this supplier...");
         try{
-            toServer.writeUTF("loadMenuWithThisSupplier");
+            toServer.writeObject("loadMenuWithThisSupplier");
             toServer.flush();
-            toServer.writeUTF(selectedSupplier);
+            toServer.writeObject(selectedSupplier);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -627,9 +628,9 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
         System.out.println("Loading no available ingredients...");
         try{
-            toServer.writeUTF("loadNoIngr");
+            toServer.writeObject("loadNoIngr");
             toServer.flush();
-            toServer.writeUTF(selectedSupplier);
+            toServer.writeObject(selectedSupplier);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -679,9 +680,9 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
         try{
-            toServer.writeUTF("searchIngredients");
+            toServer.writeObject("searchIngredients");
             toServer.flush();
-            toServer.writeUTF(dish);
+            toServer.writeObject(dish);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -705,23 +706,23 @@ public class SocketUserManager implements UserRemote {
     public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, LocalDate oldDate) throws RemoteException {
         System.out.println("sendiang a message to update menu");
         try{
-            toServer.writeUTF("updateMenu");
+            toServer.writeObject("updateMenu");
             toServer.flush();
-            toServer.writeUTF(num);
+            toServer.writeObject(num);
             toServer.flush();
-            toServer.writeUTF(entree);
+            toServer.writeObject(entree);
             toServer.flush();
-            toServer.writeUTF(main);
+            toServer.writeObject(main);
             toServer.flush();
-            toServer.writeUTF(dessert);
+            toServer.writeObject(dessert);
             toServer.flush();
-            toServer.writeUTF(side);
+            toServer.writeObject(side);
             toServer.flush();
-            toServer.writeUTF(drink);
+            toServer.writeObject(drink);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(day));
+            toServer.writeObject(String.valueOf(day));
             toServer.flush();
-            toServer.writeUTF(String.valueOf(oldDate));
+            toServer.writeObject(String.valueOf(oldDate));
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -739,7 +740,7 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
         System.out.println("sending a message to open menu");
         try {
-            toServer.writeUTF("loadmenu");
+            toServer.writeObject("loadmenu");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -760,21 +761,21 @@ public class SocketUserManager implements UserRemote {
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
         System.out.println("sending a message to add the menu");
         try{
-            toServer.writeUTF("addMenu");
+            toServer.writeObject("addMenu");
             toServer.flush();
-            toServer.writeUTF(num);
+            toServer.writeObject(num);
             toServer.flush();
-            toServer.writeUTF(entree);
+            toServer.writeObject(entree);
             toServer.flush();
-            toServer.writeUTF(mainCourse);
+            toServer.writeObject(mainCourse);
             toServer.flush();
-            toServer.writeUTF(dessert);
+            toServer.writeObject(dessert);
             toServer.flush();
-            toServer.writeUTF(sideDish);
+            toServer.writeObject(sideDish);
             toServer.flush();
-            toServer.writeUTF(drink);
+            toServer.writeObject(drink);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(date));
+            toServer.writeObject(String.valueOf(date));
             toServer.flush();
 
         } catch (IOException e) {
@@ -793,14 +794,13 @@ public class SocketUserManager implements UserRemote {
     public boolean controllDate(LocalDate d) throws RemoteException {
         System.out.println("sending a message to controll the date");
         try {
-            toServer.writeUTF("controllDate");
+            toServer.writeObject("controllDate");
             toServer.flush();
-            toServer.writeUTF(String.valueOf(d));
+            toServer.writeObject(String.valueOf(d));
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         try{
             return fromServer.readBoolean();
 
@@ -814,9 +814,9 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean deleteMenu(LocalDate d) throws RemoteException {
         try{
-            toServer.writeUTF("deleteMenu");
+            toServer.writeObject("deleteMenu");
             toServer.flush();
-            toServer.writeUTF(String.valueOf(d));
+            toServer.writeObject(String.valueOf(d));
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -833,9 +833,9 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
         System.out.println("Loading interni with allergies...");
         try{
-            toServer.writeUTF("loadAllergicalInterni");
+            toServer.writeObject("loadAllergicalInterni");
             toServer.flush();
-            toServer.writeUTF(String.valueOf(date));
+            toServer.writeObject(String.valueOf(date));
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -853,9 +853,9 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException {
         try{
-            toServer.writeUTF("saveIngredients");
+            toServer.writeObject("saveIngredients");
             toServer.flush();
-            toServer.writeUTF(dish);
+            toServer.writeObject(dish);
             toServer.flush();
             toServer.writeObject(selectedIngredients);
             toServer.flush();
@@ -874,7 +874,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException {
         try{
-            toServer.writeUTF("loadSpecialMenu");
+            toServer.writeObject("loadSpecialMenu");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -891,13 +891,13 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException {
         try{
-            toServer.writeUTF("deleteSpecialMenu");
+            toServer.writeObject("deleteSpecialMenu");
             toServer.flush();
-            toServer.writeUTF(String.valueOf(date));
+            toServer.writeObject(String.valueOf(date));
             toServer.flush();
-            toServer.writeUTF(FC);
+            toServer.writeObject(FC);
             toServer.flush();
-            toServer.writeUTF(allergies);
+            toServer.writeObject(allergies);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -913,19 +913,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
         try{
-            toServer.writeUTF("addSpecialMenu");
+            toServer.writeObject("addSpecialMenu");
             toServer.flush();
-            toServer.writeUTF(entree);
+            toServer.writeObject(entree);
             toServer.flush();
-            toServer.writeUTF(main);
+            toServer.writeObject(main);
             toServer.flush();
-            toServer.writeUTF(dessert);
+            toServer.writeObject(dessert);
             toServer.flush();
-            toServer.writeUTF(side);
+            toServer.writeObject(side);
             toServer.flush();
-            toServer.writeUTF(drink);
+            toServer.writeObject(drink);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(date));
+            toServer.writeObject(String.valueOf(date));
             toServer.flush();
             toServer.writeObject(special);
             toServer.flush();
@@ -946,19 +946,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
         try{
-            toServer.writeUTF("updateSpecialMenu");
+            toServer.writeObject("updateSpecialMenu");
             toServer.flush();
-            toServer.writeUTF(entree);
+            toServer.writeObject(entree);
             toServer.flush();
-            toServer.writeUTF(main);
+            toServer.writeObject(main);
             toServer.flush();
-            toServer.writeUTF(dessert);
+            toServer.writeObject(dessert);
             toServer.flush();
-            toServer.writeUTF(side);
+            toServer.writeObject(side);
             toServer.flush();
-            toServer.writeUTF(drink);
+            toServer.writeObject(drink);
             toServer.flush();
-            toServer.writeUTF(String.valueOf(date));
+            toServer.writeObject(String.valueOf(date));
             toServer.flush();
             toServer.writeObject(special);
             toServer.flush();
@@ -1004,7 +1004,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
         try{
-            toServer.writeUTF("loadDataTrip");
+            toServer.writeObject("loadDataTrip");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1022,10 +1022,10 @@ public class SocketUserManager implements UserRemote {
     public boolean deleteTrip(String dep, String dateDep, String dateCom, String alloggio, String dateArr, String arr) throws RemoteException {
         System.out.println("Deleting trip...");
         try{
-            toServer.writeUTF("deleteTrip");
+            toServer.writeObject("deleteTrip");
             toServer.flush();
             //String dep, String dateDep, String dateCom, String staying, String dateArr, String arr
-            toServer.writeUTF(dep);
+            toServer.writeObject(dep);
             toServer.flush();
             toServer.writeObject(dateDep);
             toServer.flush();
@@ -1052,7 +1052,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException{
         try{
-            toServer.writeUTF("loadChildTrip");
+            toServer.writeObject("loadChildTrip");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1069,7 +1069,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
         try{
-            toServer.writeUTF("loadStaffTtrip");
+            toServer.writeObject("loadStaffTtrip");
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1089,23 +1089,23 @@ public class SocketUserManager implements UserRemote {
         int[] participantsFromServer = new int[2];
 
         try{
-            toServer.writeUTF("addSupplier");
+            toServer.writeObject("addSupplier");
             toServer.flush();
             toServer.writeObject(selectedChild);
             toServer.flush();
             toServer.writeObject(selectedStaff);
             toServer.flush();
-            toServer.writeUTF(timeDep);
+            toServer.writeObject(timeDep);
             toServer.flush();
-            toServer.writeUTF(timeArr);
+            toServer.writeObject(timeArr);
             toServer.flush();
-            toServer.writeUTF(timeCom);
+            toServer.writeObject(timeCom);
             toServer.flush();
-            toServer.writeUTF(departureFrom);
+            toServer.writeObject(departureFrom);
             toServer.flush();
-            toServer.writeUTF(arrivalTo);
+            toServer.writeObject(arrivalTo);
             toServer.flush();
-            toServer.writeUTF(staying);
+            toServer.writeObject(staying);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1123,19 +1123,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("loadTripSelectedChildren");
+            toServer.writeObject("loadTripSelectedChildren");
             toServer.flush();
-            toServer.writeUTF(selectedDepFrom);
+            toServer.writeObject(selectedDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedDep);
+            toServer.writeObject(selectedDep);
             toServer.flush();
-            toServer.writeUTF(selectedCom);
+            toServer.writeObject(selectedCom);
             toServer.flush();
-            toServer.writeUTF(selectedAccomodation);
+            toServer.writeObject(selectedAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedArr);
+            toServer.writeObject(selectedArr);
             toServer.flush();
-            toServer.writeUTF(selectedArrTo);
+            toServer.writeObject(selectedArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1152,19 +1152,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("loadTripSelectedStaff");
+            toServer.writeObject("loadTripSelectedStaff");
             toServer.flush();
-            toServer.writeUTF(selectedDepFrom);
+            toServer.writeObject(selectedDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedDep);
+            toServer.writeObject(selectedDep);
             toServer.flush();
-            toServer.writeUTF(selectedCom);
+            toServer.writeObject(selectedCom);
             toServer.flush();
-            toServer.writeUTF(selectedAccomodation);
+            toServer.writeObject(selectedAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedArr);
+            toServer.writeObject(selectedArr);
             toServer.flush();
-            toServer.writeUTF(selectedArrTo);
+            toServer.writeObject(selectedArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1181,13 +1181,13 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<CodRifChildDbDetails> findNotAvailableStaff(ArrayList<String> selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
         try{
-            toServer.writeUTF("findNotAvailableStaff");
+            toServer.writeObject("findNotAvailableStaff");
             toServer.flush();
             toServer.writeObject(selectedStaffCf);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1204,13 +1204,13 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<CodRifChildDbDetails> findNotAvailableChild(ArrayList<String> selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
         try{
-            toServer.writeUTF("findNotAvailableChild");
+            toServer.writeObject("findNotAvailableChild");
             toServer.flush();
             toServer.writeObject(selectedChildCf);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1229,7 +1229,7 @@ public class SocketUserManager implements UserRemote {
         int[] participants = new int[2];
 
         try{
-            toServer.writeUTF("howManyActualParticipants");
+            toServer.writeObject("howManyActualParticipants");
             toServer.flush();
             toServer.writeObject(selectedChildCf);
             toServer.flush();
@@ -1252,7 +1252,7 @@ public class SocketUserManager implements UserRemote {
     @Override
     public HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("associateBusToParticipants");
+            toServer.writeObject("associateBusToParticipants");
             toServer.flush();
             toServer.writeObject(selectedChildCfArrayList);
             toServer.writeInt(totChildren);
@@ -1261,17 +1261,17 @@ public class SocketUserManager implements UserRemote {
             toServer.flush();
             toServer.writeInt(totStaff);
             toServer.flush();
-            toServer.writeUTF(selectedDepFrom);
+            toServer.writeObject(selectedDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedDep);
+            toServer.writeObject(selectedDep);
             toServer.flush();
-            toServer.writeUTF(selectedCom);
+            toServer.writeObject(selectedCom);
             toServer.flush();
-            toServer.writeUTF(selectedAccomodation);
+            toServer.writeObject(selectedAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedArr);
+            toServer.writeObject(selectedArr);
             toServer.flush();
-            toServer.writeUTF(selectedArrTo);
+            toServer.writeObject(selectedArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1287,19 +1287,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadWhoTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("loadWhoTrip");
+            toServer.writeObject("loadWhoTrip");
             toServer.flush();
-            toServer.writeUTF(selectedDepFrom);
+            toServer.writeObject(selectedDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedDep);
+            toServer.writeObject(selectedDep);
             toServer.flush();
-            toServer.writeUTF(selectedCom);
+            toServer.writeObject(selectedCom);
             toServer.flush();
-            toServer.writeUTF(selectedAccomodation);
+            toServer.writeObject(selectedAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedArr);
+            toServer.writeObject(selectedArr);
             toServer.flush();
-            toServer.writeUTF(selectedArrTo);
+            toServer.writeObject(selectedArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1316,19 +1316,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<CodRifChildDbDetails> loadBusTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("loadBusTrip");
+            toServer.writeObject("loadBusTrip");
             toServer.flush();
-            toServer.writeUTF(selectedDepFrom);
+            toServer.writeObject(selectedDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedDep);
+            toServer.writeObject(selectedDep);
             toServer.flush();
-            toServer.writeUTF(selectedCom);
+            toServer.writeObject(selectedCom);
             toServer.flush();
-            toServer.writeUTF(selectedAccomodation);
+            toServer.writeObject(selectedAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedArr);
+            toServer.writeObject(selectedArr);
             toServer.flush();
-            toServer.writeUTF(selectedArrTo);
+            toServer.writeObject(selectedArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1345,19 +1345,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<SolutionDbDetails> loadSolution(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("loadSolution");
+            toServer.writeObject("loadSolution");
             toServer.flush();
-            toServer.writeUTF(selectedTripDepFrom);
+            toServer.writeObject(selectedTripDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
-            toServer.writeUTF(selectedTripAccomodation);
+            toServer.writeObject(selectedTripAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedTripArr);
+            toServer.writeObject(selectedTripArr);
             toServer.flush();
-            toServer.writeUTF(selectedTripArrTo);
+            toServer.writeObject(selectedTripArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1374,23 +1374,23 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<String> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("findParticipantOnWrongBus");
+            toServer.writeObject("findParticipantOnWrongBus");
             toServer.flush();
             toServer.writeObject(selectedChildCfArrayList);
             toServer.flush();
-            toServer.writeUTF(selectedBus);
+            toServer.writeObject(selectedBus);
             toServer.flush();
-            toServer.writeUTF(selectedTripDepFrom);
+            toServer.writeObject(selectedTripDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
-            toServer.writeUTF(selectedTripAccomodation);
+            toServer.writeObject(selectedTripAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedTripArr);
+            toServer.writeObject(selectedTripArr);
             toServer.flush();
-            toServer.writeUTF(selectedTripArrTo);
+            toServer.writeObject(selectedTripArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1407,25 +1407,25 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<String> findMissingParticipantsOnThisBus(ArrayList<String> peopleOnWrongBus, ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("findMissingParticipantsOnThisBus");
+            toServer.writeObject("findMissingParticipantsOnThisBus");
             toServer.flush();
             toServer.writeObject(peopleOnWrongBus);
             toServer.flush();
             toServer.writeObject(selectedChildCfArrayList);
             toServer.flush();
-            toServer.writeUTF(selectedBus);
+            toServer.writeObject(selectedBus);
             toServer.flush();
-            toServer.writeUTF(selectedTripDepFrom);
+            toServer.writeObject(selectedTripDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
-            toServer.writeUTF(selectedTripAccomodation);
+            toServer.writeObject(selectedTripAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedTripArr);
+            toServer.writeObject(selectedTripArr);
             toServer.flush();
-            toServer.writeUTF(selectedTripArrTo);
+            toServer.writeObject(selectedTripArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1442,19 +1442,19 @@ public class SocketUserManager implements UserRemote {
     @Override
     public void makeIsHereFalse(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("makeIsHereFalse");
+            toServer.writeObject("makeIsHereFalse");
             toServer.flush();
-            toServer.writeUTF(selectedTripDepFrom);
+            toServer.writeObject(selectedTripDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
-            toServer.writeUTF(selectedTripAccomodation);
+            toServer.writeObject(selectedTripAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedTripArr);
+            toServer.writeObject(selectedTripArr);
             toServer.flush();
-            toServer.writeUTF(selectedTripArrTo);
+            toServer.writeObject(selectedTripArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1464,21 +1464,21 @@ public class SocketUserManager implements UserRemote {
     @Override
     public void makeIsHereTrue(String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("makeIsHereTrue");
+            toServer.writeObject("makeIsHereTrue");
             toServer.flush();
-            toServer.writeUTF(selectedBus);
+            toServer.writeObject(selectedBus);
             toServer.flush();
-            toServer.writeUTF(selectedTripDepFrom);
+            toServer.writeObject(selectedTripDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
-            toServer.writeUTF(selectedTripAccomodation);
+            toServer.writeObject(selectedTripAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedTripArr);
+            toServer.writeObject(selectedTripArr);
             toServer.flush();
-            toServer.writeUTF(selectedTripArrTo);
+            toServer.writeObject(selectedTripArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1488,23 +1488,23 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadMissing(ArrayList<String> missingArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
         try{
-            toServer.writeUTF("loadMissing");
+            toServer.writeObject("loadMissing");
             toServer.flush();
             toServer.writeObject(missingArrayList);
             toServer.flush();
-            toServer.writeUTF(selectedBus);
+            toServer.writeObject(selectedBus);
             toServer.flush();
-            toServer.writeUTF(selectedTripDepFrom);
+            toServer.writeObject(selectedTripDepFrom);
             toServer.flush();
-            toServer.writeUTF(selectedTripDep);
+            toServer.writeObject(selectedTripDep);
             toServer.flush();
-            toServer.writeUTF(selectedTripCom);
+            toServer.writeObject(selectedTripCom);
             toServer.flush();
-            toServer.writeUTF(selectedTripAccomodation);
+            toServer.writeObject(selectedTripAccomodation);
             toServer.flush();
-            toServer.writeUTF(selectedTripArr);
+            toServer.writeObject(selectedTripArr);
             toServer.flush();
-            toServer.writeUTF(selectedTripArrTo);
+            toServer.writeObject(selectedTripArrTo);
             toServer.flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,11 +2,8 @@ package application.contr;
 
 import application.Singleton;
 import application.gui.GuiNew;
-import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
 
-import application.rmi.client.RmiManager;
-import application.socket.client.SocketManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;

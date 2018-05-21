@@ -26,7 +26,7 @@
         <TextField fx:id="dessertTF" layoutX="930.0" layoutY="276.0" prefHeight="25.0" prefWidth="212.0" promptText="Dessert" />
         <TextField fx:id="sideTF" layoutX="930.0" layoutY="321.0" prefHeight="25.0" prefWidth="212.0" promptText="Side dish" />
         <TextField fx:id="drinkTF" layoutX="930.0" layoutY="366.0" prefHeight="25.0" prefWidth="212.0" promptText="Drink" />
-        <TableView fx:id="tabIngr" layoutX="547.0" layoutY="171.0" prefHeight="384.0" prefWidth="212.0" style="-fx-background-color: àE0FFFF;" AnchorPane.topAnchor="183.0">
+        <TableView fx:id="tabIngr" layoutX="547.0" layoutY="171.0" prefHeight="384.0" prefWidth="212.0" style="-fx-background-color: #E0FFFF;" AnchorPane.topAnchor="183.0">
             <columns>
                 <TableColumn fx:id="Ingredients" prefWidth="211.0" text="Ingredients" />
             </columns>

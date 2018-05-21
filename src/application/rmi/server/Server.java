@@ -20,14 +20,10 @@ public class Server {
     public static void main(String[] args) throws RemoteException {
 
         try{
-
-
             Registry registry = LocateRegistry.createRegistry(1099);
+
             registry.rebind("Inter", new ServerImpl() );
-            System.out.println("Server set up completely.");
-
-
-
+            System.out.println("Server RMI set up completely.");
 
         } catch (RemoteException e){
 
@@ -35,16 +31,13 @@ public class Server {
         }
 
 
-        ServerSocket ss2 = null;
+        ServerSocket ss2;
 
         try {
             ss2 = new ServerSocket(1092);
 
-            ServerSocketListener ss = new ServerSocketListener(ss2);  //creo il server listener che si occupa dell'accettare i client e del gestirli come thread
-            System.out.println("Server connection ready");
-
-
-
+            new ServerSocketListener(ss2);  //creo il server listener che si occupa dell'accettare i client e del gestirli come thread
+            System.out.println("Server SOCKET connection ready");
 
         } catch (IOException e) {
             e.printStackTrace();

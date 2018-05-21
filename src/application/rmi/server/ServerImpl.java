@@ -2223,17 +2223,18 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<SpecialDbDetails> special = new ArrayList<>();
         ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
         ArrayList<SpecialDbDetails> specialInterni = new ArrayList<>();
-        String queryLoad = "SELECT DISTINCT CF,Allergie FROM project.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT CF FROM project.menu_special where date ='"+date+"')";
+        String queryLoad = "SELECT CF,Allergie FROM project.interni WHERE Allergie  != 'none' and CF NOT IN (SELECT menu_special_CF FROM project.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"')";
         String queryIngr = "SELECT dish_ingredients_ingredients_ingredient FROM project.menu_base_has_dish_ingredients WHERE menu_base_date =' "+date+"'";
+        IngredientsDbDetails ingred;
+        SpecialDbDetails spec;
+
+        //prima queryLoad
         try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
-            stIngr = this.connHere().prepareStatement(queryIngr);
-            resIngr = stIngr.executeQuery(queryIngr);
         }catch (SQLException e){
             e.printStackTrace();
         }
-
         try{
             if(!result.next()){
                 System.out.println("No interni in db");
@@ -2242,20 +2243,42 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 result.beforeFirst();
                 try{
                     while(result.next()){
-                        SpecialDbDetails example = null;
-                        example = new SpecialDbDetails(result.getString(1),result.getString(2));
-                        special.add(example);
+                        spec = new SpecialDbDetails(result.getString(1),result.getString(2));
+                        special.add(spec);
                     }
 
-                    while(resIngr.next()){
-                        IngredientsDbDetails example = null;
-                        example = new IngredientsDbDetails(resIngr.getString(1));
-                        ingredients.add(example);
+                    //poi queryIngr
+                    try{
+                        stIngr = this.connHere().prepareStatement(queryIngr);
+                        resIngr = stIngr.executeQuery(queryIngr);
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                    try{
+                        if(!resIngr.next()){
+                            System.out.println("No ingredient in db");
+                            return null;
+                        }
+                        else{
+                            result.beforeFirst();
+                            try{
+                                while(resIngr.next()){
+                                    ingred = new IngredientsDbDetails(resIngr.getString(1));
+                                    ingredients.add(ingred);
+                                }
+
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch(Exception e){
+                        e.printStackTrace();
                     }
 
                     for(SpecialDbDetails x : special){
                         for(IngredientsDbDetails y : ingredients){
-                            if(x.getAllergie().contains(y.getIngr())) specialInterni.add(new SpecialDbDetails(x.getCF(), x.getAllergie()));
+                            if(x.getAllergie().contains(y.getIngr()))
+                                specialInterni.add(new SpecialDbDetails(x.getCF(), x.getAllergie()));
                         }
                     }
                 }catch (SQLException e){

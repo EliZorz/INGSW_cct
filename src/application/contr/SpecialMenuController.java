@@ -194,8 +194,6 @@ public class SpecialMenuController implements Initializable {
         All.setCellValueFactory(cellData -> cellData.getValue().allergieProperty());
         tabInterni.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-
-
         tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedIngr.add(newSelection.getIngr());
@@ -471,7 +469,7 @@ public class SpecialMenuController implements Initializable {
     }
 
     public boolean controllAllergicals(){
-        ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
+        ArrayList<IngredientsDbDetails> ingredientsForThisDish;
         try{
 
             if(entreeTF.getText().trim().length() != 0) {
@@ -504,10 +502,6 @@ public class SpecialMenuController implements Initializable {
                     for(IngredientsDbDetails y : ingredientsForThisDish)
                         if(x.getAllergie().contains(y.getIngr())) return true;
             }
-
-            return false;
-
-
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -524,7 +518,7 @@ public class SpecialMenuController implements Initializable {
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
-            if(specialInterni.isEmpty() && loadInterni != null){
+            if( loadInterni != null){
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);
