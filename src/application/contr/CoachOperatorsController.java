@@ -104,6 +104,14 @@ public class CoachOperatorsController implements Initializable {
     public Button search;
 
 
+    UserRemote u;
+
+    public CoachOperatorsController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -169,7 +177,6 @@ public class CoachOperatorsController implements Initializable {
     public void handleLoadSuppliers() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataCoachOperator();  //call method in Server Impl
             dataObsList.clear();
 
@@ -217,7 +224,6 @@ public class CoachOperatorsController implements Initializable {
         } else {
             System.out.println("Adding data to database...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 boolean isAddOk = u.addDataCoachOperator(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isAddOk) {
@@ -246,7 +252,6 @@ public class CoachOperatorsController implements Initializable {
         } else {
             System.out.println("Adding data to database...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 boolean isEditOk = u.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -274,7 +279,6 @@ public class CoachOperatorsController implements Initializable {
         */
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             //cancello persone collegate alle gite connesse al bus da interni_is_here
             boolean isBusConnectedToSomeone = u.deleteIsHere(selectedPlate);
             if( !isBusConnectedToSomeone ){
@@ -317,7 +321,6 @@ public class CoachOperatorsController implements Initializable {
     public void handleDelete() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             boolean deleted = u.deleteCoachOperator(oldPiva);
             if(deleted){
                 this.renameLabel("Deleted.");
@@ -368,7 +371,6 @@ public class CoachOperatorsController implements Initializable {
         } else {
             System.out.println("Adding data to database...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 boolean isEditOk = u.addBusToDb(plate, capacity, oldPiva);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -393,7 +395,6 @@ public class CoachOperatorsController implements Initializable {
     public void handleLoadBus() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<BusPlateCapacityDbDetails> staffDbArrayList = u.loadDataBus(oldPiva);  //call method in Server Impl
             busObsList.clear();
 

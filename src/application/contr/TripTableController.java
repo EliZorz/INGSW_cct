@@ -56,6 +56,16 @@ public class TripTableController implements Initializable{
     public Label lblStatus;
 
 
+    UserRemote  u;
+
+    public TripTableController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colDepFrom.setCellValueFactory(cellData->cellData.getValue().depFromProperty());
@@ -84,7 +94,6 @@ public class TripTableController implements Initializable{
     public void handleLoad() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //call method in Server Impl
 
             dataObsList.clear();
@@ -126,7 +135,6 @@ public class TripTableController implements Initializable{
 
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             boolean deleted = u.deleteTrip(selectedTrip.get(0), stringDep, stringCom, selectedTrip.get(3), stringArr, selectedTrip.get(5));
             if(deleted){
                 this.renameLabel("Deleted.");

@@ -57,8 +57,6 @@ public class MainControllerLogin {
             } else if(selected.equals("RMI")){
                 System.out.println("User chose RMI.\nProceed...");
 
-                //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
-
                 UserRemote u = Singleton.getInstance().methodRmi();
 
                 boolean result = u.funzLog(usr, pwd);
@@ -66,51 +64,31 @@ public class MainControllerLogin {
                 if (result){
 
                     this.renameLabel("Logged in.");
-
                     new GuiNew("MenuIniziale");
 
                 } else{
                     this.renameLabel("Insert correct data.");
                 }
 
-
-                /* da mettere nel logOut !!!!!!!!!!!!!!!!!!!!!!!!!!
-                if (connectionOK != null) {
-                    try {
-                        connectionOK.close();
-                    } catch (SQLException sqe) {
-                        sqe.printStackTrace();
-                    }
-                }
-                if(result != null){
-                    try{
-                        result.close();
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                */
-
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
-              //  ch = new SocketManager();
-               // UserRemote u = ch.getUserService();
+
                 UserRemote u = Singleton.getInstance().methodSocket();
 
                 boolean result = u.funzLog(usr, pwd);
 
                 if (result){
 
-                    this.renameLabel("Loggato");
+                    this.renameLabel("Logged in.");
                     new GuiNew("MenuIniziale");
 
                 }else{
-                    this.renameLabel("Credenziali sbagliate");
+                    this.renameLabel("Wrong data.");
                 }
                // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
 
             } else {
-                    lblStatus.setText("RMI or SOCKET?");
+                    lblStatus.setText("Something wrong.");
             }
 
         } catch (Exception se) {

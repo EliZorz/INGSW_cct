@@ -82,6 +82,16 @@ public class TripPlanController implements Initializable {
     public Button btnLoadStaff;
 
 
+    UserRemote  u;
+
+    public TripPlanController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colNameChild.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -151,7 +161,6 @@ public class TripPlanController implements Initializable {
         } else {
             System.out.println("Adding...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 //in serverImpl create NumGita too (as in add for children)
 
                 int[] totParticipantsArray = u.addTrip(selectedChild, selectedStaff, dateDep, dateArr, dateCom, departureFrom, arrivalTo, staying);
@@ -175,7 +184,6 @@ public class TripPlanController implements Initializable {
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<ChildTripDbDetails> childDbArrayList = u.loadChildTrip();  //call method in Server Impl
             childObsList.clear();
 
@@ -201,7 +209,6 @@ public class TripPlanController implements Initializable {
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<StaffTripDbDetails> staffDbArrayList = u.loadStaffTrip();  //call method in Server Impl
             staffObsList.clear();
 

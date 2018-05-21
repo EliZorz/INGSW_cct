@@ -69,6 +69,16 @@ public class TripSolutionBusController  implements Initializable{
     public Label lblWarning;
 
 
+    UserRemote  u;
+
+    public TripSolutionBusController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colDepFrom.setCellValueFactory(cellData->cellData.getValue().depFromProperty());
@@ -109,7 +119,6 @@ public class TripSolutionBusController  implements Initializable{
     public void handleLoadTrip() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //already existing
 
             tripObsList.clear();
@@ -136,7 +145,6 @@ public class TripSolutionBusController  implements Initializable{
     public void handleLoadSolution() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<SolutionDbDetails> tripDbArrayList = u.loadSolution(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
 
             dataObsList.clear();

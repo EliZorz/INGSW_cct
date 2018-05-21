@@ -106,6 +106,16 @@ public class TripActualParticipantsController implements Initializable {
     @FXML
     public Label lblWarning;
 
+    UserRemote  u;
+
+    public TripActualParticipantsController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         btnBus.setDisable(true);
@@ -180,7 +190,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleLoadTrip() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //already existing
 
             tripObsList.clear();
@@ -206,7 +215,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleLoadChildren() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<ChildSelectedTripDbDetails> childDbArrayList = u.loadTripSelectedChildren(selectedTrip.get(0), selectedTrip.get(1), selectedTrip.get(2), selectedTrip.get(3), selectedTrip.get(4), selectedTrip.get(5));  //call method in Server Impl
 
             actualChildrenObsList.clear();
@@ -230,7 +238,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleLoadStaff() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<StaffSelectedTripDbDetails> staffDbArrayList = u.loadTripSelectedStaff(selectedTrip.get(0), selectedTrip.get(1), selectedTrip.get(2), selectedTrip.get(3), selectedTrip.get(4), selectedTrip.get(5));  //call method in Server Impl
 
             actualStaffObsList.clear();
@@ -259,7 +266,6 @@ public class TripActualParticipantsController implements Initializable {
         else {
             System.out.println("Selection is being processed...");
             try{
-                UserRemote u = Singleton.getInstance().methodRmi();
                 ArrayList<CodRifChildDbDetails> notAvailableStaffArrayList = u.findNotAvailableStaff(selectedStaffCfArrayList, selectedTripDep, selectedTripCom);
                 ArrayList<CodRifChildDbDetails> notAvailableChildArrayList = u.findNotAvailableChild(selectedChildCfArrayList, selectedTripDep, selectedTripCom);
 
@@ -346,7 +352,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleCalculateBus() {
         System.out.println("Calculating necessary buses...");
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             //calculate who goes on which bus -> HashMap<plateBus, who>
             busForParticipants = u.associateBusToParticipants(selectedChildCfArrayList, totChildren, selectedStaffCfArrayList, totStaff, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 

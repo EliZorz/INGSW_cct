@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class deleteSupplierController implements Initializable {
+public class DeleteSupplierController implements Initializable {
 
     private ObservableList<DishesDetails> dishes = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsNo = FXCollections.observableArrayList();

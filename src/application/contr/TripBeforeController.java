@@ -94,6 +94,15 @@ public class TripBeforeController implements Initializable{
     public TableColumn<ChildSelectedTripGuiDetails, String> colCfMissing;
 
 
+    UserRemote  u;
+
+    public TripBeforeController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colDepFrom.setCellValueFactory(cellData->cellData.getValue().depFromProperty());
@@ -153,7 +162,6 @@ public class TripBeforeController implements Initializable{
     public void handleLoadTrip() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //call method in Server Impl
 
             dataObsList.clear();
@@ -178,7 +186,6 @@ public class TripBeforeController implements Initializable{
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<ChildSelectedTripDbDetails> childDbArrayList = u.loadWhoTrip(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
             whoObsList.clear();
 
@@ -204,7 +211,6 @@ public class TripBeforeController implements Initializable{
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<CodRifChildDbDetails> busDbArrayList = u.loadBusTrip(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
             busObsList.clear();
 
@@ -234,7 +240,6 @@ public class TripBeforeController implements Initializable{
         else {
             System.out.println("Checking...");
             try{
-                UserRemote u = Singleton.getInstance().methodRmi();
                 //azzero is_here per la gita corrente
                 u.makeIsHereFalse(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
