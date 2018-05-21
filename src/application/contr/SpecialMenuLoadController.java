@@ -126,7 +126,11 @@ public class SpecialMenuLoadController implements Initializable{
 
     public void exit(ActionEvent event) {
         ((Node)(event.getSource())).getScene().getWindow().hide();
-
+        try {
+            new GuiNew("Menu");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addSpecialMenu(ActionEvent event) throws IOException {

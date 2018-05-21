@@ -141,6 +141,17 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public Button showWho;
 
+
+    UserRemote  u;
+
+    public SpecialMenuController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
+
+
     public void search(){
         searchedInterni = FXCollections.observableArrayList();
         if(searchTF.getText().trim().length() != 0){
@@ -172,9 +183,6 @@ public class SpecialMenuController implements Initializable {
             tabIngr.setItems(ingredients);
         }
     }
-
-
-
 
 
     @Override
@@ -224,10 +232,9 @@ public class SpecialMenuController implements Initializable {
     private void loadIngredients(){
         controlIngredients = false;
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
-            if( ingredients != null){
+            if(ingArray != null){
                 for(IngredientsDbDetails x : ingArray){
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
                     ingredients.add(tmp);
@@ -264,8 +271,7 @@ public class SpecialMenuController implements Initializable {
             drinkTF.setText("");
             sideTF.setText("");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();
-                //controll date
+                //control date
                 if (!u.controllDate(dateSpecialMenu)) {
                     controllSearchedDate.setText("Loading");
 
@@ -293,7 +299,6 @@ public class SpecialMenuController implements Initializable {
 
     private boolean showSelection(String selection) throws RemoteException {
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
             if(ingredientsForThisDish != null) {
@@ -443,7 +448,6 @@ public class SpecialMenuController implements Initializable {
         else if(controllAllergicals()) status.setText("A person is allergic to this menu");
         else{
             try{
-                UserRemote u = Singleton.getInstance().methodRmi();
                 if(selectedMenu == null){
                     for(SpecialDbDetails x : selectedInterno) {
                         boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
@@ -469,7 +473,7 @@ public class SpecialMenuController implements Initializable {
     public boolean controllAllergicals(){
         ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
+
             if(entreeTF.getText().trim().length() != 0) {
                 ingredientsForThisDish = u.searchIngredients(entreeTF.getText());
                 for(SpecialDbDetails x : selectedInterno)
@@ -517,7 +521,6 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public void showAllergical(){
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
@@ -552,7 +555,6 @@ public class SpecialMenuController implements Initializable {
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             if(u.saveIngredients(dishName, ingredients)){
                 status.setText("Success!!");
                 selectedIngr = new ArrayList<>();
@@ -623,14 +625,14 @@ public class SpecialMenuController implements Initializable {
     }
 
 
-    public void reLoad(ActionEvent event) {
+    public void reLoad() {
         searchedInterni = FXCollections.observableArrayList();
         searchTF.setText("");
         tabInterni.setItems(null);
         tabInterni.setItems(specialInterni);
     }
 
-    public void reLoadIngr(ActionEvent event){
+    public void reLoadIngr(){
         searchedInterni = FXCollections.observableArrayList();
         searchIngr.setText("");
         tabIngr.setItems(null);
