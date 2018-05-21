@@ -34,15 +34,16 @@ public class SocketThread extends Thread {
 
         } catch (IOException e) {
             System.out.println("IO error in server thread");
+            e.printStackTrace();
         }
 
         try {
 
             while (true) {
-                System.out.println("Ready to recieve a message");
+                System.out.println("Ready to receive a message");
                 line = inputFromClient.readUTF();
 
-                System.out.println("recieved " + line);
+                System.out.println("received " + line);
 
                 boolean responce = doAction(line);  //passo il messaggio al doAction che decide cosa fare
 
@@ -51,13 +52,12 @@ public class SocketThread extends Thread {
                 outputToClient.flush();
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             line = this.getName();  //salva in line il nome del thread che sta eseguendo
             System.out.println("IO Error/ Client " + line + " terminated abruptly");
-        } catch (NullPointerException e) {
-            line = this.getName();
-            System.out.println("Client " + line + " closed");  //stampa nel server che tale client è chiuso
-        } finally {
+            e.printStackTrace();
+        }
+        /*finally {
             try {
                 System.out.println("Connection Closing..");
                 if (inputFromClient != null) {
@@ -73,11 +73,11 @@ public class SocketThread extends Thread {
                     //System.out.println(s.isClosed()); //serve per controllare che la socket sia chiusa
                     System.out.println("Socket Closed");
                 }
-
             } catch (IOException ie) {
                 System.out.println("Socket Close Error");
+                ie.printStackTrace();
             }
-        }
+        } */
     }
 
     private boolean doAction(String line) throws IOException {
