@@ -1,26 +1,26 @@
 package application.contr;
 
-import application.Interfaces.UserRemote;
-import application.Singleton;
-import application.details.IngredientsDbDetails;
-import application.details.IngredientsGuiDetails;
-import application.details.SpecialDbDetails;
-import application.gui.GuiNew;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+        import application.Interfaces.UserRemote;
+        import application.Singleton;
+        import application.details.IngredientsDbDetails;
+        import application.details.IngredientsGuiDetails;
+        import application.details.SpecialDbDetails;
+        import application.gui.GuiNew;
+        import javafx.beans.property.StringProperty;
+        import javafx.collections.FXCollections;
+        import javafx.collections.ObservableList;
+        import javafx.event.ActionEvent;
+        import javafx.fxml.FXML;
+        import javafx.fxml.Initializable;
+        import javafx.scene.Node;
+        import javafx.scene.control.*;
 
-import java.io.IOException;
-import java.net.URL;
-import java.rmi.RemoteException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+        import java.io.IOException;
+        import java.net.URL;
+        import java.rmi.RemoteException;
+        import java.time.LocalDate;
+        import java.util.ArrayList;
+        import java.util.ResourceBundle;
 
 public class newMenuController implements Initializable {
 
@@ -101,6 +101,14 @@ public class newMenuController implements Initializable {
     public Button back;
 
 
+    UserRemote  u;
+
+    public newMenuController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -130,16 +138,10 @@ public class newMenuController implements Initializable {
 
     private void loadIngredients(){
         controllIngredients = false;
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI")) {
-            u = Singleton.getInstance().methodRmi();
-        }else {
-            u = Singleton.getInstance().methodSocket();
-        }
         try {
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
-            if (ingredients != null) {
+            if (ingArray != null) {
                 for (IngredientsDbDetails x : ingArray) {
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
                     ingredients.add(tmp);
@@ -158,11 +160,6 @@ public class newMenuController implements Initializable {
 
     private boolean showSelection(String selection) throws RemoteException {
         controllIngredients = true;
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try {
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
