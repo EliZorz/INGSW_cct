@@ -26,8 +26,8 @@ public class SupplierController implements Initializable{
 
     private ObservableList<SupplierGuiDetails> searchedSuppliers = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedSupplier = new ArrayList<>();
-    String oldPiva = null;
+    public ArrayList<String> selectedSupplier = new ArrayList<>();
+    private String oldPiva = null;
 
     @FXML
     public TableView<SupplierGuiDetails> tableSuppliers;

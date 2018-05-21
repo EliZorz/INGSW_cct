@@ -961,30 +961,33 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         String queryAdd = "INSERT INTO project.fornitore(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
                 " VALUES (?,?,?,?,?,?,?)";
-
-        try {
-            st = this.connHere().prepareStatement(queryAdd);
-            st.setString(1, name);
-            st.setString(2, piva);
-            st.setString(3, mail);
-            st.setString(4, tel);
-            st.setString(5, address);
-            st.setString(6, cap);
-            st.setString(7, province);
-            st.executeUpdate();
-
-        } catch (SQLException e){
-            e.printStackTrace();
-        } finally {
+        if(name == null || piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
+        else {
             try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+                st = this.connHere().prepareStatement(queryAdd);
+                st.setString(1, name);
+                st.setString(2, piva);
+                st.setString(3, mail);
+                st.setString(4, tel);
+                st.setString(5, address);
+                st.setString(6, cap);
+                st.setString(7, province);
+                st.executeUpdate();
 
-        return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (st != null)
+                        st.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return true;
+        }
     }
 
     @Override
@@ -994,21 +997,24 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryEdit = "UPDATE fornitore SET PIVA ='" + piva + "', NomeAzienda ='" + name + "', Mail ='" + mail + "', " +
                 "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
                 "WHERE PIVA = '" + oldPiva + "';";
-
-        try {
-            st = this.connHere().prepareStatement(queryEdit);
-            st.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+        if(name == null || oldPiva == null || piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
+        else {
             try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
+                st = this.connHere().prepareStatement(queryEdit);
+                st.executeUpdate();
+            } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (st != null)
+                        st.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            return true;
         }
-        return true;
     }
 
     @Override
@@ -1019,18 +1025,24 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
       String querySearchMenu;
       ArrayList<SpecialMenuDbDetails> special = new ArrayList<>();
       ResultSet res = null;
-      for(IngredientsDbDetails x : ingrNO){
-          querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
-          try {
-              stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
-              res = stSpecialMenu.executeQuery(querySearchMenu);
-              res.beforeFirst();
-              while(res.next()) {
-                  SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
-                    special.add(sp);
+      if(piva == null)
+          return false;
+      else {
+          if (ingrNO != null) {
+              for (IngredientsDbDetails x : ingrNO) {
+                  querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='" + x.getIngr() + "'";
+                  try {
+                      stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
+                      res = stSpecialMenu.executeQuery(querySearchMenu);
+                      res.beforeFirst();
+                      while (res.next()) {
+                          SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
+                          special.add(sp);
+                      }
+                  } catch (SQLException e) {
+                      e.printStackTrace();
+                  }
               }
-          } catch (SQLException e) {
-              e.printStackTrace();
           }
       }
 
@@ -1109,43 +1121,46 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "WHERE ingredient = '"+ ingredient +"';";
         String queryAdd = "INSERT INTO ingredients(ingredient, Fornitore_PIVA)" +
                 " VALUES (?,?)";
-
-        try {
-            st = this.connHere().prepareStatement(queryFindDuplicateIngredient);
-            resultDuplicate = st.executeQuery();
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            if( !resultDuplicate.next() ) {
-                System.out.println("No duplicate ingredient in DB. Proceed...");
-                try{
-                    st = this.connHere().prepareStatement(queryAdd);
-                    st.setString(1, ingredient);
-                    st.setString(2, selectedSupplier);
-                    st.executeUpdate();
-                } catch (SQLException e){
+        if(selectedSupplier == null || ingredient == null)
+            return false;
+        else {
+            try {
+                st = this.connHere().prepareStatement(queryFindDuplicateIngredient);
+                resultDuplicate = st.executeQuery();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (!resultDuplicate.next()) {
+                    System.out.println("No duplicate ingredient in DB. Proceed...");
+                    try {
+                        st = this.connHere().prepareStatement(queryAdd);
+                        st.setString(1, ingredient);
+                        st.setString(2, selectedSupplier);
+                        st.executeUpdate();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (resultDuplicate != null)
+                        resultDuplicate.close();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else {
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (resultDuplicate != null)
-                    resultDuplicate.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                try {
+                    if (st != null)
+                        st.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+            }
         }
 
         return true;
