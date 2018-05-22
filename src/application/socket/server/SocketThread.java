@@ -1,12 +1,12 @@
 package application.socket.server;
 
-import application.details.IngredientsDbDetails;
-import application.details.SpecialDbDetails;
+import application.details.*;
 import application.rmi.server.ServerImpl;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class SocketThread extends Thread implements Runnable {
@@ -25,6 +25,8 @@ public class SocketThread extends Thread implements Runnable {
     }
 
 
+    boolean reply = false;
+
     @Override
     public void run() {
         try {
@@ -38,13 +40,11 @@ public class SocketThread extends Thread implements Runnable {
         }
 
         try {
-            ArrayList<String> recordLine = new ArrayList<>();
-
             for(;;) {
                 System.out.println("Ready to receive a message");
-                String line = (String) inputFromClient.readObject();
-                recordLine.add(line);
+                String line = (String) inputFromClient.readUnshared();
 
+                //LOGOUT FUNCTION -> bye
                 if(line.equals("bye")){
                     s.close();
                     System.out.println("Socket closed. Bye bye.");
@@ -53,825 +53,1304 @@ public class SocketThread extends Thread implements Runnable {
                 else{
                     System.out.println("Received " + line + " from client # " + counter + "");
 
-                    boolean responce = doAction(line);  //passo il messaggio al doAction che decide cosa fare
+                    reply = doAction(line);  //passo il messaggio al doAction che decide cosa fare
 
-                    System.out.println("sending back : " + responce);
-                    outputToClient.writeBoolean(responce);
+                    System.out.println("Sending back : " + reply);
+                    outputToClient.writeUnshared(reply);
                     outputToClient.flush();
+                    System.out.println("Reply sent.");
+                    outputToClient.reset();
+
                 }
             }
 
         } catch (Exception e) {
             String threadName = this.getName();
-            System.out.println("IO Error/ Client " + threadName + " terminated abruptly");
+            System.out.println("EOF: " + threadName + " terminated");
             e.printStackTrace();
+            try {
+                s.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
     }
 
     private boolean doAction(String line) throws IOException {
 
-        if(line.equals("login")) {
-            System.out.println("Logging in...");
-            boolean isLogged = false;
-            try {
-                String usr = (String)inputFromClient.readObject();
-                String pwd = (String)inputFromClient.readObject();
-                isLogged = impl.funzLog(usr, pwd);
-                outputToClient.writeBoolean(isLogged);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return isLogged;
-        }
-
-
-        //CHILDREN -----------------------------------------------------------------------
-        else if(line.equals("loadChild")){
-            System.out.println("Loading children...");
-            outputToClient.writeObject(impl.loadData());
-            return true;
-        }else if(line.equals("addChild")){
-            System.out.println("Adding child...");
-            boolean add = false;
-            try {
-                String name = (String)inputFromClient.readObject();
-                String surname = (String)inputFromClient.readObject();
-                String cf = (String)inputFromClient.readObject();
-                LocalDate bornOn = LocalDate.parse((CharSequence) inputFromClient.readObject());
-                String bornWhere = (String)inputFromClient.readObject();
-                String residence = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                ArrayList<String> allergies = null;
+        switch (line) {
+            case "login": {
+                System.out.println("Logging in...");
                 try {
-                    allergies = (ArrayList<String>) inputFromClient.readObject();
+                    String usr = (String) inputFromClient.readUnshared();
+                    String pwd = (String) inputFromClient.readUnshared();
+                    reply = impl.funzLog(usr, pwd);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                String nameContact = (String)inputFromClient.readObject();
-                String surnameContact = (String)inputFromClient.readObject();
-                String cfContact = (String)inputFromClient.readObject();
-                String mailContact = (String)inputFromClient.readObject();
-                String telContact = (String)inputFromClient.readObject();
-                LocalDate birthContact = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                String bornWhereContact = (String)inputFromClient.readObject();
-                String addressContact = (String)inputFromClient.readObject();
-                String capContact = (String)inputFromClient.readObject();
-                String provinceContact = (String)inputFromClient.readObject();
-                boolean isDoc = inputFromClient.readBoolean();
-                boolean isGuardian = inputFromClient.readBoolean();
-                boolean isContact = inputFromClient.readBoolean();
-                
-                add = impl.addData(name, surname, cf, bornOn, bornWhere, residence, address, cap, province, allergies, nameContact, surnameContact, cfContact, mailContact,telContact, birthContact,bornWhereContact, addressContact, capContact, provinceContact, isDoc, isGuardian, isContact);
-                outputToClient.writeBoolean(add);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                return reply;
             }
-            return add;
-        }else if(line.equals("updateChild")){
-            System.out.println("Updating child...");
-            boolean update = false;
-            try {
-                String name = (String)inputFromClient.readObject();
-                String surname = (String)inputFromClient.readObject();
-                String oldCf = (String)inputFromClient.readObject();
-                String cf = (String)inputFromClient.readObject();
-                LocalDate bornOn = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                String bornWhere = (String)inputFromClient.readObject();
-                String residence = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                ArrayList<String> allergies = null;
+
+            //CHILDREN -----------------------------------------------------------------------
+            case "loadChild": {
+                System.out.println("Loading children...");
+                ArrayList<ChildDbDetails> isLoadedal = impl.loadData();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "addChild": {
+                System.out.println("Adding child...");
                 try {
-                    allergies = (ArrayList<String>) inputFromClient.readObject();
+                    String name = (String) inputFromClient.readUnshared();
+                    String surname = (String) inputFromClient.readUnshared();
+                    String cf = (String) inputFromClient.readUnshared();
+                    LocalDate bornOn = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String bornWhere = (String) inputFromClient.readUnshared();
+                    String residence = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    ArrayList<String> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    String nameContact = (String) inputFromClient.readUnshared();
+                    String surnameContact = (String) inputFromClient.readUnshared();
+                    String cfContact = (String) inputFromClient.readUnshared();
+                    String mailContact = (String) inputFromClient.readUnshared();
+                    String telContact = (String) inputFromClient.readUnshared();
+                    LocalDate birthContact = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String bornWhereContact = (String) inputFromClient.readUnshared();
+                    String addressContact = (String) inputFromClient.readUnshared();
+                    String capContact = (String) inputFromClient.readUnshared();
+                    String provinceContact = (String) inputFromClient.readUnshared();
+                    boolean isDoc = (boolean) inputFromClient.readUnshared();
+                    boolean isGuardian = (boolean) inputFromClient.readUnshared();
+                    boolean isContact = (boolean) inputFromClient.readUnshared();
+
+                    reply = impl.addData(name, surname, cf, bornOn, bornWhere, residence, address, cap, province, arrayListToReturn, nameContact, surnameContact, cfContact, mailContact, telContact, birthContact, bornWhereContact, addressContact, capContact, provinceContact, isDoc, isGuardian, isContact);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                update = impl.updateChild(name, surname,oldCf, cf, bornOn, bornWhere, residence, address, cap, province, allergies);
-                outputToClient.writeBoolean(update);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                return reply;
             }
-            return update;
-        }else if(line.equals("deleteChild")){
-            System.out.println("Deleting child...");
-            boolean delete = false;
-            try {
-                String cf = (String)inputFromClient.readObject();
-                delete = impl.deleteChild(cf);
-                outputToClient.writeBoolean(delete);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return delete;
-        }else if(line.equals("addContact")){
-            System.out.println("Adding contact...");
-            boolean add = false;
-            try{
-                ArrayList<String> selectedChild = (ArrayList<String>) inputFromClient.readObject();
-                String surname = (String)inputFromClient.readObject();
-                String name = (String)inputFromClient.readObject();
-                String cf = (String)inputFromClient.readObject();
-                String mail = (String)inputFromClient.readObject();
-                String tel = (String)inputFromClient.readObject();
-                LocalDate birthday = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                String bornWhere = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                boolean isDoc = inputFromClient.readBoolean();
-                boolean isGuardian = inputFromClient.readBoolean();
-                boolean isContact = inputFromClient.readBoolean();
-                add = impl.addContact(selectedChild, surname,name, cf, mail, tel, birthday, bornWhere, address,cap, province, isDoc, isGuardian, isContact);
-                outputToClient.writeBoolean(add);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return add;
-        }else if(line.equals("deleteContact")){
-            boolean delete = false;
-            try {
-                String oldcf = (String)inputFromClient.readObject();
-                delete = impl.deleteContact(oldcf);
-                outputToClient.writeBoolean(delete);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return delete;
-        }else if(line.equals("updateContact")){
-            boolean update = false;
-            try {
-                String name = (String)inputFromClient.readObject();
-                String surname = (String)inputFromClient.readObject();
-                String oldcf = (String)inputFromClient.readObject();
-                String cf = (String)inputFromClient.readObject();
-                String mail = (String)inputFromClient.readObject();
-                String tel = (String)inputFromClient.readObject();
-                LocalDate birthday = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                String bornWhere = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                int isDoc = inputFromClient.read();
-                int isGuardian = inputFromClient.read();
-                int isContact = inputFromClient.read();
-                update = impl.updateContact(name, surname, oldcf, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
-                outputToClient.writeBoolean(update);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return update;
-        }else if(line.equals("loadDataContacts")){
-            String rif = null;
-            try {
-                rif = (String)inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            outputToClient.writeObject(impl.loadDataContacts(rif));
-            return true;
-        }
-
-
-        //STAFF -------------------------------------------------------------------------
-        else if(line.equals("loadDataStaff")){
-            System.out.println("Loading staff...");
-            outputToClient.writeObject(impl.loadDataStaff());
-            return true;
-        }else if(line.equals("addDataStaff")){
-            System.out.println("Adding staff...");
-            boolean add = false;
-            try {
-                String name = (String)inputFromClient.readObject();
-                String surname = (String)inputFromClient.readObject();
-                String cf = (String)inputFromClient.readObject();
-                String mail = (String)inputFromClient.readObject();
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                String bornWhere = (String)inputFromClient.readObject();
-                String residece = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                ArrayList<String> selectedAllergies = null;
-                try{
-                    selectedAllergies = (ArrayList<String>) inputFromClient.readObject();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                add = impl.addDataStaff(name, surname, cf, mail, date, bornWhere, residece, address, cap, province, selectedAllergies);
-                outputToClient.writeBoolean(add);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return add;
-        }else if(line.equals("deleteStaff")){
-            System.out.println("Deleting staff...");
-            boolean delete = false;
-            try {
-                String cf = (String)inputFromClient.readObject();
-                delete = impl.deleteStaff(cf);
-                outputToClient.writeBoolean(delete);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return delete;
-        }else if(line.equals("updateStaff")){
-            System.out.println("Updating staff...");
-            boolean update = false;
-            try {
-                String name = (String)inputFromClient.readObject();
-                String surname = (String)inputFromClient.readObject();
-                String oldcf = (String)inputFromClient.readObject();
-                String cf = (String)inputFromClient.readObject();
-                String mail = (String)inputFromClient.readObject();
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                String bornWhere = (String)inputFromClient.readObject();
-                String residece = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                ArrayList<String> selectedAllergies = null;
-                try{
-                    selectedAllergies = (ArrayList<String>) inputFromClient.readObject();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                update = impl.updateStaff(name, surname, oldcf, cf, mail, date, bornWhere, residece, address, cap, province, selectedAllergies);
-                outputToClient.writeBoolean(update);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return update;
-        }
-
-
-        //MENU -------------------------------------------------------------------------------
-        else if(line.equals("loadmenu")){
-            System.out.println("Loading menu...");
-            outputToClient.writeObject(impl.loadMenu());
-            return true;
-        }else if(line.equals("deleteMenu")){
-            System.out.println("Deleting menu...");
-            boolean isDeleted = false;
-            try {
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                isDeleted = impl.deleteMenu(date);
-                outputToClient.writeBoolean(isDeleted);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return isDeleted;
-        }else if(line.equals("loadIngredients")){
-            System.out.println("Loading ingredients...");
-            outputToClient.writeObject(impl.loadIngr());
-            return true;
-        }else if(line.equals("searchIngredients")){
-            System.out.println("Looking for ingredients...");
-            try {
-                String dish = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.searchIngredients(dish));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }else if(line.equals("controllDate")){
-            System.out.println("Controlling the date...");
-            boolean controll = false;
-            try {
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                controll = impl.controllDate(date);
-                outputToClient.writeBoolean(controll);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return controll;
-        }else if(line.equals("addMenu")){
-            System.out.println("adding the menu...");
-            boolean add = false;
-            try {
-                String num = (String)inputFromClient.readObject();
-                String entree = (String)inputFromClient.readObject();
-                String main = (String)inputFromClient.readObject();
-                String dessert = (String)inputFromClient.readObject();
-                String side = (String)inputFromClient.readObject();
-                String drink = (String)inputFromClient.readObject();
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                add = impl.addMenu(num, entree, main, dessert, side, drink, date);
-                outputToClient.writeBoolean(add);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return add;
-        }else if(line.equals("updateMenu")){
-            System.out.println("updating the menu...");
-            boolean update = false;
-            try {
-                String num = (String)inputFromClient.readObject();
-                String entree = (String)inputFromClient.readObject();
-                String main = (String)inputFromClient.readObject();
-                String dessert = (String)inputFromClient.readObject();
-                String side = (String)inputFromClient.readObject();
-                String drink = (String)inputFromClient.readObject();
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                LocalDate oldDate = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                update = impl.updateMenu(num, entree, main, dessert, side, drink, date, oldDate);
-                outputToClient.writeBoolean(update);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return update;
-        }else if(line.equals("saveIngredients")){
-            System.out.println("saving ingredients...");
-            ArrayList<String> selection = new ArrayList<>();
-            boolean save = false;
-            try {
-                String dish = (String)inputFromClient.readObject();
-                selection = (ArrayList<String>)inputFromClient.readObject();
-                save = impl.saveIngredients(dish, selection);
-                outputToClient.writeBoolean(save);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return save;
-        }
-
-
-        //SUPPLIER ------------------------------------------------------------
-        else if(line.equals("loadSuppliers")){
-            System.out.println("Loading suppliers...");
-            outputToClient.writeObject(impl.loadDataSuppliers());
-            return true;
-        }else if(line.equals("addSupplier")){
-            System.out.println("Adding supplier...");
-            boolean add = false;
-            try {
-                String name = (String)inputFromClient.readObject();
-                String piva = (String)inputFromClient.readObject();
-                String mail = (String)inputFromClient.readObject();
-                String tel = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                add = impl.addDataSupplier(name, piva,mail, tel, address, cap, province );
-                outputToClient.writeBoolean(add);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return add;
-        }else if(line.equals("updateSupplier")) {
-            System.out.println("Updating supplier...");
-            boolean update = false;
-            try {
-                String name = (String)inputFromClient.readObject();
-                String oldPiva = (String)inputFromClient.readObject();
-                String piva = (String)inputFromClient.readObject();
-                String mail = (String)inputFromClient.readObject();
-                String tel = (String)inputFromClient.readObject();
-                String address = (String)inputFromClient.readObject();
-                String cap = (String)inputFromClient.readObject();
-                String province = (String)inputFromClient.readObject();
-                update = impl.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);
-                outputToClient.writeBoolean(update);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return update;
-        }else if(line.equals("loadDataIngr")){
-            System.out.println("Loading ingredients...");
-            String selection = null;
-            try {
-                selection = (String)inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            outputToClient.writeObject(impl.loadDataIngr(selection));
-            return true;
-        }else if(line.equals("addIngredientSupplier")){
-            System.out.println("Adding ingredient...");
-            boolean add = false;
-            try {
-                String ingr = (String)inputFromClient.readObject();
-                String selectedSupplier = (String)inputFromClient.readObject();
-                add = impl.addIngrToDb(ingr, selectedSupplier);
-                outputToClient.writeBoolean(add);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return add;
-
-        }else if(line.equals("loadMenuWithThisSupplier")){
-            System.out.println("Loading these menus...");
-            try {
-                String selectedSupplier = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadMenuWithThisSupplier(selectedSupplier));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
-        }else if(line.equals("loadNoIngr")){
-            System.out.println("Loading no available ingredients...");
-            try {
-                String selectedSupplier = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadNoIngr(selectedSupplier));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
-        }else if(line.equals("deleteSupplier")){
-            System.out.println("Deleting supplier...");
-            ArrayList<IngredientsDbDetails> ingredients = new ArrayList<>();
-            boolean delete = false;
-            try {
-                String piva = (String)inputFromClient.readObject();
-                ingredients = (ArrayList<IngredientsDbDetails>) inputFromClient.readObject();
-                delete = impl.deleteSupplier(piva, ingredients);
-                outputToClient.writeBoolean(delete);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            return delete;
-        }
-
-
-        //SPECIAL MENU --------------------------------------------------------------
-        else if(line.equals("addSpecialMenu")){
-            System.out.println("Adding special menu...");
-            boolean add = false;
-            try {
-                String entree = (String)inputFromClient.readObject();
-                String main = (String)inputFromClient.readObject();
-                String dessert = (String)inputFromClient.readObject();
-                String side = (String)inputFromClient.readObject();
-                String drink = (String)inputFromClient.readObject();
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                SpecialDbDetails special = null;
+            case "updateChild": {
+                System.out.println("Updating child...");
                 try {
-                    special = (SpecialDbDetails) inputFromClient.readObject();
+                    String name = (String) inputFromClient.readUnshared();
+                    String surname = (String) inputFromClient.readUnshared();
+                    String oldCf = (String) inputFromClient.readUnshared();
+                    String cf = (String) inputFromClient.readUnshared();
+                    LocalDate bornOn = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String bornWhere = (String) inputFromClient.readUnshared();
+                    String residence = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    ArrayList<String> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    reply = impl.updateChild(name, surname, oldCf, cf, bornOn, bornWhere, residence, address, cap, province, arrayListToReturn);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                add = impl.addSpecialMenu(entree, main, dessert, side, drink, date, special);
-                outputToClient.writeBoolean(add);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                return reply;
             }
-            return add;
-        }else if(line.equals("loadAllergicalInterni")){
-            System.out.println("Loading allergical interni...");
-            LocalDate date = null;
-            try {
-                date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            outputToClient.writeObject(impl.loadInterniWithAllergies(date));
-            return true;
-        }else if(line.equals("deleteSpecialMenu")){
-            System.out.println("Deleting special menu....");
-            boolean delete = false;
-            try {
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                String FC = (String)inputFromClient.readObject();
-                String allergies = (String)inputFromClient.readObject();
-                delete = impl.deleteSpecialMenu(date, FC, allergies);
-                outputToClient.writeBoolean(delete);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return delete;
-        }else if(line.equals("loadSpecialMenu")){
-            System.out.println("Loading special menu...");
-            outputToClient.writeObject(impl.loadSpecialMenu());
-            return true;
-        }else if(line.equals("updateSpecialMenu")){
-            System.out.println("Updating special menu...");
-            boolean update = false;
-            try {
-                String entree = (String)inputFromClient.readObject();
-                String main = (String)inputFromClient.readObject();
-                String dessert = (String)inputFromClient.readObject();
-                String side = (String)inputFromClient.readObject();
-                String drink = (String)inputFromClient.readObject();
-                LocalDate date = LocalDate.parse((CharSequence)inputFromClient.readObject());
-                SpecialDbDetails special = null;
-                try{
-                    special = (SpecialDbDetails) inputFromClient.readObject();
+            case "deleteChild": {
+                System.out.println("Deleting child...");
+                try {
+                    String cf = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteChild(cf);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                update = impl.updateSpecialMenu(entree, main, dessert,side, drink, date, special);
-                outputToClient.writeBoolean(update);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                return reply;
             }
-            return update;
-        }
+            case "addContact": {
+                System.out.println("Adding contact...");
+                try {
+                    ArrayList<String> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    String surname = (String) inputFromClient.readUnshared();
+                    String name = (String) inputFromClient.readUnshared();
+                    String cf = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    String tel = (String) inputFromClient.readUnshared();
+                    LocalDate birthday = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String bornWhere = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    boolean isDoc = (boolean) inputFromClient.readUnshared();
+                    boolean isGuardian = (boolean) inputFromClient.readUnshared();
+                    boolean isContact = (boolean) inputFromClient.readUnshared();
+                    reply = impl.addContact(arrayListToReturn, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "deleteContact": {
+                try {
+                    String oldcf = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteContact(oldcf);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "updateContact": {
+                try {
+                    String name = (String) inputFromClient.readUnshared();
+                    String surname = (String) inputFromClient.readUnshared();
+                    String oldcf = (String) inputFromClient.readUnshared();
+                    String cf = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    String tel = (String) inputFromClient.readUnshared();
+                    LocalDate birthday = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String bornWhere = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    int isDoc = inputFromClient.read();
+                    int isGuardian = inputFromClient.read();
+                    int isContact = inputFromClient.read();
+                    reply = impl.updateContact(name, surname, oldcf, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "loadDataContacts": {
+                System.out.println("Loading contacts...");
+                String rif = null;
+                try {
+                    rif = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<ContactsDbDetails> isLoadedal = impl.loadDataContacts(rif);
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+
+            case "controllCF": {
+                System.out.println("Controlling cf...");
+                try {
+                    String cf = (String) inputFromClient.readObject();
+                    reply = impl.controllCF(cf);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+            //STAFF -------------------------------------------------------------------------
+            case "loadDataStaff": {
+                System.out.println("Loading staff members...");
+                ArrayList<StaffDbDetails> isLoadedal = impl.loadDataStaff();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "addDataStaff": {
+                System.out.println("Adding staff...");
+                try {
+                    String name = (String) inputFromClient.readUnshared();
+                    String surname = (String) inputFromClient.readUnshared();
+                    String cf = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String bornWhere = (String) inputFromClient.readUnshared();
+                    String residence = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    ArrayList<String> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    reply = impl.addDataStaff(name, surname, cf, mail, date, bornWhere, residence, address, cap, province, arrayListToReturn);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "deleteStaff": {
+                System.out.println("Deleting staff...");
+                try {
+                    String cf = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteStaff(cf);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "updateStaff": {
+                System.out.println("Updating staff...");
+                try {
+                    String name = (String) inputFromClient.readUnshared();
+                    String surname = (String) inputFromClient.readUnshared();
+                    String oldcf = (String) inputFromClient.readUnshared();
+                    String cf = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String bornWhere = (String) inputFromClient.readUnshared();
+                    String residence = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    ArrayList<String> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    reply = impl.updateStaff(name, surname, oldcf, cf, mail, date, bornWhere, residence, address, cap, province, arrayListToReturn);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
 
 
-        //TRIP -------------------------------------------
-        else if(line.equals("loadDataTrip")){
-            System.out.println("Loading data trip...");
-            outputToClient.writeObject(impl.loadDataTrip());
-            return true;
-        } else if(line.equals("deleteTrip")){
-            System.out.println("Deleting supplier...");
-            boolean delete = false;
-            try {
-                String dep = (String)inputFromClient.readObject();
-                String dateDep = (String)inputFromClient.readObject();
-                String dateCom = (String)inputFromClient.readObject();
-                String staying = (String)inputFromClient.readObject();
-                String dateArr = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                delete = impl.deleteTrip(dep, dateDep, dateCom, staying, dateArr, arr);
-                outputToClient.writeBoolean(delete);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            //MENU -------------------------------------------------------------------------------
+            case "loadmenu": {
+                System.out.println("Loading menu...");
+                ArrayList<DishesDbDetails> isLoadedal = impl.loadMenu();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
             }
-            return delete;
-        } else if(line.equals("loadChildTrip")){
-            System.out.println("Loading child for trip...");
-            outputToClient.writeObject(impl.loadChildTrip());
-            return true;
-        } else if(line.equals("loadStaffTrip")) {
-            System.out.println("Loading staff for trip...");
-            outputToClient.writeObject(impl.loadStaffTrip());
-            return true;
-        } else if (line.equals("addTrip")){
-            System.out.println("Adding trip...");
-            int[] returnedPart;
-            //ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep,
-            //String timeArr, String timeCom, String departureFrom, String arrivalTo, String staying
-            ArrayList<String> children = null;
-            ArrayList<String> staff = null;
-            try {
-                children = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "deleteMenu": {
+                System.out.println("Deleting menu...");
+                try {
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    reply = impl.deleteMenu(date);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            try {
-                staff = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "loadIngredients": {
+                System.out.println("Loading ingredients...");
+                ArrayList<IngredientsDbDetails> isLoadedal = impl.loadIngr();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
             }
-            try {
-                String timeDep = (String)inputFromClient.readObject();
-                String timeArr = (String)inputFromClient.readObject();
-                String timeCom = (String)inputFromClient.readObject();
-                String depFrom = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                returnedPart = impl.addTrip(children, staff, timeDep, timeArr, timeCom, depFrom, arrTo, arr);
-                for(int i=0; i<2; i++){
+            case "searchIngredients": {
+                System.out.println("Looking for ingredients...");
+                try {
+                    String dish = (String) inputFromClient.readUnshared();
+                    ArrayList<IngredientsDbDetails> ingrAl = impl.searchIngredients(dish);
+                    if (!ingrAl.isEmpty()) {
+                        outputToClient.writeUnshared(ingrAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "controllDate": {
+                System.out.println("Controlling the date...");
+                try {
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    reply = impl.controllDate(date);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "addMenu": {
+                System.out.println("adding the menu...");
+                try {
+                    String num = (String) inputFromClient.readUnshared();
+                    String entree = (String) inputFromClient.readUnshared();
+                    String main = (String) inputFromClient.readUnshared();
+                    String dessert = (String) inputFromClient.readUnshared();
+                    String side = (String) inputFromClient.readUnshared();
+                    String drink = (String) inputFromClient.readUnshared();
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    reply = impl.addMenu(num, entree, main, dessert, side, drink, date);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "updateMenu": {
+                System.out.println("updating the menu...");
+                try {
+                    String num = (String) inputFromClient.readUnshared();
+                    String entree = (String) inputFromClient.readUnshared();
+                    String main = (String) inputFromClient.readUnshared();
+                    String dessert = (String) inputFromClient.readUnshared();
+                    String side = (String) inputFromClient.readUnshared();
+                    String drink = (String) inputFromClient.readUnshared();
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    LocalDate oldDate = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    reply = impl.updateMenu(num, entree, main, dessert, side, drink, date, oldDate);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "saveIngredients": {
+                System.out.println("saving ingredients...");
+                try {
+                    String dish = (String) inputFromClient.readUnshared();
+                    ArrayList<String> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    reply = impl.saveIngredients(dish, arrayListToReturn);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+            //SUPPLIER ------------------------------------------------------------
+            case "loadSuppliers": {
+                System.out.println("Loading suppliers...");
+                ArrayList<SupplierDbDetails> isLoadedal = impl.loadDataSuppliers();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "addSupplier": {
+                System.out.println("Adding supplier...");
+                try {
+                    String name = (String) inputFromClient.readUnshared();
+                    String piva = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    String tel = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    reply = impl.addDataSupplier(name, piva, mail, tel, address, cap, province);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "updateSupplier": {
+                System.out.println("Updating supplier...");
+                try {
+                    String name = (String) inputFromClient.readUnshared();
+                    String oldPiva = (String) inputFromClient.readUnshared();
+                    String piva = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    String tel = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    reply = impl.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "loadDataIngr": {
+                System.out.println("Loading ingredients...");
+                String rif = null;
+                try {
+                    rif = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<CodRifChildDbDetails> isLoadedal = impl.loadDataIngr(rif);
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "addIngredientSupplier": {
+                System.out.println("Adding ingredient...");
+                try {
+                    String ingr = (String) inputFromClient.readUnshared();
+                    String selectedSupplier = (String) inputFromClient.readUnshared();
+                    reply = impl.addIngrToDb(ingr, selectedSupplier);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+
+            }
+            case "loadMenuWithThisSupplier":{
+                System.out.println("Loading these menus...");
+                String rif = null;
+                try {
+                    rif = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<DishesDbDetails> isLoadedal = impl.loadMenuWithThisSupplier(rif);
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "loadNoIngr": {
+                System.out.println("Loading no available ingredients...");
+                String rif = null;
+                try {
+                    rif = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<IngredientsDbDetails> isLoadedal = impl.loadNoIngr(rif);
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "deleteSupplier": {
+                System.out.println("Deleting supplier...");
+                try {
+                    String piva = (String) inputFromClient.readUnshared();
+                    ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof IngredientsDbDetails) {
+                                        IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    reply = impl.deleteSupplier(piva, arrayListToReturn);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                return reply;
+            }
+
+
+            //SPECIAL MENU --------------------------------------------------------------
+            case "addSpecialMenu": {
+                System.out.println("Adding special menu...");
+                try {
+                    String entree = (String) inputFromClient.readUnshared();
+                    String main = (String) inputFromClient.readUnshared();
+                    String dessert = (String) inputFromClient.readUnshared();
+                    String side = (String) inputFromClient.readUnshared();
+                    String drink = (String) inputFromClient.readUnshared();
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    SpecialDbDetails special = null;
+                    try {
+                        special = (SpecialDbDetails) inputFromClient.readUnshared();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    reply = impl.addSpecialMenu(entree, main, dessert, side, drink, date, special);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "loadAllergicalInterni": {
+                System.out.println("Loading allergical interni...");
+                String rif = null;
+                try {
+                    rif = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<SpecialDbDetails> isLoadedal = impl.loadInterniWithAllergies(LocalDate.parse(rif));
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "deleteSpecialMenu": {
+                System.out.println("Deleting special menu....");
+                try {
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    String FC = (String) inputFromClient.readUnshared();
+                    String allergies = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteSpecialMenu(date, FC, allergies);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "loadSpecialMenu": {
+                ArrayList<SpecialMenuDbDetails> isLoadedal = impl.loadSpecialMenu();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "updateSpecialMenu": {
+                System.out.println("Updating special menu...");
+                try {
+                    String entree = (String) inputFromClient.readUnshared();
+                    String main = (String) inputFromClient.readUnshared();
+                    String dessert = (String) inputFromClient.readUnshared();
+                    String side = (String) inputFromClient.readUnshared();
+                    String drink = (String) inputFromClient.readUnshared();
+                    LocalDate date = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
+                    SpecialDbDetails special = null;
+                    try {
+                        special = (SpecialDbDetails) inputFromClient.readUnshared();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    reply = impl.updateSpecialMenu(entree, main, dessert, side, drink, date, special);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+
+            //TRIP -------------------------------------------
+            case "loadDataTrip": {
+                System.out.println("Loading data trip...");
+                ArrayList<TripTableDbDetails> isLoadedal = impl.loadDataTrip();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "deleteTrip": {
+                System.out.println("Deleting supplier...");
+                try {
+                    String dep = (String) inputFromClient.readUnshared();
+                    String dateDep = (String) inputFromClient.readUnshared();
+                    String dateCom = (String) inputFromClient.readUnshared();
+                    String staying = (String) inputFromClient.readUnshared();
+                    String dateArr = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteTrip(dep, dateDep, dateCom, staying, dateArr, arr);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "loadChildTrip": {
+                System.out.println("Loading child for trip...");
+                ArrayList<ChildTripDbDetails> isLoadedal = impl.loadChildTrip();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "loadStaffTrip": {
+                System.out.println("Loading staff for trip...");
+                ArrayList<StaffTripDbDetails> isLoadedal = impl.loadStaffTrip();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "addTrip": {
+                System.out.println("Adding trip...");
+                int[] returnedPart;
+                ArrayList<String> childrenArrayList = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    childrenArrayList.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(childrenArrayList.isEmpty())
+                    reply = false;
+                ArrayList<String> staffArrayList = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    staffArrayList.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(staffArrayList.isEmpty())
+                    reply = false;
+                try {
+                    String timeDep = (String) inputFromClient.readUnshared();
+                    String timeArr = (String) inputFromClient.readUnshared();
+                    String timeCom = (String) inputFromClient.readUnshared();
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    returnedPart = impl.addTrip(childrenArrayList, staffArrayList, timeDep, timeArr, timeCom, depFrom, arrTo, arr);
+                    for (int i = 0; i < 2; i++) {
+                        outputToClient.writeInt(returnedPart[i]);
+                        reply = true;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    reply = false;
+                }
+                return reply;
+            }
+            case "loadTripSelectedChildren": {
+                System.out.println("Loading effective child for trip...");
+                try {
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<ChildSelectedTripDbDetails> loadedAl = impl.loadTripSelectedChildren(depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "loadTripSelectedStaff": {
+                System.out.println("Loading effective staff for trip...");
+                try {
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<StaffSelectedTripDbDetails> loadedAl = impl.loadTripSelectedStaff(depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "findNotAvailableStaff": {
+                System.out.println("Loading not available staff for trip...");
+                ArrayList<String> arrayListToReturn = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    arrayListToReturn.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String dep;
+                try {
+                    dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    ArrayList<CodRifChildDbDetails> loadedAl = impl.findNotAvailableStaff(arrayListToReturn, dep, com);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "findNotAvailableChild": {
+                System.out.println("Loading not available children for trip...");
+                ArrayList<String> arrayListToReturn = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    arrayListToReturn.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String dep;
+                try {
+                    dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    ArrayList<CodRifChildDbDetails> loadedAl = impl.findNotAvailableChild(arrayListToReturn, dep, com);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "howManyActualParticipants": {
+                System.out.println("Calculating number of participants...");
+                int[] returnedPart;
+                ArrayList<String> childrenArrayList = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    childrenArrayList.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(childrenArrayList.isEmpty())
+                    reply = false;
+                ArrayList<String> staffArrayList = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    staffArrayList.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(staffArrayList.isEmpty())
+                    reply = false;
+                returnedPart = impl.howManyActualParticipants(childrenArrayList, staffArrayList);
+                for (int i = 0; i < 2; i++) {
                     outputToClient.writeInt(returnedPart[i]);
+                    reply = true;
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                return reply;
             }
-            return true;
-        } else if(line.equals("loadTripSelectedChildren")){
-            System.out.println("Loading effective child for trip...");
-            try {
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadTripSelectedChildren(depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "loadWhoTrip": {
+                System.out.println("Loading who participates to this trip...");
+                try {
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<ChildSelectedTripDbDetails> loadedAl = impl.loadWhoTrip(depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            return true;
-        } else if(line.equals("loadTripSelectedStaff")) {
-            System.out.println("Loading effective staff for trip...");
-            try {
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadTripSelectedStaff(depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "loadBusTrip": {
+                System.out.println("Loading bus to this trip...");
+                try {
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<CodRifChildDbDetails> loadedAl = impl.loadBusTrip(depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            return true;
-        } else if(line.equals("findNotAvailableStaff")){
-            System.out.println("Loading not available staff for trip...");
-            ArrayList<String> staff = null;
-            try {
-                staff = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "loadSolution": {
+                System.out.println("Loading solution...");
+                try {
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<SolutionDbDetails> loadedAl = impl.loadSolution(depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            String dep = null;
-            try {
-                dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.findNotAvailableStaff(staff, dep, com));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "findParticipantsOnWrongBus": {
+                System.out.println("Searching for participants on wrong bus...");
+                ArrayList<String> arrayListToReturn = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    arrayListToReturn.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(arrayListToReturn.isEmpty())
+                    reply = false;
+                try {
+                    String selectedBus = (String) inputFromClient.readUnshared();
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<String> loadedAl = impl.findParticipantOnWrongBus(arrayListToReturn, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            return true;
-        } else if(line.equals("findNotAvailableChild")){
-            System.out.println("Loading not available children for trip...");
-            ArrayList<String> child = null;
-            try {
-                child = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "findMissingParticipantsOnThisBus": {
+                System.out.println("Searching for missing participants on this bus...");
+                ArrayList<String> peopleOnWrongBus = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    peopleOnWrongBus.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<String> selectedChild = new ArrayList<>();
+                try {
+                    Object loaded = inputFromClient.readUnshared();
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof String) {
+                                    String myElement = (String) element;
+                                    selectedChild.add(myElement);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(selectedChild.isEmpty())
+                    reply = false;
+                String selectedBus;
+                try {
+                    selectedBus = (String) inputFromClient.readUnshared();
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<String> loadedAl = impl.findMissingParticipantsOnThisBus(peopleOnWrongBus, selectedChild, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            String dep = null;
-            try {
-                dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.findNotAvailableStaff(child, dep, com));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
-        } else if(line.equals("howManyActualParticipants")){
-            System.out.println("Calculating number of participants...");
-            int[] returnedPart;
-            ArrayList<String> children = null;
-            ArrayList<String> staff = null;
-            try {
-                children = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                staff = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            returnedPart = impl.howManyActualParticipants(children, staff);
-            for(int i=0; i<2; i++){
-                outputToClient.writeInt(returnedPart[i]);
-            }
-            return true;
-        } else if(line.equals("loadWhoTrip")){
-            System.out.println("Loading who participates to this trip...");
-            try {
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadWhoTrip(depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
-        } else if(line.equals("loadBusTrip")){
-            System.out.println("Loading bus to this trip...");
-            try {
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadBusTrip(depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
-        } else if(line.equals("loadSolution")) {
-            System.out.println("Loading solution...");
-            try {
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadSolution(depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
-        } else if(line.equals("findParticipantsOnWrongBus")) {
-            System.out.println("Searching for participants on wrong bus...");
-            ArrayList<String> participants = null;
-            try {
-                participants = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            String selectedBus;
-            try {
-                selectedBus = (String)inputFromClient.readObject();
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.findParticipantOnWrongBus(participants, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
-        } else if(line.equals("findMissingParticipantsOnThisBus")) {
-            System.out.println("Searching for missing participants on this bus...");
-            ArrayList<String> peopleOnWrongBus = null;
-            ArrayList<String> selectedChild = null;
-            try {
-                peopleOnWrongBus = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                selectedChild = (ArrayList<String>) inputFromClient.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            String selectedBus;
-            try {
-                selectedBus = (String)inputFromClient.readObject();
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                outputToClient.writeObject(impl.findMissingParticipantsOnThisBus(peopleOnWrongBus, selectedChild, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
+            case "loadMissing": {
+                System.out.println("Loading missing participants on this bus...");
 
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                try {
+                    ArrayList<String> arrayListToReturn = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        arrayListToReturn.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    String selectedBus = (String) inputFromClient.readUnshared();
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    ArrayList<ChildSelectedTripDbDetails> loadedAl = impl.loadMissing(arrayListToReturn, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            return true;
-        } else if(line.equals("loadMissing")){
-            System.out.println("Loading missing participants on this bus...");
+            case "associateBusToParticipants": {
+                System.out.println("Associating participants to bus...");
+                try {
+                    ArrayList<String> childrenArrayList = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        childrenArrayList.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if(childrenArrayList.isEmpty())
+                        reply = false;
 
-            try {
-                ArrayList<String> missing = (ArrayList<String>) inputFromClient.readObject();
-                String selectedBus = (String) inputFromClient.readObject();
-                String depFrom = (String) inputFromClient.readObject();
-                String dep = (String) inputFromClient.readObject();
-                String com = (String) inputFromClient.readObject();
-                String accomodation = (String) inputFromClient.readObject();
-                String arr = (String) inputFromClient.readObject();
-                String arrTo = (String) inputFromClient.readObject();
-                outputToClient.writeObject(impl.loadMissing(missing, selectedBus, depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                    int totChildren = inputFromClient.readInt();
+
+                    ArrayList<String> staffArrayList = new ArrayList<>();
+                    try {
+                        Object loaded = inputFromClient.readUnshared();
+                        if (loaded instanceof ArrayList<?>) {
+                            //get list
+                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                            if (loadedAl.size() > 0) {
+                                for (Object element : loadedAl) {
+                                    if (element instanceof String) {
+                                        String myElement = (String) element;
+                                        staffArrayList.add(myElement);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if(staffArrayList.isEmpty())
+                        reply = false;
+
+                    int totStaff = inputFromClient.readInt();
+
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    HashMap<String, ArrayList<String>> loadedAl = impl.associateBusToParticipants(childrenArrayList, totChildren, staffArrayList, totStaff, depFrom, dep, com, accomodation, arr, arrTo);
+                    if (!loadedAl.isEmpty()) {
+                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.flush();
+                        reply = true;
+                    } else {
+                        reply = false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            return true;
-        } else if(line.equals("associateBusToParticipants")){
-            System.out.println("Associating participants to bus...");
-            try {
-                ArrayList<String> children = (ArrayList<String>) inputFromClient.readObject();
-                int totChildren = inputFromClient.readInt();
-                ArrayList<String> staff = (ArrayList<String>) inputFromClient.readObject();
-                int totStaff = inputFromClient.readInt();
-                String depFrom = (String) inputFromClient.readObject();
-                String dep = (String) inputFromClient.readObject();
-                String com = (String) inputFromClient.readObject();
-                String accomodation = (String) inputFromClient.readObject();
-                String arr = (String) inputFromClient.readObject();
-                String arrTo = (String) inputFromClient.readObject();
-                outputToClient.writeObject(impl.associateBusToParticipants(children, totChildren, staff, totStaff, depFrom, dep, com, accomodation, arr, arrTo));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "makeIsHereTrue": {
+                try {
+                    String selectedBus = (String) inputFromClient.readUnshared();
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    impl.makeIsHereTrue(selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
+                    reply = true;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            return true;
-        } else if(line.equals("makeIsHereTrue")){
-            try {
-                String selectedBus = (String)inputFromClient.readObject();
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                impl.makeIsHereTrue(selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            case "makeIsHereFalse": {
+                try {
+                    String depFrom = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
+                    String com = (String) inputFromClient.readUnshared();
+                    String accomodation = (String) inputFromClient.readUnshared();
+                    String arr = (String) inputFromClient.readUnshared();
+                    String arrTo = (String) inputFromClient.readUnshared();
+                    impl.makeIsHereFalse(depFrom, dep, com, accomodation, arr, arrTo);
+                    reply = true;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
             }
-            return true;
-        } else if(line.equals("makeIsHereFalse")){
-            try {
-                String depFrom = (String)inputFromClient.readObject();
-                String dep = (String)inputFromClient.readObject();
-                String com = (String)inputFromClient.readObject();
-                String accomodation = (String)inputFromClient.readObject();
-                String arr = (String)inputFromClient.readObject();
-                String arrTo = (String)inputFromClient.readObject();
-                impl.makeIsHereFalse(depFrom, dep, com, accomodation, arr, arrTo);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return true;
         }
-
-
         return false;
     }
 }
