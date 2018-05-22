@@ -1,17 +1,18 @@
 package application.Test;
 
-import application.contr.StaffController;
-import application.details.IngredientsDbDetails;
-
 import application.rmi.server.ServerImpl;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import com.sun.org.apache.regexp.internal.RE;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SupplierControllerTest {
+
     private ServerImpl si;
 
     private SupplierControllerTest() throws RemoteException {
@@ -19,58 +20,79 @@ class SupplierControllerTest {
     }
 
     @Test
-    void handleAddSupplier() throws RemoteException {
-        assertTrue(si.addDataSupplier("AAA", "11112", "CCCCCD","1234", "DDDD", "12345", "AB"));
-        assertTrue(si.addDataSupplier("BBB", "000078", "CCCCCD","1234", "DDDD", "12345", "AB"));
-        assertFalse(si.addDataSupplier(null , "11112", "CCCCCD","1234", "DDDD", "12345", "AB"));
-        assertFalse(si.addDataSupplier("AAA", null, "CCCCCD","1234", "DDDD", "12345", "AB"));
-        assertFalse(si.addDataSupplier("AAA", "11112", null,"1234", "DDDD", "12345", "AB"));
-        assertFalse(si.addDataSupplier("AAA", "11112", "CCCCCD",null, "DDDD", "12345", "AB"));
-        assertFalse(si.addDataSupplier("AAA", "11112", "CCCCCD","1234", null, "12345", "AB"));
-        assertFalse(si.addDataSupplier("AAA", "11112", "CCCCCD","1234", "DDDD", null, "AB"));
-        assertFalse(si.addDataSupplier("AAA", "11112", "CCCCCD","1234", "DDDD", "12345", null));
+    void testAddSupplier() throws RemoteException{
+        assertTrue(si.addDataSupplier("AAA","0000","BBB", "1234", "CCC", "01234", "DD"));
+        assertTrue(si.addDataSupplier("BBB", "1", "AAA", "000", "AAA", "12345", "AB"));
+    }
+
+
+    @Test
+    void testAddNullParameterSupplier() throws RemoteException {
+            assertFalse(si.addDataSupplier("AAA", null, "AAA", "000", "AAA", "00000", "AA"));
+    }
+
+    @Test
+    void testAddNullSupplier() throws RemoteException{
         assertFalse(si.addDataSupplier(null, null, null, null, null, null, null));
-        assertTrue(si.addIngrToDb("FFFFF", "11112"));
     }
 
     @Test
-    void handleAddIngrToDb() throws RemoteException {
-        assertFalse(si.addIngrToDb("ABCD", null));
-        assertFalse(si.addIngrToDb(null, null));
-        assertFalse(si.addIngrToDb(null, "AAA"));
+    void testAddIngrSupplier() throws RemoteException {
+        assertTrue(si.addIngrToDb("ABC", "1"));
     }
 
     @Test
-    void handleLoadIngr() throws RemoteException {
-        assertNotNull(si.loadIngr());
-    }
-
-    @Test
-    void handleLoadSuppliers() throws RemoteException {
+    void testLoadSupplier() throws RemoteException{
         assertNotNull(si.loadDataSuppliers());
     }
 
     @Test
-    void handleUpdateSupplier() throws RemoteException {
-        assertTrue(si.updateSupplier("ABC", "11112", "11", "AAA", "123456", "CCCC", "12345", "AB"));
-        assertTrue(si.updateSupplier("ABC", "11", "11112", "AAA", "123456", "CCCC", "12345", "AB"));
-        assertFalse(si.updateSupplier(null, null, null, null, null, null, null, null));
-        assertFalse(si.updateSupplier("ABC", null, "BBB", "AAA", "000", "AAAAA", "00123", "BC"));
+    void testNoIngrAddIngrSupplier() throws RemoteException{
+        assertFalse(si.addIngrToDb(null, "1"));
     }
 
     @Test
-    void handleDeleteSupplier() throws RemoteException {
-        ArrayList<IngredientsDbDetails> ingr = new ArrayList<>();
-        ingr.add(new IngredientsDbDetails("FFFFF"));
-        assertFalse(si.deleteSupplier(null, null));
-        assertFalse(si.deleteSupplier(null, ingr));
-        assertTrue(si.deleteSupplier("11112", ingr));
-        assertTrue(si.deleteSupplier("000078", null));
+    void testNoSupplierAddIngrSupplier() throws RemoteException{
+        assertFalse(si.addIngrToDb("AAA", null));
+    }
 
+    @Test
+    void testNullAddIngrSupplier() throws RemoteException{
+        assertFalse(si.addIngrToDb(null,  null));
+    }
+
+    @Test
+    void testNullUpdateSupplier() throws RemoteException {
+       assertFalse( si.updateSupplier(null, null, null, null, null, null, null, null));
+    }
+
+    @Test
+    void testUpdateSupplier() throws RemoteException {
+        assertTrue(si.updateSupplier("AAA", "0000", "0001", "AAA", "01234", "AAAA", "12345", "AA"));
+    }
+
+    @Test
+    void testNullParameterUpdateSupplier() throws RemoteException {
+        assertFalse(si.updateSupplier("AAA", null, "0001", "AAA", "01234", "AAAA", "12345", "AA"));
 
     }
 
+    @Test
+    void testDeleteSupplier() throws RemoteException {
+        Assertions.assertThrows(NullPointerException.class, ()->{
+            si.deleteSupplier("0001", null);
+        });    }
 
+    @Test
+    void testNullDeleteSupplier(){
+        Assertions.assertThrows(NullPointerException.class, ()->{
+            si.deleteSupplier(null, null);
+        });
+    }
 
+    @Test
+    void testDeleteSupplierWIthIngredients() throws RemoteException{
+        assertTrue(si.deleteSupplier("1", si.loadNoIngr("1")));
+    }
 
 }

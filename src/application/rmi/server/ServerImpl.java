@@ -309,6 +309,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
 
+        if(oldcf == null)
+            return false;
+
         try {
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
@@ -978,7 +981,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         String queryAdd = "INSERT INTO fornitore(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
                 " VALUES (?,?,?,?,?,?,?)";
-
+        if(name == null || piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryAdd);
             st.setString(1, name);
@@ -1012,6 +1016,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
                 "WHERE PIVA = '" + oldPiva + "';";
 
+        if(name == null || oldPiva == null || piva == null|| mail == null || tel == null || address == null || cap == null ||province == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryEdit);
             st.executeUpdate();
@@ -1126,7 +1132,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "WHERE ingredient = '"+ ingredient +"';";
         String queryAdd = "INSERT INTO ingredients(ingredient, Fornitore_PIVA)" +
                 " VALUES (?,?)";
-
+        if(ingredient == null || selectedSupplier == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryFindDuplicateIngredient);
             resultDuplicate = st.executeQuery();
