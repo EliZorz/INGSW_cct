@@ -2,11 +2,8 @@ package application.contr;
 
 import application.Singleton;
 import application.gui.GuiNew;
-import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
 
-import application.rmi.client.RmiManager;
-import application.socket.client.SocketManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -25,7 +22,6 @@ public class MainControllerLogin {
     public static String selected = null;  //per la scelta tra rmi e socket
 
 
-
     @FXML
     private TextField txtUsername;
 
@@ -42,12 +38,10 @@ public class MainControllerLogin {
 
 
     public void handleLogin() throws SQLException {
-
         String usr = txtUsername.getText().toString();
         String pwd = txtPassword.getText().toString();
 
         selected = (String) select.getSelectionModel().getSelectedItem();
-
 
         try {
              if (selected == null){
@@ -60,80 +54,39 @@ public class MainControllerLogin {
             } else if(selected.equals("RMI")){
                 System.out.println("User chose RMI.\nProceed...");
 
-                //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
-
-
                 UserRemote u = Singleton.getInstance().methodRmi();
-
 
                 boolean result = u.funzLog(usr, pwd);
 
                 if (result){
 
                     this.renameLabel("Logged in.");
-
                     new GuiNew("MenuIniziale");
 
                 } else{
                     this.renameLabel("Insert correct data.");
                 }
 
-                //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza
-                //this.isLogged(ch.getUserService().funzLog(usr, pwd));
-
-
-                /* da mettere nel logOut !!!!!!!!!!!!!!!!!!!!!!!!!!
-                if (connectionOK != null) {
-                    try {
-                        connectionOK.close();
-                    } catch (SQLException sqe) {
-                        sqe.printStackTrace();
-                    }
-                }
-                if(result != null){
-                    try{
-                        result.close();
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                */
-
-
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
-              //  ch = new SocketManager();
-               // UserRemote u = ch.getUserService();
-                UserRemote u = Singleton.getInstance().methodSocket();
 
+                UserRemote u = Singleton.getInstance().methodSocket();
 
                 boolean result = u.funzLog(usr, pwd);
 
                 if (result){
 
-                    this.renameLabel("Loggato");
+                    this.renameLabel("Logged in");
                     new GuiNew("MenuIniziale");
 
-
                 }else{
-                    this.renameLabel("Credenziali sbagliate");
+                    this.renameLabel("Wrong data");
                 }
-
-               // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
+                // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
 
             } else {
-                lblStatus.setText("RMI or SOCKET?");
+                lblStatus.setText("Something wrong");
             }
-
-
-
-
-
-
-
-
-
-
 
         } catch (Exception se) {
             se.printStackTrace();
