@@ -95,6 +95,18 @@ public class DeleteSupplierController implements Initializable {
     @FXML
     public Button deleteButton;
 
+
+    private UserRemote u;
+
+    public DeleteSupplierController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colNum.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
