@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.BusPlateCapacityDbDetails;
 import application.details.BusPlateCapacityGuiDetails;
 import application.details.SupplierDbDetails;
@@ -9,7 +9,6 @@ import application.details.SupplierGuiDetails;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -108,9 +107,9 @@ public class CoachOperatorsController implements Initializable {
 
     public CoachOperatorsController(){
         if(MainControllerLogin.selected.equals("RMI"))
-            u= Singleton.getInstance().methodRmi();
+            u= LookupCall.getInstance().methodRmi();
         else
-            u= Singleton.getInstance().methodSocket();
+            u= LookupCall.getInstance().methodSocket();
     }
 
     @Override

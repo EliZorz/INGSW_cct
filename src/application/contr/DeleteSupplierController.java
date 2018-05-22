@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.DishesDbDetails;
 import application.details.DishesDetails;
 import application.details.IngredientsDbDetails;
@@ -144,7 +144,7 @@ public class DeleteSupplierController implements Initializable {
 
     public void handleLoad() {
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
+            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<DishesDbDetails> menuDbArray = u.loadMenuWithThisSupplier(selectedSupplier);
             dishes.clear();
             if (menuDbArray != null) {
@@ -166,7 +166,7 @@ public class DeleteSupplierController implements Initializable {
 
     public void loadNoIngr() {
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
+            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingrNo = u.loadNoIngr(selectedSupplier);
             ingredientsNo.clear();
             if (ingrNo != null) {
@@ -266,7 +266,7 @@ public class DeleteSupplierController implements Initializable {
 
     private boolean controllIngr(String dish) {
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
+            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsDbArray = u.searchIngredients(dish);
             if (ingredientsDbArray == null)
                 loadIngredients();
@@ -295,7 +295,7 @@ public class DeleteSupplierController implements Initializable {
         controllAddIngredients = false;
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
+            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
             for (IngredientsDbDetails x : ingArray)
@@ -338,7 +338,7 @@ public class DeleteSupplierController implements Initializable {
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients) {
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();
+            UserRemote u = LookupCall.getInstance().methodRmi();
             if (u.saveIngredients(dishName, ingredients)) {
                 status.setText("Success!!");
                 selectedIngredients = new ArrayList<>();
@@ -406,7 +406,7 @@ public class DeleteSupplierController implements Initializable {
         else if (!controllAddIngredients) status.setText("Make sure you have added all the ingredients");
         else {
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();
+                UserRemote u = LookupCall.getInstance().methodRmi();
                 if (u.updateMenu(selectedMenu[0], entreeTF.getText(), mainTF.getText(), dessertTF.getText(), sideTF.getText(), drinkTF.getText(), LocalDate.parse(selectedMenu[6]), LocalDate.parse(selectedMenu[6])))
                     status.setText("Success");
                 handleLoad();
@@ -422,7 +422,7 @@ public class DeleteSupplierController implements Initializable {
     @FXML
     public void backHome(ActionEvent event) {
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
+            UserRemote u = LookupCall.getInstance().methodRmi();  //lookup
             ArrayList<IngredientsDbDetails> ingr = new ArrayList<>();
             for(IngredientsGuiDetails x : ingredientsNo)
                 ingr.add(new IngredientsDbDetails(x.getIngr()));
@@ -444,9 +444,9 @@ public class DeleteSupplierController implements Initializable {
         if (selectedMenu != null) {
             UserRemote u;
             if (MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
+                u = LookupCall.getInstance().methodRmi();
             else
-                u = Singleton.getInstance().methodSocket();
+                u = LookupCall.getInstance().methodSocket();
             try {
                 if (u.deleteMenu(LocalDate.parse(selectedMenu[6]))) {
                     status.setText("Deleted");

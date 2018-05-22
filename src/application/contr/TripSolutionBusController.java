@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.SolutionDbDetails;
 import application.details.SolutionGuiDetails;
 import application.details.TripTableDbDetails;
@@ -73,9 +73,9 @@ public class TripSolutionBusController  implements Initializable{
 
     public TripSolutionBusController(){
         if(MainControllerLogin.selected.equals("RMI"))
-            u= Singleton.getInstance().methodRmi();
+            u= LookupCall.getInstance().methodRmi();
         else
-            u= Singleton.getInstance().methodSocket();
+            u= LookupCall.getInstance().methodSocket();
     }
 
 

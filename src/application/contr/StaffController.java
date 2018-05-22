@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +9,6 @@ import application.details.StaffDbDetails;
 import application.details.StaffGuiDetails;
 import application.details.IngredientsDbDetails;
 import application.details.IngredientsGuiDetails;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -118,9 +117,9 @@ public class StaffController implements Initializable {
 
     public StaffController(){
         if(MainControllerLogin.selected.equals("RMI"))
-            u= Singleton.getInstance().methodRmi();
+            u= LookupCall.getInstance().methodRmi();
         else
-            u= Singleton.getInstance().methodSocket();
+            u= LookupCall.getInstance().methodSocket();
     }
 
 

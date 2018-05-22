@@ -1,6 +1,6 @@
 package application.contr;
 
-import application.Singleton;
+import application.LookupCall;
 import application.gui.GuiNew;
 import application.Interfaces.UserRemote;
 
@@ -54,7 +54,7 @@ public class MainControllerLogin {
             } else if(selected.equals("RMI")){
                 System.out.println("User chose RMI.\nProceed...");
 
-                UserRemote u = Singleton.getInstance().methodRmi();
+                UserRemote u = LookupCall.getInstance().methodRmi();
 
                 boolean result = u.funzLog(usr, pwd);
 
@@ -70,12 +70,11 @@ public class MainControllerLogin {
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
 
-                UserRemote u = Singleton.getInstance().methodSocket();
+                UserRemote u = LookupCall.getInstance().methodSocket();
 
                 boolean result = u.funzLog(usr, pwd);
 
                 if (result){
-
                     this.renameLabel("Logged in.");
                     new GuiNew("MenuIniziale");
 

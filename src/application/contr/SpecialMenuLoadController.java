@@ -1,8 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
-import application.details.SpecialDbDetails;
+import application.LookupCall;
 import application.details.SpecialMenuDbDetails;
 import application.details.SpecialMenuGuiDetails;
 import application.gui.GuiNew;
@@ -87,9 +86,9 @@ public class SpecialMenuLoadController implements Initializable{
 
     public SpecialMenuLoadController(){
         if(MainControllerLogin.selected.equals("RMI"))
-            u= Singleton.getInstance().methodRmi();
+            u= LookupCall.getInstance().methodRmi();
         else
-            u= Singleton.getInstance().methodSocket();
+            u= LookupCall.getInstance().methodSocket();
     }
 
     @Override

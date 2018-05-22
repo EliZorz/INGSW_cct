@@ -18,7 +18,7 @@ import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 
@@ -91,9 +91,9 @@ public class MenuController implements Initializable {
 
     public MenuController(){
         if(MainControllerLogin.selected.equals("RMI"))
-            u= Singleton.getInstance().methodRmi();
+            u= LookupCall.getInstance().methodRmi();
         else
-            u= Singleton.getInstance().methodSocket();
+            u= LookupCall.getInstance().methodSocket();
     }
 
 

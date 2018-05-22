@@ -20,6 +20,7 @@ public interface UserRemote extends Remote {
     boolean updateChild(String name, String surname, String oldcf, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
 
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
+    boolean controllCF(String CF) throws RemoteException;
 
 
     ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException;

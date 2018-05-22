@@ -66,12 +66,28 @@ public class SocketUserManager implements UserRemote {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try{
-            return (ArrayList<ChildDbDetails>) fromServer.readObject();
+
+        ArrayList<ChildDbDetails> arrayListToReturn = new ArrayList<>();
+
+        try {
+            Object loaded = fromServer.readObject();
+            if(loaded instanceof ArrayList<?>){
+                //get list
+                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                if(loadedAl.size()>0){
+                    for (Object element : loadedAl) {
+                        if (element instanceof ChildDbDetails) {
+                            ChildDbDetails myElement = (ChildDbDetails) element;
+                            arrayListToReturn.add(myElement);
+                        }
+                    }
+                }
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return arrayListToReturn;
     }
 
     @Override
@@ -205,6 +221,11 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean controllCF(String CF) throws RemoteException {
+        return false;
     }
 
 

@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.CodRifChildDbDetails;
 import application.details.CodRifChildGuiDetails;
 import application.details.SupplierDbDetails;
@@ -97,9 +97,9 @@ public class SupplierController implements Initializable{
 
     public SupplierController(){
         if(MainControllerLogin.selected.equals("RMI"))
-            u= Singleton.getInstance().methodRmi();
+            u= LookupCall.getInstance().methodRmi();
         else
-            u= Singleton.getInstance().methodSocket();
+            u= LookupCall.getInstance().methodSocket();
     }
 
 

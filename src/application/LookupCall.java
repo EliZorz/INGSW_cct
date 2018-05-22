@@ -5,28 +5,29 @@ import application.Interfaces.UserRemote;
 import application.rmi.client.RmiManager;
 import application.socket.client.SocketManager;
 
-public class Singleton {
+public class LookupCall {
+    private static LookupCall instance = null;
+    ServicesManager servicesMan;
+    UserRemote u = null;
 
-    private static Singleton instance = null;
 
     //private constructor, prevents other class from instantiating
-    private Singleton(){}
+    private LookupCall(){}
 
-    //static instance method
-    public static Singleton getInstance(){
+
+    public static LookupCall getInstance(){
         if(instance == null){
-            instance = new Singleton();
+            return new LookupCall();
         }
-        return instance;
+        else {
+            return instance;
+        }
     }
 
     public UserRemote methodRmi(){
-        ServicesManager chrmi;
-        chrmi = new RmiManager();
-
-        UserRemote u = null;
+        servicesMan = new RmiManager();
         try {
-            u = chrmi.getUserService();
+            u = servicesMan.getUserService();
             System.out.println("lookup done");
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,16 +36,14 @@ public class Singleton {
     }
 
     public UserRemote methodSocket(){
-        ServicesManager chsock;
-        chsock = new SocketManager();
-
-        UserRemote u = null;
+        servicesMan= new SocketManager();
         try {
-            u = chsock.getUserService();
+            u = servicesMan.getUserService();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return u;
     }
+
 }

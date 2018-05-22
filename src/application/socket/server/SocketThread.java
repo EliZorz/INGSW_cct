@@ -8,22 +8,22 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-//quello corretto
+
 public class SocketThread extends Thread implements Runnable {
 
-    private String line = "";
     private ObjectOutputStream outputToClient;
     private ObjectInputStream inputFromClient;
     private Socket s = null;
-    private ServerImpl impl;  //mi serve per poter chiamare le funzioni  ESSENZIALE!!!!!
+    private ServerImpl impl;
     private int counter;
-    //devo considerare che per chiamare  i metodi devo mandare dei messaggi
+
 
     public SocketThread(Socket s, ServerImpl impl, int counter) {
         this.impl = impl;
         this.s = s;
         this.counter = counter;
     }
+
 
     @Override
     public void run() {
@@ -38,60 +38,38 @@ public class SocketThread extends Thread implements Runnable {
         }
 
         try {
+            ArrayList<String> recordLine = new ArrayList<>();
 
-            while ( !line.equals("bye")) {
+            for(;;) {
                 System.out.println("Ready to receive a message");
-                line = (String)inputFromClient.readObject();
+                String line = (String) inputFromClient.readObject();
+                recordLine.add(line);
 
-                System.out.println("Received " + line + " from client # " + counter + "");
+                if(line.equals("bye")){
+                    s.close();
+                    System.out.println("Socket closed. Bye bye.");
+                    return;
+                }
+                else{
+                    System.out.println("Received " + line + " from client # " + counter + "");
 
-                boolean responce = doAction(line);  //passo il messaggio al doAction che decide cosa fare
+                    boolean responce = doAction(line);  //passo il messaggio al doAction che decide cosa fare
 
-                System.out.println("sending back : " + responce);
-                outputToClient.writeBoolean(responce);
-                outputToClient.flush();
+                    System.out.println("sending back : " + responce);
+                    outputToClient.writeBoolean(responce);
+                    outputToClient.flush();
+                }
             }
 
         } catch (Exception e) {
-            line = this.getName();  //salva in line il nome del thread che sta eseguendo
-            System.out.println("IO Error/ Client " + line + " terminated abruptly");
+            String threadName = this.getName();
+            System.out.println("IO Error/ Client " + threadName + " terminated abruptly");
             e.printStackTrace();
-        } finally{
-            try {
-                s.close();
-                inputFromClient.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
         }
-        /* LOGOUT -----------------------------------------------------------------------------------------------
-        finally {
-            try {
-                System.out.println("Connection Closing..");
-                if (inputFromClient != null) {
-                    inputFromClient.close();
-                    System.out.println("Socket Input Stream Closed");
-                }
-                if (outputToClient != null) {
-                    outputToClient.close();
-                    System.out.println("Socket Out Closed");
-                }
-                if (s != null) {
-                    s.close();  //fa terminare la accept di quel solo client
-                    //System.out.println(s.isClosed()); //serve per controllare che la socket sia chiusa
-                    System.out.println("Socket Closed");
-                }
-            } catch (IOException ie) {
-                System.out.println("Socket Close Error");
-                ie.printStackTrace();
-            }
-        } ------------------------------------------------------------------------------------------------------------
-        */
+
     }
 
     private boolean doAction(String line) throws IOException {
-
-        //String[] credentials = line.split("\\s+");
 
         if(line.equals("login")) {
             System.out.println("Logging in...");
