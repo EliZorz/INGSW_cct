@@ -4,8 +4,6 @@ import application.Interfaces.UserRemote;
 import application.Singleton;
 import application.details.*;
 import application.gui.GuiNew;
-import application.rmi.server.ServerImpl;
-import com.mysql.jdbc.Connection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,13 +13,16 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
+
+
+
+
+
 public class ChildController implements Initializable {
+
     private ObservableList<ChildGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
     private ObservableList<ContactsGuiDetails> dataContactObsList = FXCollections.observableArrayList();
@@ -31,14 +32,14 @@ public class ChildController implements Initializable {
     private ObservableList<ChildGuiDetails> searchedChildren = FXCollections.observableArrayList();
 
 
-    ArrayList<String> selectedAllergy = new ArrayList<>();
-    ArrayList<String> selectedChild = new ArrayList<>();
-    ArrayList<String> selectedContact = new ArrayList<>();
-    String oldcf = new String();
-    String oldcfContact = new String();
-    int isDocint = 0;
-    int isContactint = 0;
-    int isGuardianint = 0;
+    private ArrayList<String> selectedAllergy = new ArrayList<>();
+    private ArrayList<String> selectedChild = new ArrayList<>();
+    private ArrayList<String> selectedContact = new ArrayList<>();
+    private String oldcf;
+    private String oldcfContact;
+    private int isDocint = 0;
+    private int isContactint = 0;
+    private int isGuardianint = 0;
 
     @FXML
     public Button btnBack;
@@ -90,33 +91,6 @@ public class ChildController implements Initializable {
     public TextField txtCap;
     @FXML
     public TextField txtProvince;
-
-    @FXML
-    public Button backContact;
-
-    @FXML
-    public TextField searchContact;
-
-    @FXML
-    public Button searchC;
-
-    @FXML
-    public Button backAll;
-
-    @FXML
-    public Button searchA;
-
-    @FXML
-    public TextField searchAll;
-
-    @FXML
-    public TextField searchCH;
-
-    @FXML
-    public Button backChildren;
-
-    @FXML
-    public Button searchChild;
 
 
     @FXML
@@ -175,9 +149,54 @@ public class ChildController implements Initializable {
     @FXML
     public TableColumn<IngredientsGuiDetails, String> colIngr;
 
+    @FXML
+    public TextField searchContact;
+    @FXML
+    public Button searchC;
+    @FXML
+    public Button backAll;
+    @FXML
+    public Button searchA;
+    @FXML
+    public TextField searchAll;
+    @FXML
+    public TextField searchCH;
+    @FXML
+    public Button backChildren;
+    @FXML
+    public Button searchChild;
+    @FXML
+    public Button backContact;
+
+    private UserRemote u;
+
+    public ChildController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= Singleton.getInstance().methodRmi();
+        else
+            u= Singleton.getInstance().methodSocket();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(true);
+        btnDelete.setDisable(true);
+        btnDeselect.setDisable(true);
+        btnUpdate.setDisable(true);
+        btnLoadIngredients.setDisable(true);
+        btnLoadContact.setDisable(true);
+        btnAddContact.setDisable(true);
+        btnUpdateContact.setDisable(true);
+        btnDeleteContact.setDisable(true);
+        searchC.setDisable(true);
+        searchA.setDisable(true);
+        searchChild.setDisable(true);
+        backChildren.setDisable(true);
+        backAll.setDisable(true);
+        backContact.setDisable(true);
 
         colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSurname.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
@@ -202,11 +221,13 @@ public class ChildController implements Initializable {
                         selectedChild.add(newSelection.getAddress());
                         selectedChild.add(newSelection.getCap());
                         selectedChild.add(newSelection.getProvince());
+
+                        btnAdd.setDisable(true);
                         //PER EVIDENZIARE ALLERGIA QUANDO SELEZIONO RIGA SERVE QUERY CHE CERCHI NEL DB LE ALLERGIE COLLEGATE AL CF DEL SELEZIONATO - per ora lasciamo che riselezioni quelle che vuole
 
                         oldcf = newSelection.getCf();
 
-                        //Serve una query che salvi il CodRif del selezionato PRIMA di modificare qualsiasi cosa (vd updateChild)
+
 
                         txtName.setText(newSelection.getName());
                         txtSurname.setText(newSelection.getSurname());
@@ -300,45 +321,60 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleLoadData() {
-        UserRemote u;
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtBornWhere.clear();
+        txtResidence.clear();
+        txtAddress.clear();
+        txtCap.clear();
+        txtProvince.clear();
+
         System.out.println("Loading data...");
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try {
-
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
-
             dataObsList.clear();
 
             if (childDbArrayList != null){
                 for(ChildDbDetails c : childDbArrayList){
                     ChildGuiDetails tmp = new ChildGuiDetails(c);
                     dataObsList.add(tmp);
-
                 }
-
                 tableChild.setItems(null);
                 tableChild.setItems(dataObsList);
 
                 this.renameLabel("Table loaded!");
-
             }else{
                 this.renameLabel("Error.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        btnDeselect.setDisable(true);
+        btnLoadContact.setDisable(false);
+        btnAddContact.setDisable(true);
+        btnUpdateContact.setDisable(true);
+        btnDeleteContact.setDisable(true);
+        searchC.setDisable(false);
+        searchA.setDisable(false);
+        searchChild.setDisable(false);
+        backChildren.setDisable(false);
+        backAll.setDisable(false);
+        backContact.setDisable(false);
     }
 
 
 
+
     @FXML
-    public void handleAddChild() {
+    public void handleAddChild() throws RemoteException {
         System.out.println("Adding new child to database...");
 
         String name = txtName.getText();
@@ -377,25 +413,17 @@ public class ChildController implements Initializable {
                 || nameContact.trim().isEmpty() || surnameContact.trim().isEmpty() || cfContact.trim().isEmpty() || mailContact.trim().isEmpty() || telContact.trim().isEmpty()
                 || birthdayContact == null || bornWhereContact.trim().isEmpty() || addressContact.trim().isEmpty()
                 || capContact.trim().isEmpty() || provinceContact.trim().isEmpty() || ! isDoc) {
-            //this verifies there are no void fields
+
             this.renameLabel("Insert data.");
 
 
-            //DA VERIFICARE : CONTACTS
-            // NON DIMENTICARE di collegare ogni nuovo contatto al corrispondente Bambino (CodRif NECESSARIO per associare)
 
-            //X ALLERGIES: IN MANUALE UTENTE -> "Se l'utente non seleziona nulla dal campo allergia,
-            //il sistema vede tale scelta come se non ci fossero allergie da segnalare. Modificare il campo in seguito se necessario (i.g. per dimenticanza)
-
-        } else {
-            UserRemote u;
+        }else if(u.controllCF(cf)){
+            this.renameLabel("Change child fiscal code");
+        }
+            else {
             System.out.println("Adding data to database...");
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();
-                else
-                    u = Singleton.getInstance().methodSocket();
-
                 boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy,
                         nameContact, surnameContact, cfContact, mailContact, telContact, birthdayContact, bornWhereContact, addressContact, capContact, provinceContact, isDoc, isGuardian, isContact);  //call method in Server Impl
 
@@ -403,6 +431,15 @@ public class ChildController implements Initializable {
 
                 if (isAddOk) {
                     lblWarning.setText("Congrats! Child added.");
+                    txtName.clear();
+                    txtSurname.clear();
+                    txtCf.clear();
+                    dpBirthday.setValue(LocalDate.now());
+                    txtBornWhere.clear();
+                    txtResidence.clear();
+                    txtAddress.clear();
+                    txtCap.clear();
+                    txtProvince.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -412,15 +449,20 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleDelete() {
-        UserRemote u;
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();            boolean deleted = u.deleteChild(oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
+            boolean deleted = u.deleteChild(oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedChild.clear();
+                txtName.clear();
+                txtSurname.clear();
+                txtCf.clear();
+                dpBirthday.setValue(LocalDate.now());
+                txtBornWhere.clear();
+                txtResidence.clear();
+                txtAddress.clear();
+                txtCap.clear();
+                txtProvince.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -433,56 +475,69 @@ public class ChildController implements Initializable {
 
 
     @FXML
-    public void handleUpdate() {
+    public void handleUpdate() throws RemoteException {
         System.out.println("Loading data...");
-        UserRemote u;
 
-        String name = txtName.getText().toString();
-        String surname = txtSurname.getText().toString();
-        String cf = txtCf.getText().toString();
+        String name = txtName.getText();
+        String surname = txtSurname.getText();
+        String cf = txtCf.getText();
         LocalDate birthday = dpBirthday.getValue();
-        String bornWhere = txtBornWhere.getText().toString();
-        String residence = txtResidence.getText().toString();
-        String address = txtAddress.getText().toString();
-        String cap = txtCap.getText().toString();
-        String province = txtProvince.getText().toString();
+        String bornWhere = txtBornWhere.getText();
+        String residence = txtResidence.getText();
+        String address = txtAddress.getText();
+        String cap = txtCap.getText();
+        String province = txtProvince.getText();
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday == null
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
                 || cap.trim().isEmpty() || province.trim().isEmpty()) {
-            //this verifies there are no void fields
-            this.renameLabel("Insert data.");
-        } else {
-            System.out.println("Adding data to database...");
-            try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();
-                else
-                    u = Singleton.getInstance().methodSocket();
-                boolean isEditOk = u.updateChild(surname, name, oldcf, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
-                if (isEditOk) {
-                    lblWarning.setText("Congrats! Child edited.");
-                    selectedChild.clear();
+            this.renameLabel("Insert data.");
+        } else if(!oldcf.equals(cf) && !u.controllCF(cf)){
+                this.renameLabel("Change fiscal code");
+        }else {
+                System.out.println("Adding data to database...");
+                try {
+                    boolean isEditOk = u.updateChild(surname, name, oldcf, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+
+                    if (isEditOk) {
+                        lblWarning.setText("Congrats! Child edited.");
+                        selectedChild.clear();
+                        txtName.clear();
+                        txtSurname.clear();
+                        txtCf.clear();
+                        dpBirthday.setValue(LocalDate.now());
+                        txtBornWhere.clear();
+                        txtResidence.clear();
+                        txtAddress.clear();
+                        txtCap.clear();
+                        txtProvince.clear();
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
             }
         }
-    }
+
+
+
+
 
 
     public void handleLoadContacts() {
         System.out.println("Loading data contacts...");
-        UserRemote u;
-
+        txtNameContact.clear();
+        txtSurnameContact.clear();
+        txtCfContact.clear();
+        txtMailContact.clear();
+        txtTelContact.clear();
+        dpBirthdayContact.setValue(LocalDate.now());
+        txtBornWhereContact.clear();
+        txtAddressContact.clear();
+        txtCapContact.clear();
+        txtProvinceContact.clear();
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
-            ArrayList<ContactsDbDetails> contactsDbArrayList = u.loadDataContacts(oldcf); //carico i contatti del selezionato!
-
+            ArrayList<ContactsDbDetails> contactsDbArrayList = u.loadDataContacts(oldcf);
             dataContactObsList.clear();
 
             if (contactsDbArrayList != null){
@@ -490,10 +545,8 @@ public class ChildController implements Initializable {
                     ContactsGuiDetails tmpc = new ContactsGuiDetails(c);
                     dataContactObsList.add(tmpc);
                 }
-
                 tableContacts.setItems(null);
                 tableContacts.setItems(dataContactObsList);
-
                 this.renameLabel("Table loaded!");
             }else{
                 this.renameLabel("Error.");
@@ -501,22 +554,39 @@ public class ChildController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        btnDeselect.setDisable(true);
+        btnLoadContact.setDisable(false);
+        btnAddContact.setDisable(false);
+        btnUpdateContact.setDisable(false);
+        btnDeleteContact.setDisable(false);
+        searchC.setDisable(false);
+        searchA.setDisable(false);
+        searchChild.setDisable(false);
+        backChildren.setDisable(false);
+        backAll.setDisable(false);
+        backContact.setDisable(false);
+
     }
 
-
-    public void handleAddContact() {
+    public void handleAddContact() throws RemoteException {
         System.out.println("Adding new contact to database...");
-        UserRemote u;
-        String name = txtNameContact.getText().toString();
-        String surname = txtSurnameContact.getText().toString();
-        String cf = txtCfContact.getText().toString();
-        String mail = txtMailContact.getText().toString();
-        String tel = txtTelContact.getText().toString();
+
+        String name = txtNameContact.getText();
+        String surname = txtSurnameContact.getText();
+        String cf = txtCfContact.getText();
+        String mail = txtMailContact.getText();
+        String tel = txtTelContact.getText();
         LocalDate birthday = dpBirthdayContact.getValue();
-        String bornWhere = txtBornWhereContact.getText().toString();
-        String address = txtAddressContact.getText().toString();
-        String cap = txtCapContact.getText().toString();
-        String province = txtProvince.getText().toString();
+        String bornWhere = txtBornWhereContact.getText();
+        String address = txtAddressContact.getText();
+        String cap = txtCapContact.getText();
+        String province = txtProvince.getText();
         boolean isDoc = cbDoc.isSelected();
         if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
         else { cbDoc.setSelected(false); }
@@ -533,18 +603,24 @@ public class ChildController implements Initializable {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
-        } else {
+        }else {
 
             System.out.println("Adding data to database...");
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();
-                else
-                    u = Singleton.getInstance().methodSocket();
                 boolean isAddOk = u.addContact(selectedChild, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
 
                 if (isAddOk) {
                     this.renameLabel("Congrats! Contact added.");
+                    txtNameContact.clear();
+                    txtSurnameContact.clear();
+                    txtCfContact.clear();
+                    txtMailContact.clear();
+                    txtTelContact.clear();
+                    dpBirthdayContact.setValue(LocalDate.now());
+                    txtBornWhereContact.clear();
+                    txtAddressContact.clear();
+                    txtCapContact.clear();
+                    txtProvinceContact.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -554,19 +630,19 @@ public class ChildController implements Initializable {
 
     }
 
-    public void handleUpdateContact() {
+    public void handleUpdateContact() throws RemoteException {
         System.out.println("Loading data...");
-        UserRemote u;
-        String name = txtNameContact.getText().toString();
-        String surname = txtSurnameContact.getText().toString();
-        String cf = txtCfContact.getText().toString();
-        String mail = txtMailContact.getText().toString();
-        String tel = txtTelContact.getText().toString();
+
+        String name = txtNameContact.getText();
+        String surname = txtSurnameContact.getText();
+        String cf = txtCfContact.getText();
+        String mail = txtMailContact.getText();
+        String tel = txtTelContact.getText();
         LocalDate birthday = dpBirthdayContact.getValue();
-        String bornWhere = txtBornWhereContact.getText().toString();
-        String address = txtAddressContact.getText().toString();
-        String cap = txtCapContact.getText().toString();
-        String province = txtProvince.getText().toString();
+        String bornWhere = txtBornWhereContact.getText();
+        String address = txtAddressContact.getText();
+        String cap = txtCapContact.getText();
+        String province = txtProvince.getText();
         boolean isDoc = cbDoc.isSelected();
         if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
         else { cbDoc.setSelected(false); }
@@ -586,15 +662,22 @@ public class ChildController implements Initializable {
         } else {
             System.out.println("Adding data to database...");
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();
-                else
-                    u = Singleton.getInstance().methodSocket();
                 boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Contact edited.");
                     selectedContact.clear();
+
+                    txtNameContact.clear();
+                    txtSurnameContact.clear();
+                    txtCfContact.clear();
+                    txtMailContact.clear();
+                    txtTelContact.clear();
+                    dpBirthdayContact.setValue(LocalDate.now());
+                    txtBornWhereContact.clear();
+                    txtAddressContact.clear();
+                    txtCapContact.clear();
+                    txtProvinceContact.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -604,16 +687,22 @@ public class ChildController implements Initializable {
     }
 
     public void handleDeleteContact() {
-        UserRemote u;
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             boolean deleted = u.deleteContact(oldcfContact);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedContact.clear();
+
+                txtNameContact.clear();
+                txtSurnameContact.clear();
+                txtCfContact.clear();
+                txtMailContact.clear();
+                txtTelContact.clear();
+                dpBirthdayContact.setValue(LocalDate.now());
+                txtBornWhereContact.clear();
+                txtAddressContact.clear();
+                txtCapContact.clear();
+                txtProvinceContact.clear();
             } else {
                 this.renameLabel("Error deleting.");
             }
@@ -627,12 +716,8 @@ public class ChildController implements Initializable {
 
     public void handleLoadIngredients(){
         System.out.println("Loading data...");
-        UserRemote u;
+
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
 
             ingredientsObsList.clear();
@@ -654,6 +739,23 @@ public class ChildController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnLoadContact.setDisable(false);
+        btnAddContact.setDisable(true);
+        btnUpdateContact.setDisable(true);
+        btnDeleteContact.setDisable(true);
+        searchC.setDisable(false);
+        searchA.setDisable(false);
+        searchChild.setDisable(false);
+        backChildren.setDisable(false);
+        backAll.setDisable(false);
+        backContact.setDisable(false);
 
     }
 
@@ -685,7 +787,6 @@ public class ChildController implements Initializable {
 
 
     public void handleBackHomepage() {
-        //exit window (the previous window was MenuIniziale.fxml)
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.close();
         try {
@@ -696,9 +797,10 @@ public class ChildController implements Initializable {
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
+
 
     public void reloadContact(){
         searchedContacts = FXCollections.observableArrayList();
@@ -755,8 +857,8 @@ public class ChildController implements Initializable {
                 if(x.getAddress().contains(searchCH.getText()) || x.getBornOn().contains(searchCH.getText()) || x.getBornWhere().contains(searchCH.getText()) || x.getCap().contains(searchCH.getText()) || x.getCf().contains(searchCH.getText()) || x.getName().contains(searchCH.getText()) || x.getProvince().contains(searchCH.getText()) || x.getResidence().contains(searchCH.getText() )|| x.getSurname().contains(searchCH.getText()))
                     searchedChildren.add(x);
                 }
-                tableChild.setItems(null);
-                tableChild.setItems(searchedChildren);
+            tableChild.setItems(null);
+            tableChild.setItems(searchedChildren);
         }else{
             tableChild.setItems(null);
             tableChild.setItems(dataObsList);

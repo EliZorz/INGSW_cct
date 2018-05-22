@@ -194,6 +194,24 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
+    public boolean controllCF(String CF) throws RemoteException{
+        try{
+            toServer.writeUTF("controllCF");
+            toServer.flush();
+            toServer.writeUTF(CF);
+            toServer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{
+            return fromServer.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
         try{
             toServer.writeUTF("loadIngredients");

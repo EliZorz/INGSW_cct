@@ -1071,6 +1071,35 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
     @Override
+    public boolean controllCF(String CF) throws RemoteException{
+        ResultSet result = null;
+        PreparedStatement st = null;
+        String queryControll = "SELECT * FROM interni WHERE CF = '"+ CF+"'";
+
+        try{
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No CF like this in DB");
+                result.close();
+                return true;
+            }
+            result.close();
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+
+    @Override
     public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException{
         PreparedStatement st = null;
         ResultSet result = null;

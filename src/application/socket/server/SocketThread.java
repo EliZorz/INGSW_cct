@@ -351,7 +351,13 @@ public class SocketThread extends Thread {
             Boolean delete = impl.deleteChild(cf);
             outputToClient.writeBoolean(delete);
             return delete;
-        }else if(line.equals("addContact")){
+        }else if(line.equals("controllCF")){
+            System.out.println("Controlling CF...");
+            String cf = inputFromClient.readUTF();
+            Boolean controll = impl.controllCF(cf);
+            outputToClient.writeBoolean(controll);
+            return controll;
+        } else if(line.equals("addContact")){
             System.out.println("Adding contact...");
             ArrayList<String> selectedChild = null;
             try{

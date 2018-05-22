@@ -18,9 +18,9 @@
 
 <AnchorPane prefHeight="806.0" prefWidth="1369.0" style="" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.ChildController">
   <children>
-    <SplitPane dividerPositions="0.4872852233676976" focusTraversable="true" prefHeight="774.0" prefWidth="1300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane dividerPositions="0.5193855157278713" focusTraversable="true" prefHeight="774.0" prefWidth="1300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="738.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="804.0" prefWidth="699.0">
           <children>
             <TableView fx:id="tableChild" layoutY="57.0" prefHeight="747.0" prefWidth="663.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="57.0">
               <columns>
@@ -62,12 +62,12 @@
             <TextField fx:id="txtAddress" layoutX="46.0" layoutY="291.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" />
             <TextField fx:id="txtCap" layoutX="172.0" layoutY="326.0" prefHeight="26.0" prefWidth="86.0" promptText="CAP" />
             <TextField fx:id="txtProvince" layoutX="47.0" layoutY="326.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" />
-            <Label fx:id="lblWarning" alignment="CENTER" layoutX="-170.0" layoutY="744.0" prefHeight="35.0" prefWidth="615.0" text="Status" textAlignment="CENTER" textFill="RED">
+            <Label fx:id="lblWarning" alignment="CENTER" layoutX="6.0" layoutY="744.0" prefHeight="35.0" prefWidth="398.0" text="Status" textAlignment="CENTER" textFill="RED">
               <font>
                 <Font name="Courier New" size="24.0" />
               </font>
             </Label>
-                  <DatePicker fx:id="dpBirthday" layoutX="46.0" layoutY="183.0" prefHeight="26.0" prefWidth="91.0" promptText="Birthday" />
+                  <DatePicker fx:id="dpBirthday" layoutX="46.0" layoutY="183.0" prefHeight="26.0" prefWidth="114.0" promptText="Birthday" />
             <Button fx:id="btnBack" layoutX="420.0" layoutY="719.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="16.0" prefWidth="190.0" style="-fx-cursor: hand" text="HomePage" />
                   <ButtonBar layoutX="258.0" layoutY="670.0" prefHeight="26.0" prefWidth="221.0">
                      <buttons>
