@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.SolutionDbDetails;
 import application.details.SolutionGuiDetails;
 import application.details.TripTableDbDetails;
@@ -25,12 +25,12 @@ public class TripSolutionBusController  implements Initializable{
     private ObservableList<SolutionGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<TripTableGuiDetails> tripObsList = FXCollections.observableArrayList();
 
-    String selectedTripDepFrom = new String();
-    String selectedTripDep = new String();
-    String selectedTripCom = new String();
-    String selectedTripAccomodation = new String();
-    String selectedTripArrTo = new String();
-    String selectedTripArr = new String();
+    private String selectedTripDepFrom = new String();
+    private String selectedTripDep = new String();
+    private String selectedTripCom = new String();
+    private String selectedTripAccomodation = new String();
+    private String selectedTripArrTo = new String();
+    private String selectedTripArr = new String();
 
 
     @FXML
@@ -67,6 +67,16 @@ public class TripSolutionBusController  implements Initializable{
 
     @FXML
     public Label lblWarning;
+
+
+    UserRemote  u;
+
+    public TripSolutionBusController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
 
 
     @Override
@@ -109,7 +119,6 @@ public class TripSolutionBusController  implements Initializable{
     public void handleLoadTrip() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //already existing
 
             tripObsList.clear();
@@ -136,7 +145,6 @@ public class TripSolutionBusController  implements Initializable{
     public void handleLoadSolution() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<SolutionDbDetails> tripDbArrayList = u.loadSolution(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
 
             dataObsList.clear();
@@ -159,7 +167,7 @@ public class TripSolutionBusController  implements Initializable{
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 

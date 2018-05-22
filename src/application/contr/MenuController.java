@@ -18,7 +18,7 @@ import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 
@@ -87,6 +87,16 @@ public class MenuController implements Initializable {
     public DatePicker dateSearch;
 
 
+    UserRemote  u;
+
+    public MenuController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colDessert.setCellValueFactory(cellData -> cellData.getValue().dessertProperty());
@@ -120,15 +130,7 @@ public class MenuController implements Initializable {
     @FXML
     public void handleLoad() {
         tableMenu.getItems().clear();
-        UserRemote u;
-        ArrayList<DishesDbDetails> dishesDbArrayList = new ArrayList<>();
-        if (MainControllerLogin.selected.equals("RMI")) {
-            System.out.println("oper RMI menu");
-            u = Singleton.getInstance().methodRmi();
-        } else {
-            System.out.println("open SOCKET menu");
-            u = Singleton.getInstance().methodSocket();
-        }
+        ArrayList<DishesDbDetails> dishesDbArrayList;
         menu.clear();
         try {
             dishesDbArrayList = u.loadMenu();
@@ -164,6 +166,11 @@ public class MenuController implements Initializable {
     public void esc(ActionEvent event) {
         selectedMenu = null;
         ((Node) (event.getSource())).getScene().getWindow().hide();
+        try {
+            new GuiNew("Menu");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -171,11 +178,6 @@ public class MenuController implements Initializable {
         if (selectedMenu == null)
             labelStatus.setText("Please select a menu");
         else {
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             try {
                 System.out.println(LocalDate.parse(dateSelected));
                 boolean deleted = u.deleteMenu(LocalDate.parse(dateSelected));
@@ -194,7 +196,7 @@ public class MenuController implements Initializable {
 
     public void update(ActionEvent event) throws IOException {
         if(selectedMenu != null) {
-            newMenuController.selectedMenu = selectedMenu;
+            NewMenuController.selectedMenu = selectedMenu;
             ((Node) (event.getSource())).getScene().getWindow().hide();
             new GuiNew("newMenu");
         }
@@ -213,8 +215,6 @@ public class MenuController implements Initializable {
             tableMenu.setItems(null);
             tableMenu.setItems(searchedMenu);
         }
-
-
         else{
             tableMenu.setItems(null);
             tableMenu.setItems(menu);
@@ -228,4 +228,3 @@ public class MenuController implements Initializable {
         tableMenu.setItems(menu);
     }
 }
-

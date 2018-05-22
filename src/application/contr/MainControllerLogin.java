@@ -1,6 +1,6 @@
 package application.contr;
 
-import application.Singleton;
+import application.LookupCall;
 import application.gui.GuiNew;
 import application.Interfaces.UserRemote;
 
@@ -10,8 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.sql.SQLException;
-
-
 
 
 /**
@@ -38,8 +36,8 @@ public class MainControllerLogin {
 
 
     public void handleLogin() throws SQLException {
-        String usr = txtUsername.getText().toString();
-        String pwd = txtPassword.getText().toString();
+        String usr = txtUsername.getText();
+        String pwd = txtPassword.getText();
 
         selected = (String) select.getSelectionModel().getSelectedItem();
 
@@ -48,13 +46,13 @@ public class MainControllerLogin {
                 System.out.println("User did not choose.\nRetry...");
                 lblStatus.setText("RMI or SOCKET?");
             } else
-                if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
+                if(usr.trim().length() == 0 || pwd.trim().length() == 0){
                 this.renameLabel("Insert username, password");
 
             } else if(selected.equals("RMI")){
                 System.out.println("User chose RMI.\nProceed...");
 
-                UserRemote u = Singleton.getInstance().methodRmi();
+                UserRemote u = LookupCall.getInstance().methodRmi();
 
                 boolean result = u.funzLog(usr, pwd);
 
@@ -70,7 +68,7 @@ public class MainControllerLogin {
             } else if (selected.equals("SOCKET")){
                 System.out.println("User chose SOCKET.\nProceed...");
 
-                UserRemote u = Singleton.getInstance().methodSocket();
+                UserRemote u = LookupCall.getInstance().methodSocket();
 
                 boolean result = u.funzLog(usr, pwd);
 
@@ -94,7 +92,7 @@ public class MainControllerLogin {
 
     }
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblStatus.setText(st);
     }
 

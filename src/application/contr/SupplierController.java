@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.CodRifChildDbDetails;
 import application.details.CodRifChildGuiDetails;
 import application.details.SupplierDbDetails;
@@ -26,7 +26,7 @@ public class SupplierController implements Initializable{
 
     private ObservableList<SupplierGuiDetails> searchedSuppliers = FXCollections.observableArrayList();
 
-    public ArrayList<String> selectedSupplier = new ArrayList<>();
+    private ArrayList<String> selectedSupplier = new ArrayList<>();
     private String oldPiva = null;
 
     @FXML
@@ -93,6 +93,16 @@ public class SupplierController implements Initializable{
     public TextField searchTF;
 
 
+    UserRemote  u;
+
+    public SupplierController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colName.setCellValueFactory(cellData -> cellData.getValue().nameazProperty());
@@ -138,12 +148,14 @@ public class SupplierController implements Initializable{
     }
 
     public void handleLoadSuppliers() {
+        txtName.clear();
+        txtPiva.clear();
+        txtMail.clear();
+        txtTel.clear();
+        txtAddress.clear();
+        txtCap.clear();
+        txtProvince.clear();
         System.out.println("Loading data...");
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try {
             ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataSuppliers();  //call method in Server Impl
             dataObsList.clear();
@@ -181,16 +193,18 @@ public class SupplierController implements Initializable{
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             try {
                 boolean isAddOk = u.addDataSupplier(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isAddOk) {
                     this.renameLabel("Congrats! Supplier added.");
+                    txtName.clear();
+                    txtPiva.clear();
+                    txtMail.clear();
+                    txtTel.clear();
+                    txtAddress.clear();
+                    txtCap.clear();
+                    txtProvince.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -214,17 +228,19 @@ public class SupplierController implements Initializable{
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             try {
                 boolean isEditOk = u.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Supplier edited.");
                     selectedSupplier.clear();
+                    txtName.clear();
+                    txtPiva.clear();
+                    txtMail.clear();
+                    txtTel.clear();
+                    txtAddress.clear();
+                    txtCap.clear();
+                    txtProvince.clear();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -235,7 +251,7 @@ public class SupplierController implements Initializable{
 
     public void handleDeleteSupplier() throws IOException {
         System.out.println("Loading data...");
-         DeleteSupplierController.selectedSupplier = txtPiva.getText();
+        DeleteSupplierController.selectedSupplier = txtPiva.getText();
         new GuiNew("deleteSupplier");
     }
 
@@ -271,11 +287,6 @@ public class SupplierController implements Initializable{
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             try {
                 boolean isEditOk = u.addIngrToDb(ingr, oldPiva);  //call method in Server Impl
 
@@ -298,11 +309,6 @@ public class SupplierController implements Initializable{
 
     public void handleLoadIngr() {
         System.out.println("Loading data...");
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try {
             ArrayList<CodRifChildDbDetails> staffDbArrayList = u.loadDataIngr(oldPiva);  //call method in Server Impl
             ingrObsList.clear();
@@ -326,7 +332,7 @@ public class SupplierController implements Initializable{
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 

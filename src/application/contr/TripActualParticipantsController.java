@@ -2,28 +2,20 @@ package application.contr;
 
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.*;
 import application.gui.GuiNew;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by ELISA on 23/04/2018.
@@ -34,22 +26,22 @@ public class TripActualParticipantsController implements Initializable {
     private ObservableList<ChildSelectedTripGuiDetails> actualChildrenObsList = FXCollections.observableArrayList();
     private ObservableList<StaffSelectedTripGuiDetails> actualStaffObsList = FXCollections.observableArrayList();
 
-    int totChildren = 0;
-    int totStaff = 0;
+    private int totChildren = 0;
+    private int totStaff = 0;
 
     private HashMap<String, ArrayList<String>> busForParticipants = new HashMap<>();
 
-    ArrayList<String> selectedTrip = new ArrayList<>();
-    ArrayList<String> selectedChild = new ArrayList<>();
-    ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
-    ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
-    ArrayList<String> selectedStaff = new ArrayList<>();
-    String selectedTripDepFrom = new String();
-    String selectedTripDep = new String();
-    String selectedTripCom = new String();
-    String selectedTripAccomodation = new String();
-    String selectedTripArrTo = new String();
-    String selectedTripArr = new String();
+    private ArrayList<String> selectedTrip = new ArrayList<>();
+    private ArrayList<String> selectedChild = new ArrayList<>();
+    private ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
+    private ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
+    private ArrayList<String> selectedStaff = new ArrayList<>();
+    private String selectedTripDepFrom = new String();
+    private String selectedTripDep = new String();
+    private String selectedTripCom = new String();
+    private String selectedTripAccomodation = new String();
+    private String selectedTripArrTo = new String();
+    private String selectedTripArr = new String();
 
     @FXML
     public TableView<ChildSelectedTripGuiDetails> tableActualChildren;
@@ -105,6 +97,16 @@ public class TripActualParticipantsController implements Initializable {
     public Button btnDeselect;
     @FXML
     public Label lblWarning;
+
+    UserRemote  u;
+
+    public TripActualParticipantsController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -180,7 +182,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleLoadTrip() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //already existing
 
             tripObsList.clear();
@@ -206,7 +207,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleLoadChildren() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<ChildSelectedTripDbDetails> childDbArrayList = u.loadTripSelectedChildren(selectedTrip.get(0), selectedTrip.get(1), selectedTrip.get(2), selectedTrip.get(3), selectedTrip.get(4), selectedTrip.get(5));  //call method in Server Impl
 
             actualChildrenObsList.clear();
@@ -230,7 +230,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleLoadStaff() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<StaffSelectedTripDbDetails> staffDbArrayList = u.loadTripSelectedStaff(selectedTrip.get(0), selectedTrip.get(1), selectedTrip.get(2), selectedTrip.get(3), selectedTrip.get(4), selectedTrip.get(5));  //call method in Server Impl
 
             actualStaffObsList.clear();
@@ -259,7 +258,6 @@ public class TripActualParticipantsController implements Initializable {
         else {
             System.out.println("Selection is being processed...");
             try{
-                UserRemote u = Singleton.getInstance().methodRmi();
                 ArrayList<CodRifChildDbDetails> notAvailableStaffArrayList = u.findNotAvailableStaff(selectedStaffCfArrayList, selectedTripDep, selectedTripCom);
                 ArrayList<CodRifChildDbDetails> notAvailableChildArrayList = u.findNotAvailableChild(selectedChildCfArrayList, selectedTripDep, selectedTripCom);
 
@@ -346,7 +344,6 @@ public class TripActualParticipantsController implements Initializable {
     public void handleCalculateBus() {
         System.out.println("Calculating necessary buses...");
         try{
-            UserRemote u = Singleton.getInstance().methodRmi();
             //calculate who goes on which bus -> HashMap<plateBus, who>
             busForParticipants = u.associateBusToParticipants(selectedChildCfArrayList, totChildren, selectedStaffCfArrayList, totStaff, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
@@ -385,13 +382,13 @@ public class TripActualParticipantsController implements Initializable {
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 
-    public void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
+    private void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
 
-    public void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
+    private void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
 
 
 }

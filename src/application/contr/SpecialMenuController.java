@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.*;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
@@ -12,11 +12,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
-import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -31,7 +29,7 @@ public class SpecialMenuController implements Initializable {
 
     private ObservableList<IngredientsGuiDetails> searchedIngredients = FXCollections.observableArrayList();
 
-    public ArrayList<String> selectedIngr = new ArrayList<>();
+    private ArrayList<String> selectedIngr = new ArrayList<>();
 
     private LocalDate dateSpecialMenu = null;
 
@@ -141,6 +139,17 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public Button showWho;
 
+
+    UserRemote  u;
+
+    public SpecialMenuController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
+
     public void search(){
         searchedInterni = FXCollections.observableArrayList();
         if(searchTF.getText().trim().length() != 0){
@@ -174,9 +183,6 @@ public class SpecialMenuController implements Initializable {
     }
 
 
-
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Ingredients.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
@@ -185,8 +191,6 @@ public class SpecialMenuController implements Initializable {
         FC.setCellValueFactory(cellData-> cellData.getValue().CFProperty());
         All.setCellValueFactory(cellData -> cellData.getValue().allergieProperty());
         tabInterni.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-
 
         tabIngr.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -223,15 +227,10 @@ public class SpecialMenuController implements Initializable {
     @FXML
     private void loadIngredients(){
         controlIngredients = false;
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try{
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
-            if( ingredients != null){
+            if(ingArray != null){
                 for(IngredientsDbDetails x : ingArray){
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(x);
                     ingredients.add(tmp);
@@ -268,12 +267,7 @@ public class SpecialMenuController implements Initializable {
             drinkTF.setText("");
             sideTF.setText("");
             try {
-                UserRemote u;
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();
-                else
-                    u = Singleton.getInstance().methodSocket();
-                //controll date
+                //control date
                 if (!u.controllDate(dateSpecialMenu)) {
                     controllSearchedDate.setText("Loading");
 
@@ -301,11 +295,6 @@ public class SpecialMenuController implements Initializable {
 
     private boolean showSelection(String selection) throws RemoteException {
         try {
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u= Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             ArrayList<IngredientsDbDetails> ingredientsForThisDish = u.searchIngredients(selection);
             ingredients.clear();
             if(ingredientsForThisDish != null) {
@@ -455,11 +444,6 @@ public class SpecialMenuController implements Initializable {
         else if(controllAllergicals()) status.setText("A person is allergic to this menu");
         else{
             try{
-                UserRemote u;
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();
-                else
-                    u = Singleton.getInstance().methodSocket();
                 if(selectedMenu == null){
                     for(SpecialDbDetails x : selectedInterno) {
                         boolean addSuccess = u.addSpecialMenu(entree, main, dessert, side, drink, date, x);
@@ -482,13 +466,8 @@ public class SpecialMenuController implements Initializable {
         }
     }
 
-    public boolean controllAllergicals(){
-        ArrayList<IngredientsDbDetails> ingredientsForThisDish = new ArrayList<>();
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
+    private boolean controllAllergicals(){
+        ArrayList<IngredientsDbDetails> ingredientsForThisDish;
         try{
 
             if(entreeTF.getText().trim().length() != 0) {
@@ -521,10 +500,6 @@ public class SpecialMenuController implements Initializable {
                     for(IngredientsDbDetails y : ingredientsForThisDish)
                         if(x.getAllergie().contains(y.getIngr())) return true;
             }
-
-            return false;
-
-
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -538,15 +513,10 @@ public class SpecialMenuController implements Initializable {
     @FXML
     public void showAllergical(){
         try {
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             ArrayList<SpecialDbDetails> loadInterni = u.loadInterniWithAllergies(dateSpecialMenu);
             specialInterni.clear();
 
-            if(specialInterni.isEmpty() && loadInterni != null){
+            if( loadInterni != null){
                 for(SpecialDbDetails x : loadInterni){
                     SpecialGuiDetails tmp = new SpecialGuiDetails(x);
                     specialInterni.add(tmp);
@@ -577,11 +547,6 @@ public class SpecialMenuController implements Initializable {
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients){
         try{
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             if(u.saveIngredients(dishName, ingredients)){
                 status.setText("Success!!");
                 selectedIngr = new ArrayList<>();
@@ -652,14 +617,14 @@ public class SpecialMenuController implements Initializable {
     }
 
 
-    public void reLoad(ActionEvent event) {
+    public void reLoad() {
         searchedInterni = FXCollections.observableArrayList();
         searchTF.setText("");
         tabInterni.setItems(null);
         tabInterni.setItems(specialInterni);
     }
 
-    public void reLoadIngr(ActionEvent event){
+    public void reLoadIngr(){
         searchedInterni = FXCollections.observableArrayList();
         searchIngr.setText("");
         tabIngr.setItems(null);

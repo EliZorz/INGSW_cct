@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.*;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
@@ -15,9 +15,6 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.*;
-
-
-
 
 
 
@@ -172,11 +169,10 @@ public class ChildController implements Initializable {
 
     public ChildController(){
         if(MainControllerLogin.selected.equals("RMI"))
-            u= Singleton.getInstance().methodRmi();
+            u= LookupCall.getInstance().methodRmi();
         else
-            u= Singleton.getInstance().methodSocket();
+            u= LookupCall.getInstance().methodSocket();
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

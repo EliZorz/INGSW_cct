@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.BusPlateCapacityDbDetails;
 import application.details.BusPlateCapacityGuiDetails;
 import application.details.SupplierDbDetails;
@@ -9,7 +9,6 @@ import application.details.SupplierGuiDetails;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -31,8 +30,9 @@ public class CoachOperatorsController implements Initializable {
 
     private ObservableList<SupplierGuiDetails> searchedSuppliers = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedSupplier = new ArrayList<>();
-    String oldPiva = null;
+    private ArrayList<String> selectedSupplier = new ArrayList<>();
+    private String oldPiva;
+    private String selectedPlate;
 
     @FXML
     public TableView<SupplierGuiDetails> tableSuppliers;
@@ -59,13 +59,15 @@ public class CoachOperatorsController implements Initializable {
     @FXML
     public Button btnUpdate;
     @FXML
-    public Button btnDelete;
+    public Button btnDeleteBus;
     @FXML
     public Button btnBack;
     @FXML
     public Button btnDeselect;
     @FXML
     public Button btnAddBus;
+    @FXML
+    public Button btnDelete;
     @FXML
     public TextField txtName;
     @FXML
@@ -80,6 +82,8 @@ public class CoachOperatorsController implements Initializable {
     public TextField txtCap;
     @FXML
     public TextField txtProvince;
+    @FXML
+    public Button btnLoadBus;
     @FXML
     public TableView<BusPlateCapacityGuiDetails> tableBus;
     @FXML
@@ -99,9 +103,28 @@ public class CoachOperatorsController implements Initializable {
     public Button search;
 
 
+    UserRemote u;
+
+    public CoachOperatorsController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(true);
+        btnDeleteBus.setDisable(true);
+        btnUpdate.setDisable(true);
+        btnDeselect.setDisable(true);
+        btnLoadBus.setDisable(true);
+        btnAddBus.setDisable(true);
+        search.setDisable(true);
+        back.setDisable(true);
+
         colName.setCellValueFactory(cellData -> cellData.getValue().nameazProperty());
         colPiva.setCellValueFactory(cellData -> cellData.getValue().pivaProperty());
         colMail.setCellValueFactory(cellData -> cellData.getValue().mailProperty());
@@ -139,19 +162,21 @@ public class CoachOperatorsController implements Initializable {
 
         colPlate.setCellValueFactory(cellData -> cellData.getValue().plateProperty());
         colCapacity.setCellValueFactory(cellData -> cellData.getValue().capacityProperty());
+        tableBus.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
+        tableBus.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if(newSelection != null){
+                selectedPlate = newSelection.getPlate();
+            }
+        });
         tableBus.getItems().clear();
 
     }
 
     public void handleLoadSuppliers() {
         System.out.println("Loading data...");
-        UserRemote u;
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();  //lookup
-            else
-                u = Singleton.getInstance().methodSocket();             ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataCoachOperator();  //call method in Server Impl
+            ArrayList<SupplierDbDetails> staffDbArrayList = u.loadDataCoachOperator();  //call method in Server Impl
             dataObsList.clear();
 
             if (staffDbArrayList != null){
@@ -168,6 +193,16 @@ public class CoachOperatorsController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDeleteBus.setDisable(true);
+        btnUpdate.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnLoadBus.setDisable(false);
+        btnAddBus.setDisable(true);
+        search.setDisable(false);
+        back.setDisable(false);
     }
 
     public void handleAddSupplier() {
@@ -187,12 +222,8 @@ public class CoachOperatorsController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();  //lookup
-                else
-                    u = Singleton.getInstance().methodSocket();                 boolean isAddOk = u.addDataCoachOperator(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
+                boolean isAddOk = u.addDataCoachOperator(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isAddOk) {
                     this.renameLabel("Congrats! Coach operator added.");
@@ -219,12 +250,8 @@ public class CoachOperatorsController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();  //lookup
-                else
-                    u = Singleton.getInstance().methodSocket();                 boolean isEditOk = u.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
+                boolean isEditOk = u.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Coach operator edited.");
@@ -238,15 +265,61 @@ public class CoachOperatorsController implements Initializable {
     }
 
 
-    public void handleDeleteSupplier() {
+    public void handleDeleteBus() {
+        /*
+        1. controllo se per il noleggio associato al bus che sto eliminando esistono altri bus
+        2. se ResultSet della SELECT .next() != null, elimino solo quella targa dal db bus
+        3. else elimina l'interno fornitore da db noleggio
+        4. in ramo if(deleted) apro gui TRIP_ACTUAL_PARTICIPANTS,
+        azzero partecipanti effettivi gita e così posso reinserirli,
+        cancello persone collegate alle gite connesse al bus da interni_is_here
+        e richiedo selezione partecipanti e calcolo bus
+        */
         System.out.println("Loading data...");
-        UserRemote u;
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();  //lookup
-            else
-                u = Singleton.getInstance().methodSocket();
-            boolean deleted = u.deleteCoachOperator(selectedSupplier.get(1));
+            //cancello persone collegate alle gite connesse al bus da interni_is_here
+            boolean isBusConnectedToSomeone = u.deleteIsHere(selectedPlate);
+            if( !isBusConnectedToSomeone ){
+                boolean deleted = u.deleteCoachOperatorBus(selectedPlate);
+                if(deleted){
+                    System.out.println("Deleted bus.");
+                    this.renameLabel("Deleted.");
+                } else {
+                    System.out.println("Error deleting bus.");
+                    this.renameLabel("Error deleting.");
+                }
+            } else {
+                //azzero partecipanti effettivi gita
+                boolean effective = u.zeroActualParticipants(selectedPlate);
+                if (effective) {
+                    //elimino da gita_has_bus
+                    u.deleteFromGitaHasBus(selectedPlate);
+                    //cancello bus
+                    boolean deleted = u.deleteCoachOperatorBus(selectedPlate);
+                    if (deleted) {
+                        this.renameLabel("Edit trip before!");
+                        try {
+                            //richiedo riselezione partecipanti e calcolo bus (come visualizzo solo gite interessanti?????????????????????????)
+                            new GuiNew("TripActualParticipants");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        this.renameLabel("Error deleting who is on.");
+                    }
+                } else {
+                    this.renameLabel("Error zero actual participants");
+                }
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleDelete() {
+        System.out.println("Loading data...");
+        try {
+            boolean deleted = u.deleteCoachOperator(oldPiva);
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedSupplier.clear();
@@ -295,12 +368,7 @@ public class CoachOperatorsController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();  //lookup
-                else
-                    u = Singleton.getInstance().methodSocket();
                 boolean isEditOk = u.addBusToDb(plate, capacity, oldPiva);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -324,12 +392,7 @@ public class CoachOperatorsController implements Initializable {
 
     public void handleLoadBus() {
         System.out.println("Loading data...");
-        UserRemote u;
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();  //lookup
-            else
-                u = Singleton.getInstance().methodSocket();
             ArrayList<BusPlateCapacityDbDetails> staffDbArrayList = u.loadDataBus(oldPiva);  //call method in Server Impl
             busObsList.clear();
 
@@ -347,7 +410,16 @@ public class CoachOperatorsController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDeleteBus.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnLoadBus.setDisable(false);
+        btnAddBus.setDisable(false);
+        search.setDisable(false);
+        back.setDisable(false);
 
     }
 

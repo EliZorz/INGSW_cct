@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +9,6 @@ import application.details.StaffDbDetails;
 import application.details.StaffGuiDetails;
 import application.details.IngredientsDbDetails;
 import application.details.IngredientsGuiDetails;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -32,9 +31,9 @@ public class StaffController implements Initializable {
     private ObservableList<StaffGuiDetails> searchedStaff = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> searchedAllergies = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedAllergy = new ArrayList<>();
-    ArrayList<String> selectedStaff = new ArrayList<>();
-    String oldcf = null;
+    private ArrayList<String> selectedAllergy = new ArrayList<>();
+    private ArrayList<String> selectedStaff = new ArrayList<>();
+    private String oldcf = null;
 
     @FXML
     public Button btnBack;
@@ -117,6 +116,16 @@ public class StaffController implements Initializable {
     @FXML
     public TextField searchSTF;
 
+    private UserRemote  u;
+
+    public StaffController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -177,40 +186,36 @@ public class StaffController implements Initializable {
 
     @FXML
     public void handleLoadStaff() {
-
         System.out.println("Loading data...");
-        UserRemote u;
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();  //lookup
-            else
-                u = Singleton.getInstance().methodSocket();
-
             ArrayList<StaffDbDetails> staffDbArrayList = u.loadDataStaff();  //call method in Server Impl
-
             dataObsList.clear();
 
             if (staffDbArrayList != null){
                 for(StaffDbDetails c : staffDbArrayList){
                     StaffGuiDetails tmp = new StaffGuiDetails(c);
                     dataObsList.add(tmp);
-
                 }
-
                 tableStaff.setItems(null);
                 tableStaff.setItems(dataObsList);
-
                 this.renameLabel("Table loaded!");
-
             }else{
                 this.renameLabel("Error.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        search.setDisable(false);
+        searchSt.setDisable(false);
+        back.setDisable(false);
+        backStaff.setDisable(false);
     }
 
 
@@ -241,12 +246,7 @@ public class StaffController implements Initializable {
 
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();  //lookup
-                else
-                    u = Singleton.getInstance().methodSocket();
                 boolean isAddOk = u.addDataStaff(surname, name, cf, mail, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
                 //IN SERVERIMPL: pick every field content and save into list (1 list for staff -> interni + 1 list for allergy)
@@ -262,15 +262,8 @@ public class StaffController implements Initializable {
 
     public void handleLoadIngredients(){
         System.out.println("Loading data...");
-        UserRemote u;
-
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();  //lookup
-            else
-                u = Singleton.getInstance().methodSocket();
             ArrayList<IngredientsDbDetails> ingrArrayList = u.loadIngr();  //call method in Server Impl
-
             ingredientsObsList.clear();
 
             if (ingrArrayList != null){
@@ -278,19 +271,25 @@ public class StaffController implements Initializable {
                     IngredientsGuiDetails tmp = new IngredientsGuiDetails(c);
                     ingredientsObsList.add(tmp);
                 }
-
                 tableIngr.setItems(null);
                 tableIngr.setItems(ingredientsObsList);
-
-
             } else {
                 System.out.println("Error loading Ingredients");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        btnLoad.setDisable(false);
+        btnBack.setDisable(false);
+        btnAdd.setDisable(false);
+        btnDelete.setDisable(false);
+        btnDeselect.setDisable(false);
+        btnUpdate.setDisable(false);
+        btnLoadIngredients.setDisable(false);
+        search.setDisable(false);
+        searchSt.setDisable(false);
+        back.setDisable(false);
+        backStaff.setDisable(false);
     }
 
 
@@ -344,12 +343,7 @@ public class StaffController implements Initializable {
             this.renameLabel("Insert data.");
         } else {
             System.out.println("Adding data to database...");
-            UserRemote u;
             try {
-                if(MainControllerLogin.selected.equals("RMI"))
-                    u = Singleton.getInstance().methodRmi();  //lookup
-                else
-                    u = Singleton.getInstance().methodSocket();
                 boolean isEditOk = u.updateStaff(surname, name, oldcf, cf, mail, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
                 if (isEditOk) {
@@ -365,12 +359,8 @@ public class StaffController implements Initializable {
 
     public void handleDeleteStaff() {
         System.out.println("Loading data...");
-        UserRemote u;
+
         try {
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();  //lookup
-            else
-                u = Singleton.getInstance().methodSocket();
             boolean deleted = u.deleteStaff(selectedStaff.get(2));
             if(deleted){
                 this.renameLabel("Deleted.");
@@ -385,9 +375,10 @@ public class StaffController implements Initializable {
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
+
 
     public void reloadAll(){
         searchedAllergies = FXCollections.observableArrayList();
@@ -411,7 +402,7 @@ public class StaffController implements Initializable {
                     if(x.getIngr().contains(searchTF.getText()))
                         searchedAllergies.add(x);
                 }
-                tableIngr.setItems(null);
+            tableIngr.setItems(null);
             tableIngr.setItems(searchedAllergies);
         }else{
             tableIngr.setItems(null);
@@ -424,9 +415,9 @@ public class StaffController implements Initializable {
         if(searchSTF.getText().trim().length() != 0){
             if(dataObsList != null)
                 for(StaffGuiDetails x : dataObsList){
-                if(x.getCf().contains(searchSTF.getText()) || x.getAddress().contains(searchSTF.getText()) || x.getBornOn().contains(searchSTF.getText()) || x.getBornWhere().contains(searchSTF.getText()) || x.getCap().contains(searchSTF.getText()) || x.getMail().contains(searchSTF.getText()) || x.getName().contains(searchSTF.getText()) || x.getProvince().contains(searchSTF.getText()) || x.getResidence().contains(searchSTF.getText()) || x.getSurname().contains(searchSTF.getText()))
-                    searchedStaff.add(x);
-            }
+                    if(x.getCf().contains(searchSTF.getText()) || x.getAddress().contains(searchSTF.getText()) || x.getBornOn().contains(searchSTF.getText()) || x.getBornWhere().contains(searchSTF.getText()) || x.getCap().contains(searchSTF.getText()) || x.getMail().contains(searchSTF.getText()) || x.getName().contains(searchSTF.getText()) || x.getProvince().contains(searchSTF.getText()) || x.getResidence().contains(searchSTF.getText()) || x.getSurname().contains(searchSTF.getText()))
+                        searchedStaff.add(x);
+                }
             tableStaff.setItems(null);
             tableStaff.setItems(searchedStaff);
         }else{
@@ -434,5 +425,4 @@ public class StaffController implements Initializable {
             tableStaff.setItems(dataObsList);
         }
     }
-
 }

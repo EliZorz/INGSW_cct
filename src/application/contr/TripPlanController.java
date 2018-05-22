@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.*;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
@@ -14,11 +14,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.sql.Date;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -30,8 +27,8 @@ public class TripPlanController implements Initializable {
     private ObservableList<ChildTripGuiDetails> childObsList = FXCollections.observableArrayList();
     private ObservableList<StaffTripGuiDetails> staffObsList = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedChild = new ArrayList<>();
-    ArrayList<String> selectedStaff = new ArrayList<>();
+    private ArrayList<String> selectedChild = new ArrayList<>();
+    private ArrayList<String> selectedStaff = new ArrayList<>();
 
 
     @FXML
@@ -80,6 +77,16 @@ public class TripPlanController implements Initializable {
     public Button btnLoadChildren;
     @FXML
     public Button btnLoadStaff;
+
+
+    UserRemote  u;
+
+    public TripPlanController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
 
 
     @Override
@@ -151,7 +158,6 @@ public class TripPlanController implements Initializable {
         } else {
             System.out.println("Adding...");
             try {
-                UserRemote u = Singleton.getInstance().methodRmi();  //lookup
                 //in serverImpl create NumGita too (as in add for children)
 
                 int[] totParticipantsArray = u.addTrip(selectedChild, selectedStaff, dateDep, dateArr, dateCom, departureFrom, arrivalTo, staying);
@@ -175,7 +181,6 @@ public class TripPlanController implements Initializable {
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<ChildTripDbDetails> childDbArrayList = u.loadChildTrip();  //call method in Server Impl
             childObsList.clear();
 
@@ -201,7 +206,6 @@ public class TripPlanController implements Initializable {
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<StaffTripDbDetails> staffDbArrayList = u.loadStaffTrip();  //call method in Server Impl
             staffObsList.clear();
 
@@ -242,14 +246,14 @@ public class TripPlanController implements Initializable {
 
 
 
-    public void renameLabelChildren(String st){lblStatusChildren.setText(st);}
+    private void renameLabelChildren(String st){lblStatusChildren.setText(st);}
 
-    public void renameLabelStaff(String st){lblStatusStaff.setText(st);}
+    private void renameLabelStaff(String st){lblStatusStaff.setText(st);}
 
-    public void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
+    private void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
 
-    public void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
+    private void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
 
-    public void renameLabelStatus(String st){lblStatus.setText(st);}
+    private void renameLabelStatus(String st){lblStatus.setText(st);}
 
 }

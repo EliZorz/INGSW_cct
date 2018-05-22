@@ -1,7 +1,9 @@
+
 package application.socket.client;
 
 import application.Interfaces.ServicesManager;
 import application.Interfaces.UserRemote;
+import application.socket.client.SocketUserManager;
 
 import java.net.Socket;
 
@@ -12,32 +14,29 @@ public class SocketManager implements ServicesManager{
     private UserRemote user;
 
     public  SocketManager(){
-            Socket s = null;
-          try {
-                System.out.println("opening socket");
-                s = new Socket("localhost", 1092);
-                System.out.println("socket opened");
-                System.out.println("connection Established");
-                //SocketThread st = new SocketThread(s); // crea un thread per la gestione dei vari client
-                //st.start();
-              System.out.println("creating the user manager");
-                user = new SocketUserManager(s);  //implementazione della user remote per quella socket
-              System.out.println("");
+        Socket s;
+        try {
+            System.out.println("opening socket");
+            s = new Socket("localhost", 1092);
+            System.out.println("socket opened");
+            System.out.println("connection established from Socket Manager");
+            System.out.println("creating the user manager");
+            user = new SocketUserManager(s);  //implementazione della user remote per quella socket
+            System.out.println("");
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("Connection Error");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Connection Error");
 
-            }
+        }
+
 
     }
     @Override
     public UserRemote getUserService() throws Exception {
-       return user; //ritorna l'interfaccia remota
+        return user; //ritorna l'interfaccia remota
 
     }
 
 
 }
-
-

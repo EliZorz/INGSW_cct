@@ -1,7 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.*;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -27,10 +26,11 @@ public class TripBeforeController implements Initializable{
     private ObservableList<TripTableGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<ChildSelectedTripGuiDetails> whoObsList = FXCollections.observableArrayList();
     private ObservableList<CodRifChildGuiDetails> busObsList = FXCollections.observableArrayList();
+    private ObservableList<ChildSelectedTripGuiDetails> missingObsList = FXCollections.observableArrayList();
 
     private ArrayList<String> selectedChild = new ArrayList<>();
     private ArrayList<String> selectedChildCfArrayList  = new ArrayList<>();
-    private ArrayList<String> selectedBus = new ArrayList<>();
+    private String selectedBus = new String();
 
     private String selectedTripDepFrom = new String();
     private String selectedTripDep = new String();
@@ -93,6 +93,15 @@ public class TripBeforeController implements Initializable{
     public TableColumn<ChildSelectedTripGuiDetails, String> colCfMissing;
 
 
+    UserRemote  u;
+
+    public TripBeforeController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colDepFrom.setCellValueFactory(cellData->cellData.getValue().depFromProperty());
@@ -141,7 +150,7 @@ public class TripBeforeController implements Initializable{
         tableBus.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tableBus.getSelectionModel().selectedItemProperty().addListener((obsBus, oldSelectionBus, newSelectionBus) -> {
             if(newSelectionBus != null) {
-                selectedBus.add(newSelectionBus.getCodRif());
+                selectedBus = newSelectionBus.getCodRif();
             }
         });
         tableBus.getItems().clear();
@@ -152,7 +161,6 @@ public class TripBeforeController implements Initializable{
     public void handleLoadTrip() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //call method in Server Impl
 
             dataObsList.clear();
@@ -177,7 +185,6 @@ public class TripBeforeController implements Initializable{
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<ChildSelectedTripDbDetails> childDbArrayList = u.loadWhoTrip(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
             whoObsList.clear();
 
@@ -203,7 +210,6 @@ public class TripBeforeController implements Initializable{
         System.out.println("Loading data...");
 
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<CodRifChildDbDetails> busDbArrayList = u.loadBusTrip(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
             busObsList.clear();
 
@@ -227,35 +233,55 @@ public class TripBeforeController implements Initializable{
 
 
     public void handleCheck() {
-/*        if(selectedChild == null || selectedBus == null){
+        if(selectedChild == null || selectedBus == null){
             this.renameLabel("Add at least one child AND one bus to check");
         }
         else {
             System.out.println("Checking...");
             try{
-                UserRemote u = Singleton.getInstance().methodRmi();
+                //azzero is_here per la gita corrente
+                u.makeIsHereFalse(selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+
                 //chi è su questo bus ma non dovrebbe esserci
-                ArrayList<CodRifChildDbDetails> participantOnWrongBusArrayList = u.findParticipantOnWrongBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+                ArrayList<String> participantOnWrongBusArrayList = u.findParticipantOnWrongBus(selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+
                 //chi manca all'appello (e quindi su uno dei bus), cioè che ha is_here = 0 per questa gita ---> LOAD TABLE   *****************************
-                ArrayList<CodRifChildDbDetails> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(selectedChildCfArrayList, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+                ArrayList<String> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(participantOnWrongBusArrayList, selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+
                 //find out if some participants the user selected are already used in a concurrent trip
                 if (participantOnWrongBusArrayList.isEmpty()){
                     System.out.println("Your selection has been saved.");
+
                     if( missingParticipantsArrayList != null ){
                         //load missing table
+                        ArrayList<ChildSelectedTripDbDetails> missingDbArrayList = u.loadMissing(missingParticipantsArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
+                        missingObsList.clear();
+
+                        if (missingDbArrayList != null){
+                            for(ChildSelectedTripDbDetails c : missingDbArrayList){
+                                ChildSelectedTripGuiDetails tmp = new ChildSelectedTripGuiDetails(c);
+                                missingObsList.add(tmp);
+                            }
+                            tableMissing.setItems(null);
+                            tableMissing.setItems(missingObsList);
+                            this.renameLabel("Table loaded!");
+                        }else{
+                            this.renameLabel("Error.");
+                        }
+
                         this.renameLabel("Participants on correct bus. Someone's missing.");
+
                     } else {
+                        u.makeIsHereTrue(selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
                         this.renameLabel("Participants on correct bus. No missing.");
                     }
+
                 } else {
                     //highlight items into arrayList and tell user to reselect
                     System.out.println("Changing colours for not available children in tableview...");
-                    ArrayList<String> wrongBusParticipantStrings = new ArrayList<>(participantOnWrongBusArrayList.size());
-                    for (CodRifChildDbDetails object : participantOnWrongBusArrayList) {
-                        wrongBusParticipantStrings.add(Objects.toString(object, null));
-                    }
-                    for(String s : wrongBusParticipantStrings)
+                    for(String s : participantOnWrongBusArrayList)
                         System.out.println("Change colour for: " + s);
+
                     colCf.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
                         @Override
                         protected void updateItem(String item, boolean empty) {
@@ -263,15 +289,39 @@ public class TripBeforeController implements Initializable{
                             setText(empty ? "" : getItem());
                             setGraphic(null);
                             TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
-                            for (CodRifChildDbDetails child : participantOnWrongBusArrayList) {
-                                if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
+                            for (String child : participantOnWrongBusArrayList) {
+                                if (!currentRow.isEmpty() && item.equals(child)) {
                                     currentRow.setStyle("-fx-background-color:lightcoral");
                                 }
                             }
                         }
                     });
+
+                    if( missingParticipantsArrayList != null ){
+                        //load missing table
+                        ArrayList<ChildSelectedTripDbDetails> missingDbArrayList = u.loadMissing(missingParticipantsArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl
+                        missingObsList.clear();
+
+                        if (missingDbArrayList != null){
+                            for(ChildSelectedTripDbDetails c : missingDbArrayList){
+                                ChildSelectedTripGuiDetails tmp = new ChildSelectedTripGuiDetails(c);
+                                missingObsList.add(tmp);
+                            }
+                            tableMissing.setItems(null);
+                            tableMissing.setItems(missingObsList);
+                            this.renameLabel("Table loaded!");
+                        }else{
+                            this.renameLabel("Error.");
+                        }
+
+                        this.renameLabel("Red ones shouldn't be here. Someone's missing. Exit and redo.");
+                    } else {
+                        u.makeIsHereTrue(selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
+                        this.renameLabel("Red ones shouldn't be here. No missing.");
+                    }
+
                     System.out.println("Reselect participants on this bus.");
-                    this.renameLabel("Red ones shouldn't be on this bus. Exit and redo.");
+
 //BLOCCA TUTTO TRANNE HOMEPAGE E SOLUTION  ************************************************************************************************************
                     btnCheck.setDisable(true);
                     btnLoadTrip.setDisable(true);
@@ -280,11 +330,12 @@ public class TripBeforeController implements Initializable{
                     btnLoadBus.setDisable(true);
                     btnLoadWho.setDisable(true);
                 }
+
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-         }
-*/    }
+        }
+    }
 
 
     public void handleOpenSolutionGui() {
@@ -313,7 +364,7 @@ public class TripBeforeController implements Initializable{
         }
     }
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblStatus.setText(st);
     }
 }

@@ -1,11 +1,10 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
+import application.LookupCall;
 import application.details.TripTableDbDetails;
 import application.details.TripTableGuiDetails;
 import application.gui.GuiNew;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,9 +15,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.Date;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -28,7 +24,7 @@ import java.util.ResourceBundle;
 public class TripTableController implements Initializable{
     private ObservableList<TripTableGuiDetails> dataObsList = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedTrip = new ArrayList<>();
+    private ArrayList<String> selectedTrip = new ArrayList<>();
 
     @FXML
     public TableView<TripTableGuiDetails> tableTrip;
@@ -54,6 +50,16 @@ public class TripTableController implements Initializable{
     public Button btnSolution;
     @FXML
     public Label lblStatus;
+
+
+    UserRemote  u;
+
+    public TripTableController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
 
 
     @Override
@@ -84,7 +90,6 @@ public class TripTableController implements Initializable{
     public void handleLoad() {
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             ArrayList<TripTableDbDetails> tripDbArrayList = u.loadDataTrip();  //call method in Server Impl
 
             dataObsList.clear();
@@ -126,7 +131,6 @@ public class TripTableController implements Initializable{
 
         System.out.println("Loading data...");
         try {
-            UserRemote u = Singleton.getInstance().methodRmi();  //lookup
             boolean deleted = u.deleteTrip(selectedTrip.get(0), stringDep, stringCom, selectedTrip.get(3), stringArr, selectedTrip.get(5));
             if(deleted){
                 this.renameLabel("Deleted.");
@@ -149,7 +153,7 @@ public class TripTableController implements Initializable{
         }
     }
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblStatus.setText(st);
     }
 }

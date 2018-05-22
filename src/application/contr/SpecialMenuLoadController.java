@@ -1,8 +1,7 @@
 package application.contr;
 
 import application.Interfaces.UserRemote;
-import application.Singleton;
-import application.details.SpecialDbDetails;
+import application.LookupCall;
 import application.details.SpecialMenuDbDetails;
 import application.details.SpecialMenuGuiDetails;
 import application.gui.GuiNew;
@@ -83,6 +82,15 @@ public class SpecialMenuLoadController implements Initializable{
     public DatePicker dateSearch;
 
 
+    UserRemote  u;
+
+    public SpecialMenuLoadController(){
+        if(MainControllerLogin.selected.equals("RMI"))
+            u= LookupCall.getInstance().methodRmi();
+        else
+            u= LookupCall.getInstance().methodSocket();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colDate.setCellValueFactory(cellData-> cellData.getValue().dateProperty());
@@ -117,7 +125,11 @@ public class SpecialMenuLoadController implements Initializable{
 
     public void exit(ActionEvent event) {
         ((Node)(event.getSource())).getScene().getWindow().hide();
-
+        try {
+            new GuiNew("Menu");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addSpecialMenu(ActionEvent event) throws IOException {
@@ -143,15 +155,10 @@ public class SpecialMenuLoadController implements Initializable{
     }
 
 
-    public void deleteMenu(ActionEvent event) {
+    public void deleteMenu() {
         if (selectedMenu == null)
             labelStatus.setText("Please select a menu");
         else {
-            UserRemote u;
-            if(MainControllerLogin.selected.equals("RMI"))
-                u = Singleton.getInstance().methodRmi();
-            else
-                u = Singleton.getInstance().methodSocket();
             try {
                 boolean deleted = u.deleteSpecialMenu(LocalDate.parse(selectedMenu[0]), selectedMenu[6], selectedMenu[7]);
                 if (deleted) {
@@ -167,11 +174,6 @@ public class SpecialMenuLoadController implements Initializable{
     }
 
     public void loadMenu() {
-        UserRemote u;
-        if(MainControllerLogin.selected.equals("RMI"))
-            u = Singleton.getInstance().methodRmi();
-        else
-            u = Singleton.getInstance().methodSocket();
         try{
             ArrayList<SpecialMenuDbDetails> specialDbArrayList = u.loadSpecialMenu();
             specialMenu.clear();
@@ -184,9 +186,9 @@ public class SpecialMenuLoadController implements Initializable{
                 else labelStatus.setText("Loaded");
             }
 
-                tabSpecialMenu.setItems(null);
-                tabSpecialMenu.setItems(specialMenu);
-                selectedMenu = null;
+            tabSpecialMenu.setItems(null);
+            tabSpecialMenu.setItems(specialMenu);
+            selectedMenu = null;
 
         }catch(RemoteException e){
             e.printStackTrace();
