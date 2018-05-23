@@ -4,7 +4,9 @@ import application.rmi.server.ServerImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 
@@ -21,6 +23,21 @@ class StaffControllerTest {
         si = new ServerImpl();
     }
 
+    @BeforeEach
+    void addStaff() throws RemoteException{
+        ArrayList<String> allergies = new ArrayList<>();
+        si.addDataStaff("AAA", "BBB", "CCC111", "DDD", LocalDate.parse("1982-11-11"), "EEE", "FFF", "GGG", "12345", "AB", allergies);
+
+    }
+
+    @AfterEach
+    void deleteStaff() throws RemoteException{
+        si.deleteStaff("CCC111");
+        si.deleteStaff("DDD");
+    }
+
+    //ADD STAFF
+
     @Test
     void testAddNullStaff() {
         Assertions.assertThrows(NullPointerException.class, () -> {
@@ -35,12 +52,7 @@ class StaffControllerTest {
         });
     }
 
-    @Test
-    void testAddDataStaff()throws RemoteException{
-        ArrayList<String> allergies = new ArrayList<>();
-        assertTrue(si.addDataStaff("AAA", "BBB", "CCC111", "DDD", LocalDate.parse("1982-11-11"), "EEE", "FFF", "GGG", "12345", "AB", allergies));
-        assertTrue(si.addDataStaff("AAA", "BBB", "ABC", "DDD", LocalDate.parse("1982-11-11"), "EEE", "FFF", "GGG", "12345", "AB", allergies));
-    }
+    //LOAD
 
     @Test
     void testLoadDataStaff() throws RemoteException {
@@ -51,6 +63,8 @@ class StaffControllerTest {
     void testLoadIngredients() throws RemoteException {
         assertNotNull(si.loadIngr());
     }
+
+    //UPDATE
 
     @Test
     void testNullParameterUpdateStaff() {
@@ -73,11 +87,8 @@ class StaffControllerTest {
         assertTrue(si.updateStaff("AAA", "BBB", "CCC111", "DDD", "EEE",  LocalDate.parse("1982-11-11"), "EEE", "FFF", "GGG", "12345", "AB", allergies));
     }
 
-    @Test
-    void testDeleteStaff() throws RemoteException {
-        assertTrue(si.deleteStaff("ABC"));
-        assertTrue(si.deleteStaff("CCC111"));
-    }
+
+    //DELETE STAFF
 
     @Test
     void testNullDeleteStaff() throws RemoteException{

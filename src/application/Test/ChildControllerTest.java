@@ -25,6 +25,14 @@ class ChildControllerTest {
 
     }
 
+    @AfterEach
+    void delete() throws RemoteException{
+        si.deleteContact("1");
+        si.deleteContact("99");
+        si.deleteChild("A0");
+        si.deleteChild("29999");
+    }
+
     //ADD CHILD
 
     @Test
@@ -162,13 +170,6 @@ class ChildControllerTest {
         assertFalse(si.deleteContact(null));
     }
 
-    @AfterEach
-    void delete() throws RemoteException{
-        si.deleteContact("1");
-        si.deleteContact("99");
-        si.deleteChild("A0");
-        si.deleteChild("29999");
-    }
 
 
 
