@@ -1,9 +1,8 @@
 package application.Test;
 
-import application.details.IngredientsDbDetails;
+
 import application.rmi.server.ServerImpl;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -19,12 +18,14 @@ class ChildControllerTest {
         si = new ServerImpl();
     }
 
-    //ADD CHILD
-    @Test
-    void testAddChild() throws RemoteException{
+    @BeforeEach
+    void addChild() throws RemoteException{
         ArrayList<String> allergies = new ArrayList<>();
-        assertTrue(si.addData("AAA", "BBB", "A0", LocalDate.parse("1992-11-11"), "CCC", "DDD", "EEE", "00000", "FF", allergies, "GG", "HH", "1", "II", "1111", LocalDate.parse("1968-11-11"), "LL", "MM", "12345", "NN", true, false, false));
+        si.addData("AAA", "BBB", "A0", LocalDate.parse("1992-11-11"), "CCC", "DDD", "EEE", "00000", "FF", allergies, "GG", "HH", "1", "II", "1111", LocalDate.parse("1968-11-11"), "LL", "MM", "12345", "NN", true, false, false);
+
     }
+
+    //ADD CHILD
 
     @Test
     void testNullAddChild(){
@@ -147,10 +148,6 @@ class ChildControllerTest {
         assertFalse(si.deleteChild(null));
     }
 
-    @Test
-    void testDeleteChild() throws RemoteException {
-       assertTrue( si.deleteChild("29999"));
-    }
 
 
     //DELETE CONTACT
@@ -158,7 +155,7 @@ class ChildControllerTest {
     @Test
     void testDeleteContact() throws RemoteException{
         assertTrue(si.deleteContact("1"));
-        assertTrue(si.deleteContact("990"));
+        assertTrue(si.deleteContact("99"));
     }
 
     @Test
@@ -166,7 +163,13 @@ class ChildControllerTest {
         assertFalse(si.deleteContact(null));
     }
 
-
+    @AfterEach
+    void delete() throws RemoteException{
+        si.deleteContact("1");
+        si.deleteContact("99");
+        si.deleteChild("A0");
+        si.deleteChild("29999");
+    }
 
 
 
