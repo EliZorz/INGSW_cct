@@ -4,13 +4,16 @@ import application.rmi.server.ServerImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class SupplierControllerTest {
 
     private ServerImpl si;
@@ -19,12 +22,21 @@ class SupplierControllerTest {
         si = new ServerImpl();
     }
 
-    @Before
-    void testAddSupplier() throws RemoteException{
-        assertTrue(si.addDataSupplier("AAA","0","BBB", "1234", "CCC", "01234", "DD"));
-        assertTrue(si.addDataSupplier("BBB", "1", "AAA", "000", "AAA", "12345", "AB"));
+    @BeforeEach
+    void addSupplier() throws RemoteException{
+        si.addDataSupplier("BBB", "1", "AAA", "000", "AAA", "12345", "AB");
+        si.addIngrToDb("ABC", "1");
+        si.addDataSupplier("AEF","2","QWE", "000", "AAA", "12345", "AB");
     }
 
+    @AfterEach
+    void deleteSupplier() throws RemoteException{
+        si.deleteSupplier("1", si.loadNoIngr("1"));
+        si.deleteSupplier("2", si.loadNoIngr("2"));
+        si.deleteSupplier("33", si.loadNoIngr("33"));
+    }
+
+    //ADD SUPPLIER
 
     @Test
     void testAddNullParameterSupplier() throws RemoteException {
@@ -36,15 +48,14 @@ class SupplierControllerTest {
         assertFalse(si.addDataSupplier(null, null, null, null, null, null, null));
     }
 
-    @Test
-    void testAddIngrSupplier() throws RemoteException {
-        assertTrue(si.addIngrToDb("ABC", "1"));
-    }
+    //LOAD SUPPLIER
 
     @Test
     void testLoadSupplier() throws RemoteException{
         assertNotNull(si.loadDataSuppliers());
     }
+
+    //ADD INGREDIENTS
 
     @Test
     void testNoIngrAddIngrSupplier() throws RemoteException{
@@ -61,6 +72,21 @@ class SupplierControllerTest {
         assertFalse(si.addIngrToDb(null,  null));
     }
 
+    //LOAD NO INGREDIENTS
+
+    @Test
+    void testLoadNoIngr() throws RemoteException{
+        assertNotNull(si.loadNoIngr("1"));
+    }
+
+
+    @Test
+    void testNullLoadNoIngr() throws RemoteException{
+        assertNull(si.loadNoIngr(null));
+    }
+
+    // UPDATE SUPPLIER
+
     @Test
     void testNullUpdateSupplier() throws RemoteException {
        assertFalse( si.updateSupplier(null, null, null, null, null, null, null, null));
@@ -68,28 +94,26 @@ class SupplierControllerTest {
 
     @Test
     void testUpdateSupplier() throws RemoteException {
-        assertTrue(si.updateSupplier("AAA", "0", "33", "AAA", "01234", "AAAA", "12345", "AA"));
+        assertTrue(si.updateSupplier("AAA", "1", "33", "AAA", "01234", "AAAA", "12345", "AA"));
     }
 
     @Test
     void testNullParameterUpdateSupplier() throws RemoteException {
         assertFalse(si.updateSupplier("AAA", null, "31", "AAA", "01234", "AAAA", "12345", "AA"));
-
     }
 
-    @After
-    void testDeleteSupplier() throws RemoteException {
-        assertTrue(si.deleteSupplier("33", null));
-    }
+    //DELETE SUPPLIER
 
     @Test
     void testNullDeleteSupplier() throws RemoteException {
         assertFalse(si.deleteSupplier(null, null));
     }
 
-    @After
-    void testDeleteSupplierWIthIngredients() throws RemoteException{
-        assertTrue(si.deleteSupplier("1", si.loadNoIngr("1")));
+    @Test
+    void testDeleteSupplierWithoutIngredients() throws RemoteException{
+        assertTrue(si.deleteSupplier("2", si.loadNoIngr("2")));
     }
+
+
 
 }
