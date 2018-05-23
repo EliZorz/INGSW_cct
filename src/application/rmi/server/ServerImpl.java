@@ -450,7 +450,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryLoadContacts = "SELECT Cognome, Nome, CF, Mail, Tel, DataNascita, CittaNascita, Indirizzo, CAP, Provincia, Pediatra, Tutore, Contatto" +
                 " FROM adulto INNER JOIN bambino" +
                 " WHERE adulto.Bambino_CodRif = bambino.CodRif AND bambino.Interni_CF = '" + cfChild + "';";
-
+        if(cfChild == null)
+            return null;
         try {
             st = this.connHere().prepareStatement(queryLoadContacts);
             result = st.executeQuery(queryLoadContacts);
@@ -517,6 +518,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryAddContact = "INSERT INTO adulto(Cognome, Nome, CF, Mail, Tel, DataNascita, CittaNascita, Indirizzo, CAP, Provincia, Pediatra, Tutore, Contatto, Bambino_CodRif)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        if(!isContact && !isDoc && !isGuardian)
+            return false;
+
         try {
             //search CodRif of the selected child, to add it to db in Adulto
             st = this.connHere().prepareStatement(querySearchCodRif);
@@ -574,6 +578,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
 
         String queryDelete = "DELETE FROM adulto WHERE CF = '" + oldcfContact + "';";
+        if(oldcfContact == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
@@ -1042,9 +1048,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String querySearchMenu;
         ArrayList<SpecialMenuDbDetails> special = new ArrayList<>();
         ResultSet res = null;
-        for(IngredientsDbDetails x : ingrNO){
-            querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
-            try {
+        if(piva == null)
+            return false;
+        if(ingrNO != null)
+            for(IngredientsDbDetails x : ingrNO){
+                querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
+                try {
                 stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
                 res = stSpecialMenu.executeQuery(querySearchMenu);
                 res.beforeFirst();

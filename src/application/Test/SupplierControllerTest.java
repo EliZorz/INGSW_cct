@@ -1,16 +1,14 @@
 package application.Test;
 
 import application.rmi.server.ServerImpl;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import com.sun.org.apache.regexp.internal.RE;
-import org.junit.jupiter.api.Assertions;
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
+import org.junit.runners.MethodSorters;
 
 import java.rmi.RemoteException;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class SupplierControllerTest {
 
     private ServerImpl si;
@@ -21,7 +19,7 @@ class SupplierControllerTest {
 
     @Test
     void testAddSupplier() throws RemoteException{
-        assertTrue(si.addDataSupplier("AAA","0000","BBB", "1234", "CCC", "01234", "DD"));
+        assertTrue(si.addDataSupplier("AAA","0","BBB", "1234", "CCC", "01234", "DD"));
         assertTrue(si.addDataSupplier("BBB", "1", "AAA", "000", "AAA", "12345", "AB"));
     }
 
@@ -68,26 +66,23 @@ class SupplierControllerTest {
 
     @Test
     void testUpdateSupplier() throws RemoteException {
-        assertTrue(si.updateSupplier("AAA", "0000", "0001", "AAA", "01234", "AAAA", "12345", "AA"));
+        assertTrue(si.updateSupplier("AAA", "0", "33", "AAA", "01234", "AAAA", "12345", "AA"));
     }
 
     @Test
     void testNullParameterUpdateSupplier() throws RemoteException {
-        assertFalse(si.updateSupplier("AAA", null, "0001", "AAA", "01234", "AAAA", "12345", "AA"));
+        assertFalse(si.updateSupplier("AAA", null, "31", "AAA", "01234", "AAAA", "12345", "AA"));
 
     }
 
     @Test
     void testDeleteSupplier() throws RemoteException {
-        Assertions.assertThrows(NullPointerException.class, ()->{
-            si.deleteSupplier("0001", null);
-        });    }
+        assertTrue(si.deleteSupplier("33", null));
+    }
 
     @Test
-    void testNullDeleteSupplier(){
-        Assertions.assertThrows(NullPointerException.class, ()->{
-            si.deleteSupplier(null, null);
-        });
+    void testNullDeleteSupplier() throws RemoteException {
+        assertFalse(si.deleteSupplier(null, null));
     }
 
     @Test
