@@ -328,7 +328,7 @@ public class ChildController implements Initializable {
         txtCap.clear();
         txtProvince.clear();
 
-        System.out.println("Loading data...");
+        System.out.println("Loading data from ChildController...");
         try {
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
             dataObsList.clear();
@@ -473,7 +473,7 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleUpdate() throws RemoteException {
-        System.out.println("Loading data...");
+        System.out.println("Handling update...");
 
         String name = txtName.getText();
         String surname = txtSurname.getText();
