@@ -36,12 +36,12 @@ public class TripActualParticipantsController implements Initializable {
     private ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
     private ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
     private ArrayList<String> selectedStaff = new ArrayList<>();
-    private String selectedTripDepFrom = new String();
-    private String selectedTripDep = new String();
-    private String selectedTripCom = new String();
-    private String selectedTripAccomodation = new String();
-    private String selectedTripArrTo = new String();
-    private String selectedTripArr = new String();
+    private String selectedTripDepFrom ;
+    private String selectedTripDep ;
+    private String selectedTripCom ;
+    private String selectedTripAccomodation ;
+    private String selectedTripArrTo ;
+    private String selectedTripArr ;
 
     @FXML
     public TableView<ChildSelectedTripGuiDetails> tableActualChildren;
