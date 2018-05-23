@@ -404,7 +404,7 @@ public class SocketThread extends Thread implements Runnable {
             }
 
 
-            //MENU -------------------------------------------------------------------------------
+            //MENU BASE -------------------------------------------------------------------------------
             case "loadmenu": {
                 System.out.println("Loading menu...");
                 ArrayList<DishesDbDetails> isLoadedal = impl.loadMenu();
@@ -524,6 +524,55 @@ public class SocketThread extends Thread implements Runnable {
                     reply = impl.saveIngredients(dish, arrayListToReturn);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                }
+                return reply;
+            }
+
+            //MENU ------------------------------------------------------------------------------------------
+            case "loadThisMenu" : {
+                System.out.println("Loading this menu...");
+                String dateString = null;
+                ArrayList<DishesDbDetails> isLoadedal = new ArrayList<>();
+                try {
+                    dateString = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                if(dateString != null) {
+                    LocalDate date = LocalDate.parse(dateString);
+                    isLoadedal = impl.loadThisMenu(date);
+                }
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+
+            case "loadIngredientsForThisDay" : {
+                System.out.println("Loading ingredients for given day...");
+                String dateString = null;
+                ArrayList<IngredientsDbDetails> isLoadedal = new ArrayList<>();
+                try {
+                    dateString = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                if(dateString != null) {
+                    LocalDate date = LocalDate.parse(dateString);
+                    isLoadedal = impl.loadIngr(date);
+                }
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
                 }
                 return reply;
             }
@@ -671,6 +720,89 @@ public class SocketThread extends Thread implements Runnable {
             }
 
 
+            //COACH OPERATOR -----------------------------------------------------------
+            case "loadCoachOperator": {
+                System.out.println("Loading coach operator...");
+                ArrayList<SupplierDbDetails> isLoadedal = impl.loadDataCoachOperator();
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+            case "addCoachOperator": {
+                System.out.println("Adding coach operator...");
+                try {
+                    String name = (String) inputFromClient.readUnshared();
+                    String piva = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    String tel = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    reply = impl.addDataCoachOperator(name, piva, mail, tel, address, cap, province);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "updateCoachOperator": {
+                System.out.println("Updating coach operator...");
+                try {
+                    String name = (String) inputFromClient.readUnshared();
+                    String oldPiva = (String) inputFromClient.readUnshared();
+                    String piva = (String) inputFromClient.readUnshared();
+                    String mail = (String) inputFromClient.readUnshared();
+                    String tel = (String) inputFromClient.readUnshared();
+                    String address = (String) inputFromClient.readUnshared();
+                    String cap = (String) inputFromClient.readUnshared();
+                    String province = (String) inputFromClient.readUnshared();
+                    reply = impl.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+            case "addBusToDb": {
+                System.out.println("Adding bus...");
+                try {
+                    String plate = (String) inputFromClient.readUnshared();
+                    int capacity = (int) inputFromClient.readUnshared();
+                    String selectedSupplier = (String) inputFromClient.readUnshared();
+                    reply = impl.addBusToDb(plate, capacity, selectedSupplier);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+            case "deleteCoachOperator": {
+                System.out.println("Deleting coach operator...");
+                try {
+                    String piva = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteCoachOperator(piva);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                return reply;
+            }
+
+            case "deleteCoachOperatorBus": {
+                System.out.println("Deleting bus related to coach operator...");
+                try {
+                    String plate = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteCoachOperatorBus(plate);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                return reply;
+            }
+
             //SPECIAL MENU --------------------------------------------------------------
             case "addSpecialMenu": {
                 System.out.println("Adding special menu...");
@@ -758,6 +890,60 @@ public class SocketThread extends Thread implements Runnable {
 
 
             //TRIP -------------------------------------------
+
+            case "zeroActualParticipants" : {
+                System.out.println("Deleting people here....");
+                try {
+                    String plate = (String) inputFromClient.readUnshared();
+                    reply = impl.zeroActualParticipants(plate);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+            case "deleteIsHere" : {
+                System.out.println("Deleting people here....");
+                try {
+                    String plate = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteIsHere(plate);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+            case "deleteFromGitaHasBus": {
+                System.out.println("Deleting from gita_has_bus....");
+                try {
+                    String plate = (String) inputFromClient.readUnshared();
+                    impl.deleteFromGitaHasBus(plate);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                return true;
+            }
+
+            case "loadDataBus" : {
+                System.out.println("Loading data bus...");
+                String rif = null;
+                try {
+                    rif = (String) inputFromClient.readUnshared();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<BusPlateCapacityDbDetails> isLoadedal = impl.loadDataBus(rif);
+                if (!isLoadedal.isEmpty()) {
+                    outputToClient.writeUnshared(isLoadedal);
+                    outputToClient.flush();
+                    reply = true;
+                } else {
+                    reply = false;
+                }
+                return reply;
+            }
+
             case "loadDataTrip": {
                 System.out.println("Loading data trip...");
                 ArrayList<TripTableDbDetails> isLoadedal = impl.loadDataTrip();
@@ -829,9 +1015,8 @@ public class SocketThread extends Thread implements Runnable {
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
-                }
-                if(childrenArrayList.isEmpty())
                     reply = false;
+                }
                 ArrayList<String> staffArrayList = new ArrayList<>();
                 try {
                     Object loaded = inputFromClient.readUnshared();
@@ -849,9 +1034,8 @@ public class SocketThread extends Thread implements Runnable {
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
-                }
-                if(staffArrayList.isEmpty())
                     reply = false;
+                }
                 try {
                     String timeDep = (String) inputFromClient.readUnshared();
                     String timeArr = (String) inputFromClient.readUnshared();
