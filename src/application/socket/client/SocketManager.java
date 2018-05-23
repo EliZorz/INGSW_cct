@@ -22,7 +22,7 @@ public class SocketManager implements ServicesManager{
             System.out.println("connection established from Socket Manager");
             System.out.println("creating the user manager");
             user = new SocketUserManager(s);  //implementazione della user remote per quella socket
-            System.out.println("");
+
 
         } catch (Exception e) {
             e.printStackTrace();

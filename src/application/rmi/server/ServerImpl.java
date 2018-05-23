@@ -27,7 +27,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         super();
     }
 
-
     //LOGIN----------------------------------------------------------------------------------
     @Override
     public boolean funzLog(String usr, String pwd) {
@@ -83,6 +82,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return res;
 
     }
+
+
+    @Override
+    public boolean logout(){
+        return true;
+    }
+
 
 
     //CHILDREN---------------------------------------------------------------------------------------
@@ -337,6 +343,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         PreparedStatement st = null;
 
+        if(bornOn == null)
+            return false;
+
         //divide items from arraylist selectedAllergy into string to put into database
         StringBuilder allAllergies = new StringBuilder();
         if (!selectedAllergy.isEmpty()) {
@@ -450,8 +459,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryLoadContacts = "SELECT Cognome, Nome, CF, Mail, Tel, DataNascita, CittaNascita, Indirizzo, CAP, Provincia, Pediatra, Tutore, Contatto" +
                 " FROM adulto INNER JOIN bambino" +
                 " WHERE adulto.Bambino_CodRif = bambino.CodRif AND bambino.Interni_CF = '" + cfChild + "';";
-        if(cfChild == null)
-            return null;
+
         try {
             st = this.connHere().prepareStatement(queryLoadContacts);
             result = st.executeQuery(queryLoadContacts);
@@ -652,16 +660,22 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
             else
                 controll = false;
-            result.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        try {
-            if (st != null)
-                st.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return controll;
 
@@ -694,6 +708,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try {
             if (!result.next()) {
                 System.out.println("No staff in DB");
+                return null;
 
             } else {
                 result.beforeFirst();
@@ -954,6 +969,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !result.next() ) {
                 System.out.println("No supplier in DB");
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -1064,12 +1080,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             for(IngredientsDbDetails x : ingrNO){
                 querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
                 try {
-                stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
-                res = stSpecialMenu.executeQuery(querySearchMenu);
-                res.beforeFirst();
-                while(res.next()) {
-                    SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
-                    special.add(sp);
+                    stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
+                    res = stSpecialMenu.executeQuery(querySearchMenu);
+                    res.beforeFirst();
+                    while(res.next()) {
+                        SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
+                        special.add(sp);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -1110,6 +1126,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !result.next() ) {
                 System.out.println("No ingredient in DB");
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -1213,6 +1230,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try {
             if (!result.next()) {
                 System.out.println("no ingredients");
+                return null;
             } else {
                 result.beforeFirst();
                 try {
@@ -1281,6 +1299,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try {
             if (!result.next()) {
                 System.out.println("no ingredients");
+                return null;
             } else {
                 result.beforeFirst();
                 while (result.next()) {
@@ -1313,6 +1332,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try {
             if (!result.next()) {
                 System.out.println("No coach operator in DB");
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -1727,6 +1747,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !result.next() ) {
                 System.out.println("No bus in DB");
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -1836,7 +1857,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             System.out.println("ok");
             if( !result.next() ) {
                 System.out.println("No menu in Db");
-
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -2065,7 +2086,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             System.out.println("ok");
             if( !result.next() ) {
                 System.out.println("No menu in Db");
-
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -2172,12 +2193,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 }
             }
 
-        } catch (SQLException e){
+        } catch (Exception e){
+            e.printStackTrace();
             if(loadThisMenu(date) != null){
                 deleteMenu(date);
                 return false;
             }
-            e.printStackTrace();
         } finally {
             try {
                 if (st != null ) {
@@ -2361,14 +2382,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException{
         PreparedStatement st;
         ResultSet result = null;
-        ArrayList<SpecialMenuDbDetails> dishes = new ArrayList<>(4);
+        ArrayList<SpecialMenuDbDetails> dishes = new ArrayList<>(8);
 
         String queryLoad1 = "SELECT * FROM project.menu_special";
 
         try{
-            Connection c = this.connHere();
-            c.setAutoCommit(true);
-            st = c.prepareStatement(queryLoad1);
+            st = this.connHere().prepareStatement(queryLoad1);
             result = st.executeQuery(queryLoad1);
 
         } catch (SQLException e) {
@@ -2376,11 +2395,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
 
+
         try{
             System.out.println("ok");
             if( !result.next() ) {
                 System.out.println("No menu in Db");
-
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -2717,6 +2737,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !result.next() ) {
                 System.out.println("No child in DB");
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -2842,6 +2863,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !result.next() ) {
                 System.out.println("Error");
+                return null;
             } else {
                 result.beforeFirst();
                 System.out.println("Processing ResultSet to create new NumGita");
@@ -3202,6 +3224,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             try {
                 if (!resultStaff.next()) {  //NON ho staff che partecipa a gite sovrapposte
                     System.out.println("NO");
+                    return null;
                 } else { //HO staff che partecipa a gite sovrapposte
                     System.out.println("YES");
                     resultStaff.beforeFirst();
@@ -3229,14 +3252,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ArrayList<CodRifChildDbDetails> childNotAvailableArrayList = new ArrayList<>();
         String[] selectedChildArray = selectedChildCf.toArray(new String[selectedChildCf.size()]);
 
-        /* OVERLAP QUERY
-        SELECT G2.NumGita FROM gita AS G1
-        INNER JOIN gita AS G2 ON (G1.NumGita = G2.NumGita
-        AND G2.DataOraPar <= G1.DataOraRit <= G2.DataOraRit
-        OR G2.DataOraPar <= G1.DataOraPar <= G2.DataOraRit)
-        WHERE G1.NumGita <> G2.NumGita
-        AND G1.DataOraPar = '...' AND G1.DataOraRit = '...'
-        */
         String queryFindNotAvailableChild = "SELECT DISTINCT IG.interni_CF " +
                 "FROM interni_has_gita AS IG " +
                 "WHERE IG.interni_CF = ? " +
@@ -3260,6 +3275,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             try {
                 if (!resultChild.next()) {  //NON ho staff che partecipa a gite sovrapposte
                     System.out.println("NO");
+                    return null;
                 } else { //HO staff che partecipa a gite sovrapposte
                     System.out.println("YES");
                     resultChild.beforeFirst();
@@ -3993,6 +4009,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !resultNumGita.next() ) {
                 System.out.println("No trip in DB");
+                return null;
             } else {
                 resultNumGita.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -4106,6 +4123,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !resultNumGita.next() ) {
                 System.out.println("No trip in DB");
+                return null;
             } else {
                 resultNumGita.beforeFirst();
                 System.out.println("Processing ResultSet");

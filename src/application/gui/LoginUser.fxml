@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-1.0" minWidth="410.0" prefHeight="502.0" prefWidth="410.0" style="-fx-background-radius: 10;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MainControllerLogin">
+<AnchorPane minHeight="-1.0" minWidth="410.0" prefHeight="502.0" prefWidth="410.0" style="-fx-background-radius: 10;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MainControllerLogin">
   <children>
     <AnchorPane id="AnchorPane" mouseTransparent="false" prefHeight="502.0" prefWidth="410.0" style="-fx-background-color: #FFEFCE; -fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -31,26 +31,26 @@
             <InnerShadow blurType="TWO_PASS_BOX" />
           </effect>
         </TextField>
-        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" labelFor="$lblStatus" layoutX="40.0" layoutY="405.0" prefHeight="64.0" prefWidth="331.0" text="Status" textAlignment="CENTER" textFill="#ff8141" textOverrun="ELLIPSIS" underline="false" wrapText="true">
+        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" labelFor="$lblStatus" layoutX="40.0" layoutY="411.0" prefHeight="46.0" prefWidth="331.0" text="Status" textAlignment="CENTER" textFill="#6842ff" textOverrun="ELLIPSIS" underline="false" wrapText="true">
           <effect>
             <Glow level="0.09245283018867922" />
           </effect>
           <font>
-            <Font name="Courier New" size="20.0" />
+            <Font name="Courier New Bold" size="21.0" />
           </font>
         </Label>
-        <Text fill="#ff5036" fontSmoothingType="GRAY" layoutX="132.0" layoutY="52.0" scaleX="1.1700402965599597" scaleY="1.4539901477832513" smooth="true" strikethrough="false" stroke="#33ffe7" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In" textAlignment="CENTER" underline="false">
+        <Text fill="RED" fontSmoothingType="GRAY" layoutX="142.0" layoutY="60.0" scaleX="1.1700402965599597" scaleY="1.4539901477832513" smooth="true" strikethrough="false" stroke="#33ffe7" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In" textAlignment="CENTER" underline="false" wrappingWidth="124.82955932617188">
           <font>
-            <Font name="Courier New Bold" size="35.0" />
+            <Font name="Jokerman" size="31.0" />
           </font>
         </Text>
-        <ImageView id="no_user.png" fitHeight="85.0" fitWidth="85.0" layoutX="163.0" layoutY="82.0">
+        <ImageView id="no_user.png" fitHeight="68.0" fitWidth="67.0" layoutX="172.0" layoutY="94.0">
           <image>
             <Image preserveRatio="true" smooth="true" url="@no_user.png" />
           </image>
         </ImageView>
-        <Button fx:id="btnLogin" layoutX="292.0" layoutY="355.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
-        <ChoiceBox fx:id="select" layoutX="40.0" layoutY="355.0">
+        <Button fx:id="btnLogin" layoutX="292.0" layoutY="351.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="33.0" prefWidth="76.0" text="Login" />
+        <ChoiceBox fx:id="select" layoutX="40.0" layoutY="355.0" prefHeight="26.0" prefWidth="110.0">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:id="RMI" fx:value="RMI" />
@@ -58,6 +58,11 @@
             </FXCollections>
           </items>
         </ChoiceBox>
+        <Text layoutX="43.0" layoutY="475.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Child Care Tech Project by Beati and Zorzella">
+          <font>
+            <Font name="Courier New" size="12.0" />
+          </font>
+        </Text>
       </children>
       <effect>
         <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.54763448806035" radius="33.273813383919844" width="67.54761904761904">

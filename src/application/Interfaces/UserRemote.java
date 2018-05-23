@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface UserRemote extends Remote {
-    boolean funzLog(String usr, String pwd) throws RemoteException; 
+    boolean funzLog(String usr, String pwd) throws RemoteException;
+    boolean logout() throws RemoteException;
 
 
     ArrayList<ChildDbDetails> loadData() throws RemoteException;

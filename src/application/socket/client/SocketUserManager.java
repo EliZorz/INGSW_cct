@@ -2,32 +2,26 @@ package application.socket.client;
 
 import application.Interfaces.UserRemote;
 import application.details.*;
-
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Spliterator;
 
 
 public class SocketUserManager implements UserRemote {
-    protected final Socket socket;  //socket del client
     private ObjectOutputStream toServer;
     private ObjectInputStream fromServer;
 
 
-    public SocketUserManager(Socket s) {
-        this.socket = s;
+    SocketUserManager(Socket s) {
         try{
             toServer = new ObjectOutputStream(s.getOutputStream());
             toServer.flush();
             fromServer = new ObjectInputStream(s.getInputStream());
             System.out.println("Created streams I/O for socket user manager");
-        }catch(IOException e){
+        }catch(Exception e){
             System.out.println("IO error in server thread");
         }
 
@@ -39,298 +33,386 @@ public class SocketUserManager implements UserRemote {
     public boolean funzLog(String usr, String pwd) throws RemoteException {
         boolean isLogged = false;
         try{
-            toServer.writeObject("login");
+            toServer.writeUnshared("login");
             toServer.flush();
-            toServer.writeObject(usr);
+            toServer.writeUnshared (usr);
             toServer.flush();
-            toServer.writeObject(pwd);
+            toServer.writeUnshared (pwd);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            isLogged = fromServer.readBoolean();
-        } catch (IOException e) {
+            isLogged = (boolean) fromServer.readUnshared ();
+            System.out.println("Has logged in? " +isLogged);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return isLogged;
     }
 
+    //LOGOUT -------------------------------------------------------------------------
+    @Override
+    public boolean logout(){
+        try{
+            toServer.writeUnshared("bye");
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     //CHILDREN ---------------------------------------------------------------------------
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
+        System.out.println("Loading from SockUsrMananger");
+        boolean ok = false;
+        ArrayList<ChildDbDetails> arrayListToReturn = new ArrayList<>();
+        Object loaded = new Object();
+
         try{
-            toServer.writeObject("loadChild");
+            toServer.writeUnshared("loadChild");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ArrayList<ChildDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readObject();
-            if(loaded instanceof ArrayList<?>){
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                loaded = fromServer.readUnshared();
+                System.out.println("Read array as Object");
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            if (loaded instanceof ArrayList<?>) {
                 //get list
                 ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
+                if (loadedAl.size() > 0) {
                     for (Object element : loadedAl) {
                         if (element instanceof ChildDbDetails) {
                             ChildDbDetails myElement = (ChildDbDetails) element;
                             arrayListToReturn.add(myElement);
+                            System.out.println(myElement.getCf());
                         }
                     }
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
 
-        return arrayListToReturn;
+        if(ok){
+            return arrayListToReturn;
+        }
+        return null;
     }
 
     @Override
     public boolean addData(String name, String surname, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy, String nameContact, String surnameContact, String cfContact, String mailContact, String telContact, LocalDate birthdayContact, String bornWhereContact, String addressContact, String capContact, String provinceContact, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("addChild");
+            toServer.writeUnshared ("addChild");
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(surname);
+            toServer.writeUnshared (surname);
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-            toServer.writeObject(String.valueOf(bornOn));
+            toServer.writeUnshared (String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeObject(bornWhere);
+            toServer.writeUnshared (bornWhere);
             toServer.flush();
-            toServer.writeObject(residence);
+            toServer.writeUnshared (residence);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
-            toServer.writeObject(selectedAllergy);
+            toServer.writeUnshared (selectedAllergy);
             toServer.flush();
-            toServer.writeObject(nameContact);
+            toServer.writeUnshared (nameContact);
             toServer.flush();
-            toServer.writeObject(surnameContact);
+            toServer.writeUnshared (surnameContact);
             toServer.flush();
-            toServer.writeObject(cfContact);
+            toServer.writeUnshared (cfContact);
             toServer.flush();
-            toServer.writeObject(mailContact);
+            toServer.writeUnshared (mailContact);
             toServer.flush();
-            toServer.writeObject(telContact);
+            toServer.writeUnshared (telContact);
             toServer.flush();
-            toServer.writeObject(String.valueOf(birthdayContact));
+            toServer.writeUnshared (String.valueOf(birthdayContact));
             toServer.flush();
-            toServer.writeObject(bornWhereContact);
+            toServer.writeUnshared (bornWhereContact);
             toServer.flush();
-            toServer.writeObject(addressContact);
+            toServer.writeUnshared (addressContact);
             toServer.flush();
-            toServer.writeObject(capContact);
+            toServer.writeUnshared (capContact);
             toServer.flush();
-            toServer.writeObject(provinceContact);
+            toServer.writeUnshared (provinceContact);
             toServer.flush();
-            toServer.writeBoolean(isDoc);
+            toServer.writeUnshared(isDoc);
             toServer.flush();
-            toServer.writeBoolean(isGuardian);
+            toServer.writeUnshared(isGuardian);
             toServer.flush();
-            toServer.writeBoolean(isContact);
+            toServer.writeUnshared(isContact);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
 
     }
 
     @Override
     public boolean updateChild(String name, String surname, String oldcf, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException{
+        boolean ok = false;
         try {
-            toServer.writeObject("updateChild");
+            toServer.writeUnshared("updateChild");
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(surname);
+            toServer.writeUnshared (surname);
             toServer.flush();
-            toServer.writeObject(oldcf);
+            toServer.writeUnshared (oldcf);
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-            toServer.writeObject(String.valueOf(bornOn));
+            toServer.writeUnshared (String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeObject(bornWhere);
+            toServer.writeUnshared (bornWhere);
             toServer.flush();
-            toServer.writeObject(residence);
+            toServer.writeUnshared (residence);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
-            toServer.writeObject(selectedAllergy);
+            toServer.writeUnshared (selectedAllergy);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     @Override
     public boolean deleteChild(String cf) throws RemoteException{
+        boolean ok = false;
         try{
-            toServer.writeObject("deleteChild");
+            toServer.writeUnshared ("deleteChild");
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadIngredients");
+            toServer.writeUnshared ("loadIngredients");
             toServer.flush();
-            return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }
+
+        ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public boolean controllCF(String CF) throws RemoteException {
+        boolean ok = false;
         try{
             toServer.writeObject("controllCF");
             toServer.flush();
             toServer.writeObject(CF);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
 
     //CONTACT --------------------------------------------------------------------------------
     @Override
     public boolean addContact (ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("addContact");
+            toServer.writeUnshared ("addContact");
             toServer.flush();
-            toServer.writeObject(selectedChild);
+            toServer.writeUnshared (selectedChild);
             toServer.flush();
-            toServer.writeObject(surname);
+            toServer.writeUnshared (surname);
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-            toServer.writeObject(mail);
+            toServer.writeUnshared (mail);
             toServer.flush();
-            toServer.writeObject(tel);
+            toServer.writeUnshared (tel);
             toServer.flush();
-            toServer.writeObject(String.valueOf(birthday));
+            toServer.writeUnshared (String.valueOf(birthday));
             toServer.flush();
-            toServer.writeObject(bornWhere);
+            toServer.writeUnshared (bornWhere);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
-            toServer.writeBoolean(isDoc);
+            toServer.writeUnshared(isDoc);
             toServer.flush();
-            toServer.writeBoolean(isGuardian);
+            toServer.writeUnshared(isGuardian);
             toServer.flush();
-            toServer.writeBoolean(isContact);
+            toServer.writeUnshared(isContact);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     @Override
     public boolean deleteContact (String oldcfContact) throws RemoteException{
+        boolean ok =false;
         try{
-            toServer.writeObject("deleteContact");
+            toServer.writeUnshared ("deleteContact");
             toServer.flush();
-            toServer.writeObject(oldcfContact);
+            toServer.writeUnshared (oldcfContact);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     @Override
     public boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException{
+        boolean ok = false;
         try{
-            toServer.writeObject("updateContact");
+            toServer.writeUnshared ("updateContact");
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(surname);
+            toServer.writeUnshared (surname);
             toServer.flush();
-            toServer.writeObject(oldcf);
+            toServer.writeUnshared (oldcf);
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-            toServer.writeObject(mail);
+            toServer.writeUnshared (mail);
             toServer.flush();
-            toServer.writeObject(tel);
+            toServer.writeUnshared (tel);
             toServer.flush();
-            toServer.writeObject(String.valueOf(bornOn));
+            toServer.writeUnshared (String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeObject(bornWhere);
+            toServer.writeUnshared (bornWhere);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
             toServer.write(isDoc);
             toServer.flush();
@@ -338,33 +420,66 @@ public class SocketUserManager implements UserRemote {
             toServer.flush();
             toServer.write(isContact);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     @Override
     public ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadDataContacts");
+            toServer.writeUnshared ("loadDataContacts");
             toServer.flush();
-            toServer.writeObject(cfChild);
+            toServer.writeUnshared (cfChild);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try{
-            return (ArrayList<ContactsDbDetails>) fromServer.readObject();
-        } catch (IOException e) {
+        ArrayList<ContactsDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ContactsDbDetails) {
+                                ContactsDbDetails myElement = (ContactsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
@@ -373,308 +488,473 @@ public class SocketUserManager implements UserRemote {
     //STAFF ------------------------------------------------------------------------------------------
     @Override
     public ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException {
-        System.out.println("sending a message to open staff");
+        boolean ok = false;
         try {
-            toServer.writeObject("loadDataStaff");
+            toServer.writeUnshared ("loadDataStaff");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        ArrayList<StaffDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof StaffDbDetails) {
+                                StaffDbDetails myElement = (StaffDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         try {
-            return (ArrayList<StaffDbDetails>) fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
+        System.out.println(ok);
 
+        if(ok){
+            return arrayListToReturn;
+        }
         return null;
     }
 
     @Override
     public boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("addDataStaff");
+            toServer.writeUnshared ("addDataStaff");
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(surname);
+            toServer.writeUnshared (surname);
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-            toServer.writeObject(mail);
+            toServer.writeUnshared (mail);
             toServer.flush();
-            toServer.writeObject(String.valueOf(birthday));
+            toServer.writeUnshared (String.valueOf(birthday));
             toServer.flush();
-            toServer.writeObject(bornWhere);
+            toServer.writeUnshared (bornWhere);
             toServer.flush();
-            toServer.writeObject(residence);
+            toServer.writeUnshared (residence);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
-            toServer.writeObject(selectedAllergy);
+            toServer.writeUnshared (selectedAllergy);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     @Override
     public boolean deleteStaff(String cf) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("deleteStaff");
+            toServer.writeUnshared ("deleteStaff");
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     @Override
     public boolean updateStaff(String name, String surname, String oldcf, String cf, String mail, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException{
+        boolean ok = false;
         try{
-            toServer.writeObject("updateStaff");
+            toServer.writeUnshared ("updateStaff");
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(surname);
+            toServer.writeUnshared (surname);
             toServer.flush();
-            toServer.writeObject(oldcf);
+            toServer.writeUnshared (oldcf);
             toServer.flush();
-            toServer.writeObject(cf);
+            toServer.writeUnshared (cf);
             toServer.flush();
-            toServer.writeObject(mail);
+            toServer.writeUnshared (mail);
             toServer.flush();
-            toServer.writeObject(String.valueOf(bornOn));
+            toServer.writeUnshared (String.valueOf(bornOn));
             toServer.flush();
-            toServer.writeObject(bornWhere);
+            toServer.writeUnshared (bornWhere);
             toServer.flush();
-            toServer.writeObject(residence);
+            toServer.writeUnshared (residence);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
-            toServer.writeObject(selectedAllergy);
+            toServer.writeUnshared (selectedAllergy);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return ok;
     }
 
     //SUPPLIERS ------------------------------------------------------------------------
     @Override
     public ArrayList<SupplierDbDetails> loadDataSuppliers() throws RemoteException {
-        System.out.println("sending a message to load suppliers");
+        boolean ok = false;
         try {
-            toServer.writeObject("loadSuppliers");
+            toServer.writeUnshared ("loadSuppliers");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<SupplierDbDetails>) fromServer.readObject();
-        }catch(Exception e){
-            System.out.println("OMG ERROR LISTENING");
+        ArrayList<SupplierDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SupplierDbDetails) {
+                                SupplierDbDetails myElement = (SupplierDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
 
+        if(ok){
+            return arrayListToReturn;
+        }
         return null;
     }
 
     @Override
     public boolean addDataSupplier(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
-        System.out.println("sending a message to add supplier");
+        boolean ok = false;
         try{
-            toServer.writeObject("addSupplier");
+            toServer.writeUnshared ("addSupplier");
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(piva);
+            toServer.writeUnshared (piva);
             toServer.flush();
-            toServer.writeObject(mail);
+            toServer.writeUnshared (mail);
             toServer.flush();
-            toServer.writeObject(tel);
+            toServer.writeUnshared (tel);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        }  catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
     @Override
     public boolean updateSupplier(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
-        System.out.println("sending a message to update supplier");
+        boolean ok = false;
         try{
-            toServer.writeObject("updateSupplier");
+            toServer.writeUnshared ("updateSupplier");
             toServer.flush();
-            toServer.writeObject(name);
+            toServer.writeUnshared (name);
             toServer.flush();
-            toServer.writeObject(oldPiva);
+            toServer.writeUnshared (oldPiva);
             toServer.flush();
-            toServer.writeObject(piva);
+            toServer.writeUnshared (piva);
             toServer.flush();
-            toServer.writeObject(mail);
+            toServer.writeUnshared (mail);
             toServer.flush();
-            toServer.writeObject(tel);
+            toServer.writeUnshared (tel);
             toServer.flush();
-            toServer.writeObject(address);
+            toServer.writeUnshared (address);
             toServer.flush();
-            toServer.writeObject(cap);
+            toServer.writeUnshared (cap);
             toServer.flush();
-            toServer.writeObject(province);
+            toServer.writeUnshared (province);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        }  catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
     @Override
     public boolean deleteSupplier(String piva, ArrayList<IngredientsDbDetails> ingrNO) throws RemoteException {
-        System.out.println("Deleting supplier...");
+        boolean ok = false;
         try{
-            toServer.writeObject("deleteSupplier");
+            toServer.writeUnshared ("deleteSupplier");
             toServer.flush();
-            toServer.writeObject(piva);
+            toServer.writeUnshared (piva);
             toServer.flush();
-            toServer.writeObject(ingrNO);
+            toServer.writeUnshared (ingrNO);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
 
 
     @Override
     public ArrayList<CodRifChildDbDetails> loadDataIngr(String selectedSupplier) throws RemoteException {
-        System.out.println("sending a message to load ingredients");
+        boolean ok = false;
         try {
-            toServer.writeObject("loadDataIngr");
+            toServer.writeUnshared ("loadDataIngr");
             toServer.flush();
-            toServer.writeObject(selectedSupplier);
+            toServer.writeUnshared (selectedSupplier);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        try{
-            return (ArrayList<CodRifChildDbDetails>) fromServer.readObject();
-        }catch(Exception e){
-            System.out.println("OMG ERROR LISTENING");
+        ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof CodRifChildDbDetails) {
+                                CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
 
+        if(ok){
+            return arrayListToReturn;
+        }
         return null;
     }
 
     @Override
     public boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException {
-        System.out.println("Adding ingredient to db...");
+        boolean ok = false;
         try{
-            toServer.writeObject("addIngredientSupplier");
+            toServer.writeUnshared ("addIngredientSupplier");
             toServer.flush();
-            toServer.writeObject(ingr);
+            toServer.writeUnshared (ingr);
             toServer.flush();
-            toServer.writeObject(selectedSupplier);
+            toServer.writeUnshared (selectedSupplier);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
     @Override
     public ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException {
-        System.out.println("Loading menu with the ingredients of this supplier...");
+        boolean ok = false;
         try{
-            toServer.writeObject("loadMenuWithThisSupplier");
+            toServer.writeUnshared ("loadMenuWithThisSupplier");
             toServer.flush();
-            toServer.writeObject(selectedSupplier);
+            toServer.writeUnshared (selectedSupplier);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<DishesDbDetails>) fromServer.readObject();
-        } catch (IOException e) {
+        ArrayList<DishesDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof DishesDbDetails) {
+                                DishesDbDetails myElement = (DishesDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
-        System.out.println("Loading no available ingredients...");
+        boolean ok = false;
         try{
-            toServer.writeObject("loadNoIngr");
+            toServer.writeUnshared ("loadNoIngr");
             toServer.flush();
-            toServer.writeObject(selectedSupplier);
+            toServer.writeUnshared (selectedSupplier);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try{
-            return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
-        } catch (IOException e) {
+        ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
@@ -682,578 +962,1285 @@ public class SocketUserManager implements UserRemote {
 
     @Override
     public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
+        boolean ok = false;
+        try {
+            toServer.writeUnshared ("loadCoachOperator");
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<SupplierDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SupplierDbDetails) {
+                                SupplierDbDetails myElement = (SupplierDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
+        }
         return null;
     }
 
     @Override
     public boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
-        return false;
+        boolean ok = false;
+        try{
+            toServer.writeUnshared ("addCoachOperator");
+            toServer.flush();
+            toServer.writeUnshared (name);
+            toServer.flush();
+            toServer.writeUnshared (piva);
+            toServer.flush();
+            toServer.writeUnshared (mail);
+            toServer.flush();
+            toServer.writeUnshared (tel);
+            toServer.flush();
+            toServer.writeUnshared (address);
+            toServer.flush();
+            toServer.writeUnshared (cap);
+            toServer.flush();
+            toServer.writeUnshared (province);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
+    public boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeUnshared ("addBusToDb");
+            toServer.flush();
+            toServer.writeUnshared (plate);
+            toServer.flush();
+            toServer.writeUnshared (capacity);
+            toServer.flush();
+            toServer.writeUnshared (selectedSupplier);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
+
+    @Override
     public boolean updateCoachOperator(String name, String oldPiva, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException {
-        return false;
+        boolean ok = false;
+        try{
+            toServer.writeUnshared ("updateCoachOperator");
+            toServer.flush();
+            toServer.writeUnshared (name);
+            toServer.flush();
+            toServer.writeUnshared (oldPiva);
+            toServer.flush();
+            toServer.writeUnshared (piva);
+            toServer.flush();
+            toServer.writeUnshared (mail);
+            toServer.flush();
+            toServer.writeUnshared (tel);
+            toServer.flush();
+            toServer.writeUnshared (address);
+            toServer.flush();
+            toServer.writeUnshared (cap);
+            toServer.flush();
+            toServer.writeUnshared (province);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
     public boolean deleteCoachOperator(String piva) throws RemoteException {
-        return false;
+        boolean ok = false;
+        try{
+            toServer.writeUnshared ("deleteCoachOperator");
+            toServer.flush();
+            toServer.writeUnshared (piva);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
     public boolean deleteCoachOperatorBus(String plate) throws RemoteException {
-        return false;
+        boolean ok = false;
+        try{
+            toServer.writeUnshared ("deleteCoachOperatorBus");
+            toServer.flush();
+            toServer.writeUnshared (plate);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     //MENU -------------------------------------------------------------------------------
     @Override
     public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {
-        return null;
-    }
+        boolean ok = false;
+        DishesDbDetails menu = null;
+        try {
+            toServer.writeUnshared ("loadThisMenu");
+            toServer.flush();
+            toServer.writeUnshared(String.valueOf(date));
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                menu = (DishesDbDetails) fromServer.readUnshared();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return menu;
+        }
+        return null;        }
 
     @Override
     public ArrayList<IngredientsDbDetails> searchIngredients(String dish) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("searchIngredients");
+            toServer.writeUnshared ("searchIngredients");
             toServer.flush();
-            toServer.writeObject(dish);
+            toServer.writeUnshared (dish);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try{
-            return (ArrayList<IngredientsDbDetails>) fromServer.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
-    }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
+        }
+        return null;       }
 
     @Override
     public ArrayList<IngredientsDbDetails> loadIngr(LocalDate day) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeUnshared ("loadIngredientsForThisDay");
+            toServer.flush();
+            toServer.writeUnshared(String.valueOf(day));
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
+        }
         return null;
     }
 
     @Override
     public boolean updateMenu(String num, String entree, String main, String dessert, String side, String drink, LocalDate day, LocalDate oldDate) throws RemoteException {
-        System.out.println("sendiang a message to update menu");
+        boolean ok = false;
         try{
-            toServer.writeObject("updateMenu");
+            toServer.writeUnshared ("updateMenu");
             toServer.flush();
-            toServer.writeObject(num);
+            toServer.writeUnshared (num);
             toServer.flush();
-            toServer.writeObject(entree);
+            toServer.writeUnshared (entree);
             toServer.flush();
-            toServer.writeObject(main);
+            toServer.writeUnshared (main);
             toServer.flush();
-            toServer.writeObject(dessert);
+            toServer.writeUnshared (dessert);
             toServer.flush();
-            toServer.writeObject(side);
+            toServer.writeUnshared (side);
             toServer.flush();
-            toServer.writeObject(drink);
+            toServer.writeUnshared (drink);
             toServer.flush();
-            toServer.writeObject(String.valueOf(day));
+            toServer.writeUnshared (String.valueOf(day));
             toServer.flush();
-            toServer.writeObject(String.valueOf(oldDate));
+            toServer.writeUnshared (String.valueOf(oldDate));
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        }  catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
 
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
-        System.out.println("sending a message to open menu");
+        boolean ok = false;
+        ArrayList<DishesDbDetails> arrayListToReturn = new ArrayList<>();
         try {
-            toServer.writeObject("loadmenu");
+            toServer.writeUnshared ("loadMenuBasic");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<DishesDbDetails>) fromServer.readObject();
-        }catch(Exception e){
-            System.out.println("OMG ERROR LISTENING");
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded != null) {
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof DishesDbDetails) {
+                                    DishesDbDetails myElement = (DishesDbDetails) element;
+                                    arrayListToReturn.add(myElement);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok)
+            return arrayListToReturn;
 
         return null;
+
     }
 
 
     @Override
     public boolean addMenu(String num, String entree, String mainCourse, String dessert, String sideDish, String drink, LocalDate date) throws RemoteException {
-        System.out.println("sending a message to add the menu");
+        boolean ok = false;
         try{
-            toServer.writeObject("addMenu");
+            toServer.writeUnshared ("addMenu");
             toServer.flush();
-            toServer.writeObject(num);
+            toServer.writeUnshared (num);
             toServer.flush();
-            toServer.writeObject(entree);
+            toServer.writeUnshared (entree);
             toServer.flush();
-            toServer.writeObject(mainCourse);
+            toServer.writeUnshared (mainCourse);
             toServer.flush();
-            toServer.writeObject(dessert);
+            toServer.writeUnshared (dessert);
             toServer.flush();
-            toServer.writeObject(sideDish);
+            toServer.writeUnshared (sideDish);
             toServer.flush();
-            toServer.writeObject(drink);
+            toServer.writeUnshared (drink);
             toServer.flush();
-            toServer.writeObject(String.valueOf(date));
+            toServer.writeUnshared (String.valueOf(date));
             toServer.flush();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
     @Override
     public boolean controllDate(LocalDate d) throws RemoteException {
-        System.out.println("sending a message to controll the date");
+        boolean ok = false;
         try {
-            toServer.writeObject("controllDate");
+            toServer.writeUnshared ("controllDate");
             toServer.flush();
-            toServer.writeObject(String.valueOf(d));
+            toServer.writeUnshared (String.valueOf(d));
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-
-        }catch(Exception e){
-            System.out.println("OMG ERROR LISTENING");
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
     @Override
     public boolean deleteMenu(LocalDate d) throws RemoteException {
+        boolean ok =false;
         try{
-            toServer.writeObject("deleteMenu");
+            toServer.writeUnshared ("deleteMenu");
             toServer.flush();
-            toServer.writeObject(String.valueOf(d));
+            toServer.writeUnshared (String.valueOf(d));
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try {
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
     @Override
     public ArrayList<SpecialDbDetails> loadInterniWithAllergies(LocalDate date) throws RemoteException {
-        System.out.println("Loading interni with allergies...");
+        boolean ok =false;
         try{
-            toServer.writeObject("loadAllergicalInterni");
+            toServer.writeUnshared ("loadAllergicalInterni");
             toServer.flush();
-            toServer.writeObject(String.valueOf(date));
+            toServer.writeUnshared (String.valueOf(date));
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try{
-            return (ArrayList<SpecialDbDetails>) fromServer.readObject();
-        } catch (ClassNotFoundException e) {
+        ArrayList<SpecialDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SpecialDbDetails) {
+                                SpecialDbDetails myElement = (SpecialDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public boolean saveIngredients(String dish, ArrayList<String> selectedIngredients) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("saveIngredients");
+            toServer.writeUnshared ("saveIngredients");
             toServer.flush();
-            toServer.writeObject(dish);
+            toServer.writeUnshared (dish);
             toServer.flush();
-            toServer.writeObject(selectedIngredients);
+            toServer.writeUnshared (selectedIngredients);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
+
 
     //SPECIAL MENU ------------------------------------------------------------------------------------
     @Override
     public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadSpecialMenu");
+            toServer.writeUnshared ("loadSpecialMenu");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<SpecialMenuDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<SpecialMenuDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SpecialMenuDbDetails) {
+                                SpecialMenuDbDetails myElement = (SpecialMenuDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("deleteSpecialMenu");
+            toServer.writeUnshared ("deleteSpecialMenu");
             toServer.flush();
-            toServer.writeObject(String.valueOf(date));
+            toServer.writeUnshared (String.valueOf(date));
             toServer.flush();
-            toServer.writeObject(FC);
+            toServer.writeUnshared (FC);
             toServer.flush();
-            toServer.writeObject(allergies);
+            toServer.writeUnshared (allergies);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
     @Override
     public boolean addSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("addSpecialMenu");
+            toServer.writeUnshared ("addSpecialMenu");
             toServer.flush();
-            toServer.writeObject(entree);
+            toServer.writeUnshared (entree);
             toServer.flush();
-            toServer.writeObject(main);
+            toServer.writeUnshared (main);
             toServer.flush();
-            toServer.writeObject(dessert);
+            toServer.writeUnshared (dessert);
             toServer.flush();
-            toServer.writeObject(side);
+            toServer.writeUnshared (side);
             toServer.flush();
-            toServer.writeObject(drink);
+            toServer.writeUnshared (drink);
             toServer.flush();
-            toServer.writeObject(String.valueOf(date));
+            toServer.writeUnshared (String.valueOf(date));
             toServer.flush();
-            toServer.writeObject(special);
+            toServer.writeUnshared (special);
             toServer.flush();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return false;
+        return ok;
     }
 
     @Override
     public boolean updateSpecialMenu(String entree, String main, String dessert, String side, String drink, LocalDate date, SpecialDbDetails special) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("updateSpecialMenu");
+            toServer.writeUnshared ("updateSpecialMenu");
             toServer.flush();
-            toServer.writeObject(entree);
+            toServer.writeUnshared (entree);
             toServer.flush();
-            toServer.writeObject(main);
+            toServer.writeUnshared (main);
             toServer.flush();
-            toServer.writeObject(dessert);
+            toServer.writeUnshared (dessert);
             toServer.flush();
-            toServer.writeObject(side);
+            toServer.writeUnshared (side);
             toServer.flush();
-            toServer.writeObject(drink);
+            toServer.writeUnshared (drink);
             toServer.flush();
-            toServer.writeObject(String.valueOf(date));
+            toServer.writeUnshared (String.valueOf(date));
             toServer.flush();
-            toServer.writeObject(special);
+            toServer.writeUnshared (special);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return false;
+        return ok;
     }
 
     //TRIP -------------------------------------------------------------------------------
     @Override
     public boolean zeroActualParticipants(String plate) throws RemoteException {
-        return false;
+        boolean ok = false;
+        try{
+            toServer.writeUnshared("zeroActualParticipants");
+            toServer.flush();
+            toServer.writeUnshared(plate);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
     public boolean deleteIsHere(String plate) throws RemoteException {
-        return false;
+        boolean ok = false;
+        try{
+            toServer.writeUnshared("deleteIsHere");
+            toServer.flush();
+            toServer.writeUnshared(plate);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
     public void deleteFromGitaHasBus(String plate) throws RemoteException {
-
+        boolean ok;
+        try{
+            toServer.writeUnshared("deleteFromGitaHasBus");
+            toServer.flush();
+            toServer.writeUnshared(plate);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            if(ok)
+                System.out.println("Read reply from server: deleted");
+            else
+                System.out.println("Read reply from server: not deleted. Problems upcoming.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException {
-        return null;
-    }
+        boolean ok = false;
+        try{
+            toServer.writeUnshared ("loadDataBus");
+            toServer.flush();
+            toServer.writeUnshared(selectedSupplier);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    @Override
-    public boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException {
-        return false;
+        ArrayList<BusPlateCapacityDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof BusPlateCapacityDbDetails) {
+                                BusPlateCapacityDbDetails myElement = (BusPlateCapacityDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
+        }
+        return null;
     }
 
 
     @Override
     public ArrayList<TripTableDbDetails> loadDataTrip() throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadDataTrip");
+            toServer.writeUnshared ("loadDataTrip");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<TripTableDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<TripTableDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof TripTableDbDetails) {
+                                TripTableDbDetails myElement = (TripTableDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public boolean deleteTrip(String dep, String dateDep, String dateCom, String alloggio, String dateArr, String arr) throws RemoteException {
-        System.out.println("Deleting trip...");
+        boolean ok = false;
         try{
-            toServer.writeObject("deleteTrip");
+            toServer.writeUnshared ("deleteTrip");
             toServer.flush();
             //String dep, String dateDep, String dateCom, String staying, String dateArr, String arr
-            toServer.writeObject(dep);
+            toServer.writeUnshared (dep);
             toServer.flush();
-            toServer.writeObject(dateDep);
+            toServer.writeUnshared (dateDep);
             toServer.flush();
-            toServer.writeObject(dateCom);
+            toServer.writeUnshared (dateCom);
             toServer.flush();
-            toServer.writeObject(alloggio);
+            toServer.writeUnshared (alloggio);
             toServer.flush();
-            toServer.writeObject(dateArr);
+            toServer.writeUnshared (dateArr);
             toServer.flush();
-            toServer.writeObject(arr);
+            toServer.writeUnshared (arr);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            return fromServer.readBoolean();
-        } catch (IOException e) {
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return ok;
     }
 
 
     @Override
     public ArrayList<ChildTripDbDetails> loadChildTrip() throws RemoteException{
+        boolean ok = false;
         try{
-            toServer.writeObject("loadChildTrip");
+            toServer.writeUnshared ("loadChildTrip");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<ChildTripDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<ChildTripDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildTripDbDetails) {
+                                ChildTripDbDetails myElement = (ChildTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
+        boolean ok = false;
         try{
-            toServer.writeObject("loadStaffTtrip");
+            toServer.writeUnshared ("loadStaffTtrip");
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<StaffTripDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<StaffTripDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof StaffTripDbDetails) {
+                                StaffTripDbDetails myElement = (StaffTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public int[] addTrip(ArrayList<String> selectedChild, ArrayList<String> selectedStaff, String timeDep, String timeArr, String timeCom, String departureFrom, String arrivalTo, String staying) throws RemoteException {
-        System.out.println("sending a message to add supplier");
+        boolean ok =false;
         int[] participantsFromServer = new int[2];
 
         try{
-            toServer.writeObject("addSupplier");
+            toServer.writeUnshared ("addSupplier");
             toServer.flush();
-            toServer.writeObject(selectedChild);
+            toServer.writeUnshared (selectedChild);
             toServer.flush();
-            toServer.writeObject(selectedStaff);
+            toServer.writeUnshared (selectedStaff);
             toServer.flush();
-            toServer.writeObject(timeDep);
+            toServer.writeUnshared (timeDep);
             toServer.flush();
-            toServer.writeObject(timeArr);
+            toServer.writeUnshared (timeArr);
             toServer.flush();
-            toServer.writeObject(timeCom);
+            toServer.writeUnshared (timeCom);
             toServer.flush();
-            toServer.writeObject(departureFrom);
+            toServer.writeUnshared (departureFrom);
             toServer.flush();
-            toServer.writeObject(arrivalTo);
+            toServer.writeUnshared (arrivalTo);
             toServer.flush();
-            toServer.writeObject(staying);
+            toServer.writeUnshared (staying);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
             for(int i = 0; i<2 ; i++){
                 participantsFromServer[i] = fromServer.readInt();
             }
-        }  catch (IOException e) {
+        }  catch (Exception e) {
             e.printStackTrace();
         }
-        return participantsFromServer;
+
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return participantsFromServer;
+        }
+        return null;
     }
 
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadTripSelectedChildren (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadTripSelectedChildren");
+            toServer.writeUnshared ("loadTripSelectedChildren");
             toServer.flush();
-            toServer.writeObject(selectedDepFrom);
+            toServer.writeUnshared (selectedDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedDep);
+            toServer.writeUnshared (selectedDep);
             toServer.flush();
-            toServer.writeObject(selectedCom);
+            toServer.writeUnshared (selectedCom);
             toServer.flush();
-            toServer.writeObject(selectedAccomodation);
+            toServer.writeUnshared (selectedAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedArr);
+            toServer.writeUnshared (selectedArr);
             toServer.flush();
-            toServer.writeObject(selectedArrTo);
+            toServer.writeUnshared (selectedArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<ChildSelectedTripDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<ChildSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildSelectedTripDbDetails) {
+                                ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<StaffSelectedTripDbDetails> loadTripSelectedStaff (String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadTripSelectedStaff");
+            toServer.writeUnshared ("loadTripSelectedStaff");
             toServer.flush();
-            toServer.writeObject(selectedDepFrom);
+            toServer.writeUnshared (selectedDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedDep);
+            toServer.writeUnshared (selectedDep);
             toServer.flush();
-            toServer.writeObject(selectedCom);
+            toServer.writeUnshared (selectedCom);
             toServer.flush();
-            toServer.writeObject(selectedAccomodation);
+            toServer.writeUnshared (selectedAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedArr);
+            toServer.writeUnshared (selectedArr);
             toServer.flush();
-            toServer.writeObject(selectedArrTo);
+            toServer.writeUnshared (selectedArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<StaffSelectedTripDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<StaffSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof StaffSelectedTripDbDetails) {
+                                StaffSelectedTripDbDetails myElement = (StaffSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<CodRifChildDbDetails> findNotAvailableStaff(ArrayList<String> selectedStaffCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("findNotAvailableStaff");
+            toServer.writeUnshared ("findNotAvailableStaff");
             toServer.flush();
-            toServer.writeObject(selectedStaffCf);
+            toServer.writeUnshared (selectedStaffCf);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<CodRifChildDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
+
+        try {
+            Object loaded = fromServer.readUnshared ();
+            if(loaded instanceof ArrayList<?>){
+                //get list
+                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                if(loadedAl.size()>0){
+                    for (Object element : loadedAl) {
+                        if (element instanceof CodRifChildDbDetails) {
+                            CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                            arrayListToReturn.add(myElement);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<CodRifChildDbDetails> findNotAvailableChild(ArrayList<String> selectedChildCf, String selectedTripDep, String selectedTripCom) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("findNotAvailableChild");
+            toServer.writeUnshared ("findNotAvailableChild");
             toServer.flush();
-            toServer.writeObject(selectedChildCf);
+            toServer.writeUnshared (selectedChildCf);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<CodRifChildDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
+
+        try {
+            Object loaded = fromServer.readUnshared ();
+            if(loaded instanceof ArrayList<?>){
+                //get list
+                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                if(loadedAl.size()>0){
+                    for (Object element : loadedAl) {
+                        if (element instanceof CodRifChildDbDetails) {
+                            CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                            arrayListToReturn.add(myElement);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
@@ -1261,15 +2248,15 @@ public class SocketUserManager implements UserRemote {
     @Override
     public int[] howManyActualParticipants(ArrayList<String> selectedChildCf, ArrayList<String> selectedStaffCf) throws RemoteException {
         int[] participants = new int[2];
-
+        boolean ok = false;
         try{
-            toServer.writeObject("howManyActualParticipants");
+            toServer.writeUnshared ("howManyActualParticipants");
             toServer.flush();
-            toServer.writeObject(selectedChildCf);
+            toServer.writeUnshared (selectedChildCf);
             toServer.flush();
-            toServer.writeObject(selectedStaffCf);
+            toServer.writeUnshared (selectedStaffCf);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1277,277 +2264,517 @@ public class SocketUserManager implements UserRemote {
             for(int i = 0; i<2 ; i++){
                 participants[i] = fromServer.readInt();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return participants;
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return participants;
+        }
+        return null;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public HashMap<String, ArrayList<String>> associateBusToParticipants(ArrayList<String> selectedChildCfArrayList, int totChildren, ArrayList<String> selectedStaffCfArrayList, int totStaff, String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        boolean ok = false;
+        HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
         try{
-            toServer.writeObject("associateBusToParticipants");
+            toServer.writeUnshared ("associateBusToParticipants");
             toServer.flush();
-            toServer.writeObject(selectedChildCfArrayList);
+            toServer.writeUnshared (selectedChildCfArrayList);
             toServer.writeInt(totChildren);
             toServer.flush();
-            toServer.writeObject(selectedStaffCfArrayList);
+            toServer.writeUnshared (selectedStaffCfArrayList);
             toServer.flush();
             toServer.writeInt(totStaff);
             toServer.flush();
-            toServer.writeObject(selectedDepFrom);
+            toServer.writeUnshared (selectedDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedDep);
+            toServer.writeUnshared (selectedDep);
             toServer.flush();
-            toServer.writeObject(selectedCom);
+            toServer.writeUnshared (selectedCom);
             toServer.flush();
-            toServer.writeObject(selectedAccomodation);
+            toServer.writeUnshared (selectedAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedArr);
+            toServer.writeUnshared (selectedArr);
             toServer.flush();
-            toServer.writeObject(selectedArrTo);
+            toServer.writeUnshared (selectedArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try{
-            return (HashMap<String, ArrayList<String>>) fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+
+        try {
+            hashMap = (HashMap<String, ArrayList<String>>) fromServer.readUnshared();
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        try {
+            ok = (boolean) fromServer.readUnshared();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(ok) {
+            return hashMap;
         }
         return null;
     }
 
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadWhoTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadWhoTrip");
+            toServer.writeUnshared ("loadWhoTrip");
             toServer.flush();
-            toServer.writeObject(selectedDepFrom);
+            toServer.writeUnshared (selectedDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedDep);
+            toServer.writeUnshared (selectedDep);
             toServer.flush();
-            toServer.writeObject(selectedCom);
+            toServer.writeUnshared (selectedCom);
             toServer.flush();
-            toServer.writeObject(selectedAccomodation);
+            toServer.writeUnshared (selectedAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedArr);
+            toServer.writeUnshared (selectedArr);
             toServer.flush();
-            toServer.writeObject(selectedArrTo);
+            toServer.writeUnshared (selectedArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<ChildSelectedTripDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<ChildSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildSelectedTripDbDetails) {
+                                ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<CodRifChildDbDetails> loadBusTrip(String selectedDepFrom, String selectedDep, String selectedCom, String selectedAccomodation, String selectedArr, String selectedArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadBusTrip");
+            toServer.writeUnshared ("loadBusTrip");
             toServer.flush();
-            toServer.writeObject(selectedDepFrom);
+            toServer.writeUnshared (selectedDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedDep);
+            toServer.writeUnshared (selectedDep);
             toServer.flush();
-            toServer.writeObject(selectedCom);
+            toServer.writeUnshared (selectedCom);
             toServer.flush();
-            toServer.writeObject(selectedAccomodation);
+            toServer.writeUnshared (selectedAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedArr);
+            toServer.writeUnshared (selectedArr);
             toServer.flush();
-            toServer.writeObject(selectedArrTo);
+            toServer.writeUnshared (selectedArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<CodRifChildDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof CodRifChildDbDetails) {
+                                CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<SolutionDbDetails> loadSolution(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadSolution");
+            toServer.writeUnshared ("loadSolution");
             toServer.flush();
-            toServer.writeObject(selectedTripDepFrom);
+            toServer.writeUnshared (selectedTripDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-            toServer.writeObject(selectedTripAccomodation);
+            toServer.writeUnshared (selectedTripAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedTripArr);
+            toServer.writeUnshared (selectedTripArr);
             toServer.flush();
-            toServer.writeObject(selectedTripArrTo);
+            toServer.writeUnshared (selectedTripArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<SolutionDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<SolutionDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SolutionDbDetails) {
+                                SolutionDbDetails myElement = (SolutionDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<String> findParticipantOnWrongBus(ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("findParticipantOnWrongBus");
+            toServer.writeUnshared ("findParticipantOnWrongBus");
             toServer.flush();
-            toServer.writeObject(selectedChildCfArrayList);
+            toServer.writeUnshared (selectedChildCfArrayList);
             toServer.flush();
-            toServer.writeObject(selectedBus);
+            toServer.writeUnshared (selectedBus);
             toServer.flush();
-            toServer.writeObject(selectedTripDepFrom);
+            toServer.writeUnshared (selectedTripDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-            toServer.writeObject(selectedTripAccomodation);
+            toServer.writeUnshared (selectedTripAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedTripArr);
+            toServer.writeUnshared (selectedTripArr);
             toServer.flush();
-            toServer.writeObject(selectedTripArrTo);
+            toServer.writeUnshared (selectedTripArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<String>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<String> arrayListToReturn = new ArrayList<>();
+
+        try {
+            Object loaded = fromServer.readUnshared ();
+            if(loaded instanceof ArrayList<?>){
+                //get list
+                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                if(loadedAl.size()>0){
+                    for (Object element : loadedAl) {
+                        if (element instanceof String) {
+                            String myElement = (String) element;
+                            arrayListToReturn.add(myElement);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public ArrayList<String> findMissingParticipantsOnThisBus(ArrayList<String> peopleOnWrongBus, ArrayList<String> selectedChildCfArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("findMissingParticipantsOnThisBus");
+            toServer.writeUnshared ("findMissingParticipantsOnThisBus");
             toServer.flush();
-            toServer.writeObject(peopleOnWrongBus);
+            toServer.writeUnshared (peopleOnWrongBus);
             toServer.flush();
-            toServer.writeObject(selectedChildCfArrayList);
+            toServer.writeUnshared (selectedChildCfArrayList);
             toServer.flush();
-            toServer.writeObject(selectedBus);
+            toServer.writeUnshared (selectedBus);
             toServer.flush();
-            toServer.writeObject(selectedTripDepFrom);
+            toServer.writeUnshared (selectedTripDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-            toServer.writeObject(selectedTripAccomodation);
+            toServer.writeUnshared (selectedTripAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedTripArr);
+            toServer.writeUnshared (selectedTripArr);
             toServer.flush();
-            toServer.writeObject(selectedTripArrTo);
+            toServer.writeUnshared (selectedTripArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<String>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<String> arrayListToReturn = new ArrayList<>();
+
+        try {
+            Object loaded = fromServer.readUnshared ();
+            if(loaded instanceof ArrayList<?>){
+                //get list
+                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                if(loadedAl.size()>0){
+                    for (Object element : loadedAl) {
+                        if (element instanceof String) {
+                            String myElement = (String) element;
+                            arrayListToReturn.add(myElement);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }
 
     @Override
     public void makeIsHereFalse(String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("makeIsHereFalse");
+            toServer.writeUnshared ("makeIsHereFalse");
             toServer.flush();
-            toServer.writeObject(selectedTripDepFrom);
+            toServer.writeUnshared (selectedTripDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-            toServer.writeObject(selectedTripAccomodation);
+            toServer.writeUnshared (selectedTripAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedTripArr);
+            toServer.writeUnshared (selectedTripArr);
             toServer.flush();
-            toServer.writeObject(selectedTripArrTo);
+            toServer.writeUnshared (selectedTripArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok)
+            System.out.println("Read reply from server: is_here made false");
+
+        else
+            System.out.println("Read reply from server: problems upcoming, is_here unchanged.");
     }
 
     @Override
     public void makeIsHereTrue(String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("makeIsHereTrue");
+            toServer.writeUnshared ("makeIsHereTrue");
             toServer.flush();
-            toServer.writeObject(selectedBus);
+            toServer.writeUnshared (selectedBus);
             toServer.flush();
-            toServer.writeObject(selectedTripDepFrom);
+            toServer.writeUnshared (selectedTripDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-            toServer.writeObject(selectedTripAccomodation);
+            toServer.writeUnshared (selectedTripAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedTripArr);
+            toServer.writeUnshared (selectedTripArr);
             toServer.flush();
-            toServer.writeObject(selectedTripArrTo);
+            toServer.writeUnshared (selectedTripArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok)
+            System.out.println("Read reply from server: is_here made true");
+
+        else
+            System.out.println("Read reply from server: problems upcoming, is_here unchanged.");
     }
 
     @Override
     public ArrayList<ChildSelectedTripDbDetails> loadMissing(ArrayList<String> missingArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException {
+        boolean ok = false;
         try{
-            toServer.writeObject("loadMissing");
+            toServer.writeUnshared ("loadMissing");
             toServer.flush();
-            toServer.writeObject(missingArrayList);
+            toServer.writeUnshared (missingArrayList);
             toServer.flush();
-            toServer.writeObject(selectedBus);
+            toServer.writeUnshared (selectedBus);
             toServer.flush();
-            toServer.writeObject(selectedTripDepFrom);
+            toServer.writeUnshared (selectedTripDepFrom);
             toServer.flush();
-            toServer.writeObject(selectedTripDep);
+            toServer.writeUnshared (selectedTripDep);
             toServer.flush();
-            toServer.writeObject(selectedTripCom);
+            toServer.writeUnshared (selectedTripCom);
             toServer.flush();
-            toServer.writeObject(selectedTripAccomodation);
+            toServer.writeUnshared (selectedTripAccomodation);
             toServer.flush();
-            toServer.writeObject(selectedTripArr);
+            toServer.writeUnshared (selectedTripArr);
             toServer.flush();
-            toServer.writeObject(selectedTripArrTo);
+            toServer.writeUnshared (selectedTripArrTo);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            return (ArrayList<ChildSelectedTripDbDetails>)fromServer.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ArrayList<ChildSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
+        try {
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildSelectedTripDbDetails) {
+                                ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            ok = (boolean) fromServer.readUnshared ();
+            System.out.println("Read reply from server");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(ok);
+
+        if(ok){
+            return arrayListToReturn;
         }
         return null;
     }

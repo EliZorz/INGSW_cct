@@ -105,7 +105,7 @@ class ChildControllerTest {
 
     @Test
     void testLoadNullContact() throws RemoteException {
-        assertNull(si.loadDataContacts(null));
+        assertTrue( si.loadDataContacts(null).isEmpty());
     }
 
 
@@ -119,10 +119,9 @@ class ChildControllerTest {
 
 
     @Test
-    void testNullUpdateChild(){
-        Assertions.assertThrows(NullPointerException.class, () ->{
-            si.updateChild(null, null, null, null, null, null, null, null, null, null, null);
-        });
+    void testNullUpdateChild() throws RemoteException {
+        assertFalse(si.updateChild(null, null, null, null, null, null, null, null, null, null, null));
+
     }
 
 

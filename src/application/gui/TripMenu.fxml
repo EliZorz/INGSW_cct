@@ -5,9 +5,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #98fb98;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
+<AnchorPane prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #98FB98;" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
    <children>
-      <AnchorPane layoutX="40.0" layoutY="36.0" prefHeight="407.0" prefWidth="256.0" style="-fx-background-color: #ef4896; -fx-border-color: #deffff;">
+      <AnchorPane layoutX="40.0" layoutY="36.0" prefHeight="407.0" prefWidth="256.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #DEFFFF;">
          <children>
             <Button layoutX="47.0" layoutY="43.0" mnemonicParsing="false" onAction="#openTableTrips" prefHeight="46.0" prefWidth="162.0" text="VIEW PLANNED TRIPS" />
             <Button layoutX="47.0" layoutY="132.0" mnemonicParsing="false" onAction="#openPlanTrip" prefHeight="46.0" prefWidth="162.0" text="PLAN NEW TRIP" />
@@ -15,16 +15,20 @@
             <Button layoutX="47.0" layoutY="223.0" mnemonicParsing="false" onAction="#openActualParticipants" prefHeight="46.0" prefWidth="162.0" text="WHO PARTICIPATES?" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="405.0" layoutY="45.0" prefHeight="292.0" prefWidth="197.0" style="-fx-border-color: #def001; -fx-background-color: #ffffff;">
+      <AnchorPane layoutX="407.0" layoutY="43.0" prefHeight="292.0" prefWidth="197.0" style="-fx-border-color: #def001; -fx-background-color: #ffffff;">
          <children>
-            <ImageView fitHeight="207.0" fitWidth="174.0" layoutX="12.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <Button fx:id="btnBack" layoutX="77.0" layoutY="236.0" mnemonicParsing="false" onAction="#backHome">
+               <graphic>
+                  <ImageView fitHeight="71.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@if_House_by_Artdesigner.lv_83154.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="36.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@Movie_Brainy.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="76.0" layoutY="238.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@if_House_by_Artdesigner.lv_83154.png" />
+                  <Image url="@schoolTheme.jpg" />
                </image>
             </ImageView>
          </children>

@@ -6,21 +6,21 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="769.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripPlanController">
+<AnchorPane prefHeight="769.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripPlanController">
    <children>
       <TableView fx:id="tableChildren" layoutX="46.0" layoutY="53.0" prefHeight="170.0" prefWidth="313.0">
-        <columns>
-          <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="colSurnameChild" prefWidth="101.59998321533203" text="Surname" />
+         <columns>
+            <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurnameChild" prefWidth="101.59998321533203" text="Surname" />
             <TableColumn fx:id="colCfChild" prefWidth="135.199951171875" text="CF" />
-        </columns>
+         </columns>
       </TableView>
-      <Text layoutX="46.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select participants among children:">
+      <Text fill="#ff00e5" layoutX="46.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select participants among children:">
          <font>
             <Font name="Courier New" size="18.0" />
          </font>
@@ -30,7 +30,7 @@
             <Font name="Courier New" size="17.0" />
          </font>
       </Label>
-      <Text layoutX="46.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select participants among staff:">
+      <Text fill="#ff00ee" layoutX="46.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select participants among staff:">
          <font>
             <Font name="Courier New" size="18.0" />
          </font>
@@ -62,12 +62,12 @@
       <TextField fx:id="txtArrTo" layoutX="249.0" layoutY="529.0" promptText="Arrival to" />
       <Button fx:id="btnLoadChildren" layoutX="374.0" layoutY="196.0" mnemonicParsing="false" onAction="#handleLoadChildren" prefHeight="26.0" prefWidth="83.0" text="Load">
          <effect>
-            <SepiaTone />
+            <DropShadow blurType="ONE_PASS_BOX" color="#00bbff" />
          </effect>
       </Button>
       <Button fx:id="btnLoadStaff" layoutX="374.0" layoutY="425.0" mnemonicParsing="false" onAction="#handleLoadStaff" prefHeight="26.0" prefWidth="83.0" text="Load">
          <effect>
-            <SepiaTone />
+            <DropShadow blurType="ONE_PASS_BOX" color="#01b7ff" />
          </effect>
       </Button>
       <Label fx:id="lblStatusChildren" layoutX="424.0" layoutY="130.0" text="Status Children" textFill="#0628e5">

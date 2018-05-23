@@ -5,59 +5,63 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="696.0" prefWidth="1082.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuController">
    <children>
-      <TableView fx:id="tableMenu" layoutX="172.0" layoutY="127.0" prefHeight="602.0" prefWidth="620.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="172.0" AnchorPane.rightAnchor="488.0" AnchorPane.topAnchor="127.0">
-        <columns>
-          <TableColumn fx:id="colNumber" prefWidth="58.4444580078125" resizable="false" text="Number" />
-          <TableColumn fx:id="colEntree" prefWidth="112.22222900390625" resizable="false" text="Entree" />
+      <TableView fx:id="tableMenu" layoutX="62.0" layoutY="120.0" prefHeight="493.0" prefWidth="629.0" AnchorPane.bottomAnchor="83.0" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="391.0" AnchorPane.topAnchor="120.0">
+         <columns>
+            <TableColumn fx:id="colNumber" prefWidth="58.4444580078125" resizable="false" text="Number" />
+            <TableColumn fx:id="colEntree" prefWidth="112.22222900390625" resizable="false" text="Entree" />
             <TableColumn fx:id="colMainCourse" prefWidth="103.6666259765625" resizable="false" text="Main Course" />
             <TableColumn fx:id="colDessert" prefWidth="92.0" resizable="false" text="Dessert" />
             <TableColumn fx:id="colSide" prefWidth="88.333251953125" resizable="false" text="Side dish" />
             <TableColumn fx:id="colDrink" minWidth="0.0" prefWidth="82.22216796875" resizable="false" text="Drink" />
             <TableColumn fx:id="colDay" prefWidth="90.0" resizable="false" text="Date" />
-        </columns>
+         </columns>
       </TableView>
-      <Button fx:id="handleLoad" layoutX="932.0" layoutY="190.0" mnemonicParsing="false" onAction="#handleLoad" prefHeight="36.0" prefWidth="145.0" text="Load menu" AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="createMenu" layoutX="932.0" layoutY="343.0" mnemonicParsing="false" onAction="#openCreation" prefHeight="36.0" prefWidth="145.0" text="Create a new menu " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="updateMenu" layoutX="932.0" layoutY="428.0" mnemonicParsing="false" onAction="#update" prefHeight="36.0" prefWidth="145.0" text="Update meu" AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="deleteMenu" layoutX="932.0" layoutY="513.0" mnemonicParsing="false" onAction="#delete" prefHeight="36.0" prefWidth="145.0" text="Delete menu " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="backHome" layoutX="62.0" layoutY="45.0" mnemonicParsing="false" onAction="#esc" prefHeight="36.0" prefWidth="44.0">
+      <Button fx:id="handleLoad" layoutX="742.0" layoutY="235.0" mnemonicParsing="false" onAction="#handleLoad" prefHeight="36.0" prefWidth="227.0" text="Load menu" AnchorPane.leftAnchor="742.0" AnchorPane.rightAnchor="113.0" />
+      <Button fx:id="createMenu" layoutX="742.0" layoutY="368.0" mnemonicParsing="false" onAction="#openCreation" prefHeight="36.0" prefWidth="227.0" text="Create a new menu " AnchorPane.leftAnchor="742.0" AnchorPane.rightAnchor="113.0" />
+      <Button fx:id="updateMenu" layoutX="742.0" layoutY="433.0" mnemonicParsing="false" onAction="#update" prefHeight="36.0" prefWidth="227.0" text="Update menu" AnchorPane.leftAnchor="742.0" AnchorPane.rightAnchor="113.0" />
+      <Button fx:id="deleteMenu" layoutX="742.0" layoutY="504.0" mnemonicParsing="false" onAction="#delete" prefHeight="36.0" prefWidth="227.0" text="Delete menu " AnchorPane.leftAnchor="742.0" AnchorPane.rightAnchor="113.0" />
+      <Button fx:id="backHome" layoutX="850.0" layoutY="579.0" mnemonicParsing="false" onAction="#esc" prefHeight="36.0" prefWidth="44.0">
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../if_House_by_Artdesigner.lv_83154.png" />
+                  <Image url="@if_House_by_Artdesigner.lv_83154.png" />
                </image>
             </ImageView>
          </graphic></Button>
-      <Label fx:id="labelStatus" layoutX="932.0" layoutY="640.0" prefHeight="35.0" prefWidth="254.0" text="STATUS">
+      <Label fx:id="labelStatus" layoutX="62.0" layoutY="632.0" prefHeight="35.0" prefWidth="629.0" text="Status" textFill="#f50808">
          <font>
-            <Font size="24.0" />
+            <Font name="Courier New" size="25.0" />
          </font>
       </Label>
-      <Text layoutX="382.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BASE MENU">
+      <Text layoutX="62.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BASIC MENU">
          <font>
-            <Font name="System Bold" size="35.0" />
+            <Font name="Courier New Bold" size="35.0" />
          </font>
       </Text>
-      <Button fx:id="deselect" layoutX="932.0" layoutY="264.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="145.0" text="Deselect All " AnchorPane.leftAnchor="932.0" AnchorPane.rightAnchor="203.0" />
-      <Button fx:id="searchButton" layoutX="880.0" layoutY="81.0" mnemonicParsing="false" onAction="#search" prefHeight="28.0" text="Search" AnchorPane.rightAnchor="348.0" AnchorPane.topAnchor="81.0" />
-      <Button fx:id="back" layoutX="945.0" layoutY="81.0" mnemonicParsing="false" onAction="#reLoad" prefHeight="28.0" prefWidth="32.0">
+      <Button fx:id="deselect" layoutX="742.0" layoutY="302.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="227.0" text="Deselect All " AnchorPane.leftAnchor="742.0" AnchorPane.rightAnchor="113.0" />
+      <Button fx:id="searchButton" layoutX="917.0" layoutY="157.0" mnemonicParsing="false" onAction="#search" prefHeight="28.0" text="Search" AnchorPane.rightAnchor="113.0" AnchorPane.topAnchor="157.0">
+         <effect>
+            <SepiaTone />
+         </effect></Button>
+      <Button fx:id="back" layoutX="742.0" layoutY="120.0" mnemonicParsing="false" onAction="#reLoad" prefHeight="28.0" prefWidth="32.0">
          <graphic>
             <ImageView fitHeight="20.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../if_back_322419.png" />
+                  <Image url="@if_back_322419.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <DatePicker fx:id="dateSearch" layoutX="698.0" layoutY="81.0" prefHeight="28.0" prefWidth="174.0" AnchorPane.leftAnchor="698.0" AnchorPane.topAnchor="81.0" />
+      <DatePicker fx:id="dateSearch" layoutX="784.0" layoutY="120.0" prefHeight="28.0" prefWidth="184.0" AnchorPane.leftAnchor="784.0" AnchorPane.topAnchor="120.0" />
 
    </children>
 </AnchorPane>
