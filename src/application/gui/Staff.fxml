@@ -8,13 +8,15 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="774.0" prefWidth="1300.0" style="" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.StaffController">
+<AnchorPane prefHeight="774.0" prefWidth="1300.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.StaffController">
     <children>
         <SplitPane dividerPositions="0.6956856702619415" focusTraversable="true" prefHeight="774.0" prefWidth="1300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -34,13 +36,16 @@
                                 <TableColumn fx:id="colMail" maxWidth="5000.0" minWidth="10.0" prefWidth="112.39996337890625" text="e-mail" />
                             </columns>
                         </TableView>
-                        <TextField fx:id="searchSTF" layoutX="156.0" layoutY="19.0" AnchorPane.topAnchor="19.0" />
-                        <Button fx:id="searchSt" layoutX="320.0" layoutY="19.0" mnemonicParsing="false" onAction="#searchStaff" text="Search" AnchorPane.topAnchor="19.0" />
-                        <Button fx:id="backStaff" layoutX="387.0" layoutY="19.0" mnemonicParsing="false" onAction="#reloadStaff" prefHeight="25.0" prefWidth="32.0" AnchorPane.topAnchor="19.0">
+                        <TextField fx:id="searchSTF" layoutX="319.0" layoutY="19.0" AnchorPane.topAnchor="19.0" />
+                        <Button fx:id="searchSt" layoutX="479.0" layoutY="19.0" mnemonicParsing="false" onAction="#searchStaff" text="Search staff member" AnchorPane.topAnchor="19.0">
+                     <effect>
+                        <SepiaTone />
+                     </effect></Button>
+                        <Button fx:id="backStaff" layoutX="269.0" layoutY="18.0" mnemonicParsing="false" onAction="#reloadStaff" prefHeight="25.0" prefWidth="32.0" AnchorPane.topAnchor="18.0">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../../../../if_back_322419.png" />
+                                        <Image url="@if_back_322419.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
@@ -49,26 +54,30 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="0.0">
                     <children>
-                        <TextField fx:id="txtName" layoutX="238.0" layoutY="26.0" prefWidth="133.0" promptText="First Name" />
-                        <TextField fx:id="txtSurname" layoutX="28.0" layoutY="26.0" prefWidth="190.0" promptText="Last Name" />
-                        <TextField fx:id="txtCf" layoutX="28.0" layoutY="68.0" prefHeight="26.0" prefWidth="343.0" promptText="CF" />
-                        <TextField fx:id="txtBornWhere" layoutX="173.0" layoutY="157.0" prefHeight="26.0" prefWidth="200.0" promptText="Hometown" />
-                        <TextField fx:id="txtResidence" layoutX="29.0" layoutY="204.0" prefHeight="26.0" prefWidth="200.0" promptText="Current city" />
-                        <TextField fx:id="txtAddress" layoutX="29.0" layoutY="249.0" prefWidth="200.0" promptText="Address" />
-                        <TextField fx:id="txtCap" layoutX="29.0" layoutY="294.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
-                        <TextField fx:id="txtProvince" layoutX="185.0" layoutY="294.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
-                        <TextField fx:id="txtMail" layoutX="28.0" layoutY="111.0" prefHeight="26.0" prefWidth="343.0" promptText="e-mail" />
-                        <DatePicker fx:id="dpBirthday" layoutX="28.0" layoutY="157.0" prefHeight="26.0" prefWidth="126.0" promptText="Birthday" />
+                        <TextField fx:id="txtName" layoutX="235.0" layoutY="52.0" prefWidth="133.0" promptText="First Name" />
+                        <TextField fx:id="txtSurname" layoutX="27.0" layoutY="52.0" prefWidth="190.0" promptText="Last Name" />
+                        <TextField fx:id="txtCf" layoutX="28.0" layoutY="86.0" prefHeight="26.0" prefWidth="343.0" promptText="CF" />
+                        <TextField fx:id="txtBornWhere" layoutX="29.0" layoutY="190.0" prefHeight="26.0" prefWidth="200.0" promptText="Hometown" />
+                        <TextField fx:id="txtResidence" layoutX="29.0" layoutY="225.0" prefHeight="26.0" prefWidth="200.0" promptText="Current city" />
+                        <TextField fx:id="txtAddress" layoutX="29.0" layoutY="260.0" prefHeight="26.0" prefWidth="200.0" promptText="Address" />
+                        <TextField fx:id="txtCap" layoutX="28.0" layoutY="294.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
+                        <TextField fx:id="txtProvince" layoutX="148.0" layoutY="294.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
+                        <TextField fx:id="txtMail" layoutX="28.0" layoutY="121.0" prefHeight="26.0" prefWidth="343.0" promptText="e-mail" />
+                        <DatePicker fx:id="dpBirthday" layoutX="28.0" layoutY="157.0" prefHeight="26.0" prefWidth="158.0" promptText="Birthday" />
                         <Button fx:id="btnBack" layoutX="213.0" layoutY="696.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="158.0" text="Homepage" />
-                        <ButtonBar layoutX="20.0" layoutY="634.0" prefHeight="40.0" prefWidth="343.0">
+                        <ButtonBar layoutX="23.0" layoutY="330.0" prefHeight="40.0" prefWidth="343.0">
                             <buttons>
-                                <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadStaff" text="Load table" />
+                                <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadStaff" prefHeight="26.0" prefWidth="126.0" text="Load staff">
+                           <effect>
+                              <DropShadow blurType="ONE_PASS_BOX" color="#04bff8" />
+                           </effect>
+                        </Button>
                                 <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddStaff" prefHeight="26.0" text="Add " />
                                 <Button fx:id="btnUpdate" minWidth="38.0" mnemonicParsing="false" onAction="#handleUpdateStaff" prefHeight="26.0" text="Update" />
                                 <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDeleteStaff" text="Delete" />
                             </buttons>
                         </ButtonBar>
-                        <TableView fx:id="tableIngr" layoutX="29.0" layoutY="349.0" prefHeight="177.0" prefWidth="174.0">
+                        <TableView fx:id="tableIngr" layoutX="35.0" layoutY="402.0" prefHeight="166.0" prefWidth="174.0">
                             <columns>
                                 <TableColumn fx:id="colIngr" prefWidth="174.40002822875977" text="Possible allergies" />
                             </columns>
@@ -76,28 +85,39 @@
                                 <SepiaTone />
                             </effect>
                         </TableView>
-                        <ButtonBar layoutX="14.0" layoutY="536.0" prefHeight="40.0" prefWidth="190.0">
+                        <ButtonBar layoutX="17.0" layoutY="584.0" prefHeight="40.0" prefWidth="190.0">
                             <buttons>
-                                <Button fx:id="btnLoadIngredients" mnemonicParsing="false" onAction="#handleLoadIngredients" text="Load list" />
+                                <Button fx:id="btnLoadIngredients" mnemonicParsing="false" onAction="#handleLoadIngredients" text="Load list">
+                           <effect>
+                              <DropShadow blurType="ONE_PASS_BOX" color="#07aced" />
+                           </effect></Button>
                                 <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="26.0" prefWidth="91.0" text="Deselect all" />
                             </buttons>
                         </ButtonBar>
-                        <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="25.0" layoutY="585.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
+                        <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="25.0" layoutY="642.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
                             <font>
-                                <Font size="24.0" />
+                                <Font name="Courier New" size="19.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="searchTF" layoutX="218.0" layoutY="349.0" AnchorPane.rightAnchor="25.0" />
-                        <Button fx:id="search" layoutX="218.0" layoutY="386.0" mnemonicParsing="false" onAction="#searchAll" text="Search" />
-                        <Button fx:id="back" layoutX="276.0" layoutY="386.0" mnemonicParsing="false" onAction="#reloadAll" prefHeight="25.0" prefWidth="32.0">
+                        <TextField fx:id="searchTF" layoutX="227.0" layoutY="497.0" prefHeight="26.0" prefWidth="121.0" AnchorPane.rightAnchor="16.0" />
+                        <Button fx:id="search" layoutX="285.0" layoutY="535.0" mnemonicParsing="false" onAction="#searchAll" text="Search allergy">
+                     <effect>
+                        <SepiaTone />
+                     </effect></Button>
+                        <Button fx:id="back" layoutX="212.0" layoutY="497.0" mnemonicParsing="false" onAction="#reloadAll" prefHeight="25.0" prefWidth="32.0">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../../../../if_back_322419.png" />
+                                        <Image url="@if_back_322419.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
+                  <Text fill="#f008e8" layoutX="112.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STAFF MEMBERS">
+                     <font>
+                        <Font name="Courier New" size="23.0" />
+                     </font>
+                  </Text>
                     </children>
                 </AnchorPane>
             </items>

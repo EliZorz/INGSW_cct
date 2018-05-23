@@ -9,18 +9,20 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="806.0" prefWidth="1369.0" style="" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.ChildController">
+<AnchorPane prefHeight="774.0" prefWidth="1373.0" style="" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.ChildController">
     <children>
-        <SplitPane dividerPositions="0.4872852233676976" focusTraversable="true" prefHeight="774.0" prefWidth="1300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <SplitPane dividerPositions="0.5164113785557987" focusTraversable="true" prefHeight="781.0" prefWidth="1373.0" AnchorPane.bottomAnchor="-7.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="738.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="805.0" prefWidth="701.0">
                     <children>
                         <TableView fx:id="tableChild" layoutY="57.0" prefHeight="747.0" prefWidth="663.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="57.0">
                             <columns>
@@ -40,7 +42,7 @@
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../../../../if_back_322419.png" />
+                                        <Image url="@if_back_322419.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
@@ -52,7 +54,7 @@
                         </Button>
                     </children>
                 </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="698.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="805.0" prefWidth="660.0">
                     <children>
                         <TextField fx:id="txtName" layoutX="45.0" layoutY="72.0" prefHeight="26.0" prefWidth="167.0" promptText="First Name" />
                         <TextField fx:id="txtSurname" layoutX="45.0" layoutY="109.0" prefHeight="26.0" prefWidth="167.0" promptText="Last name" />
@@ -62,31 +64,30 @@
                         <TextField fx:id="txtAddress" layoutX="46.0" layoutY="291.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" />
                         <TextField fx:id="txtCap" layoutX="172.0" layoutY="326.0" prefHeight="26.0" prefWidth="86.0" promptText="CAP" />
                         <TextField fx:id="txtProvince" layoutX="47.0" layoutY="326.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" />
-                        <Label fx:id="lblWarning" alignment="CENTER" layoutX="-170.0" layoutY="744.0" prefHeight="35.0" prefWidth="615.0" text="Status" textAlignment="CENTER" textFill="RED">
+                        <Label fx:id="lblWarning" alignment="CENTER" layoutX="14.0" layoutY="716.0" prefHeight="25.0" prefWidth="615.0" text="Status" textAlignment="CENTER" textFill="RED">
                             <font>
                                 <Font name="Courier New" size="24.0" />
                             </font>
                         </Label>
-                        <DatePicker fx:id="dpBirthday" layoutX="46.0" layoutY="183.0" prefHeight="26.0" prefWidth="91.0" promptText="Birthday" />
-                        <Button fx:id="btnBack" layoutX="420.0" layoutY="719.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="16.0" prefWidth="190.0" style="-fx-cursor: hand" text="HomePage" />
-                        <ButtonBar layoutX="258.0" layoutY="670.0" prefHeight="26.0" prefWidth="221.0">
-                            <buttons>
-                                <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="118.0" text="Load" />
-                                <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="25.0" prefWidth="87.0" text="Edit" />
-                                <Button fx:id="btnAdd" minWidth="68.0" mnemonicParsing="false" onAction="#handleAddChild" prefHeight="26.0" prefWidth="87.0" text="Add" />
-                                <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="17.0" prefWidth="87.0" text="Delete" />
-                            </buttons>
+                        <DatePicker fx:id="dpBirthday" layoutX="46.0" layoutY="183.0" prefHeight="31.0" prefWidth="167.0" promptText="Birthday" />
+                        <Button fx:id="btnBack" layoutX="437.0" layoutY="675.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="16.0" prefWidth="190.0" style="-fx-cursor: hand" text="HomePage" />
+                        <ButtonBar layoutX="18.0" layoutY="411.0" prefHeight="26.0" prefWidth="258.0">
+                     <buttons>
+                                <Button fx:id="btnUpdate" minWidth="62.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="26.0" prefWidth="62.0" text="Edit" />
+                                <Button fx:id="btnAdd" minWidth="62.0" mnemonicParsing="false" onAction="#handleAddChild" prefHeight="26.0" prefWidth="62.0" text="Add" />
+                                <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="26.0" prefWidth="62.0" text="Delete" />
+                     </buttons>
                         </ButtonBar>
-                        <TableView fx:id="tableIngr" layoutX="47.0" layoutY="430.0" prefHeight="125.0" prefWidth="200.0">
+                        <TableView fx:id="tableIngr" layoutX="61.0" layoutY="513.0" prefHeight="126.0" prefWidth="200.0">
                             <columns>
                                 <TableColumn fx:id="colIngr" prefWidth="198.40007781982422" text="Possible allergies" />
                             </columns>
                         </TableView>
-                        <ButtonBar layoutX="46.0" layoutY="562.0" prefHeight="40.0" prefWidth="200.0">
+                        <ButtonBar layoutX="61.0" layoutY="634.0" prefHeight="40.0" prefWidth="200.0">
                             <buttons>
                                 <Button fx:id="btnLoadIngredients" mnemonicParsing="false" onAction="#handleLoadIngredients" prefHeight="26.0" prefWidth="74.0" text="Load list">
                                     <effect>
-                                        <SepiaTone />
+                              <DropShadow blurType="ONE_PASS_BOX" color="#07acf2" />
                                     </effect></Button>
                                 <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="26.0" prefWidth="110.0" text="Deselect all">
                                     <effect>
@@ -94,23 +95,22 @@
                                     </effect></Button>
                             </buttons>
                         </ButtonBar>
-                        <Text layoutX="77.0" layoutY="382.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select one or more." />
-                        <Text layoutX="75.0" layoutY="403.0" strokeType="OUTSIDE" strokeWidth="0.0" text="If your child has no allergy," />
-                        <Text layoutX="73.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="don't click or click void row." />
+                        <Text layoutX="59.0" layoutY="481.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select one or more." />
+                        <Text layoutX="59.0" layoutY="498.0" strokeType="OUTSIDE" strokeWidth="0.0" text="If your child has no allergy, no click" />
                         <Text layoutX="270.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-                        <Text fill="#f20ce8" layoutX="102.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CHILD" textAlignment="CENTER" wrappingWidth="99.19999685883522">
+                        <Text fill="#f20ce8" layoutX="96.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CHILD" textAlignment="CENTER" wrappingWidth="99.19999685883522">
                             <font>
                                 <Font name="Century" size="21.0" />
                             </font>
                         </Text>
-                        <Text fill="#f20ce8" layoutX="401.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CONTACT" textAlignment="CENTER" wrappingWidth="138.3984327763319">
+                        <Text fill="#f20ce8" layoutX="401.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CONTACT" textAlignment="CENTER" wrappingWidth="138.3984327763319">
                             <font>
                                 <Font name="Century" size="21.0" />
                             </font>
                         </Text>
-                        <TextField fx:id="txtNameContact" layoutX="355.0" layoutY="326.0" prefHeight="26.0" prefWidth="99.0" promptText="First Name" />
-                        <TextField fx:id="txtSurnameContact" layoutX="464.0" layoutY="326.0" prefHeight="26.0" prefWidth="167.0" promptText="Last Name" />
-                        <TableView fx:id="tableContacts" layoutX="333.0" layoutY="72.0" prefHeight="159.0" prefWidth="290.0">
+                        <TextField fx:id="txtNameContact" layoutX="333.0" layoutY="268.0" prefHeight="26.0" prefWidth="99.0" promptText="First Name" />
+                        <TextField fx:id="txtSurnameContact" layoutX="449.0" layoutY="268.0" prefHeight="26.0" prefWidth="167.0" promptText="Last Name" />
+                        <TableView fx:id="tableContacts" layoutX="334.0" layoutY="64.0" prefHeight="141.0" prefWidth="290.0">
                             <columns>
                                 <TableColumn fx:id="colSurnameContact" prefWidth="57.60015869140625" text="Surname" />
                                 <TableColumn fx:id="colCfContact" prefWidth="75.199951171875" text="CF" />
@@ -119,63 +119,66 @@
                                 <TableColumn fx:id="colContact" prefWidth="56.79990234374998" text="Contact" />
                             </columns>
                         </TableView>
-                        <TextField fx:id="txtCfContact" layoutX="355.0" layoutY="364.0" prefHeight="26.0" prefWidth="212.0" promptText="Fiscal Code" />
-                        <TextField fx:id="txtBornWhereContact" layoutX="464.0" layoutY="394.0" prefHeight="26.0" prefWidth="167.0" promptText="Home Town" />
-                        <DatePicker fx:id="dpBirthdayContact" layoutX="355.0" layoutY="394.0" prefHeight="26.0" prefWidth="99.0" promptText="Birthday" />
-                        <TextField fx:id="txtAddressContact" layoutX="355.0" layoutY="500.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" />
-                        <TextField fx:id="txtProvinceContact" layoutX="355.0" layoutY="531.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" />
-                        <TextField fx:id="txtCapContact" layoutX="479.0" layoutY="531.0" prefHeight="26.0" prefWidth="86.0" promptText="Cap" />
-                        <CheckBox fx:id="cbDoc" layoutX="355.0" layoutY="574.0" mnemonicParsing="false" text="is Doc" />
-                        <CheckBox fx:id="cbGuardian" layoutX="437.0" layoutY="574.0" mnemonicParsing="false" text="is Guardian" />
-                        <CheckBox fx:id="cbContact" layoutX="548.0" layoutY="574.0" mnemonicParsing="false" text="is Contact" />
-                        <ButtonBar layoutX="536.0" layoutY="271.0" prefHeight="40.0" prefWidth="86.0">
-                            <buttons>
-                                <Button fx:id="btnLoadContact" mnemonicParsing="false" onAction="#handleLoadContacts" text="Load">
-                                    <effect>
-                                        <SepiaTone />
-                                    </effect>
-                                </Button>
-                            </buttons>
-                        </ButtonBar>
-                        <TextField fx:id="txtMailContact" layoutX="355.0" layoutY="430.0" prefHeight="26.0" prefWidth="276.0" promptText="Mail" />
-                        <TextField fx:id="txtTelContact" layoutX="355.0" layoutY="464.0" prefHeight="26.0" prefWidth="167.0" promptText="Phone number" />
-                        <ButtonBar layoutX="355.0" layoutY="235.0" prefHeight="40.0" prefWidth="200.0">
+                        <TextField fx:id="txtCfContact" layoutX="331.0" layoutY="304.0" prefHeight="26.0" prefWidth="212.0" promptText="Fiscal Code" />
+                        <TextField fx:id="txtBornWhereContact" layoutX="334.0" layoutY="377.0" prefHeight="26.0" prefWidth="167.0" promptText="Home Town" />
+                        <DatePicker fx:id="dpBirthdayContact" layoutX="333.0" layoutY="339.0" prefHeight="31.0" prefWidth="167.0" promptText="Birthday" />
+                        <TextField fx:id="txtAddressContact" layoutX="331.0" layoutY="498.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" />
+                        <TextField fx:id="txtProvinceContact" layoutX="333.0" layoutY="538.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" />
+                        <TextField fx:id="txtCapContact" layoutX="447.0" layoutY="538.0" prefHeight="26.0" prefWidth="86.0" promptText="Cap" />
+                        <CheckBox fx:id="cbDoc" layoutX="331.0" layoutY="583.0" mnemonicParsing="false" text="is Doc" />
+                        <CheckBox fx:id="cbGuardian" layoutX="417.0" layoutY="583.0" mnemonicParsing="false" text="is Guardian" />
+                        <CheckBox fx:id="cbContact" layoutX="532.0" layoutY="583.0" mnemonicParsing="false" text="is Contact" />
+                        <ButtonBar layoutX="536.0" layoutY="271.0" prefHeight="40.0" prefWidth="86.0" />
+                        <TextField fx:id="txtMailContact" layoutX="335.0" layoutY="419.0" prefHeight="26.0" prefWidth="276.0" promptText="Mail" />
+                        <TextField fx:id="txtTelContact" layoutX="334.0" layoutY="458.0" prefHeight="26.0" prefWidth="167.0" promptText="Phone number" />
+                        <ButtonBar layoutX="357.0" layoutY="614.0" prefHeight="40.0" prefWidth="200.0">
                             <buttons>
                                 <Button fx:id="btnAddContact" mnemonicParsing="false" onAction="#handleAddContact" text="Add" />
                                 <Button fx:id="btnUpdateContact" mnemonicParsing="false" onAction="#handleUpdateContact" text="Edit" />
                                 <Button fx:id="btnDeleteContact" mnemonicParsing="false" onAction="#handleDeleteContact" text="Delete" />
                             </buttons>
                         </ButtonBar>
-                        <Button fx:id="searchA" layoutX="198.0" layoutY="609.0" mnemonicParsing="false" onAction="#searchAllergies" prefHeight="26.0" prefWidth="54.0" text="Search">
+                        <Button fx:id="searchA" layoutX="204.0" layoutY="674.0" mnemonicParsing="false" onAction="#searchAllergies" prefHeight="26.0" prefWidth="54.0" text="Search">
                             <effect>
                                 <SepiaTone />
                             </effect>
                         </Button>
-                        <TextField fx:id="searchAll" layoutX="45.0" layoutY="609.0" />
-                        <TextField fx:id="searchContact" layoutX="356.0" layoutY="279.0" prefHeight="25.0" prefWidth="114.0" />
-                        <Button fx:id="searchC" layoutX="478.0" layoutY="279.0" mnemonicParsing="false" onAction="#searchContact" prefHeight="26.0" prefWidth="54.0" text="Search">
+                        <TextField fx:id="searchAll" layoutX="80.0" layoutY="674.0" prefHeight="26.0" prefWidth="114.0" />
+                        <TextField fx:id="searchContact" layoutX="377.0" layoutY="221.0" prefHeight="26.0" prefWidth="91.0" />
+                        <Button fx:id="searchC" layoutX="473.0" layoutY="221.0" mnemonicParsing="false" onAction="#searchContact" prefHeight="26.0" prefWidth="54.0" text="Search">
                             <effect>
                                 <SepiaTone />
                             </effect>
                         </Button>
-                        <Button fx:id="backContact" layoutX="317.0" layoutY="279.0" mnemonicParsing="false" onAction="#reloadContact" prefHeight="25.0" prefWidth="29.0">
+                        <Button fx:id="backContact" layoutX="338.0" layoutY="221.0" mnemonicParsing="false" onAction="#reloadContact" prefHeight="25.0" prefWidth="29.0">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../../../../if_back_322419.png" />
+                                        <Image url="@if_back_322419.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button fx:id="backAll" layoutX="7.0" layoutY="609.0" mnemonicParsing="false" onAction="#reloadAllergies" prefHeight="25.0" prefWidth="29.0">
+                        <Button fx:id="backAll" layoutX="38.0" layoutY="675.0" mnemonicParsing="false" onAction="#reloadAllergies" prefHeight="25.0" prefWidth="29.0">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../../../../if_back_322419.png" />
+                                        <Image url="@if_back_322419.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
+                          <Button fx:id="btnLoadContact" layoutX="533.0" layoutY="221.0" mnemonicParsing="false" onAction="#handleLoadContacts" prefHeight="26.0" prefWidth="91.0" text="Load contacts">
+                              <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" color="#02b4f0" />
+                              </effect>
+                          </Button>
+                          <Button fx:id="btnLoad" layoutX="174.0" layoutY="377.0" minWidth="58.0" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="114.0" text="Load children">
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" color="#09c4f2" />
+                     </effect>
+                  </Button>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="668.0" layoutX="305.0" layoutY="36.0" stroke="BLACK" strokeType="INSIDE" width="6.0" />
                     </children>
                 </AnchorPane>
             </items>

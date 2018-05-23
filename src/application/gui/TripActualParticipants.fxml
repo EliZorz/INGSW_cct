@@ -4,6 +4,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -49,13 +52,26 @@
             <Font name="Courier New" size="16.0" />
          </font>
       </Label>
-      <Button fx:id="btnLoadChildren" layoutX="245.0" layoutY="660.0" mnemonicParsing="false" onAction="#handleLoadChildren" prefHeight="19.0" prefWidth="99.0" text="Load" />
+      <Button fx:id="btnLoadChildren" layoutX="245.0" layoutY="660.0" mnemonicParsing="false" onAction="#handleLoadChildren" prefHeight="19.0" prefWidth="99.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00a6ff" />
+         </effect></Button>
       <Button fx:id="btnDoneSelection" layoutX="740.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleDoneSelection" prefHeight="40.0" prefWidth="99.0" text="Done selection" />
-      <Button fx:id="btnBack" layoutX="740.0" layoutY="608.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="40.0" prefWidth="99.0" text="Homepage" />
-      <Button fx:id="btnLoadStaff" layoutX="605.0" layoutY="660.0" mnemonicParsing="false" onAction="#handleLoadStaff" prefHeight="19.0" prefWidth="99.0" text="Load" />
-      <Label fx:id="lblWarning" layoutX="29.0" layoutY="705.0" prefHeight="23.0" prefWidth="810.0" text="Label" textFill="#ed0404">
+      <Button fx:id="btnBack" layoutX="767.0" layoutY="610.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="32.0" prefWidth="32.0">
+         <graphic>
+            <ImageView fitHeight="33.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@if_House_by_Artdesigner.lv_83154.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="btnLoadStaff" layoutX="605.0" layoutY="660.0" mnemonicParsing="false" onAction="#handleLoadStaff" prefHeight="19.0" prefWidth="99.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00ccff" />
+         </effect></Button>
+      <Label fx:id="lblWarning" layoutX="29.0" layoutY="705.0" prefHeight="23.0" prefWidth="810.0" text="Status" textFill="#ed0404">
          <font>
-            <Font name="Courier New" size="18.0" />
+            <Font name="Courier New" size="20.0" />
          </font>
       </Label>
       <Text fill="#f00bb3" layoutX="29.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select trip">
@@ -73,7 +89,10 @@
             <TableColumn fx:id="colArrivalTo" prefWidth="98.39996337890625" text="Arrival to" />
          </columns>
       </TableView>
-      <Button fx:id="btnLoadTrip" layoutX="684.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleLoadTrip" prefHeight="19.0" prefWidth="99.0" text="Load" />
+      <Button fx:id="btnLoadTrip" layoutX="684.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleLoadTrip" prefHeight="19.0" prefWidth="99.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00d9ff" />
+         </effect></Button>
       <Button fx:id="btnDeselect" layoutX="740.0" layoutY="545.0" mnemonicParsing="false" onAction="#handleDeselectAll" prefHeight="40.0" prefWidth="99.0" text="Deselect all" />
       <Button fx:id="btnBus" layoutX="740.0" layoutY="487.0" mnemonicParsing="false" onAction="#handleCalculateBus" prefHeight="40.0" prefWidth="99.0" text="Calculate buses" />
    </children>
