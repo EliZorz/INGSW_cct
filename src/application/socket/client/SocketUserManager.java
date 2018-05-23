@@ -79,16 +79,24 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
 
+        boolean isEmpty = false;
         try {
-            loaded = fromServer.readUnshared();
-            System.out.println("Read array as Object");
-        } catch (Exception e1) {
-            e1.printStackTrace();
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if(loaded instanceof ArrayList<?>){
+        if(!isEmpty) {
+            try {
+                loaded = fromServer.readUnshared();
+                System.out.println("Read array as Object");
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            if (loaded instanceof ArrayList<?>) {
                 //get list
                 ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0) {
+                if (loadedAl.size() > 0) {
                     for (Object element : loadedAl) {
                         if (element instanceof ChildDbDetails) {
                             ChildDbDetails myElement = (ChildDbDetails) element;
@@ -98,7 +106,7 @@ public class SocketUserManager implements UserRemote {
                     }
                 }
             }
-
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -247,24 +255,33 @@ public class SocketUserManager implements UserRemote {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
 
+        ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof IngredientsDbDetails) {
-                            IngredientsDbDetails myElement = (IngredientsDbDetails) element;
-                            arrayListToReturn.add(myElement);
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         try {
@@ -427,25 +444,32 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         ArrayList<ContactsDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof ContactsDbDetails) {
-                            ContactsDbDetails myElement = (ContactsDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ContactsDbDetails) {
+                                ContactsDbDetails myElement = (ContactsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -472,25 +496,32 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         ArrayList<StaffDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof StaffDbDetails) {
-                            StaffDbDetails myElement = (StaffDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof StaffDbDetails) {
+                                StaffDbDetails myElement = (StaffDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -619,23 +650,31 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<SupplierDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof SupplierDbDetails) {
-                            SupplierDbDetails myElement = (SupplierDbDetails) element;
-                            arrayListToReturn.add(myElement);
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SupplierDbDetails) {
+                                SupplierDbDetails myElement = (SupplierDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         try {
             ok = (boolean) fromServer.readUnshared ();
@@ -753,25 +792,32 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof CodRifChildDbDetails) {
-                            CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof CodRifChildDbDetails) {
+                                CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -821,23 +867,31 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<DishesDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof DishesDbDetails) {
-                            DishesDbDetails myElement = (DishesDbDetails) element;
-                            arrayListToReturn.add(myElement);
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof DishesDbDetails) {
+                                DishesDbDetails myElement = (DishesDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         try {
             ok = (boolean) fromServer.readUnshared ();
@@ -865,25 +919,32 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof IngredientsDbDetails) {
-                            IngredientsDbDetails myElement = (IngredientsDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -910,23 +971,31 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<SupplierDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof SupplierDbDetails) {
-                            SupplierDbDetails myElement = (SupplierDbDetails) element;
-                            arrayListToReturn.add(myElement);
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SupplierDbDetails) {
+                                SupplierDbDetails myElement = (SupplierDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         try {
             ok = (boolean) fromServer.readUnshared ();
@@ -1086,13 +1155,20 @@ public class SocketUserManager implements UserRemote {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        boolean isEmpty = false;
         try {
-            menu = (DishesDbDetails) fromServer.readUnshared();
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                menu = (DishesDbDetails) fromServer.readUnshared();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1118,25 +1194,32 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof IngredientsDbDetails) {
-                            IngredientsDbDetails myElement = (IngredientsDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1162,25 +1245,32 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         ArrayList<IngredientsDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof IngredientsDbDetails) {
-                            IngredientsDbDetails myElement = (IngredientsDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof IngredientsDbDetails) {
+                                IngredientsDbDetails myElement = (IngredientsDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1233,31 +1323,42 @@ public class SocketUserManager implements UserRemote {
     @Override
     public ArrayList<DishesDbDetails> loadMenu() throws RemoteException {
         boolean ok = false;
+        ArrayList<DishesDbDetails> arrayListToReturn = new ArrayList<>();
         try {
-            toServer.writeUnshared ("loadmenu");
+            toServer.writeUnshared ("loadMenuBasic");
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ArrayList<DishesDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof DishesDbDetails) {
-                            DishesDbDetails myElement = (DishesDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded != null) {
+                    if (loaded instanceof ArrayList<?>) {
+                        //get list
+                        ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                        if (loadedAl.size() > 0) {
+                            for (Object element : loadedAl) {
+                                if (element instanceof DishesDbDetails) {
+                                    DishesDbDetails myElement = (DishesDbDetails) element;
+                                    arrayListToReturn.add(myElement);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         try {
@@ -1268,10 +1369,11 @@ public class SocketUserManager implements UserRemote {
         }
         System.out.println(ok);
 
-        if(ok){
+        if(ok)
             return arrayListToReturn;
-        }
+
         return null;
+
     }
 
 
@@ -1361,25 +1463,32 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         ArrayList<SpecialDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof SpecialDbDetails) {
-                            SpecialDbDetails myElement = (SpecialDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SpecialDbDetails) {
+                                SpecialDbDetails myElement = (SpecialDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1416,6 +1525,7 @@ public class SocketUserManager implements UserRemote {
         return ok;
     }
 
+
     //SPECIAL MENU ------------------------------------------------------------------------------------
     @Override
     public ArrayList<SpecialMenuDbDetails> loadSpecialMenu() throws RemoteException {
@@ -1428,25 +1538,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<SpecialMenuDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof SpecialMenuDbDetails) {
-                            SpecialMenuDbDetails myElement = (SpecialMenuDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SpecialMenuDbDetails) {
+                                SpecialMenuDbDetails myElement = (SpecialMenuDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1627,25 +1744,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<BusPlateCapacityDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof BusPlateCapacityDbDetails) {
-                            BusPlateCapacityDbDetails myElement = (BusPlateCapacityDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof BusPlateCapacityDbDetails) {
+                                BusPlateCapacityDbDetails myElement = (BusPlateCapacityDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1672,25 +1796,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<TripTableDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof TripTableDbDetails) {
-                            TripTableDbDetails myElement = (TripTableDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof TripTableDbDetails) {
+                                TripTableDbDetails myElement = (TripTableDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1748,25 +1879,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<ChildTripDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof ChildTripDbDetails) {
-                            ChildTripDbDetails myElement = (ChildTripDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildTripDbDetails) {
+                                ChildTripDbDetails myElement = (ChildTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1792,25 +1930,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<StaffTripDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof StaffTripDbDetails) {
-                            StaffTripDbDetails myElement = (StaffTripDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof StaffTripDbDetails) {
+                                StaffTripDbDetails myElement = (StaffTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1897,25 +2042,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<ChildSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof ChildSelectedTripDbDetails) {
-                            ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildSelectedTripDbDetails) {
+                                ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -1953,25 +2105,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<StaffSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof StaffSelectedTripDbDetails) {
-                            StaffSelectedTripDbDetails myElement = (StaffSelectedTripDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof StaffSelectedTripDbDetails) {
+                                StaffSelectedTripDbDetails myElement = (StaffSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2193,25 +2352,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<ChildSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof ChildSelectedTripDbDetails) {
-                            ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildSelectedTripDbDetails) {
+                                ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2249,25 +2415,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof CodRifChildDbDetails) {
-                            CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof CodRifChildDbDetails) {
+                                CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2305,25 +2478,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<SolutionDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof SolutionDbDetails) {
-                            SolutionDbDetails myElement = (SolutionDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof SolutionDbDetails) {
+                                SolutionDbDetails myElement = (SolutionDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2559,25 +2739,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<ChildSelectedTripDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isEmpty = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof ChildSelectedTripDbDetails) {
-                            ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isEmpty = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " +isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!isEmpty) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof ChildSelectedTripDbDetails) {
+                                ChildSelectedTripDbDetails myElement = (ChildSelectedTripDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");

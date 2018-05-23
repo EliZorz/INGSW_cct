@@ -99,12 +99,16 @@ public class SocketThread extends Thread implements Runnable {
             case "loadChild": {
                 System.out.println("Loading children...");
                 ArrayList<ChildDbDetails> isLoadedal = impl.loadData();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -286,12 +290,16 @@ public class SocketThread extends Thread implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<ContactsDbDetails> isLoadedal = impl.loadDataContacts(rif);
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -311,12 +319,16 @@ public class SocketThread extends Thread implements Runnable {
             case "loadDataStaff": {
                 System.out.println("Loading staff members...");
                 ArrayList<StaffDbDetails> isLoadedal = impl.loadDataStaff();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -408,14 +420,23 @@ public class SocketThread extends Thread implements Runnable {
 
 
             //MENU BASE -------------------------------------------------------------------------------
-            case "loadmenu": {
-                System.out.println("Loading menu...");
+            case "loadMenuBasic": {
+                System.out.println("Loading basic menu...");
                 ArrayList<DishesDbDetails> isLoadedal = impl.loadMenu();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    System.out.println("Db empty. Please add before loading again.");
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
+                    System.out.println("Db not empty. Here you go.");
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
+                    reply = true;
                 }
-                return true;
+                return reply;
             }
             case "deleteMenu": {
                 System.out.println("Deleting menu...");
@@ -430,29 +451,38 @@ public class SocketThread extends Thread implements Runnable {
             case "loadIngredients": {
                 System.out.println("Loading ingredients...");
                 ArrayList<IngredientsDbDetails> isLoadedal = impl.loadIngr();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
             case "searchIngredients": {
                 System.out.println("Looking for ingredients...");
+                String dish = null;
                 try {
-                    String dish = (String) inputFromClient.readUnshared();
-                    ArrayList<IngredientsDbDetails> ingrAl = impl.searchIngredients(dish);
-                    if (!ingrAl.isEmpty()) {
-                        outputToClient.writeUnshared(ingrAl);
-                        outputToClient.flush();
-                        reply = true;
-                    } else {
-                        reply = false;
-                    }
+                    dish = (String) inputFromClient.readUnshared();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                }
+                ArrayList<IngredientsDbDetails> ingrAl = impl.searchIngredients(dish);
+                if (ingrAl == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
+                    outputToClient.writeUnshared(ingrAl);
+                    outputToClient.flush();
+                    reply = true;
                 }
                 return reply;
             }
@@ -521,12 +551,14 @@ public class SocketThread extends Thread implements Runnable {
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
+                    System.out.println("Input read. Calling saveIngredients");
                     reply = impl.saveIngredients(dish, arrayListToReturn);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
                 return reply;
             }
+
 
             //MENU ------------------------------------------------------------------------------------------
             case "loadThisMenu" : {
@@ -543,12 +575,17 @@ public class SocketThread extends Thread implements Runnable {
                     LocalDate date = LocalDate.parse(dateString);
                     isLoadedal = impl.loadThisMenu(date);
                 }
-                if (!isLoadedal.isEmpty()) {
+
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -567,12 +604,16 @@ public class SocketThread extends Thread implements Runnable {
                     LocalDate date = LocalDate.parse(dateString);
                     isLoadedal = impl.loadIngr(date);
                 }
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -581,12 +622,16 @@ public class SocketThread extends Thread implements Runnable {
             case "loadSuppliers": {
                 System.out.println("Loading suppliers...");
                 ArrayList<SupplierDbDetails> isLoadedal = impl.loadDataSuppliers();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -632,12 +677,16 @@ public class SocketThread extends Thread implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<CodRifChildDbDetails> isLoadedal = impl.loadDataIngr(rif);
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -662,12 +711,16 @@ public class SocketThread extends Thread implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<DishesDbDetails> isLoadedal = impl.loadMenuWithThisSupplier(rif);
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -680,12 +733,16 @@ public class SocketThread extends Thread implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<IngredientsDbDetails> isLoadedal = impl.loadNoIngr(rif);
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -724,12 +781,16 @@ public class SocketThread extends Thread implements Runnable {
             case "loadCoachOperator": {
                 System.out.println("Loading coach operator...");
                 ArrayList<SupplierDbDetails> isLoadedal = impl.loadDataCoachOperator();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -834,12 +895,16 @@ public class SocketThread extends Thread implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<SpecialDbDetails> isLoadedal = impl.loadInterniWithAllergies(LocalDate.parse(rif));
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -857,12 +922,16 @@ public class SocketThread extends Thread implements Runnable {
             }
             case "loadSpecialMenu": {
                 ArrayList<SpecialMenuDbDetails> isLoadedal = impl.loadSpecialMenu();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -934,12 +1003,16 @@ public class SocketThread extends Thread implements Runnable {
                     e.printStackTrace();
                 }
                 ArrayList<BusPlateCapacityDbDetails> isLoadedal = impl.loadDataBus(rif);
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -947,12 +1020,16 @@ public class SocketThread extends Thread implements Runnable {
             case "loadDataTrip": {
                 System.out.println("Loading data trip...");
                 ArrayList<TripTableDbDetails> isLoadedal = impl.loadDataTrip();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -974,24 +1051,32 @@ public class SocketThread extends Thread implements Runnable {
             case "loadChildTrip": {
                 System.out.println("Loading child for trip...");
                 ArrayList<ChildTripDbDetails> isLoadedal = impl.loadChildTrip();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
             case "loadStaffTrip": {
                 System.out.println("Loading staff for trip...");
                 ArrayList<StaffTripDbDetails> isLoadedal = impl.loadStaffTrip();
-                if (!isLoadedal.isEmpty()) {
+                if (isLoadedal == null) {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    reply = false;
+                } else {
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
                     reply = true;
-                } else {
-                    reply = false;
                 }
                 return reply;
             }
@@ -1064,12 +1149,16 @@ public class SocketThread extends Thread implements Runnable {
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     ArrayList<ChildSelectedTripDbDetails> loadedAl = impl.loadTripSelectedChildren(depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -1086,12 +1175,16 @@ public class SocketThread extends Thread implements Runnable {
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     ArrayList<StaffSelectedTripDbDetails> loadedAl = impl.loadTripSelectedStaff(depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -1232,13 +1325,18 @@ public class SocketThread extends Thread implements Runnable {
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     ArrayList<ChildSelectedTripDbDetails> loadedAl = impl.loadWhoTrip(depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
+                    return reply;
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -1254,13 +1352,18 @@ public class SocketThread extends Thread implements Runnable {
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     ArrayList<CodRifChildDbDetails> loadedAl = impl.loadBusTrip(depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
+                    return reply;
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -1276,12 +1379,16 @@ public class SocketThread extends Thread implements Runnable {
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     ArrayList<SolutionDbDetails> loadedAl = impl.loadSolution(depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -1423,12 +1530,16 @@ public class SocketThread extends Thread implements Runnable {
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     ArrayList<ChildSelectedTripDbDetails> loadedAl = impl.loadMissing(arrayListToReturn, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();

@@ -123,7 +123,6 @@ public class MenuController implements Initializable {
             }}
         );
         tableMenu.getItems().clear();
-        handleLoad();
     }
 
 
@@ -142,6 +141,9 @@ public class MenuController implements Initializable {
                 tableMenu.setItems(null);
                 tableMenu.setItems(menu);
                 selectedMenu = null;
+            }
+            else {
+                System.out.println("No menu here for you! Add one to continue.");
             }
         } catch (RemoteException e) {
             e.printStackTrace();

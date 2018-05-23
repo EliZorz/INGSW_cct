@@ -2167,12 +2167,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 }
             }
 
-        } catch (SQLException e){
+        } catch (Exception e){
+            e.printStackTrace();
             if(loadThisMenu(date) != null){
                 deleteMenu(date);
                 return false;
             }
-            e.printStackTrace();
         } finally {
             try {
                 if (st != null ) {

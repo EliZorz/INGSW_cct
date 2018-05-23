@@ -332,8 +332,7 @@ public class newMenuController implements Initializable {
                         label1.setText("Success!!");
                     }
                 }
-                else
-                if(u.updateMenu(num, entree, main, dessert, side, drink, day, LocalDate.parse(selectedMenu[6]))){
+                else if(u.updateMenu(num, entree, main, dessert, side, drink, day, LocalDate.parse(selectedMenu[6]))){
                     label1.setText("success!!");
                     selectedMenu = null;
                 }
