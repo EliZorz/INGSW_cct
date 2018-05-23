@@ -12,7 +12,7 @@
       <children>
         <ImageView fitHeight="150.0" fitWidth="156.0" layoutX="36.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="121.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="35.599998474121094" AnchorPane.topAnchor="24.0">
                   <image>
-                     <Image url="@../../../2257dd4fc102954.jpg" />
+                     <Image url="@../../../scoolTheme.jpg" />
                   </image></ImageView>
         <Button layoutX="78.0" layoutY="228.0" mnemonicParsing="false" onAction="#logout" AnchorPane.bottomAnchor="28.0" AnchorPane.rightAnchor="75.0">
           <graphic>

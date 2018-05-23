@@ -413,8 +413,7 @@ public class ChildController implements Initializable {
             this.renameLabel("Insert data.");
 
 
-
-        }else if(u.controllCF(cf)){
+        }else if(!u.controllCF(cf)){
             this.renameLabel("Change child fiscal code");
         }
             else {

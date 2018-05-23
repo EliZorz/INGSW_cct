@@ -634,6 +634,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         PreparedStatement st = null;
         String queryControll = "SELECT * FROM interni WHERE CF = '"+ CF+"'";
+        Boolean controll = false;
 
         try{
             st = this.connHere().prepareStatement(queryControll);
@@ -646,14 +647,22 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             if(!result.next()){
                 System.out.println("No CF like this in DB");
                 result.close();
-                return true;
+                controll = true;
             }
+            else
+                controll = false;
             result.close();
-            return false;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        try {
+            if (st != null)
+                st.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return controll;
 
     }
 
