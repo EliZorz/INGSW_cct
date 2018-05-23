@@ -20,7 +20,7 @@ class CoachOperatorsControllerTest {
     }
 
 
-    @Before
+    @Test
     void testAddCoachOperator() throws RemoteException {
         assertTrue(si.addDataCoachOperator("OO", "12", "AS", "1234", "AAAAS", "12345", "AB"));
     }
@@ -60,13 +60,30 @@ class CoachOperatorsControllerTest {
         assertTrue(si.updateCoachOperator("OKKK", "12", "13", "AAA", "123", "ASDF", "12345", "AB"));
     }
 
+    @Test
+    void testLoadDataBus() throws RemoteException{
+        assertNotNull(si.loadDataBus("13"));
+    }
 
+    @Test
+    void testLoadNullDataBus() throws RemoteException{
+        assertNull(si.loadDataBus(null));
+    }
+    @Test
+    void testDeleteCoachOperatorBus() throws RemoteException{
+        assertTrue(si.deleteCoachOperatorBus("AB"));
+    }
+
+    @Test
+    void testNullDeleteCoachOperatorBus() throws RemoteException{
+        assertFalse(si.deleteCoachOperatorBus(null));
+    }
     @Test
     void testDeleteNullCoachOperator() throws RemoteException{
         assertFalse(si.deleteCoachOperator(null));
     }
 
-    @After
+    @Test
     void testDeleteCoachOperator() throws RemoteException{
         assertTrue(si.deleteCoachOperator("13"));
     }

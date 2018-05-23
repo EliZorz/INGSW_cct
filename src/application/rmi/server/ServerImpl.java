@@ -1410,7 +1410,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
          */
         PreparedStatement st = null;
         String queryDeleteBus = "DELETE FROM bus WHERE Targa = '" + plate + "';";
-
+        if(plate == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryDeleteBus);
             st.executeUpdate(queryDeleteBus);
@@ -1705,6 +1706,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryLoad = "SELECT * FROM bus " +
                 "WHERE Noleggio_PIVA = '" + selectedSupplier + "';";
 
+        if(selectedSupplier == null)
+            return null;
         try{
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
