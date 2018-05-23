@@ -610,7 +610,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "Indirizzo='" + address + "', CAP='" + cap + "', Provincia='" + province + "', Pediatra='" + isDoc + "', " +
                 "Tutore = '" + isGuardian + "', Contatto = '" + isContact + "' " +
                 "WHERE CF = '" + oldcf + "';";
-
+        if(oldcf == null || cf == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryEdit);
             st.executeUpdate();

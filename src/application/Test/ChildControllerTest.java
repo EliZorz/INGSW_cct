@@ -19,7 +19,7 @@ class ChildControllerTest {
         si = new ServerImpl();
     }
 
-
+    //ADD CHILD
     @Test
     void testAddChild() throws RemoteException{
         ArrayList<String> allergies = new ArrayList<>();
@@ -33,9 +33,10 @@ class ChildControllerTest {
         });
     }
 
+    //CONTROLL FISCAL CODE TO HAVE NO DOUBLE FC IN DB
     @Test
     void testControllCF() throws RemoteException {
-        assertFalse(si.controllCF("0"));
+        assertFalse(si.controllCF("A0"));
     }
 
     @Test
@@ -43,26 +44,19 @@ class ChildControllerTest {
         assertTrue(si.controllCF(null));
     }
 
+    //LOAD CHILD
     @Test
     void testLoadChild() throws RemoteException {
         assertNotNull(si.loadData());
     }
 
-    @Test
-    void testLoadContact() throws RemoteException{
-        assertNotNull(si.loadDataContacts("0"));
-    }
+    //ADD CONTACT
 
     @Test
     void testNoContactAddChild(){
         Assertions.assertThrows(NullPointerException.class, () -> {
             si.addData("AAA", "BBB", "1",LocalDate.parse("1991-11-11"), "AAA", "ABB", "BCC", "1234", "AS",null, null, null, null, null, null, null, null, null, null, null, false, false,  false );
         });
-    }
-
-    @Test
-    void testLoadNullContact() throws RemoteException {
-        assertNull(si.loadDataContacts(null));
     }
 
     @Test
@@ -101,6 +95,21 @@ class ChildControllerTest {
         assertFalse(si.addContact(children, "OKOK", "AA", "99", "EEE", "1234", LocalDate.parse("1976-11-11"), "AAA", "AA", "00000", "WE", false, false, false));
     }
 
+    //LOAD CONTACT
+
+    @Test
+    void testLoadContact() throws RemoteException{
+        assertNotNull(si.loadDataContacts("0"));
+    }
+
+    @Test
+    void testLoadNullContact() throws RemoteException {
+        assertNull(si.loadDataContacts(null));
+    }
+
+
+    //UPDATE CHILD
+
     @Test
     void testUpdateChild() throws RemoteException {
         ArrayList<String> allergies = new ArrayList<>();
@@ -115,6 +124,24 @@ class ChildControllerTest {
         });
     }
 
+
+
+    //UPDATE CONTACT
+
+    @Test
+    void testUpdateContact() throws RemoteException {
+        assertTrue(si.updateContact( "OKOK", "AA", "99", "990","EEE", "1234", LocalDate.parse("1976-11-11"), "AAA", "AA", "00000", "WE", 0, 0, 1));
+    }
+
+    @Test
+    void testNullUpdateContact() throws RemoteException {
+        assertFalse(si.updateContact( "OKOK", "AA", "99", null,"EEE", "1234", LocalDate.parse("1976-11-11"), "AAA", "AA", "00000", "WE", 0, 0, 1));
+
+    }
+
+
+    //DELETE CHILD
+
     @Test
     void testNullDeleteChild() throws RemoteException {
         assertFalse(si.deleteChild(null));
@@ -125,10 +152,13 @@ class ChildControllerTest {
        assertTrue( si.deleteChild("29999"));
     }
 
+
+    //DELETE CONTACT
+
     @Test
     void testDeleteContact() throws RemoteException{
         assertTrue(si.deleteContact("1"));
-        assertTrue(si.deleteContact("99"));
+        assertTrue(si.deleteContact("990"));
     }
 
     @Test
