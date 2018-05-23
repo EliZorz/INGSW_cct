@@ -318,16 +318,6 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleLoadData() {
-        txtName.clear();
-        txtSurname.clear();
-        txtCf.clear();
-        dpBirthday.setValue(LocalDate.now());
-        txtBornWhere.clear();
-        txtResidence.clear();
-        txtAddress.clear();
-        txtCap.clear();
-        txtProvince.clear();
-
         System.out.println("Loading data from ChildController...");
         try {
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
@@ -415,7 +405,7 @@ public class ChildController implements Initializable {
 
 
 
-        }else if(u.controllCF(cf)){
+        }else if( !u.controllCF(cf)){
             this.renameLabel("Change child fiscal code");
         }
         else {

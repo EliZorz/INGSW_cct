@@ -44,13 +44,7 @@ public class SocketThread extends Thread implements Runnable {
                 System.out.println("Ready to receive a message");
                 String line = (String) inputFromClient.readUnshared();
 
-                //LOGOUT FUNCTION -> bye
-                if(line.equals("bye")){
-                    s.close();
-                    System.out.println("Socket closed. Bye bye.");
-                    return;
-                }
-                else{
+
                     System.out.println("Received " + line + " from client # " + counter + "");
 
                     reply = doAction(line);  //passo il messaggio al doAction che decide cosa fare
@@ -61,7 +55,6 @@ public class SocketThread extends Thread implements Runnable {
                     System.out.println("Reply sent.");
                     outputToClient.reset();
 
-                }
             }
 
         } catch (Exception e) {
@@ -80,6 +73,8 @@ public class SocketThread extends Thread implements Runnable {
     private boolean doAction(String line) throws IOException {
 
         switch (line) {
+
+            //LOGIN AND LOGOUT ----------------------------------------------------
             case "login": {
                 System.out.println("Logging in...");
                 try {
@@ -91,6 +86,14 @@ public class SocketThread extends Thread implements Runnable {
                 }
                 return reply;
             }
+
+
+            case "bye" : {
+                System.out.println("Logging out");
+                s.close();
+                System.out.println("Socket closed. Bye bye.");
+            }
+
 
             //CHILDREN -----------------------------------------------------------------------
             case "loadChild": {
@@ -411,11 +414,8 @@ public class SocketThread extends Thread implements Runnable {
                 if (!isLoadedal.isEmpty()) {
                     outputToClient.writeUnshared(isLoadedal);
                     outputToClient.flush();
-                    reply = true;
-                } else {
-                    reply = false;
                 }
-                return reply;
+                return true;
             }
             case "deleteMenu": {
                 System.out.println("Deleting menu...");

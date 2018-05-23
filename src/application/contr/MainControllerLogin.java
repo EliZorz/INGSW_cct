@@ -5,19 +5,20 @@ import application.gui.GuiNew;
 import application.Interfaces.UserRemote;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.net.URL;
 import java.sql.SQLException;
-
-
+import java.util.ResourceBundle;
 
 
 /**
  * Created by ELISA on 23/03/2018.
  */
-public class MainControllerLogin {
+public class MainControllerLogin implements Initializable {
 
     public static String selected = null;  //per la scelta tra rmi e socket
 
@@ -35,11 +36,17 @@ public class MainControllerLogin {
     private Label lblStatus;
 
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        txtPassword.clear();
+        txtUsername.clear();
+
+    }
 
 
     public void handleLogin() throws SQLException {
-        String usr = txtUsername.getText().toString();
-        String pwd = txtPassword.getText().toString();
+        String usr = txtUsername.getText();
+        String pwd = txtPassword.getText();
 
         selected = (String) select.getSelectionModel().getSelectedItem();
 
@@ -48,7 +55,7 @@ public class MainControllerLogin {
                 System.out.println("User did not choose.\nRetry...");
                 lblStatus.setText("RMI or SOCKET?");
             } else
-                if(usr.trim().isEmpty() || usr == null || pwd.trim().isEmpty() || pwd == null){
+                if(usr.trim().isEmpty() || pwd.trim().isEmpty()){
                 this.renameLabel("Insert username, password");
 
             } else if(selected.equals("RMI")){

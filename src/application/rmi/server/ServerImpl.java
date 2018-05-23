@@ -85,6 +85,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
+    @Override
+    public boolean logout(){
+        return true;
+    }
+
+
     //CHILDREN---------------------------------------------------------------------------------------
     @Override
     public ArrayList<ChildDbDetails> loadData() throws RemoteException {
@@ -624,6 +630,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean controllCF(String CF) throws RemoteException{
         ResultSet result = null;
         PreparedStatement st = null;
+        boolean ok = false;
         String queryControll = "SELECT * FROM interni WHERE CF = '"+ CF+"'";
 
         try{
@@ -637,14 +644,29 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             if(!result.next()){
                 System.out.println("No CF like this in DB");
                 result.close();
-                return true;
+                ok = true;
             }
-            result.close();
-            return false;
+            else
+                ok = false;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return false;
+        
+        
+        return ok;
 
     }
 

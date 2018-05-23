@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public interface UserRemote extends Remote {
     boolean funzLog(String usr, String pwd) throws RemoteException; //questa funzione controllerà se username e password sono corretti
+    boolean logout() throws RemoteException;
 
 
     ArrayList<ChildDbDetails> loadData() throws RemoteException;

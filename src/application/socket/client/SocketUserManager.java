@@ -44,12 +44,24 @@ public class SocketUserManager implements UserRemote {
         }
         try{
             isLogged = (boolean) fromServer.readUnshared ();
-            System.out.println("Is logged? " +isLogged);
+            System.out.println("Has logged in? " +isLogged);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return isLogged;
+    }
+
+    //LOGOUT -------------------------------------------------------------------------
+    @Override
+    public boolean logout(){
+        try{
+            toServer.writeUnshared("bye");
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     //CHILDREN ---------------------------------------------------------------------------
@@ -277,13 +289,13 @@ public class SocketUserManager implements UserRemote {
             toServer.flush();
             toServer.writeObject(CF);
             toServer.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -329,9 +341,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -349,9 +361,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -395,9 +407,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -525,9 +537,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -545,9 +557,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -587,9 +599,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -663,9 +675,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -697,9 +709,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -719,9 +731,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -788,9 +800,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -891,7 +903,7 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException {
         boolean ok = false;
         try {
-            toServer.writeUnshared ("loadCoachOperators");
+            toServer.writeUnshared ("loadCoachOperator");
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -919,8 +931,8 @@ public class SocketUserManager implements UserRemote {
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         System.out.println(ok);
 
@@ -954,9 +966,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -978,9 +990,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1013,9 +1025,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1033,9 +1045,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1053,9 +1065,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1067,7 +1079,7 @@ public class SocketUserManager implements UserRemote {
         boolean ok = false;
         DishesDbDetails menu = null;
         try {
-            toServer.writeUnshared ("loadMenu");
+            toServer.writeUnshared ("loadThisMenu");
             toServer.flush();
             toServer.writeUnshared(String.valueOf(date));
             toServer.flush();
@@ -1209,9 +1221,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1289,9 +1301,9 @@ public class SocketUserManager implements UserRemote {
         }
 
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1309,9 +1321,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1329,9 +1341,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1396,9 +1408,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1465,9 +1477,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1499,9 +1511,9 @@ public class SocketUserManager implements UserRemote {
         }
 
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1531,9 +1543,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1552,9 +1564,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1572,9 +1584,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
@@ -1592,12 +1604,12 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             if(ok)
                 System.out.println("Read reply from server: deleted");
             else
                 System.out.println("Read reply from server: not deleted. Problems upcoming.");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1716,9 +1728,9 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
         try{
-            ok = fromServer.readBoolean();
+            ok = (boolean) fromServer.readUnshared();
             System.out.println("Read reply from server");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ok;
