@@ -1347,6 +1347,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryAdd = "INSERT INTO noleggio(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
                 " VALUES (?,?,?,?,?,?,?)";
 
+        if(piva == null || name == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryAdd);
             st.setString(1, name);
@@ -1380,6 +1382,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
                 "WHERE PIVA = '" + oldPiva + "';";
 
+        if(name == null || oldPiva == null || piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryEdit);
             st.executeUpdate();
@@ -1672,7 +1676,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean deleteCoachOperator(String piva) throws RemoteException{
         PreparedStatement st =null;
         String queryDelete = "DELETE FROM noleggio WHERE PIVA = '" + piva + "';";
-
+        if(piva == null)
+            return false;
         try{
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
@@ -1751,7 +1756,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "WHERE Targa = '"+ plate +"' AND Noleggio_PIVA = '"+ selectedSupplier +"';";
         String queryAdd = "INSERT INTO bus(Targa, capienza, Noleggio_PIVA)" +
                 " VALUES (?,?,?)";
-
+        if(plate == null || selectedSupplier == null || capacity == 0)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryFindDuplicateKey);
             resultDuplicate = st.executeQuery();

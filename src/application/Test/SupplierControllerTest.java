@@ -1,6 +1,8 @@
 package application.Test;
 
 import application.rmi.server.ServerImpl;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
@@ -17,7 +19,7 @@ class SupplierControllerTest {
         si = new ServerImpl();
     }
 
-    @Test
+    @Before
     void testAddSupplier() throws RemoteException{
         assertTrue(si.addDataSupplier("AAA","0","BBB", "1234", "CCC", "01234", "DD"));
         assertTrue(si.addDataSupplier("BBB", "1", "AAA", "000", "AAA", "12345", "AB"));
@@ -75,7 +77,7 @@ class SupplierControllerTest {
 
     }
 
-    @Test
+    @After
     void testDeleteSupplier() throws RemoteException {
         assertTrue(si.deleteSupplier("33", null));
     }
@@ -85,7 +87,7 @@ class SupplierControllerTest {
         assertFalse(si.deleteSupplier(null, null));
     }
 
-    @Test
+    @After
     void testDeleteSupplierWIthIngredients() throws RemoteException{
         assertTrue(si.deleteSupplier("1", si.loadNoIngr("1")));
     }
