@@ -24,7 +24,7 @@ public class NewMenuController implements Initializable {
 
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> searchedIngredients = FXCollections.observableArrayList();
-    public ArrayList<String> selectedIngredients = new ArrayList<>();
+    private ArrayList<String> selectedIngredients = new ArrayList<>();
 
     private String selectedDish = null;
 
@@ -283,7 +283,7 @@ public class NewMenuController implements Initializable {
             controllIngredients = true;
         }
         else {
-            label1.getText().equals("This plate already exists");
+            label1.setText("This plate already exists");
             deselect();
             selectedIngredients = new ArrayList<>();
             controllIngredients = true;

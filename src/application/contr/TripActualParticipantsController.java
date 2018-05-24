@@ -17,9 +17,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
 
-/**
- * Created by ELISA on 23/04/2018.
- */
+
 public class TripActualParticipantsController implements Initializable {
 
     private ObservableList<TripTableGuiDetails> tripObsList = FXCollections.observableArrayList();
