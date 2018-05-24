@@ -170,6 +170,8 @@ public class StaffController implements Initializable {
                 txtCap.setText(newSelection.getCap());
                 txtProvince.setText(newSelection.getProvince());
 
+                btnAdd.setDisable(true);
+
             }
         });
 
@@ -221,7 +223,7 @@ public class StaffController implements Initializable {
 
 
     @FXML
-    public void handleAddStaff() {
+    public void handleAddStaff() throws RemoteException {
         System.out.println("Adding new staff member to database...");
 
         String name = txtName.getText();
@@ -244,6 +246,8 @@ public class StaffController implements Initializable {
             //X ALLERGIES: IN MANUALE UTENTE -> "Se l'utente non seleziona nulla dal campo allergia,
             //il sistema vede tale scelta come se non ci fossero allergie da segnalare. Modificare il campo in seguito se necessario (i.g. per dimenticanza)
 
+        }else if(!u.controllCF(cf)){
+            this.renameLabel("Change Staff fiscal code");
         } else {
             System.out.println("Adding data to database...");
             try {
@@ -322,7 +326,7 @@ public class StaffController implements Initializable {
         }
     }
 
-    public void handleUpdateStaff() {
+    public void handleUpdateStaff() throws RemoteException {
         System.out.println("Loading data...");
 
         String name = txtName.getText();
@@ -341,7 +345,9 @@ public class StaffController implements Initializable {
                 || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
-        } else {
+        }else if(!oldcf.equals(cf) && !u.controllCF(cf)) {
+            this.renameLabel("Change fiscal code");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.updateStaff(surname, name, oldcf, cf, mail, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
@@ -353,6 +359,7 @@ public class StaffController implements Initializable {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            btnAdd.setDisable(false);
         }
 
     }

@@ -598,6 +598,8 @@ public class ChildController implements Initializable {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
+        } else if(!u.controllContactCF(cf)){
+        this.renameLabel("Change contact fiscal code");
         }else {
 
             System.out.println("Adding data to database...");
@@ -654,7 +656,9 @@ public class ChildController implements Initializable {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
-        } else {
+        } else if(!oldcfContact.equals(cf) && !u.controllContactCF(cf)) {
+            this.renameLabel("Change Contact fiscal code");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl

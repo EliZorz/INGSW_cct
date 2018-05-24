@@ -30,7 +30,7 @@ public interface UserRemote extends Remote {
     boolean addContact(ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
     boolean deleteContact (String oldcfContact) throws RemoteException;
     boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException;
-
+    boolean controllContactCF(String CF) throws RemoteException;
 
     ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException;
     boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;

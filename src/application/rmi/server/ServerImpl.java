@@ -681,6 +681,49 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     }
 
+    @Override
+    public boolean controllContactCF(String CF) throws RemoteException{
+        ResultSet result = null;
+        PreparedStatement st = null;
+        String queryControll = "SELECT * FROM adulto WHERE CF = '"+ CF+"'";
+        Boolean controll = false;
+
+        try{
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No CF like this in DB");
+                result.close();
+                controll = true;
+            }
+            else
+                controll = false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return controll;
+
+    }
+
 
     //STAFF---------------------------------------------------------------------------------------
     @Override

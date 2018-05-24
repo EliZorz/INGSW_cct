@@ -25,7 +25,7 @@ public class SocketThread extends Thread implements Runnable {
     }
 
 
-    boolean reply = false;
+    private boolean reply = false;
 
     @Override
     public void run() {
@@ -309,6 +309,17 @@ public class SocketThread extends Thread implements Runnable {
                 try {
                     String cf = (String) inputFromClient.readObject();
                     reply = impl.controllCF(cf);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+            case "controllContactCF": {
+                System.out.println("Controlling cf...");
+                try {
+                    String cf = (String) inputFromClient.readObject();
+                    reply = impl.controllContactCF(cf);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

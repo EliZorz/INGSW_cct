@@ -484,6 +484,26 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
+    @Override
+    public boolean controllContactCF(String CF) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeObject("controllContactCF");
+            toServer.flush();
+            toServer.writeObject(CF);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
 
     //STAFF ------------------------------------------------------------------------------------------
     @Override
@@ -637,6 +657,8 @@ public class SocketUserManager implements UserRemote {
         }
         return ok;
     }
+
+
 
     //SUPPLIERS ------------------------------------------------------------------------
     @Override
