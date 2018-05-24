@@ -2,6 +2,7 @@ package application.Test;
 
 import application.rmi.server.ServerImpl;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,12 +48,21 @@ public class TripPartecipantsControllerTest {
     void testLoadPartecipants() throws RemoteException{
         assertNotNull(si.loadTripSelectedChildren("CR", "2220-11-11", "2220-11-13", "AOK", "2220-11-12", "ER"));
         assertNotNull(si.loadTripSelectedStaff("CR", "2220-11-11", "2220-11-13", "AOK", "2220-11-12", "ER"));
+    }
 
+    @Test
+    void testNullLoadPartecipants() throws RemoteException{
+        assertNull(si.loadTripSelectedChildren(null, null, null, null, null, null));
     }
 
     @Test
     void testLoadWhoTrip() throws RemoteException{
         assertNotNull(si.loadWhoTrip("CR", "2220-11-11", "2220-11-13", "AOK", "2220-11-12", "ER"));
+    }
+
+    @Test
+    void testNullLoadWhoTrip() throws RemoteException {
+        assertNull(si.loadWhoTrip(null, null, null, null, null,null));
     }
 
     //NOT AVAILABLE
@@ -67,6 +77,13 @@ public class TripPartecipantsControllerTest {
         assertNull(si.findNotAvailableStaff(partecipants, "2220-11-11", "2220-11-13"));
     }
 
+    @Test
+    void testNullNoAvailableChild(){
+        Assertions.assertThrows(NullPointerException.class,() ->{
+            si.findNotAvailableStaff(null, null, null);
+        });
+    }
+
     //TOTAL PARTECIPANTS
 
     @Test
@@ -76,6 +93,13 @@ public class TripPartecipantsControllerTest {
         ArrayList<String> staff = new ArrayList<>();
         staff.add("1");
         assertNotNull(si.howManyActualParticipants(partecipants, staff));
+    }
+
+    @Test
+    void testNullPartecipants(){
+        Assertions.assertThrows(NullPointerException.class, () ->{
+            si.howManyActualParticipants(null, null);
+        });
     }
 
 
