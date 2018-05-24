@@ -881,6 +881,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryDeleteCodID = "DELETE FROM personaleint WHERE Interni_CF = '" + cf + "';";
 
         //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
+        if(cf == null )
+            return false;
 
         try {
             st = this.connHere().prepareStatement(queryDeleteCodID);
@@ -2702,6 +2704,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryDelete = "DELETE FROM gita " +
                 "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ dateDep +"' AND DataOraRit ='"+ dateCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ dateArr +"' AND Destinazione ='"+ arr + "';";
+
+        if(dep == null || dateDep == null || dateCom == null || dateArr == null || arr == null)
+            return false;
 
         try{
             st = this.connHere().prepareStatement(queryDelete);
