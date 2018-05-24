@@ -4,12 +4,15 @@ import application.LookupCall;
 import application.gui.GuiNew;
 import application.Interfaces.UserRemote;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -44,7 +47,7 @@ public class MainControllerLogin implements Initializable {
     }
 
 
-    public void handleLogin() throws SQLException {
+    public void handleLogin(Event event) throws SQLException {
         String usr = txtUsername.getText();
         String pwd = txtPassword.getText();
 
@@ -68,7 +71,10 @@ public class MainControllerLogin implements Initializable {
                 if (result){
 
                     this.renameLabel("Logged in.");
+
+                    ((Node)(event.getSource())).getScene().getWindow().hide();
                     new GuiNew("MenuIniziale");
+
 
                 } else{
                     this.renameLabel("Insert correct data.");

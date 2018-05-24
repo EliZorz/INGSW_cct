@@ -3274,36 +3274,37 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "OR (G2.DataOraPar <= G1.DataOraPar AND G1.DataOraPar <= G2.DataOraRit)) " +
                 "AND G1.DataOraPar = '"+ selectedTripDep + "' AND G1.DataOraRit = '"+ selectedTripCom + "')";
 
-                System.out.println("Found NOT AVAILABLE staff members? YES/NO");
-                for(String staff : selectedStaffArray) {
+        System.out.println("Found NOT AVAILABLE staff members? YES/NO");
+        for(String staff : selectedStaffArray) {
+            try {
+                st = this.connHere().prepareStatement(queryFindNotAvailableStaff);
+                st.setString(1,staff);
+                resultStaff = st.executeQuery();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (!resultStaff.next()) {  //NON ho staff che partecipa a gite sovrapposte
+                    System.out.println("NO");
+                } else { //HO staff che partecipa a gite sovrapposte
+                    System.out.println("YES");
+                    resultStaff.beforeFirst();
                     try {
-                        st = this.connHere().prepareStatement(queryFindNotAvailableStaff);
-                        st.setString(1,staff);
-                        resultStaff = st.executeQuery();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        if (!resultStaff.next()) {  //NON ho staff che partecipa a gite sovrapposte
-                            System.out.println("NO");
-                            return null;
-                        } else { //HO staff che partecipa a gite sovrapposte
-                            System.out.println("YES");
-                            resultStaff.beforeFirst();
-                            try {
-                                while (resultStaff.next()) {
-                                    CodRifChildDbDetails prova = new CodRifChildDbDetails(resultStaff.getString(1));
-                                    staffNotAvailableArrayList.add(prova);
-                                }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
+                        while (resultStaff.next()) {
+                            CodRifChildDbDetails prova = new CodRifChildDbDetails(resultStaff.getString(1));
+                            staffNotAvailableArrayList.add(prova);
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
+        if(staffNotAvailableArrayList.isEmpty())
+            return null;
         return staffNotAvailableArrayList;
     }
 
@@ -3337,7 +3338,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             try {
                 if (!resultChild.next()) {  //NON ho staff che partecipa a gite sovrapposte
                     System.out.println("NO");
-                    return null;
                 } else { //HO staff che partecipa a gite sovrapposte
                     System.out.println("YES");
                     resultChild.beforeFirst();
@@ -3355,6 +3355,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
         }
 
+        if(childNotAvailableArrayList.isEmpty())
+            return null;
         return childNotAvailableArrayList;
     }
 
