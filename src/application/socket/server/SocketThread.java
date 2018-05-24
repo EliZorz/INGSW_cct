@@ -429,6 +429,17 @@ public class SocketThread extends Thread implements Runnable {
                 return reply;
             }
 
+            case "controllPiva": {
+                System.out.println("Controlling supplier...");
+                try {
+                    String piva = (String) inputFromClient.readObject();
+                    reply = impl.controllPiva(piva);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
 
             //MENU BASE -------------------------------------------------------------------------------
             case "loadMenuBasic": {

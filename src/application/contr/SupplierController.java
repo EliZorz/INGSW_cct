@@ -135,6 +135,8 @@ public class SupplierController implements Initializable{
                 txtCap.setText(newSelection.getCap());
                 txtProvince.setText(newSelection.getProvince());
 
+                btnAdd.setDisable(true);
+
             }
         });
 
@@ -176,7 +178,7 @@ public class SupplierController implements Initializable{
         }
     }
 
-    public void handleAddSupplier() {
+    public void handleAddSupplier() throws RemoteException {
         System.out.println("Adding new supplier to database...");
 
         String name = txtName.getText();
@@ -191,6 +193,8 @@ public class SupplierController implements Initializable{
                 || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
+        }else if(!u.controllPiva(piva)){
+            this.renameLabel("Change piva");
         } else {
             System.out.println("Adding data to database...");
             try {
@@ -212,7 +216,7 @@ public class SupplierController implements Initializable{
         }
     }
 
-    public void handleUpdateSupplier() {
+    public void handleUpdateSupplier() throws RemoteException {
         System.out.println("Loading data...");
         String name = txtName.getText();
         String piva = txtPiva.getText();
@@ -226,7 +230,9 @@ public class SupplierController implements Initializable{
                 || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
-        } else {
+        } else if(!oldPiva.equals(piva) && !u.controllPiva(piva)){
+            this.renameLabel("Change piva");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl

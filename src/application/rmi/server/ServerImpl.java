@@ -1358,6 +1358,49 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return ingrNo;
     }
 
+    @Override
+    public boolean controllPiva(String piva) throws RemoteException{
+        ResultSet result = null;
+        PreparedStatement st = null;
+        String queryControll = "SELECT * FROM fornitore WHERE PIVA = '"+ piva+"'";
+        Boolean controll = false;
+
+        try{
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No piva like this in DB");
+                result.close();
+                controll = true;
+            }
+            else
+                controll = false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return controll;
+
+    }
+
 //COACH OPERATORS ---------------------------------------------------------------------------------------------
 
     @Override

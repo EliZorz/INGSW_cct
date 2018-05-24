@@ -1164,6 +1164,27 @@ public class SocketUserManager implements UserRemote {
         return ok;
     }
 
+    @Override
+    public boolean controllPiva(String piva) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeObject("controllPiva");
+            toServer.flush();
+            toServer.writeObject(piva);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
+
     //MENU -------------------------------------------------------------------------------
     @Override
     public DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException {

@@ -46,7 +46,7 @@ public interface UserRemote extends Remote {
     boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException;
     ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException;
     ArrayList<IngredientsDbDetails> loadNoIngr (String selectedSupplier) throws RemoteException;
-
+    boolean controllPiva(String piva) throws RemoteException;
 
     ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException;
     boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
