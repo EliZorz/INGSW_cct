@@ -186,7 +186,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         StringBuilder allAllergies = new StringBuilder();
         if (!selectedAllergy.isEmpty()) {
             for (String s : selectedAllergy) {
-                allAllergies.append(selectedAllergy.toString() + ", ");
+                allAllergies.append(s).append(", ");
             }
             System.out.println(allAllergies.toString());
         } else {
@@ -340,16 +340,62 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         PreparedStatement st = null;
 
-        //divide items from arraylist selectedAllergy into string to put into database
+        //first load allergies in database
+        //then divide items from arraylist selectedAllergy into string
+        // finally put allAllergies into database
+        ResultSet resultPrev = null;
+        ArrayList<String> prevAllergies = new ArrayList<>();
+        String queryLoadPreviousAllergies = "SELECT Allergie FROM project.interni WHERE CF ='"+oldcf+"';";
+        try {
+            st = this.connHere().prepareStatement(queryLoadPreviousAllergies);
+            resultPrev = st.executeQuery(queryLoadPreviousAllergies);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if(!resultPrev.next())
+                System.out.println("Error, there's not even 'none' written in database.");
+            else {
+                resultPrev.beforeFirst();
+                System.out.println("Processing ResultSet");
+                while(resultPrev.next()){
+                    String prevAllergyString = resultPrev.getString(1);
+                    List<String> prevAllergy = new ArrayList<>(Arrays.asList(prevAllergyString.split(", ")));
+                    if(!prevAllergy.equals("none")){
+                        System.out.println(prevAllergy);
+                        System.out.println(prevAllergy + " already in db for this child");
+                    }
+                    //se prevAllergy == "none" allora lascio ArrayList vuoto
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         StringBuilder allAllergies = new StringBuilder();
+
+        //create string to put into db
         if (!selectedAllergy.isEmpty()) {
-            for (String s : selectedAllergy) {
-                allAllergies.append(selectedAllergy.toString() + ", ");
+
+            for(String s : selectedAllergy){
+                if(!prevAllergies.contains(s)){
+                    prevAllergies.add(s);
+                    System.out.println(s + " not in database yet.");
+                }
+                else
+                    System.out.println(s + " already into database...");
+            }
+
+            //create string from arrayList
+            for (String s : prevAllergies) {
+                allAllergies.append(s).append(", ");
             }
             System.out.println(allAllergies.toString());
         } else {
             allAllergies.append("none");
         }
+
 
         String queryEdit = "UPDATE interni SET Cognome ='" + surname + "', Nome ='" + name + "', CF ='" + cf + "', " +
                 "DataNascita ='" + Date.valueOf(bornOn) + "', CittaNascita='" + bornWhere + "', Residenza='" + residence + "', " +
@@ -763,7 +809,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         StringBuilder allAllergies = new StringBuilder();
         if (!selectedAllergy.isEmpty()) {
             for (String s : selectedAllergy) {
-                allAllergies.append(selectedAllergy.toString() + ", ");
+                allAllergies.append(s).append(", ");
             }
             System.out.println(allAllergies.toString());
         } else {
@@ -899,16 +945,60 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean updateStaff(String name, String surname, String oldcf, String cf, String mail, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException {
         PreparedStatement st = null;
 
-        //divide items from arraylist selectedAllergy into string to put into database
+        ResultSet resultPrev = null;
+        ArrayList<String> prevAllergies = new ArrayList<>();
+        String queryLoadPreviousAllergies = "SELECT Allergie FROM project.interni WHERE CF ='"+oldcf+"';";
+        try {
+            st = this.connHere().prepareStatement(queryLoadPreviousAllergies);
+            resultPrev = st.executeQuery(queryLoadPreviousAllergies);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            if(!resultPrev.next())
+                System.out.println("Error, there's not even 'none' written in database.");
+            else {
+                resultPrev.beforeFirst();
+                System.out.println("Processing ResultSet");
+                while(resultPrev.next()){
+                    String prevAllergyString = resultPrev.getString(1);
+                    List<String> prevAllergy = new ArrayList<>(Arrays.asList(prevAllergyString.split(", ")));
+                    if(!prevAllergy.equals("none")){
+                        System.out.println(prevAllergy);
+                        System.out.println(prevAllergy + " already in db for this staff member");
+                    }
+                    //se prevAllergy == "none" allora lascio ArrayList vuoto
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         StringBuilder allAllergies = new StringBuilder();
+
+        //create string to put into db
         if (!selectedAllergy.isEmpty()) {
-            for (String s : selectedAllergy) {
-                allAllergies.append(selectedAllergy.toString() + ", ");
+
+            for(String s : selectedAllergy){
+                if(!prevAllergies.contains(s)){
+                    prevAllergies.add(s);
+                    System.out.println(s + " not in database yet.");
+                }
+                else
+                    System.out.println(s + " already into database...");
+            }
+
+            //create string from arrayList
+            for (String s : prevAllergies) {
+                allAllergies.append(s).append(", ");
             }
             System.out.println(allAllergies.toString());
         } else {
             allAllergies.append("none");
         }
+
+
 
         String queryEdit = "UPDATE interni SET Cognome ='" + surname + "', Nome ='" + name + "', CF ='" + cf + "', " +
                 "DataNascita ='" + Date.valueOf(bornOn) + "', CittaNascita ='" + bornWhere + "', Residenza ='" + residence + "', " +
@@ -2531,7 +2621,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement stAdd = null;
         ArrayList<IngredientsDbDetails> ingredients;
 
-        String queryUpdate = "UPDATE project.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and CF = '"+special.getCF()+"' and Allergie = '"+special.getAllergie()+"'";
+        String queryUpdate = "UPDATE project.menu_special SET entrees ='"+entree+"' , main_courses = '"+main+"' , dessert = '"+dessert+"' , side_dish ='"+side+"' , drink ='"+drink+"' where date='"+date+"' and interni_CF = '"+special.getCF()+"' and interni_Allergie = '"+special.getAllergie()+"'";
         String queryDelete = "DELETE FROM  project.menu_special_has_dish_ingredients WHERE menu_special_date = '"+date+"' and  menu_special_CF='"+special.getCF()+"'";
         String queryAdd = "INSERT INTO project.menu_special_has_dish_ingredients (menu_special_date, dish_ingredients_Nome_piatto, dish_ingredients_ingredients_ingredient, menu_special_CF, menu_special_allergie)"+"VALUES(?,?,?,?,?)";
         try{
@@ -2943,7 +3033,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
             }
         }
-
         return totParticipants;
     }
 
@@ -4033,6 +4122,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try{
             if( !resultPeopleOnBus.next() ) {
                 System.out.println("No people for this trip in DB");
+                return null;
             } else {
                 resultPeopleOnBus.beforeFirst();
                 System.out.println("Processing ResultSet");
@@ -4072,6 +4162,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         //delete from who is here who should be on the bus to find who is on the wrong bus -> null or someone, I return -> Controller will highlight
         selectedChildCfArrayList.removeAll(correctArrayList);
+
+        if(selectedChildCfArrayList.isEmpty()){
+            System.out.println("Empty arrayList. Return null for findParticipantsOnWrongBus");
+            return null;
+        }
 
         return selectedChildCfArrayList;  //contains now just who shouldn't be here
 
@@ -4132,7 +4227,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet resultPeopleOnBus = null;
         ArrayList<CodRifChildDbDetails> peopleOnBusArrayList = new ArrayList<>();
 
-
         String queryFindPeopleOnThisBus = "SELECT interni_CF" +
                 " FROM interni_is_here" +
                 " WHERE bus_Targa = '"+ selectedBus +"'" +
@@ -4176,35 +4270,39 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             }
         }
 
-        selectedChildCfArrayList.removeAll(participantOnWrongBusArrayList);
-        for(String notWrong : selectedChildCfArrayList){
-            System.out.println(notWrong + " is not wrong");
-        }
-
-        ArrayList<String> notMissingArrayList = new ArrayList<>();
-        ArrayList<String> peopleOnBusArrayListString = new ArrayList<>();
-        for (CodRifChildDbDetails object : peopleOnBusArrayList) {
-            peopleOnBusArrayListString.add(Objects.toString(object.getCodRif(), null));
-        }
-
-        for(String childOnBus : peopleOnBusArrayListString){
-            System.out.println("NEXT who should be on is " + childOnBus);
-            for(String childNotWrong : selectedChildCfArrayList){
-                System.out.println("searching...");
-                if(childNotWrong.equals(childOnBus)){
-                    notMissingArrayList.add(childNotWrong);
-                    System.out.println("And here he/she is!");
-                }
+        if(participantOnWrongBusArrayList != null) {
+            selectedChildCfArrayList.removeAll(participantOnWrongBusArrayList);
+            for (String notWrong : selectedChildCfArrayList) {
+                System.out.println(notWrong + " is not wrong");
             }
         }
+            ArrayList<String> notMissingArrayList = new ArrayList<>();
+            ArrayList<String> peopleOnBusArrayListString = new ArrayList<>();
+            for (CodRifChildDbDetails object : peopleOnBusArrayList) {
+                peopleOnBusArrayListString.add(Objects.toString(object.getCodRif(), null));
+            }
 
-        //delete from who is here who is selected (not missing) to find who is on the wrong bus -> null or someone, I return -> Controller will highlight
-        peopleOnBusArrayListString.removeAll(notMissingArrayList);
-        for(String voila : peopleOnBusArrayListString) {
-            System.out.println(voila + " IS NOT HERE! HELP!");
-        }
+            for (String childOnBus : peopleOnBusArrayListString) {
+                System.out.println("NEXT who should be on is " + childOnBus);
+                for (String childNotWrong : selectedChildCfArrayList) {
+                    System.out.println("searching...");
+                    if (childNotWrong.equals(childOnBus)) {
+                        notMissingArrayList.add(childNotWrong);
+                        System.out.println("And here he/she is!");
+                    }
+                }
+            }
 
-        return peopleOnBusArrayListString;  //contains now just who is missing
+            //delete from who is here who is selected (not missing) to find who is on the wrong bus -> null or someone, I return -> Controller will highlight
+            peopleOnBusArrayListString.removeAll(notMissingArrayList);
+            for (String voila : peopleOnBusArrayListString) {
+                System.out.println(voila + " IS NOT HERE! HELP!");
+            }
+
+            if(peopleOnBusArrayListString.isEmpty())
+                return null;
+
+            return peopleOnBusArrayListString;   //contains now just who is missing
 
     }
 

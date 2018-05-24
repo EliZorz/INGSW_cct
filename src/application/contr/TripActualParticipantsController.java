@@ -262,7 +262,7 @@ public class TripActualParticipantsController implements Initializable {
                 ArrayList<CodRifChildDbDetails> notAvailableChildArrayList = u.findNotAvailableChild(selectedChildCfArrayList, selectedTripDep, selectedTripCom);
 
                 //find out if some participants the user selected are already used in a concurrent trip
-                if (notAvailableStaffArrayList.isEmpty() && notAvailableChildArrayList.isEmpty()){
+                if (notAvailableStaffArrayList == null && notAvailableChildArrayList == null){
                     int[] totParticipantsSelectedArray = u.howManyActualParticipants(selectedChildCfArrayList, selectedStaffCfArrayList);
                     totChildren = totParticipantsSelectedArray[0];
                     totStaff = totParticipantsSelectedArray[1];

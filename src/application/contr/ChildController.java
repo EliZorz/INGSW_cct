@@ -322,6 +322,8 @@ public class ChildController implements Initializable {
         try {
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
             dataObsList.clear();
+            ingredientsObsList.clear();
+            tableIngr.setItems(null);
 
             if (childDbArrayList != null){
                 for(ChildDbDetails c : childDbArrayList){
@@ -750,26 +752,6 @@ public class ChildController implements Initializable {
     public void handleDeselect() {
         tableIngr.getSelectionModel().clearSelection();
 
-        txtName.clear();
-        txtSurname.clear();
-        txtCf.clear();
-        txtBornWhere.clear();
-        txtResidence.clear();
-        dpBirthday.setValue(LocalDate.now());
-        txtAddress.clear();
-        txtProvince.clear();
-        txtCap.clear();
-
-        txtProvinceContact.clear();
-        txtCapContact.clear();
-        txtAddressContact.clear();
-        txtBornWhereContact.clear();
-        dpBirthdayContact.setValue(LocalDate.now());
-        txtTelContact.clear();
-        txtMailContact.clear();
-        txtCfContact.clear();
-        txtNameContact.clear();
-        txtSurnameContact.clear();
     }
 
 

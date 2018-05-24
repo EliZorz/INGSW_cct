@@ -238,6 +238,7 @@ public class SpecialMenuController implements Initializable {
                 tabIngr.setItems(null);
                 tabIngr.setItems(ingredients);
             }
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }

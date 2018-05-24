@@ -1923,7 +1923,7 @@ public class SocketUserManager implements UserRemote {
     public ArrayList<StaffTripDbDetails> loadStaffTrip() throws RemoteException{
         boolean ok = false;
         try{
-            toServer.writeUnshared ("loadStaffTtrip");
+            toServer.writeUnshared ("loadStaffTrip");
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1976,7 +1976,7 @@ public class SocketUserManager implements UserRemote {
         int[] participantsFromServer = new int[2];
 
         try{
-            toServer.writeUnshared ("addSupplier");
+            toServer.writeUnshared ("addTrip");
             toServer.flush();
             toServer.writeUnshared (selectedChild);
             toServer.flush();
@@ -1997,14 +1997,21 @@ public class SocketUserManager implements UserRemote {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        boolean canProceed = false;
         try{
-            for(int i = 0; i<2 ; i++){
-                participantsFromServer[i] = fromServer.readInt();
-            }
-        }  catch (Exception e) {
+            canProceed = (boolean) fromServer.readUnshared();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        if(canProceed) {
+            try {
+                participantsFromServer[0] = (int) fromServer.readUnshared();
+                participantsFromServer[1] = (int) fromServer.readUnshared();
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2162,25 +2169,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isUnavailable = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof CodRifChildDbDetails) {
-                            CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isUnavailable = (boolean) fromServer.readUnshared();
+            System.out.println("Is there staff unavailable? " + isUnavailable);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(isUnavailable) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof CodRifChildDbDetails) {
+                                CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2212,25 +2226,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<CodRifChildDbDetails> arrayListToReturn = new ArrayList<>();
-
+        boolean isUnavailable = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof CodRifChildDbDetails) {
-                            CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isUnavailable = (boolean) fromServer.readUnshared();
+            System.out.println("Is db empty? " + isUnavailable);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(isUnavailable) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof CodRifChildDbDetails) {
+                                CodRifChildDbDetails myElement = (CodRifChildDbDetails) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2260,13 +2281,23 @@ public class SocketUserManager implements UserRemote {
             e.printStackTrace();
         }
 
+        boolean canProceed = false;
         try{
-            for(int i = 0; i<2 ; i++){
-                participants[i] = fromServer.readInt();
-            }
-        } catch (Exception e) {
+            canProceed = (boolean) fromServer.readUnshared();
+        } catch(Exception e){
             e.printStackTrace();
         }
+
+        if(canProceed) {
+            try {
+                for (int i = 0; i <= 1; i++) {
+                    participants[i] = (int) fromServer.readUnshared();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2545,25 +2576,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<String> arrayListToReturn = new ArrayList<>();
-
+        boolean areThere = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof String) {
-                            String myElement = (String) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            areThere = (boolean) fromServer.readUnshared();
+            System.out.println("Are there participants on wrong bus? " + areThere);   //true = there are participants on wrong bus
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(areThere) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof String) {
+                                String myElement = (String) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2607,25 +2645,32 @@ public class SocketUserManager implements UserRemote {
         }
 
         ArrayList<String> arrayListToReturn = new ArrayList<>();
-
+        boolean isMissing = false;
         try {
-            Object loaded = fromServer.readUnshared ();
-            if(loaded instanceof ArrayList<?>){
-                //get list
-                ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                if(loadedAl.size()>0){
-                    for (Object element : loadedAl) {
-                        if (element instanceof String) {
-                            String myElement = (String) element;
-                            arrayListToReturn.add(myElement);
-                        }
-                    }
-                }
-            }
+            isMissing = (boolean) fromServer.readUnshared();
+            System.out.println("Is someone missing? " + isMissing);      //true = someone's missing
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(isMissing) {
+            try {
+                Object loaded = fromServer.readUnshared();
+                if (loaded instanceof ArrayList<?>) {
+                    //get list
+                    ArrayList<?> loadedAl = (ArrayList<?>) loaded;
+                    if (loadedAl.size() > 0) {
+                        for (Object element : loadedAl) {
+                            if (element instanceof String) {
+                                String myElement = (String) element;
+                                arrayListToReturn.add(myElement);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             ok = (boolean) fromServer.readUnshared ();
             System.out.println("Read reply from server");
@@ -2742,7 +2787,7 @@ public class SocketUserManager implements UserRemote {
         boolean isEmpty = false;
         try {
             isEmpty = (boolean) fromServer.readUnshared();
-            System.out.println("Is db empty? " +isEmpty);
+            System.out.println("Is anyone missing? " + !isEmpty);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -91,7 +91,7 @@ public class StaffController implements Initializable {
     @FXML
     public TextField txtProvince;
     @FXML
-    public TableView tableIngr;
+    public TableView<IngredientsGuiDetails> tableIngr;
     @FXML
     public Button btnLoadIngredients;
     @FXML
@@ -198,6 +198,8 @@ public class StaffController implements Initializable {
         try {
             ArrayList<StaffDbDetails> staffDbArrayList = u.loadDataStaff();  //call method in Server Impl
             dataObsList.clear();
+            ingredientsObsList.clear();
+            tableIngr.setItems(null);
 
             if (staffDbArrayList != null){
                 for(StaffDbDetails c : staffDbArrayList){
@@ -303,16 +305,6 @@ public class StaffController implements Initializable {
 
     public void handleDeselect() {
         tableIngr.getSelectionModel().clearSelection();
-
-        txtName.clear();
-        txtSurname.clear();
-        txtCf.clear();
-        txtBornWhere.clear();
-        txtResidence.clear();
-        dpBirthday.setValue(LocalDate.now());
-        txtAddress.clear();
-        txtProvince.clear();
-        txtCap.clear();
 
     }
 

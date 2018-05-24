@@ -141,8 +141,10 @@ public class MenuController implements Initializable {
                 tableMenu.setItems(null);
                 tableMenu.setItems(menu);
                 selectedMenu = null;
+                labelStatus.setText("Loaded");
             }
             else {
+                labelStatus.setText(("No menu in database. Please add new."));
                 System.out.println("No menu here for you! Add one to continue.");
             }
         } catch (RemoteException e) {
