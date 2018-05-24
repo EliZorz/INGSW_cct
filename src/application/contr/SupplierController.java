@@ -176,6 +176,8 @@ public class SupplierController implements Initializable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        btnAdd.setDisable(false);
     }
 
     public void handleAddSupplier() throws RemoteException {
@@ -251,6 +253,7 @@ public class SupplierController implements Initializable{
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            btnAdd.setDisable(false);
         }
 
     }
@@ -259,6 +262,7 @@ public class SupplierController implements Initializable{
         System.out.println("Loading data...");
         DeleteSupplierController.selectedSupplier = txtPiva.getText();
         new GuiNew("deleteSupplier");
+        btnAdd.setDisable(false);
     }
 
     public void handleBackHomepage() {
@@ -284,6 +288,8 @@ public class SupplierController implements Initializable{
         txtAddress.clear();
         txtProvince.clear();
         txtCap.clear();
+
+        btnAdd.setDisable(false);
     }
 
     public void handleAddIngrToDb() {

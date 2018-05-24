@@ -440,6 +440,20 @@ public class SocketThread extends Thread implements Runnable {
                 return reply;
             }
 
+            case "controllBus": {
+                System.out.println("Controlling supplier...");
+                try {
+                    String plate = (String) inputFromClient.readObject();
+                    reply = impl.controllBus(plate);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+
+
+
 
             //MENU BASE -------------------------------------------------------------------------------
             case "loadMenuBasic": {

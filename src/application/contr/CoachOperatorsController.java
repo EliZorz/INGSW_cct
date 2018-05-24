@@ -155,6 +155,8 @@ public class CoachOperatorsController implements Initializable {
                 txtCap.setText(newSelection.getCap());
                 txtProvince.setText(newSelection.getProvince());
 
+                btnAdd.setDisable(true);
+
             }
         });
 
@@ -205,7 +207,7 @@ public class CoachOperatorsController implements Initializable {
         back.setDisable(false);
     }
 
-    public void handleAddSupplier() {
+    public void handleAddSupplier() throws RemoteException {
         System.out.println("Adding new staff member to database...");
 
         String name = txtName.getText();
@@ -220,6 +222,8 @@ public class CoachOperatorsController implements Initializable {
                 || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
+        }else if(!u.controllPiva(piva)){
+            this.renameLabel("Change piva");
         } else {
             System.out.println("Adding data to database...");
             try {
@@ -234,7 +238,7 @@ public class CoachOperatorsController implements Initializable {
         }
     }
 
-    public void handleUpdateSupplier() {
+    public void handleUpdateSupplier() throws RemoteException {
         System.out.println("Loading data...");
         String name = txtName.getText();
         String piva = txtPiva.getText();
@@ -248,7 +252,9 @@ public class CoachOperatorsController implements Initializable {
                 || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
-        } else {
+        } else if(!oldPiva.equals(piva) && !u.controllPiva(piva)){
+            this.renameLabel("Change fiscal code");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.updateCoachOperator(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
@@ -257,6 +263,7 @@ public class CoachOperatorsController implements Initializable {
                     lblWarning.setText("Congrats! Coach operator edited.");
                     selectedSupplier.clear();
                 }
+                btnAdd.setDisable(false);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -326,6 +333,7 @@ public class CoachOperatorsController implements Initializable {
             } else {
                 this.renameLabel("Error deleting.");
             }
+            btnAdd.setDisable(false);
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -357,6 +365,7 @@ public class CoachOperatorsController implements Initializable {
         txtAddress.clear();
         txtProvince.clear();
         txtCap.clear();
+        btnAdd.setDisable(false);
     }
 
 
@@ -376,7 +385,9 @@ public class CoachOperatorsController implements Initializable {
                     txtCapacity.clear();
                     txtPlate.clear();
                     selectedSupplier.clear();
-                } else {
+                }else if(!u.controllBus(plate)){
+                    this.renameLabel("Change plate");
+                } else  {
                     this.renameLabel("Plate already inserted. Redo.");
                     txtCapacity.clear();
                     txtPlate.clear();

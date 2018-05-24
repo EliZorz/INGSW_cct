@@ -58,7 +58,7 @@ public interface UserRemote extends Remote {
     void deleteFromGitaHasBus(String plate) throws RemoteException;
     ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException;
     boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException;
-
+    boolean controllBus(String plate) throws RemoteException;
 
 
     DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException;

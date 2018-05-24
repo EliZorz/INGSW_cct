@@ -1184,6 +1184,26 @@ public class SocketUserManager implements UserRemote {
         return ok;
     }
 
+    @Override
+    public boolean controllBus(String plate) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeObject("controllBus");
+            toServer.flush();
+            toServer.writeObject(plate);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
 
     //MENU -------------------------------------------------------------------------------
     @Override

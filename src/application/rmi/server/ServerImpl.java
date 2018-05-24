@@ -1363,6 +1363,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         PreparedStatement st = null;
         String queryControll = "SELECT * FROM fornitore WHERE PIVA = '"+ piva+"'";
+        String queryControllNoleggio = "SELECT * FROM noleggio WHERE PIVA = '"+ piva+"'";
         Boolean controll = false;
 
         try{
@@ -1374,9 +1375,18 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         try{
             if(!result.next()){
-                System.out.println("No piva like this in DB");
-                result.close();
-                controll = true;
+                try{
+                    st = this.connHere().prepareStatement(queryControllNoleggio);
+                    result = null;
+                    result = st.executeQuery();
+                }catch(SQLException e){
+                    e.printStackTrace();
+                }
+                if(!result.next()) {
+                    System.out.println("No piva like this in DB");
+                    result.close();
+                    controll = true;
+                }
             }
             else
                 controll = false;
@@ -1922,6 +1932,51 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return true;
 
     }
+
+    @Override
+    public boolean controllBus(String plate) throws RemoteException{
+        ResultSet result = null;
+        PreparedStatement st = null;
+        String queryControll = "SELECT * FROM bus WHERE Targa = '"+ plate+"'";
+        Boolean controll = false;
+
+        try{
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No BUS like this in DB");
+                result.close();
+                controll = true;
+            }
+            else
+                controll = false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return controll;
+
+    }
+
+
 
 //MENU ---------------------------------------------------------------------------------------
 

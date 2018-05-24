@@ -465,6 +465,7 @@ public class ChildController implements Initializable {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        btnAdd.setDisable(false);
 
     }
 
@@ -508,6 +509,7 @@ public class ChildController implements Initializable {
                         txtCap.clear();
                         txtProvince.clear();
                     }
+                    btnAdd.setDisable(false);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -782,6 +784,8 @@ public class ChildController implements Initializable {
         txtCfContact.clear();
         txtNameContact.clear();
         txtSurnameContact.clear();
+
+        btnAdd.setDisable(false);
     }
 
 
