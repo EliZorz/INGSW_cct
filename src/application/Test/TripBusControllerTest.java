@@ -31,6 +31,7 @@ public class TripBusControllerTest {
         staff.add("CCC111");
         si.addTrip(children,staff, "2220-11-11", "2220-11-12", "2220-11-13", "CR", "ER", "AOK" );
         si.addDataCoachOperator("OO", "12", "AS", "1234", "AAAAS", "12345", "AB");
+        si.addBusToDb("IO", 10, "12");
 
     }
 
@@ -40,7 +41,7 @@ public class TripBusControllerTest {
         si.deleteStaff("CCC111");
         si.deleteContact("1");
         si.deleteChild("A0");
-        si.deleteCoachOperator("13");
+        si.deleteCoachOperator("12");
 
     }
 
