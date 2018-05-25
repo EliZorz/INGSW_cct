@@ -434,7 +434,7 @@ public class CoachOperatorsController implements Initializable {
 
     }
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 

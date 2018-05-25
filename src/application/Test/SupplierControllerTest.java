@@ -62,7 +62,7 @@ class SupplierControllerTest {
         assertFalse(si.addIngrToDb(null, "1"));
         assertFalse(si.addIngrToDb("AAA", null));
     }
-    
+
 
     @Test
     void testNullAddIngrSupplier() throws RemoteException{
