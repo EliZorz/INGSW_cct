@@ -19,7 +19,7 @@ public interface UserRemote extends Remote {
                     boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
     boolean deleteChild(String cf) throws RemoteException;
     boolean updateChild(String name, String surname, String oldcf, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
-
+    boolean controllContactCF(String cf) throws RemoteException;
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
     boolean controllCF(String CF) throws RemoteException;
 
@@ -44,6 +44,7 @@ public interface UserRemote extends Remote {
     boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException;
     ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException;
     ArrayList<IngredientsDbDetails> loadNoIngr (String selectedSupplier) throws RemoteException;
+    boolean controllPiva (String piva) throws RemoteException;
 
 
     ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException;
@@ -56,6 +57,7 @@ public interface UserRemote extends Remote {
     void deleteFromGitaHasBus(String plate) throws RemoteException;
     ArrayList<BusPlateCapacityDbDetails> loadDataBus(String selectedSupplier) throws RemoteException;
     boolean addBusToDb(String plate, int capacity, String selectedSupplier) throws RemoteException;
+    boolean controllBus(String plate) throws RemoteException;
 
 
     DishesDbDetails loadThisMenu(LocalDate date) throws RemoteException;

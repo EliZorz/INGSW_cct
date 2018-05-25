@@ -484,6 +484,25 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
+    @Override
+    public boolean controllContactCF(String CF) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeObject("controllContactCF");
+            toServer.flush();
+            toServer.writeObject(CF);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
 
     //STAFF ------------------------------------------------------------------------------------------
     @Override
@@ -1129,6 +1148,47 @@ public class SocketUserManager implements UserRemote {
             toServer.writeUnshared ("deleteCoachOperatorBus");
             toServer.flush();
             toServer.writeUnshared (plate);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
+
+    @Override
+    public boolean controllPiva(String piva) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeObject("controllPiva");
+            toServer.flush();
+            toServer.writeObject(piva);
+            toServer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            ok = (boolean) fromServer.readUnshared();
+            System.out.println("Read reply from server");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
+    @Override
+    public boolean controllBus(String plate) throws RemoteException {
+        boolean ok = false;
+        try{
+            toServer.writeObject("controllBus");
+            toServer.flush();
+            toServer.writeObject(plate);
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();

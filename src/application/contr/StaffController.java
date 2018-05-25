@@ -28,13 +28,12 @@ public class StaffController implements Initializable {
 
     private ObservableList<StaffGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> ingredientsObsList = FXCollections.observableArrayList();
-
     private ObservableList<StaffGuiDetails> searchedStaff = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> searchedAllergies = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedAllergy = new ArrayList<>();
-    ArrayList<String> selectedStaff = new ArrayList<>();
-    String oldcf = null;
+    private ArrayList<String> selectedAllergy = new ArrayList<>();
+    private ArrayList<String> selectedStaff = new ArrayList<>();
+    private String oldcf = null;
 
     @FXML
     public Button btnBack;
@@ -101,19 +100,23 @@ public class StaffController implements Initializable {
 
     @FXML
     public TextField searchTF;
+
     @FXML
     public Button search;
+
     @FXML
     public Button back;
+
     @FXML
     public Button searchSt;
+
     @FXML
     public Button backStaff;
+
     @FXML
     public TextField searchSTF;
 
-
-    UserRemote  u;
+    private UserRemote  u;
 
     public StaffController(){
         if(MainControllerLogin.selected.equals("RMI"))
@@ -123,20 +126,9 @@ public class StaffController implements Initializable {
     }
 
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        btnLoad.setDisable(false);
-        btnBack.setDisable(false);
-        btnAdd.setDisable(true);
-        btnDelete.setDisable(true);
-        btnDeselect.setDisable(true);
-        btnUpdate.setDisable(true);
-        btnLoadIngredients.setDisable(false);
-        search.setDisable(true);
-        searchSt.setDisable(true);
-        back.setDisable(true);
-        backStaff.setDisable(true);
 
         colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSurname.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
@@ -178,6 +170,8 @@ public class StaffController implements Initializable {
                 txtCap.setText(newSelection.getCap());
                 txtProvince.setText(newSelection.getProvince());
 
+                btnAdd.setDisable(true);
+
             }
         });
 
@@ -198,8 +192,6 @@ public class StaffController implements Initializable {
         try {
             ArrayList<StaffDbDetails> staffDbArrayList = u.loadDataStaff();  //call method in Server Impl
             dataObsList.clear();
-            ingredientsObsList.clear();
-            tableIngr.setItems(null);
 
             if (staffDbArrayList != null){
                 for(StaffDbDetails c : staffDbArrayList){
@@ -231,7 +223,7 @@ public class StaffController implements Initializable {
 
 
     @FXML
-    public void handleAddStaff() {
+    public void handleAddStaff() throws RemoteException {
         System.out.println("Adding new staff member to database...");
 
         String name = txtName.getText();
@@ -254,6 +246,8 @@ public class StaffController implements Initializable {
             //X ALLERGIES: IN MANUALE UTENTE -> "Se l'utente non seleziona nulla dal campo allergia,
             //il sistema vede tale scelta come se non ci fossero allergie da segnalare. Modificare il campo in seguito se necessario (i.g. per dimenticanza)
 
+        }else if(!u.controllCF(cf)){
+            this.renameLabel("Change Staff fiscal code");
         } else {
             System.out.println("Adding data to database...");
             try {
@@ -306,6 +300,16 @@ public class StaffController implements Initializable {
     public void handleDeselect() {
         tableIngr.getSelectionModel().clearSelection();
 
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        txtBornWhere.clear();
+        txtResidence.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtAddress.clear();
+        txtProvince.clear();
+        txtCap.clear();
+
     }
 
 
@@ -322,7 +326,7 @@ public class StaffController implements Initializable {
         }
     }
 
-    public void handleUpdateStaff() {
+    public void handleUpdateStaff() throws RemoteException {
         System.out.println("Loading data...");
 
         String name = txtName.getText();
@@ -341,7 +345,9 @@ public class StaffController implements Initializable {
                 || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
-        } else {
+        }else if(!oldcf.equals(cf) && !u.controllCF(cf)) {
+            this.renameLabel("Change fiscal code");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.updateStaff(surname, name, oldcf, cf, mail, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
@@ -353,6 +359,7 @@ public class StaffController implements Initializable {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            btnAdd.setDisable(false);
         }
 
     }
@@ -375,7 +382,7 @@ public class StaffController implements Initializable {
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 

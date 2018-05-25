@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #E0FFDF;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #E0FFDF;" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
     <children>
         <AnchorPane layoutX="386.0" layoutY="31.0" prefHeight="292.0" prefWidth="197.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffd700;" AnchorPane.rightAnchor="54.799999999999955" AnchorPane.topAnchor="31.0">
             <children>
@@ -26,8 +26,8 @@
             </children>
         </AnchorPane>
         <AnchorPane layoutX="55.0" layoutY="31.0" prefHeight="407.0" prefWidth="256.0" style="-fx-border-color: #00C196; -fx-background-color: #FFFFFF;">
-            <Button layoutX="71.0" layoutY="40.0" mnemonicParsing="false" onAction="#openMenuBasePlates" prefHeight="42.0" prefWidth="114.0" text="MENU BASE" AnchorPane.topAnchor="100.0" />
-            <Button layoutX="71.0" layoutY="162.0" mnemonicParsing="false" onAction="#openSpecialMenu" prefHeight="42.0" prefWidth="114.0" text="MENU SPECIALE" AnchorPane.bottomAnchor="100.0" />
+            <Button layoutX="71.0" layoutY="40.0" mnemonicParsing="false" onAction="#openMenuBasePlates" prefHeight="42.0" prefWidth="114.0" text="BASIC MENU" AnchorPane.topAnchor="100.0" />
+            <Button layoutX="71.0" layoutY="162.0" mnemonicParsing="false" onAction="#openSpecialMenu" prefHeight="42.0" prefWidth="114.0" text="SPECIAL MENU" AnchorPane.bottomAnchor="100.0" />
 
 
         </AnchorPane>

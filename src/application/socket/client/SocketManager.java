@@ -26,7 +26,6 @@ public class SocketManager implements ServicesManager{
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Connection Error");
-
             }
             
 

@@ -44,16 +44,15 @@ public class SocketThread extends Thread implements Runnable {
                 System.out.println("Ready to receive a message");
                 String line = (String) inputFromClient.readUnshared();
 
+                System.out.println("Received " + line + " from client # " + counter + "");
 
-                    System.out.println("Received " + line + " from client # " + counter + "");
+                reply = doAction(line);  //passo il messaggio al doAction che decide cosa fare
 
-                    reply = doAction(line);  //passo il messaggio al doAction che decide cosa fare
-
-                    System.out.println("Sending back : " + reply);
-                    outputToClient.writeUnshared(reply);
-                    outputToClient.flush();
-                    System.out.println("Reply sent.");
-                    outputToClient.reset();
+                System.out.println("Sending back : " + reply);
+                outputToClient.writeUnshared(reply);
+                outputToClient.flush();
+                System.out.println("Reply sent.");
+                outputToClient.reset();
 
             }
 
@@ -315,6 +314,18 @@ public class SocketThread extends Thread implements Runnable {
                 return reply;
             }
 
+            case "controllContactCF": {
+                System.out.println("Controlling cf...");
+                try {
+                    String cf = (String) inputFromClient.readObject();
+                    reply = impl.controllContactCF(cf);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+
             //STAFF -------------------------------------------------------------------------
             case "loadDataStaff": {
                 System.out.println("Loading staff members...");
@@ -419,6 +430,28 @@ public class SocketThread extends Thread implements Runnable {
             }
 
 
+            case "controllPiva": {
+                System.out.println("Controlling supplier...");
+                try {
+                    String piva = (String) inputFromClient.readObject();
+                    reply = impl.controllPiva(piva);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
+            case "controllBus": {
+                System.out.println("Controlling supplier...");
+                try {
+                    String plate = (String) inputFromClient.readObject();
+                    reply = impl.controllBus(plate);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return reply;
+            }
+
             //MENU BASE -------------------------------------------------------------------------------
             case "loadMenuBasic": {
                 System.out.println("Loading basic menu...");
@@ -486,6 +519,7 @@ public class SocketThread extends Thread implements Runnable {
                 }
                 return reply;
             }
+
             case "controllDate": {
                 System.out.println("Controlling the date...");
                 try {
@@ -496,6 +530,7 @@ public class SocketThread extends Thread implements Runnable {
                 }
                 return reply;
             }
+
             case "addMenu": {
                 System.out.println("adding the menu...");
                 try {

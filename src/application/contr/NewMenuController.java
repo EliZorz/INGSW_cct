@@ -1,30 +1,30 @@
 package application.contr;
 
-        import application.Interfaces.UserRemote;
-        import application.LookupCall;
-        import application.details.IngredientsDbDetails;
-        import application.details.IngredientsGuiDetails;
-        import application.gui.GuiNew;
-        import javafx.collections.FXCollections;
-        import javafx.collections.ObservableList;
-        import javafx.event.ActionEvent;
-        import javafx.fxml.FXML;
-        import javafx.fxml.Initializable;
-        import javafx.scene.Node;
-        import javafx.scene.control.*;
+import application.Interfaces.UserRemote;
+import application.LookupCall;
+import application.details.IngredientsDbDetails;
+import application.details.IngredientsGuiDetails;
+import application.gui.GuiNew;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 
-        import java.io.IOException;
-        import java.net.URL;
-        import java.rmi.RemoteException;
-        import java.time.LocalDate;
-        import java.util.ArrayList;
-        import java.util.ResourceBundle;
+import java.io.IOException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-public class newMenuController implements Initializable {
+public class NewMenuController implements Initializable {
 
     private ObservableList<IngredientsGuiDetails> ingredients = FXCollections.observableArrayList();
     private ObservableList<IngredientsGuiDetails> searchedIngredients = FXCollections.observableArrayList();
-    public ArrayList<String> selectedIngredients = new ArrayList<>();
+    private ArrayList<String> selectedIngredients = new ArrayList<>();
 
     private String selectedDish = null;
 
@@ -100,7 +100,7 @@ public class newMenuController implements Initializable {
 
     UserRemote  u;
 
-    public newMenuController(){
+    public NewMenuController(){
         if(MainControllerLogin.selected.equals("RMI"))
             u= LookupCall.getInstance().methodRmi();
         else
@@ -283,7 +283,7 @@ public class newMenuController implements Initializable {
             controllIngredients = true;
         }
         else {
-            label1.getText().equals("This plate already exists");
+            label1.setText("This plate already exists");
             deselect();
             selectedIngredients = new ArrayList<>();
             controllIngredients = true;

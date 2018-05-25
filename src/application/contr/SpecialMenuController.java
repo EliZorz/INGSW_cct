@@ -29,7 +29,7 @@ public class SpecialMenuController implements Initializable {
 
     private ObservableList<IngredientsGuiDetails> searchedIngredients = FXCollections.observableArrayList();
 
-    public ArrayList<String> selectedIngr = new ArrayList<>();
+    private ArrayList<String> selectedIngr = new ArrayList<>();
 
     private LocalDate dateSpecialMenu = null;
 
@@ -238,7 +238,6 @@ public class SpecialMenuController implements Initializable {
                 tabIngr.setItems(null);
                 tabIngr.setItems(ingredients);
             }
-
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -467,7 +466,7 @@ public class SpecialMenuController implements Initializable {
         }
     }
 
-    public boolean controllAllergicals(){
+    private boolean controllAllergicals(){
         ArrayList<IngredientsDbDetails> ingredientsForThisDish;
         try{
 

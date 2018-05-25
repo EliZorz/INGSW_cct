@@ -677,8 +677,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean controllCF(String CF) throws RemoteException{
         ResultSet result = null;
         PreparedStatement st = null;
-        boolean ok = false;
         String queryControll = "SELECT * FROM interni WHERE CF = '"+ CF+"'";
+        Boolean controll = false;
 
         try{
             st = this.connHere().prepareStatement(queryControll);
@@ -691,10 +691,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
             if(!result.next()){
                 System.out.println("No CF like this in DB");
                 result.close();
-                ok = true;
+                controll = true;
             }
             else
-                ok = false;
+                controll = false;
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -711,9 +712,50 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
             }
         }
-        
-        
-        return ok;
+        return controll;
+    }
+
+
+    @Override
+    public boolean controllContactCF(String CF) throws RemoteException{
+        ResultSet result = null;
+        PreparedStatement st = null;
+        String queryControll = "SELECT * FROM adulto WHERE CF = '"+ CF+"'";
+        Boolean controll = false;
+
+        try{
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No CF like this in DB");
+                result.close();
+                controll = true;
+            }
+            else
+                controll = false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return controll;
 
     }
 
@@ -1385,6 +1427,59 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         return ingrNo;
     }
 
+    @Override
+    public boolean controllPiva(String piva) throws RemoteException{
+        ResultSet result = null;
+        PreparedStatement st = null;
+        String queryControll = "SELECT * FROM fornitore WHERE PIVA = '"+ piva+"'";
+        String queryControllNoleggio = "SELECT * FROM noleggio WHERE PIVA = '"+ piva+"'";
+        Boolean controll = false;
+
+        try{
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                try{
+                    st = this.connHere().prepareStatement(queryControllNoleggio);
+                    result = null;
+                    result = st.executeQuery();
+                }catch(SQLException e){
+                    e.printStackTrace();
+                }
+                if(!result.next()) {
+                    System.out.println("No piva like this in DB");
+                    result.close();
+                    controll = true;
+                }
+            }
+            else
+                controll = false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return controll;
+
+    }
+
 //COACH OPERATORS ---------------------------------------------------------------------------------------------
 
     @Override
@@ -1895,6 +1990,49 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
 
         return true;
+
+    }
+
+    @Override
+    public boolean controllBus(String plate) throws RemoteException{
+        ResultSet result = null;
+        PreparedStatement st = null;
+        String queryControll = "SELECT * FROM bus WHERE Targa = '"+ plate+"'";
+        Boolean controll = false;
+
+        try{
+            st = this.connHere().prepareStatement(queryControll);
+            result = st.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No BUS like this in DB");
+                result.close();
+                controll = true;
+            }
+            else
+                controll = false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null)
+                    result.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (st != null)
+                    st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return controll;
 
     }
 

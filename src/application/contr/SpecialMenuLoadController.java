@@ -155,7 +155,7 @@ public class SpecialMenuLoadController implements Initializable{
     }
 
 
-    public void deleteMenu(ActionEvent event) {
+    public void deleteMenu() {
         if (selectedMenu == null)
             labelStatus.setText("Please select a menu");
         else {
@@ -182,9 +182,10 @@ public class SpecialMenuLoadController implements Initializable{
                     SpecialMenuGuiDetails tmp = new SpecialMenuGuiDetails(x);
                     specialMenu.add(tmp);
                 }
-                labelStatus.setText("Loaded");
-            } else
-                labelStatus.setText(("No menu in database. Please add new."));
+                if(specialDbArrayList.isEmpty()) labelStatus.setText("No special menu in the DB");
+                else labelStatus.setText("Loaded");
+            }
+
             tabSpecialMenu.setItems(null);
             tabSpecialMenu.setItems(specialMenu);
             selectedMenu = null;

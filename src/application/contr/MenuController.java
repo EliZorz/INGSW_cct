@@ -141,10 +141,8 @@ public class MenuController implements Initializable {
                 tableMenu.setItems(null);
                 tableMenu.setItems(menu);
                 selectedMenu = null;
-                labelStatus.setText("Loaded");
             }
             else {
-                labelStatus.setText(("No menu in database. Please add new."));
                 System.out.println("No menu here for you! Add one to continue.");
             }
         } catch (RemoteException e) {
@@ -200,7 +198,7 @@ public class MenuController implements Initializable {
 
     public void update(ActionEvent event) throws IOException {
         if(selectedMenu != null) {
-            newMenuController.selectedMenu = selectedMenu;
+            NewMenuController.selectedMenu = selectedMenu;
             ((Node) (event.getSource())).getScene().getWindow().hide();
             new GuiNew("newMenu");
         }

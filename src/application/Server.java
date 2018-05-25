@@ -5,6 +5,7 @@ import application.socket.server.SocketThread;
 
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -31,6 +32,10 @@ public class Server {
 
 
         //SOCKET ---------------------------------
+        /*use N+1 threads for this : one for the ServerSocket, to avoid blocking the whole application waiting for a client to connect;
+        and N threads to process the client's requests, N being the size of the thread pool
+         */
+
         ServerSocket serverSocket = null;
         Socket socket = null;
         int counter = 0;

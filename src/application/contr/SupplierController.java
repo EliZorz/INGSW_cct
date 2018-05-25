@@ -26,8 +26,8 @@ public class SupplierController implements Initializable{
 
     private ObservableList<SupplierGuiDetails> searchedSuppliers = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedSupplier = new ArrayList<>();
-    String oldPiva = null;
+    private ArrayList<String> selectedSupplier = new ArrayList<>();
+    private String oldPiva = null;
 
     @FXML
     public TableView<SupplierGuiDetails> tableSuppliers;
@@ -135,6 +135,8 @@ public class SupplierController implements Initializable{
                 txtCap.setText(newSelection.getCap());
                 txtProvince.setText(newSelection.getProvince());
 
+                btnAdd.setDisable(true);
+
             }
         });
 
@@ -174,9 +176,11 @@ public class SupplierController implements Initializable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        btnAdd.setDisable(false);
     }
 
-    public void handleAddSupplier() {
+    public void handleAddSupplier() throws RemoteException {
         System.out.println("Adding new supplier to database...");
 
         String name = txtName.getText();
@@ -191,6 +195,8 @@ public class SupplierController implements Initializable{
                 || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
+        }else if(!u.controllPiva(piva)){
+            this.renameLabel("Change piva");
         } else {
             System.out.println("Adding data to database...");
             try {
@@ -212,7 +218,7 @@ public class SupplierController implements Initializable{
         }
     }
 
-    public void handleUpdateSupplier() {
+    public void handleUpdateSupplier() throws RemoteException {
         System.out.println("Loading data...");
         String name = txtName.getText();
         String piva = txtPiva.getText();
@@ -226,7 +232,9 @@ public class SupplierController implements Initializable{
                 || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
-        } else {
+        } else if(!oldPiva.equals(piva) && !u.controllPiva(piva)){
+            this.renameLabel("Change piva");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.updateSupplier(name, oldPiva, piva, mail, tel, address, cap, province);  //call method in Server Impl
@@ -245,6 +253,7 @@ public class SupplierController implements Initializable{
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            btnAdd.setDisable(false);
         }
 
     }
@@ -253,6 +262,7 @@ public class SupplierController implements Initializable{
         System.out.println("Loading data...");
         DeleteSupplierController.selectedSupplier = txtPiva.getText();
         new GuiNew("deleteSupplier");
+        btnAdd.setDisable(false);
     }
 
     public void handleBackHomepage() {
@@ -278,6 +288,8 @@ public class SupplierController implements Initializable{
         txtAddress.clear();
         txtProvince.clear();
         txtCap.clear();
+
+        btnAdd.setDisable(false);
     }
 
     public void handleAddIngrToDb() {
@@ -332,7 +344,7 @@ public class SupplierController implements Initializable{
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 

@@ -173,7 +173,6 @@ public class ChildController implements Initializable {
         else
             u= LookupCall.getInstance().methodSocket();
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -318,12 +317,20 @@ public class ChildController implements Initializable {
 
     @FXML
     public void handleLoadData() {
-        System.out.println("Loading data from ChildController...");
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtBornWhere.clear();
+        txtResidence.clear();
+        txtAddress.clear();
+        txtCap.clear();
+        txtProvince.clear();
+
+        System.out.println("Loading data...");
         try {
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
             dataObsList.clear();
-            ingredientsObsList.clear();
-            tableIngr.setItems(null);
 
             if (childDbArrayList != null){
                 for(ChildDbDetails c : childDbArrayList){
@@ -406,8 +413,7 @@ public class ChildController implements Initializable {
             this.renameLabel("Insert data.");
 
 
-
-        }else if( !u.controllCF(cf)){
+        }else if(!u.controllCF(cf)){
             this.renameLabel("Change child fiscal code");
         }
         else {
@@ -459,13 +465,14 @@ public class ChildController implements Initializable {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        btnAdd.setDisable(false);
 
     }
 
 
     @FXML
     public void handleUpdate() throws RemoteException {
-        System.out.println("Handling update...");
+        System.out.println("Loading data...");
 
         String name = txtName.getText();
         String surname = txtSurname.getText();
@@ -502,6 +509,7 @@ public class ChildController implements Initializable {
                     txtCap.clear();
                     txtProvince.clear();
                 }
+                btnAdd.setDisable(false);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -592,6 +600,8 @@ public class ChildController implements Initializable {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
+        } else if(!u.controllContactCF(cf)){
+            this.renameLabel("Change contact fiscal code");
         }else {
 
             System.out.println("Adding data to database...");
@@ -648,7 +658,9 @@ public class ChildController implements Initializable {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
-        } else {
+        } else if(!oldcfContact.equals(cf) && !u.controllContactCF(cf)) {
+            this.renameLabel("Change Contact fiscal code");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl
@@ -752,6 +764,28 @@ public class ChildController implements Initializable {
     public void handleDeselect() {
         tableIngr.getSelectionModel().clearSelection();
 
+        txtName.clear();
+        txtSurname.clear();
+        txtCf.clear();
+        txtBornWhere.clear();
+        txtResidence.clear();
+        dpBirthday.setValue(LocalDate.now());
+        txtAddress.clear();
+        txtProvince.clear();
+        txtCap.clear();
+
+        txtProvinceContact.clear();
+        txtCapContact.clear();
+        txtAddressContact.clear();
+        txtBornWhereContact.clear();
+        dpBirthdayContact.setValue(LocalDate.now());
+        txtTelContact.clear();
+        txtMailContact.clear();
+        txtCfContact.clear();
+        txtNameContact.clear();
+        txtSurnameContact.clear();
+
+        btnAdd.setDisable(false);
     }
 
 

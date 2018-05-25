@@ -31,6 +31,7 @@ public class DeleteSupplierController implements Initializable {
     private ArrayList<String> selectedIngredients = new ArrayList<>();
     public static String selectedSupplier;
     private boolean controllAddIngredients = false;
+    private UserRemote u;
 
     @FXML
     public TextField entreeTF;
@@ -95,17 +96,12 @@ public class DeleteSupplierController implements Initializable {
     @FXML
     public Button deleteButton;
 
-
-    private UserRemote u;
-
     public DeleteSupplierController(){
         if(MainControllerLogin.selected.equals("RMI"))
             u= LookupCall.getInstance().methodRmi();
         else
             u= LookupCall.getInstance().methodSocket();
     }
-
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -148,15 +144,14 @@ public class DeleteSupplierController implements Initializable {
         tabMenu.getItems().clear();
         tabNoIngr.getItems().clear();
         tabIngr.getItems().clear();
-        handleLoad();
+
         loadNoIngr();
-        if(dishes.isEmpty())
-            back.setDisable(false);
+        handleLoad();
+
     }
 
-    public void handleLoad() {
+    private void handleLoad() {
         try {
-            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<DishesDbDetails> menuDbArray = u.loadMenuWithThisSupplier(selectedSupplier);
             dishes.clear();
             if (menuDbArray != null) {
@@ -174,11 +169,12 @@ public class DeleteSupplierController implements Initializable {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        if(dishes.isEmpty())
+            back.setDisable(false);
     }
 
-    public void loadNoIngr() {
+    private void loadNoIngr() {
         try {
-            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingrNo = u.loadNoIngr(selectedSupplier);
             ingredientsNo.clear();
             if (ingrNo != null) {
@@ -277,8 +273,8 @@ public class DeleteSupplierController implements Initializable {
     }
 
     private boolean controllIngr(String dish) {
+
         try {
-            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingredientsDbArray = u.searchIngredients(dish);
             if (ingredientsDbArray == null)
                 loadIngredients();
@@ -307,7 +303,6 @@ public class DeleteSupplierController implements Initializable {
         controllAddIngredients = false;
 
         try {
-            UserRemote u = LookupCall.getInstance().methodRmi();
             ArrayList<IngredientsDbDetails> ingArray = u.loadIngr();
             ingredients.clear();
             for (IngredientsDbDetails x : ingArray)
@@ -350,7 +345,6 @@ public class DeleteSupplierController implements Initializable {
 
     private void saveIngredientsForThisDish(String dishName, ArrayList<String> ingredients) {
         try {
-            UserRemote u = LookupCall.getInstance().methodRmi();
             if (u.saveIngredients(dishName, ingredients)) {
                 status.setText("Success!!");
                 selectedIngredients = new ArrayList<>();
@@ -364,7 +358,7 @@ public class DeleteSupplierController implements Initializable {
     }
 
     @FXML
-    public void saveIngredients(ActionEvent event) {
+    public void saveIngredients() {
         if (dishesStatus.getText().equals("Entree")) {
             saveIngredientsForThisDish(entreeTF.getText(), selectedIngredients);
             deselect();
@@ -410,7 +404,6 @@ public class DeleteSupplierController implements Initializable {
         String main = mainTF.getText();
         String drink = drinkTF.getText();
         String dessert = dessertTF.getText();
-        String side = sideTF.getText();
         if (entree.trim().isEmpty() && main.trim().isEmpty())
             status.setText("Insert an entree or a main course");
         else if (drink.trim().isEmpty()) status.setText("Insert a drink");
@@ -418,7 +411,6 @@ public class DeleteSupplierController implements Initializable {
         else if (!controllAddIngredients) status.setText("Make sure you have added all the ingredients");
         else {
             try {
-                UserRemote u = LookupCall.getInstance().methodRmi();
                 if (u.updateMenu(selectedMenu[0], entreeTF.getText(), mainTF.getText(), dessertTF.getText(), sideTF.getText(), drinkTF.getText(), LocalDate.parse(selectedMenu[6]), LocalDate.parse(selectedMenu[6])))
                     status.setText("Success");
                 handleLoad();
@@ -433,8 +425,8 @@ public class DeleteSupplierController implements Initializable {
 
     @FXML
     public void backHome(ActionEvent event) {
+
         try {
-            UserRemote u = LookupCall.getInstance().methodRmi();  //lookup
             ArrayList<IngredientsDbDetails> ingr = new ArrayList<>();
             for(IngredientsGuiDetails x : ingredientsNo)
                 ingr.add(new IngredientsDbDetails(x.getIngr()));
@@ -454,11 +446,6 @@ public class DeleteSupplierController implements Initializable {
     @FXML
     public void deleteMenu() {
         if (selectedMenu != null) {
-            UserRemote u;
-            if (MainControllerLogin.selected.equals("RMI"))
-                u = LookupCall.getInstance().methodRmi();
-            else
-                u = LookupCall.getInstance().methodSocket();
             try {
                 if (u.deleteMenu(LocalDate.parse(selectedMenu[6]))) {
                     status.setText("Deleted");
@@ -467,7 +454,6 @@ public class DeleteSupplierController implements Initializable {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            selectedMenu = new String[7];
         } else
             status.setText("Select a menu");
     }

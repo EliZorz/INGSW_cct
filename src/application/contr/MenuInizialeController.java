@@ -88,7 +88,7 @@ public class MenuInizialeController {
     @FXML
     void openSuppliers (ActionEvent event)throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
-       new GuiNew("Suppliers");
+        new GuiNew("Suppliers");
     }
 
 
@@ -132,5 +132,3 @@ public class MenuInizialeController {
 
 
 }
-
-
