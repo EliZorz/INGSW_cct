@@ -85,6 +85,20 @@ class CoachOperatorsControllerTest {
         assertNull(si.loadDataBus(null));
     }
 
+    //CONTROLL PARTITA IVA
+    @Test
+    void testControllPiva() throws RemoteException{
+        assertFalse(si.controllPiva("12"));
+        assertTrue(si.controllPiva(null));
+    }
+
+    //CONTROLL PLATE
+    @Test
+    void testControllPlate() throws RemoteException{
+        assertFalse(si.controllBus("AB"));
+        assertTrue(si.controllBus(null));
+    }
+
 
     //DELETE BUS
 

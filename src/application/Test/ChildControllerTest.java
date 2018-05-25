@@ -46,12 +46,17 @@ class ChildControllerTest {
     @Test
     void testControllCF() throws RemoteException {
         assertFalse(si.controllCF("A0"));
+        assertFalse(si.controllContactCF("1"));
+
     }
 
     @Test
     void testNullControllCF() throws RemoteException {
         assertTrue(si.controllCF(null));
+        assertTrue(si.controllContactCF(null));
+
     }
+    
 
     //LOAD CHILD
     @Test

@@ -99,6 +99,14 @@ class StaffControllerTest {
 
     }
 
+    //CONTROLL STAFF
+
+    @Test
+    void testControll() throws RemoteException{
+        assertFalse(si.controllCF("CCC111"));
+        assertTrue(si.controllCF(null));
+    }
+
 
     //DELETE STAFF
 

@@ -60,12 +60,9 @@ class SupplierControllerTest {
     @Test
     void testNoIngrAddIngrSupplier() throws RemoteException{
         assertFalse(si.addIngrToDb(null, "1"));
-    }
-
-    @Test
-    void testNoSupplierAddIngrSupplier() throws RemoteException{
         assertFalse(si.addIngrToDb("AAA", null));
     }
+    
 
     @Test
     void testNullAddIngrSupplier() throws RemoteException{
@@ -100,6 +97,14 @@ class SupplierControllerTest {
     @Test
     void testNullParameterUpdateSupplier() throws RemoteException {
         assertFalse(si.updateSupplier("AAA", null, "31", "AAA", "01234", "AAAA", "12345", "AA"));
+    }
+
+    //CONTROLL SUPPLIER
+
+    @Test
+    void testControllSupplier() throws RemoteException{
+        assertFalse(si.controllPiva("1"));
+        assertTrue(si.controllPiva(null));
     }
 
     //DELETE SUPPLIER
