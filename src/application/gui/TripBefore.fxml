@@ -20,9 +20,9 @@
          </font>
       </Text>
       <TableView fx:id="tableBus" layoutX="354.0" layoutY="281.0" prefHeight="203.0" prefWidth="114.0">
-        <columns>
-          <TableColumn fx:id="colPlate" prefWidth="112.80001220703124" text="License plate" />
-        </columns>
+         <columns>
+            <TableColumn fx:id="colPlate" prefWidth="112.80001220703124" text="License plate" />
+         </columns>
       </TableView>
       <TableView fx:id="tableWho" layoutX="37.0" layoutY="281.0" prefHeight="203.0" prefWidth="276.0">
          <columns>

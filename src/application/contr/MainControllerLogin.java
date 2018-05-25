@@ -54,11 +54,11 @@ public class MainControllerLogin implements Initializable {
         selected = (String) select.getSelectionModel().getSelectedItem();
 
         try {
-             if (selected == null){
+            if (selected == null){
                 System.out.println("User did not choose.\nRetry...");
                 lblStatus.setText("RMI or SOCKET?");
             } else
-                if(usr.trim().isEmpty() || pwd.trim().isEmpty()){
+            if(usr.trim().isEmpty() || pwd.trim().isEmpty()){
                 this.renameLabel("Insert username, password");
 
             } else if(selected.equals("RMI")){
@@ -94,10 +94,10 @@ public class MainControllerLogin implements Initializable {
                 }else{
                     this.renameLabel("Wrong data.");
                 }
-               // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
+                // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
 
             } else {
-                    lblStatus.setText("Something wrong.");
+                lblStatus.setText("Something wrong.");
             }
 
         } catch (Exception se) {

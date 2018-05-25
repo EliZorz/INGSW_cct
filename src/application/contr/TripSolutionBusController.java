@@ -25,12 +25,12 @@ public class TripSolutionBusController  implements Initializable{
     private ObservableList<SolutionGuiDetails> dataObsList = FXCollections.observableArrayList();
     private ObservableList<TripTableGuiDetails> tripObsList = FXCollections.observableArrayList();
 
-    String selectedTripDepFrom = new String();
-    String selectedTripDep = new String();
-    String selectedTripCom = new String();
-    String selectedTripAccomodation = new String();
-    String selectedTripArrTo = new String();
-    String selectedTripArr = new String();
+    private String selectedTripDepFrom;
+    private String selectedTripDep;
+    private String selectedTripCom;
+    private String selectedTripAccomodation;
+    private String selectedTripArrTo;
+    private String selectedTripArr;
 
 
     @FXML
@@ -167,7 +167,7 @@ public class TripSolutionBusController  implements Initializable{
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 

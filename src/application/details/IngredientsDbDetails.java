@@ -2,9 +2,6 @@ package application.details;
 
 import java.io.Serializable;
 
-/**
- * Created by ELISA on 16/04/2018.
- */
 public class IngredientsDbDetails implements Serializable {
 
     private String ingredient;

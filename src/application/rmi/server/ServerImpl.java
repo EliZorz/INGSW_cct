@@ -3024,8 +3024,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public int[] addTrip (ArrayList<String> selectedChild, ArrayList<String> selectedStaff,
-                            String localDateDep, String localDateArr, String localDateCom,
-                            String departureFrom, String arrivalTo, String staying) throws RemoteException {
+                          String localDateDep, String localDateArr, String localDateCom,
+                          String departureFrom, String arrivalTo, String staying) throws RemoteException {
         PreparedStatement st = null;
 
         String queryAddTrip = "INSERT INTO gita (Partenza, DataOraPar, DataOraRit, Alloggio, DataOraArr, Destinazione, NumGita)" +
@@ -3234,7 +3234,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         try{
             st = this.connHere().prepareStatement(queryLoadChildrenParticipant);
-                resultChildren = st.executeQuery(queryLoadChildrenParticipant);
+            resultChildren = st.executeQuery(queryLoadChildrenParticipant);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -4065,10 +4065,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String numGita = numGitaFoundArrayList.get(0).getNumGita();
 
         String queryLoadParticipantsAndBus = "SELECT I.Nome, I.Cognome, I.CF, GB.bus_Targa " +
-                                            " FROM interni AS I INNER JOIN" +
-                                            " interni_is_here AS IH ON (I.CF = IH.interni_CF) INNER JOIN" +
-                                            " gita_has_bus AS GB ON (IH.bus_Targa = GB.bus_Targa AND GB.gita_NumGita = '" + numGita + "')" +
-                                            " WHERE IH.gita_NumGita = '" + numGita + "';";
+                " FROM interni AS I INNER JOIN" +
+                " interni_is_here AS IH ON (I.CF = IH.interni_CF) INNER JOIN" +
+                " gita_has_bus AS GB ON (IH.bus_Targa = GB.bus_Targa AND GB.gita_NumGita = '" + numGita + "')" +
+                " WHERE IH.gita_NumGita = '" + numGita + "';";
 
         try{
             st = this.connHere().prepareStatement(queryLoadParticipantsAndBus);
@@ -4410,33 +4410,33 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 System.out.println(notWrong + " is not wrong");
             }
         }
-            ArrayList<String> notMissingArrayList = new ArrayList<>();
-            ArrayList<String> peopleOnBusArrayListString = new ArrayList<>();
-            for (CodRifChildDbDetails object : peopleOnBusArrayList) {
-                peopleOnBusArrayListString.add(Objects.toString(object.getCodRif(), null));
-            }
+        ArrayList<String> notMissingArrayList = new ArrayList<>();
+        ArrayList<String> peopleOnBusArrayListString = new ArrayList<>();
+        for (CodRifChildDbDetails object : peopleOnBusArrayList) {
+            peopleOnBusArrayListString.add(Objects.toString(object.getCodRif(), null));
+        }
 
-            for (String childOnBus : peopleOnBusArrayListString) {
-                System.out.println("NEXT who should be on is " + childOnBus);
-                for (String childNotWrong : selectedChildCfArrayList) {
-                    System.out.println("searching...");
-                    if (childNotWrong.equals(childOnBus)) {
-                        notMissingArrayList.add(childNotWrong);
-                        System.out.println("And here he/she is!");
-                    }
+        for (String childOnBus : peopleOnBusArrayListString) {
+            System.out.println("NEXT who should be on is " + childOnBus);
+            for (String childNotWrong : selectedChildCfArrayList) {
+                System.out.println("searching...");
+                if (childNotWrong.equals(childOnBus)) {
+                    notMissingArrayList.add(childNotWrong);
+                    System.out.println("And here he/she is!");
                 }
             }
+        }
 
-            //delete from who is here who is selected (not missing) to find who is on the wrong bus -> null or someone, I return -> Controller will highlight
-            peopleOnBusArrayListString.removeAll(notMissingArrayList);
-            for (String voila : peopleOnBusArrayListString) {
-                System.out.println(voila + " IS NOT HERE! HELP!");
-            }
+        //delete from who is here who is selected (not missing) to find who is on the wrong bus -> null or someone, I return -> Controller will highlight
+        peopleOnBusArrayListString.removeAll(notMissingArrayList);
+        for (String voila : peopleOnBusArrayListString) {
+            System.out.println(voila + " IS NOT HERE! HELP!");
+        }
 
-            if(peopleOnBusArrayListString.isEmpty())
-                return null;
+        if(peopleOnBusArrayListString.isEmpty())
+            return null;
 
-            return peopleOnBusArrayListString;   //contains now just who is missing
+        return peopleOnBusArrayListString;   //contains now just who is missing
 
     }
 

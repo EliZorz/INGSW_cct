@@ -15,10 +15,10 @@ public class IngredientsGuiDetails {
     }
 
     public String getIngr(){
-        return ingredient.getValue();
+        return ingredient.get();
     }
 
-    public void setIngr(String value) { ingredient.setValue(value); }
+    public void setIngr(String value) { this.ingredient.set(value); }
 
     public StringProperty ingredientProperty(){
         return ingredient;

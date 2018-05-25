@@ -58,11 +58,11 @@
             </FXCollections>
           </items>
         </ChoiceBox>
-            <Text layoutX="43.0" layoutY="475.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Child Care Tech Project by Beati and Zorzella">
-               <font>
-                  <Font name="Courier New" size="12.0" />
-               </font>
-            </Text>
+        <Text layoutX="43.0" layoutY="475.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Child Care Tech Project by Beati and Zorzella">
+          <font>
+            <Font name="Courier New" size="12.0" />
+          </font>
+        </Text>
       </children>
       <effect>
         <DropShadow blurType="TWO_PASS_BOX" color="#fff500" height="67.54763448806035" radius="33.273813383919844" width="67.54761904761904">

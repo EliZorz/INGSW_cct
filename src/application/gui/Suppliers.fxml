@@ -16,90 +16,90 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="704.0" prefWidth="1055.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.SupplierController">
-  <children>
-    <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="704.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <items>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="670.0">
-          <children>
-            <TableView fx:id="tableSuppliers" layoutY="59.0" prefHeight="643.0" prefWidth="656.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="59.0">
-              <columns>
-                <TableColumn fx:id="colPiva" maxWidth="5000.0" minWidth="10.0" prefWidth="99.0" text="P. IVA" />
-                <TableColumn fx:id="colName" maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Name" />
-                <TableColumn fx:id="colTel" maxWidth="5000.0" minWidth="10.0" prefWidth="107.19999694824219" text="Phone" />
-                <TableColumn fx:id="colMail" prefWidth="156.0" text="Mail" />
-                <TableColumn fx:id="colAddress" prefWidth="75.20004272460938" text="Address" />
-                <TableColumn fx:id="colCap" prefWidth="64.79998779296875" text="CAP" />
-                <TableColumn fx:id="colProvince" prefWidth="76.800048828125" text="Province" />
-              </columns>
-            </TableView>
-              <TextField fx:id="searchTF" layoutX="187.0" layoutY="14.0" AnchorPane.leftAnchor="187.0" />
-              <Button fx:id="searchSupp" layoutX="347.0" layoutY="14.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.rightAnchor="257.0" AnchorPane.topAnchor="14.0">
-                     <effect>
-                        <SepiaTone />
-                     </effect></Button>
-              <Button fx:id="back" layoutX="141.0" layoutY="13.0" mnemonicParsing="false" onAction="#reload" prefHeight="26.0" prefWidth="30.0" AnchorPane.rightAnchor="483.0" AnchorPane.topAnchor="13.0">
-                  <graphic>
-                      <ImageView fitHeight="21.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                          <image>
-                              <Image url="@if_back_322419.png" />
-                          </image>
-                      </ImageView>
-                  </graphic>
-              </Button>
-          </children>
-        </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="392.0">
-          <children>
-            <TextField fx:id="txtName" layoutX="33.0" layoutY="92.0" prefHeight="26.0" prefWidth="158.0" promptText="Name" />
-            <TextField fx:id="txtPiva" layoutX="199.0" layoutY="92.0" prefHeight="26.0" prefWidth="146.0" promptText="P. IVA" />
-            <TextField fx:id="txtTel" layoutX="34.0" layoutY="168.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
-            <TextField fx:id="txtAddress" layoutX="39.0" layoutY="201.0" prefHeight="26.0" prefWidth="209.0" promptText="Address" />
-            <TextField fx:id="txtCap" layoutX="34.0" layoutY="236.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
-            <TextField fx:id="txtProvince" layoutX="152.0" layoutY="236.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
-            <TextField fx:id="txtMail" layoutX="34.0" layoutY="131.0" prefHeight="26.0" prefWidth="313.0" promptText="e-mail" />
-                  <Button fx:id="btnBack" layoutX="265.0" layoutY="645.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="110.0" text="Homepage" />
-                  <ButtonBar layoutX="9.0" layoutY="318.0" prefHeight="40.0" prefWidth="343.0">
-                    <buttons>
-                        <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
-                        <Button fx:id="btnUpdate" minWidth="38.0" mnemonicParsing="false" onAction="#handleUpdateSupplier" prefHeight="26.0" text="Update" />
-                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDeleteSupplier" text="Delete" />
-                        <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
-                    </buttons>
-                  </ButtonBar>
-                  <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="19.0" layoutY="588.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
-                     <font>
-                        <Font name="Courier New" size="20.0" />
-                     </font>
-                  </Label>
-              <TableView fx:id="tableIngr" layoutX="39.0" layoutY="398.0" prefHeight="138.0" prefWidth="146.0">
-                    <columns>
-                      <TableColumn fx:id="colIngr" prefWidth="145.59986114501953" text="ingredient" />
-                    </columns>
-                  </TableView>
-                  <TextField fx:id="txtIngr" layoutX="203.0" layoutY="499.0" prefHeight="26.0" prefWidth="138.0" promptText="Ingredient provided" />
-                  <Button fx:id="btnLoadIngr" layoutX="81.0" layoutY="545.0" mnemonicParsing="false" onAction="#handleLoadIngr" text="Load Ingredients">
-                     <effect>
-                        <DropShadow blurType="ONE_PASS_BOX" color="#04c3f2" />
-                     </effect>
-                  </Button>
-                  <Button fx:id="btnAddIngr" layoutX="278.0" layoutY="545.0" mnemonicParsing="false" onAction="#handleAddIngrToDb" text="Add new">
-                     <effect>
-                        <SepiaTone />
-                     </effect>
-                  </Button>
-                <Button fx:id="btnLoad" layoutX="34.0" layoutY="282.0" mnemonicParsing="false" onAction="#handleLoadSuppliers" prefHeight="26.0" prefWidth="127.0" text="Load suppliers">
-                     <effect>
-                        <DropShadow blurType="ONE_PASS_BOX" color="#0099f8" />
-                     </effect>
-                  </Button>
-                  <Text fill="#f701ff" layoutX="139.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUPPLIERS">
-                     <font>
-                        <Font name="Courier New" size="21.0" />
-                     </font>
-                  </Text>
-          </children>
-        </AnchorPane>
-      </items>
-    </SplitPane>
-  </children>
+    <children>
+        <SplitPane dividerPositions="0.6258503401360545" focusTraversable="true" prefHeight="704.0" prefWidth="1055.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="670.0">
+                    <children>
+                        <TableView fx:id="tableSuppliers" layoutY="59.0" prefHeight="643.0" prefWidth="656.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="59.0">
+                            <columns>
+                                <TableColumn fx:id="colPiva" maxWidth="5000.0" minWidth="10.0" prefWidth="99.0" text="P. IVA" />
+                                <TableColumn fx:id="colName" maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Name" />
+                                <TableColumn fx:id="colTel" maxWidth="5000.0" minWidth="10.0" prefWidth="107.19999694824219" text="Phone" />
+                                <TableColumn fx:id="colMail" prefWidth="156.0" text="Mail" />
+                                <TableColumn fx:id="colAddress" prefWidth="75.20004272460938" text="Address" />
+                                <TableColumn fx:id="colCap" prefWidth="64.79998779296875" text="CAP" />
+                                <TableColumn fx:id="colProvince" prefWidth="76.800048828125" text="Province" />
+                            </columns>
+                        </TableView>
+                        <TextField fx:id="searchTF" layoutX="187.0" layoutY="14.0" AnchorPane.leftAnchor="187.0" />
+                        <Button fx:id="searchSupp" layoutX="347.0" layoutY="14.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.rightAnchor="257.0" AnchorPane.topAnchor="14.0">
+                            <effect>
+                                <SepiaTone />
+                            </effect></Button>
+                        <Button fx:id="back" layoutX="141.0" layoutY="13.0" mnemonicParsing="false" onAction="#reload" prefHeight="26.0" prefWidth="30.0" AnchorPane.rightAnchor="483.0" AnchorPane.topAnchor="13.0">
+                            <graphic>
+                                <ImageView fitHeight="21.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@if_back_322419.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="392.0">
+                    <children>
+                        <TextField fx:id="txtName" layoutX="33.0" layoutY="92.0" prefHeight="26.0" prefWidth="158.0" promptText="Name" />
+                        <TextField fx:id="txtPiva" layoutX="199.0" layoutY="92.0" prefHeight="26.0" prefWidth="146.0" promptText="P. IVA" />
+                        <TextField fx:id="txtTel" layoutX="34.0" layoutY="168.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
+                        <TextField fx:id="txtAddress" layoutX="39.0" layoutY="201.0" prefHeight="26.0" prefWidth="209.0" promptText="Address" />
+                        <TextField fx:id="txtCap" layoutX="34.0" layoutY="236.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
+                        <TextField fx:id="txtProvince" layoutX="152.0" layoutY="236.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
+                        <TextField fx:id="txtMail" layoutX="34.0" layoutY="131.0" prefHeight="26.0" prefWidth="313.0" promptText="e-mail" />
+                        <Button fx:id="btnBack" layoutX="265.0" layoutY="645.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="31.0" prefWidth="110.0" text="Homepage" />
+                        <ButtonBar layoutX="9.0" layoutY="318.0" prefHeight="40.0" prefWidth="343.0">
+                            <buttons>
+                                <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
+                                <Button fx:id="btnUpdate" minWidth="38.0" mnemonicParsing="false" onAction="#handleUpdateSupplier" prefHeight="26.0" text="Update" />
+                                <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDeleteSupplier" text="Delete" />
+                                <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="110.0" text="Deselect" />
+                            </buttons>
+                        </ButtonBar>
+                        <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="19.0" layoutY="588.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
+                            <font>
+                                <Font name="Courier New" size="20.0" />
+                            </font>
+                        </Label>
+                        <TableView fx:id="tableIngr" layoutX="39.0" layoutY="398.0" prefHeight="138.0" prefWidth="146.0">
+                            <columns>
+                                <TableColumn fx:id="colIngr" prefWidth="145.59986114501953" text="ingredient" />
+                            </columns>
+                        </TableView>
+                        <TextField fx:id="txtIngr" layoutX="203.0" layoutY="499.0" prefHeight="26.0" prefWidth="138.0" promptText="Ingredient provided" />
+                        <Button fx:id="btnLoadIngr" layoutX="81.0" layoutY="545.0" mnemonicParsing="false" onAction="#handleLoadIngr" text="Load Ingredients">
+                            <effect>
+                                <DropShadow blurType="ONE_PASS_BOX" color="#04c3f2" />
+                            </effect>
+                        </Button>
+                        <Button fx:id="btnAddIngr" layoutX="278.0" layoutY="545.0" mnemonicParsing="false" onAction="#handleAddIngrToDb" text="Add new">
+                            <effect>
+                                <SepiaTone />
+                            </effect>
+                        </Button>
+                        <Button fx:id="btnLoad" layoutX="34.0" layoutY="282.0" mnemonicParsing="false" onAction="#handleLoadSuppliers" prefHeight="26.0" prefWidth="127.0" text="Load suppliers">
+                            <effect>
+                                <DropShadow blurType="ONE_PASS_BOX" color="#0099f8" />
+                            </effect>
+                        </Button>
+                        <Text fill="#f701ff" layoutX="139.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUPPLIERS">
+                            <font>
+                                <Font name="Courier New" size="21.0" />
+                            </font>
+                        </Text>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
 </AnchorPane>

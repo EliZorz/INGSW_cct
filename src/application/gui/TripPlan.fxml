@@ -14,11 +14,11 @@
 <AnchorPane prefHeight="769.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripPlanController">
    <children>
       <TableView fx:id="tableChildren" layoutX="46.0" layoutY="53.0" prefHeight="170.0" prefWidth="313.0">
-        <columns>
-          <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="colSurnameChild" prefWidth="101.59998321533203" text="Surname" />
+         <columns>
+            <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurnameChild" prefWidth="101.59998321533203" text="Surname" />
             <TableColumn fx:id="colCfChild" prefWidth="135.199951171875" text="CF" />
-        </columns>
+         </columns>
       </TableView>
       <Text fill="#ff00e5" layoutX="46.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select participants among children:">
          <font>

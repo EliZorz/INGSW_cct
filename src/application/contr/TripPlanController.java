@@ -27,8 +27,8 @@ public class TripPlanController implements Initializable {
     private ObservableList<ChildTripGuiDetails> childObsList = FXCollections.observableArrayList();
     private ObservableList<StaffTripGuiDetails> staffObsList = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedChild = new ArrayList<>();
-    ArrayList<String> selectedStaff = new ArrayList<>();
+    private ArrayList<String> selectedChild = new ArrayList<>();
+    private ArrayList<String> selectedStaff = new ArrayList<>();
 
 
     @FXML
@@ -248,14 +248,14 @@ public class TripPlanController implements Initializable {
 
 
 
-    public void renameLabelChildren(String st){lblStatusChildren.setText(st);}
+    private void renameLabelChildren(String st){lblStatusChildren.setText(st);}
 
-    public void renameLabelStaff(String st){lblStatusStaff.setText(st);}
+    private void renameLabelStaff(String st){lblStatusStaff.setText(st);}
 
-    public void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
+    private void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
 
-    public void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
+    private void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
 
-    public void renameLabelStatus(String st){lblStatus.setText(st);}
+    private void renameLabelStatus(String st){lblStatus.setText(st);}
 
 }

@@ -15,96 +15,96 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="770.0" prefWidth="1071.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.CoachOperatorsController">
-  <children>
-    <SplitPane dividerPositions="0.618334892422825" focusTraversable="true" prefHeight="770.0" prefWidth="1105.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <items>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="670.0">
-          <children>
-            <TableView fx:id="tableSuppliers" prefHeight="773.0" prefWidth="646.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <columns>
-                <TableColumn fx:id="colPiva" maxWidth="5000.0" minWidth="10.0" prefWidth="99.0" text="P. IVA" />
-                <TableColumn fx:id="colName" maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Name" />
-                <TableColumn fx:id="colTel" maxWidth="5000.0" minWidth="10.0" prefWidth="107.19999694824219" text="Phone" />
-                <TableColumn fx:id="colMail" prefWidth="156.0" text="Mail" />
-                <TableColumn fx:id="colAddress" prefWidth="75.20004272460938" text="Address" />
-                <TableColumn fx:id="colCap" prefWidth="64.79998779296875" text="CAP" />
-                <TableColumn fx:id="colProvince" prefWidth="76.800048828125" text="Province" />
-              </columns>
-            </TableView>
-          </children>
-        </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="696.0" prefWidth="385.0">
-          <children>
-            <TextField fx:id="txtName" layoutX="34.0" layoutY="38.0" prefHeight="31.0" prefWidth="151.0" promptText="Name" />
-            <TextField fx:id="txtPiva" layoutX="204.0" layoutY="38.0" prefHeight="31.0" prefWidth="110.0" promptText="P. IVA" />
-            <TextField fx:id="txtTel" layoutX="34.0" layoutY="117.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
-            <TextField fx:id="txtAddress" layoutX="34.0" layoutY="160.0" prefHeight="26.0" prefWidth="200.0" promptText="Address" />
-            <TextField fx:id="txtCap" layoutX="34.0" layoutY="206.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
-            <TextField fx:id="txtProvince" layoutX="156.0" layoutY="206.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
-            <TextField fx:id="txtMail" layoutX="34.0" layoutY="76.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
-                  <Button fx:id="btnBack" layoutX="230.0" layoutY="714.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="151.0" text="Homepage" />
-                  <ButtonBar layoutX="34.0" layoutY="286.0" prefHeight="40.0" prefWidth="343.0">
-                    <buttons>
-                        <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
-                        <Button fx:id="btnUpdate" minWidth="38.0" mnemonicParsing="false" onAction="#handleUpdateSupplier" prefHeight="26.0" text="Update" />
-                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="26.0" prefWidth="75.0" text="Delete" />
-                        <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="75.0" text="Deselect" />
-                    </buttons>
-                  </ButtonBar>
-                  <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="27.0" layoutY="658.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
-                     <font>
-                        <Font name="Courier New" size="21.0" />
-                     </font>
-                  </Label>
-              <TextField fx:id="searchTF" layoutX="75.0" layoutY="356.0" prefHeight="26.0" prefWidth="161.0" AnchorPane.leftAnchor="75.0" />
-              <Button fx:id="search" layoutX="245.0" layoutY="357.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.topAnchor="357.0">
-                     <effect>
-                        <SepiaTone />
-                     </effect></Button>
-              <Button fx:id="back" layoutX="38.0" layoutY="357.0" mnemonicParsing="false" onAction="#reload" AnchorPane.rightAnchor="334.0" AnchorPane.topAnchor="357.0">
-                  <graphic>
-                      <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                          <image>
-                              <Image url="@if_back_322419.png" />
-                          </image>
-                      </ImageView>
-                  </graphic>
-              </Button>
-              <TableView fx:id="tableBus" layoutX="34.0" layoutY="431.0" prefHeight="155.0" prefWidth="200.0">
-                    <columns>
-                      <TableColumn fx:id="colPlate" prefWidth="111.19994735717773" text="plate" />
-                      <TableColumn fx:id="colCapacity" prefWidth="88.79998779296875" text="capacity" />
-                    </columns>
-                  </TableView>
-                  <TextField fx:id="txtPlate" layoutX="265.0" layoutY="509.0" prefHeight="26.0" prefWidth="110.0" promptText="Plate" />
-                  <TextField fx:id="txtCapacity" layoutX="265.0" layoutY="549.0" prefHeight="26.0" prefWidth="110.0" promptText="Capacity" />
-                  <Button fx:id="btnAddBus" layoutX="297.0" layoutY="597.0" mnemonicParsing="false" onAction="#handleAddBusToDb" prefHeight="26.0" prefWidth="75.0" text="Add bus">
-                     <effect>
-                        <SepiaTone />
-                     </effect>
-                  </Button>
-                <Button fx:id="btnLoad" layoutX="38.0" layoutY="250.0" mnemonicParsing="false" onAction="#handleLoadSuppliers" prefHeight="26.0" prefWidth="142.0" text="Load coach operators">
-                     <effect>
-                        <DropShadow blurType="ONE_PASS_BOX" color="#07d8e0" />
-                     </effect>
-                  </Button>
-                  <ButtonBar layoutX="53.0" layoutY="590.0" prefHeight="40.0" prefWidth="172.0">
-                     <buttons>
-                        <Button fx:id="btnDeleteBus" mnemonicParsing="false" onAction="#handleDeleteBus" prefHeight="26.0" prefWidth="75.0" text="Delete">
-                           <effect>
-                              <SepiaTone />
-                           </effect>
+    <children>
+        <SplitPane dividerPositions="0.618334892422825" focusTraversable="true" prefHeight="770.0" prefWidth="1105.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="773.0" prefWidth="670.0">
+                    <children>
+                        <TableView fx:id="tableSuppliers" prefHeight="773.0" prefWidth="646.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <columns>
+                                <TableColumn fx:id="colPiva" maxWidth="5000.0" minWidth="10.0" prefWidth="99.0" text="P. IVA" />
+                                <TableColumn fx:id="colName" maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Name" />
+                                <TableColumn fx:id="colTel" maxWidth="5000.0" minWidth="10.0" prefWidth="107.19999694824219" text="Phone" />
+                                <TableColumn fx:id="colMail" prefWidth="156.0" text="Mail" />
+                                <TableColumn fx:id="colAddress" prefWidth="75.20004272460938" text="Address" />
+                                <TableColumn fx:id="colCap" prefWidth="64.79998779296875" text="CAP" />
+                                <TableColumn fx:id="colProvince" prefWidth="76.800048828125" text="Province" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="696.0" prefWidth="385.0">
+                    <children>
+                        <TextField fx:id="txtName" layoutX="34.0" layoutY="38.0" prefHeight="31.0" prefWidth="151.0" promptText="Name" />
+                        <TextField fx:id="txtPiva" layoutX="204.0" layoutY="38.0" prefHeight="31.0" prefWidth="110.0" promptText="P. IVA" />
+                        <TextField fx:id="txtTel" layoutX="34.0" layoutY="117.0" prefHeight="26.0" prefWidth="200.0" promptText="Phone" />
+                        <TextField fx:id="txtAddress" layoutX="34.0" layoutY="160.0" prefHeight="26.0" prefWidth="200.0" promptText="Address" />
+                        <TextField fx:id="txtCap" layoutX="34.0" layoutY="206.0" prefHeight="26.0" prefWidth="110.0" promptText="CAP" />
+                        <TextField fx:id="txtProvince" layoutX="156.0" layoutY="206.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
+                        <TextField fx:id="txtMail" layoutX="34.0" layoutY="76.0" prefHeight="26.0" prefWidth="286.0" promptText="e-mail" />
+                        <Button fx:id="btnBack" layoutX="230.0" layoutY="714.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="151.0" text="Homepage" />
+                        <ButtonBar layoutX="34.0" layoutY="286.0" prefHeight="40.0" prefWidth="343.0">
+                            <buttons>
+                                <Button fx:id="btnAdd" minWidth="56.0" mnemonicParsing="false" onAction="#handleAddSupplier" prefHeight="26.0" text="Add " />
+                                <Button fx:id="btnUpdate" minWidth="38.0" mnemonicParsing="false" onAction="#handleUpdateSupplier" prefHeight="26.0" text="Update" />
+                                <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="26.0" prefWidth="75.0" text="Delete" />
+                                <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="31.0" prefWidth="75.0" text="Deselect" />
+                            </buttons>
+                        </ButtonBar>
+                        <Label fx:id="lblWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="27.0" layoutY="658.0" prefHeight="35.0" prefWidth="353.0" text="Status" textFill="#ea0d0d">
+                            <font>
+                                <Font name="Courier New" size="21.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="searchTF" layoutX="75.0" layoutY="356.0" prefHeight="26.0" prefWidth="161.0" AnchorPane.leftAnchor="75.0" />
+                        <Button fx:id="search" layoutX="245.0" layoutY="357.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.topAnchor="357.0">
+                            <effect>
+                                <SepiaTone />
+                            </effect></Button>
+                        <Button fx:id="back" layoutX="38.0" layoutY="357.0" mnemonicParsing="false" onAction="#reload" AnchorPane.rightAnchor="334.0" AnchorPane.topAnchor="357.0">
+                            <graphic>
+                                <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@if_back_322419.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
                         </Button>
-                        <Button fx:id="btnLoadBus" mnemonicParsing="false" onAction="#handleLoadBus" prefHeight="26.0" prefWidth="75.0" text="Load bus">
-                           <effect>
-                              <DropShadow blurType="ONE_PASS_BOX" color="#06b7f2" />
-                           </effect>
+                        <TableView fx:id="tableBus" layoutX="34.0" layoutY="431.0" prefHeight="155.0" prefWidth="200.0">
+                            <columns>
+                                <TableColumn fx:id="colPlate" prefWidth="111.19994735717773" text="plate" />
+                                <TableColumn fx:id="colCapacity" prefWidth="88.79998779296875" text="capacity" />
+                            </columns>
+                        </TableView>
+                        <TextField fx:id="txtPlate" layoutX="265.0" layoutY="509.0" prefHeight="26.0" prefWidth="110.0" promptText="Plate" />
+                        <TextField fx:id="txtCapacity" layoutX="265.0" layoutY="549.0" prefHeight="26.0" prefWidth="110.0" promptText="Capacity" />
+                        <Button fx:id="btnAddBus" layoutX="297.0" layoutY="597.0" mnemonicParsing="false" onAction="#handleAddBusToDb" prefHeight="26.0" prefWidth="75.0" text="Add bus">
+                            <effect>
+                                <SepiaTone />
+                            </effect>
                         </Button>
-                     </buttons>
-                  </ButtonBar>
-          </children>
-        </AnchorPane>
-      </items>
-    </SplitPane>
-  </children>
+                        <Button fx:id="btnLoad" layoutX="38.0" layoutY="250.0" mnemonicParsing="false" onAction="#handleLoadSuppliers" prefHeight="26.0" prefWidth="142.0" text="Load coach operators">
+                            <effect>
+                                <DropShadow blurType="ONE_PASS_BOX" color="#07d8e0" />
+                            </effect>
+                        </Button>
+                        <ButtonBar layoutX="53.0" layoutY="590.0" prefHeight="40.0" prefWidth="172.0">
+                            <buttons>
+                                <Button fx:id="btnDeleteBus" mnemonicParsing="false" onAction="#handleDeleteBus" prefHeight="26.0" prefWidth="75.0" text="Delete">
+                                    <effect>
+                                        <SepiaTone />
+                                    </effect>
+                                </Button>
+                                <Button fx:id="btnLoadBus" mnemonicParsing="false" onAction="#handleLoadBus" prefHeight="26.0" prefWidth="75.0" text="Load bus">
+                                    <effect>
+                                        <DropShadow blurType="ONE_PASS_BOX" color="#06b7f2" />
+                                    </effect>
+                                </Button>
+                            </buttons>
+                        </ButtonBar>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
 </AnchorPane>

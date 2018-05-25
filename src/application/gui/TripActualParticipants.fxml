@@ -14,18 +14,18 @@
 <AnchorPane prefHeight="754.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripActualParticipantsController">
    <children>
       <TableView fx:id="tableActualChildren" layoutX="29.0" layoutY="398.0" prefHeight="250.0" prefWidth="314.0">
-        <columns>
-          <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="colSurnameChild" prefWidth="93.5999755859375" text="Surname" />
+         <columns>
+            <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurnameChild" prefWidth="93.5999755859375" text="Surname" />
             <TableColumn fx:id="colCfChild" prefWidth="144.7999725341797" text="CF" />
-        </columns>
+         </columns>
       </TableView>
       <TableView fx:id="tableActualStaff" layoutX="390.0" layoutY="398.0" prefHeight="250.0" prefWidth="314.0">
-        <columns>
-          <TableColumn fx:id="colNameStaff" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="colSurnameStaff" prefWidth="88.800048828125" text="Surname" />
+         <columns>
+            <TableColumn fx:id="colNameStaff" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurnameStaff" prefWidth="88.800048828125" text="Surname" />
             <TableColumn fx:id="colCfStaff" prefWidth="149.59991455078125" text="CF" />
-        </columns>
+         </columns>
       </TableView>
       <Text fill="#f00bb3" layoutX="29.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select actual participants">
          <font>

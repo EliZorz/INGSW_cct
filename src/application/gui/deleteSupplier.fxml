@@ -49,9 +49,9 @@
         <Button fx:id="saveIngr" layoutX="422.0" layoutY="557.0" mnemonicParsing="false" onAction="#saveIngredients" text="Save ingredients" />
         <Button fx:id="deselectButton" layoutX="325.0" layoutY="557.0" mnemonicParsing="false" onAction="#deselect" text="Deselect All" />
         <Button fx:id="searchButton" layoutX="474.0" layoutY="256.0" mnemonicParsing="false" onAction="#search" text="Search">
-         <effect>
-            <SepiaTone />
-         </effect></Button>
+            <effect>
+                <SepiaTone />
+            </effect></Button>
         <Button fx:id="returnButton" layoutX="322.0" layoutY="256.0" mnemonicParsing="false" onAction="#reload" prefHeight="25.0" prefWidth="27.0">
             <graphic>
                 <ImageView fitHeight="16.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -63,9 +63,9 @@
         </Button>
         <TextField fx:id="searchTF" layoutX="364.0" layoutY="256.0" prefHeight="25.0" prefWidth="104.0" />
         <Button fx:id="back" layoutX="640.0" layoutY="612.0" mnemonicParsing="false" onAction="#backHome" prefHeight="38.0" prefWidth="216.0" text="Proceed with delete">
-         <effect>
-            <InnerShadow />
-         </effect></Button>
+            <effect>
+                <InnerShadow />
+            </effect></Button>
         <TableView fx:id="tabNoIngr" layoutX="640.0" layoutY="290.0" prefHeight="200.0" prefWidth="216.0">
             <columns>
                 <TableColumn fx:id="colIngrNO" prefWidth="215.0" text="Ingredients not available" />

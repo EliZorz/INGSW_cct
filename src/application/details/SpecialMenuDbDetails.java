@@ -87,3 +87,4 @@ public class SpecialMenuDbDetails implements Serializable {
         this.side = side;
     }
 }
+

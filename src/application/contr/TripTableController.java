@@ -24,8 +24,8 @@ import java.util.ResourceBundle;
 public class TripTableController implements Initializable{
     private ObservableList<TripTableGuiDetails> dataObsList = FXCollections.observableArrayList();
 
-    ArrayList<String> selectedTrip = new ArrayList<>();
-    
+    private ArrayList<String> selectedTrip = new ArrayList<>();
+
     @FXML
     public TableView<TripTableGuiDetails> tableTrip;
     @FXML
@@ -153,7 +153,7 @@ public class TripTableController implements Initializable{
         }
     }
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblStatus.setText(st);
     }
 }

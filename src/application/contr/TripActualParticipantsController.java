@@ -26,22 +26,22 @@ public class TripActualParticipantsController implements Initializable {
     private ObservableList<ChildSelectedTripGuiDetails> actualChildrenObsList = FXCollections.observableArrayList();
     private ObservableList<StaffSelectedTripGuiDetails> actualStaffObsList = FXCollections.observableArrayList();
 
-    int totChildren = 0;
-    int totStaff = 0;
+    private int totChildren = 0;
+    private int totStaff = 0;
 
     private HashMap<String, ArrayList<String>> busForParticipants = new HashMap<>();
 
-    ArrayList<String> selectedTrip = new ArrayList<>();
-    ArrayList<String> selectedChild = new ArrayList<>();
-    ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
-    ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
-    ArrayList<String> selectedStaff = new ArrayList<>();
-    String selectedTripDepFrom = new String();
-    String selectedTripDep = new String();
-    String selectedTripCom = new String();
-    String selectedTripAccomodation = new String();
-    String selectedTripArrTo = new String();
-    String selectedTripArr = new String();
+    private ArrayList<String> selectedTrip = new ArrayList<>();
+    private ArrayList<String> selectedChild = new ArrayList<>();
+    private ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
+    private ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
+    private ArrayList<String> selectedStaff = new ArrayList<>();
+    private String selectedTripDepFrom = new String();
+    private String selectedTripDep = new String();
+    private String selectedTripCom = new String();
+    private String selectedTripAccomodation = new String();
+    private String selectedTripArrTo = new String();
+    private String selectedTripArr = new String();
 
     @FXML
     public TableView<ChildSelectedTripGuiDetails> tableActualChildren;
@@ -328,12 +328,12 @@ public class TripActualParticipantsController implements Initializable {
                     System.out.println("Reselect participants.");
                     this.renameLabel("Red ones are not available during trip period. Exit and redo.");
 //BLOCCA TUTTO TRANNE HOMEPAGE ************************************************************************************************************
-                btnBus.setDisable(true);
-                btnDoneSelection.setDisable(true);
-                btnLoadChildren.setDisable(true);
-                btnLoadStaff.setDisable(true);
-                btnLoadTrip.setDisable(true);
-                btnDeselect.setDisable(true);
+                    btnBus.setDisable(true);
+                    btnDoneSelection.setDisable(true);
+                    btnLoadChildren.setDisable(true);
+                    btnLoadStaff.setDisable(true);
+                    btnLoadTrip.setDisable(true);
+                    btnDeselect.setDisable(true);
                 }
 
             } catch (RemoteException e) {
@@ -384,13 +384,13 @@ public class TripActualParticipantsController implements Initializable {
     }
 
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblWarning.setText(st);
     }
 
-    public void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
+    private void renameLabelTotChildren(int st) {lblTotChildren.setText("" + st + "");}
 
-    public void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
+    private void renameLabelTotStaff(int st) {lblTotStaff.setText("" + st + "");}
 
 
 }

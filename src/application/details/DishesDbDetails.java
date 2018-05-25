@@ -89,4 +89,5 @@ public class DishesDbDetails extends ArrayList<DishesDbDetails> implements Seria
     public void setSideDish(String sideDish){this.sideDish = sideDish;}
 
 
+
 }

@@ -30,15 +30,15 @@ public class TripBeforeController implements Initializable{
 
     private ArrayList<String> selectedChild = new ArrayList<>();
     private ArrayList<String> selectedChildCfArrayList  = new ArrayList<>();
-    private String selectedBus = new String();
+    private String selectedBus;
 
-    private String selectedTripDepFrom = new String();
-    private String selectedTripDep = new String();
-    private String selectedTripCom = new String();
-    private String selectedTripAccomodation = new String();
-    private String selectedTripArrTo = new String();
-    private String selectedTripArr = new String();
-    
+    private String selectedTripDepFrom;
+    private String selectedTripDep;
+    private String selectedTripCom;
+    private String selectedTripAccomodation;
+    private String selectedTripArrTo;
+    private String selectedTripArr;
+
     @FXML
     public TableView<CodRifChildGuiDetails> tableBus;       //uso CodRifChild per plate (unica colonna)
     @FXML
@@ -227,7 +227,7 @@ public class TripBeforeController implements Initializable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 
 
@@ -333,7 +333,7 @@ public class TripBeforeController implements Initializable{
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-         }
+        }
     }
 
 
@@ -362,8 +362,8 @@ public class TripBeforeController implements Initializable{
             ioe.printStackTrace();
         }
     }
-    
-    public void renameLabel(String st){
+
+    private void renameLabel(String st){
         lblStatus.setText(st);
     }
 }

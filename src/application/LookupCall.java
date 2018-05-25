@@ -7,8 +7,8 @@ import application.socket.client.SocketManager;
 
 public class LookupCall {
     private static LookupCall instance = null;
-    ServicesManager servicesMan;
-    UserRemote u = null;
+    private ServicesManager servicesMan;
+    private UserRemote u = null;
 
 
     //private constructor, prevents other class from instantiating

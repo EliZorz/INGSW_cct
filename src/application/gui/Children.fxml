@@ -72,11 +72,11 @@
                         <DatePicker fx:id="dpBirthday" layoutX="46.0" layoutY="183.0" prefHeight="31.0" prefWidth="167.0" promptText="Birthday" />
                         <Button fx:id="btnBack" layoutX="437.0" layoutY="675.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="16.0" prefWidth="190.0" style="-fx-cursor: hand" text="HomePage" />
                         <ButtonBar layoutX="18.0" layoutY="411.0" prefHeight="26.0" prefWidth="258.0">
-                     <buttons>
+                            <buttons>
                                 <Button fx:id="btnUpdate" minWidth="62.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="26.0" prefWidth="62.0" text="Edit" />
                                 <Button fx:id="btnAdd" minWidth="62.0" mnemonicParsing="false" onAction="#handleAddChild" prefHeight="26.0" prefWidth="62.0" text="Add" />
                                 <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="26.0" prefWidth="62.0" text="Delete" />
-                     </buttons>
+                            </buttons>
                         </ButtonBar>
                         <TableView fx:id="tableIngr" layoutX="61.0" layoutY="513.0" prefHeight="126.0" prefWidth="200.0">
                             <columns>
@@ -87,7 +87,7 @@
                             <buttons>
                                 <Button fx:id="btnLoadIngredients" mnemonicParsing="false" onAction="#handleLoadIngredients" prefHeight="26.0" prefWidth="74.0" text="Load list">
                                     <effect>
-                              <DropShadow blurType="ONE_PASS_BOX" color="#07acf2" />
+                                        <DropShadow blurType="ONE_PASS_BOX" color="#07acf2" />
                                     </effect></Button>
                                 <Button fx:id="btnDeselect" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="26.0" prefWidth="110.0" text="Deselect all">
                                     <effect>
@@ -168,17 +168,17 @@
                                 </ImageView>
                             </graphic>
                         </Button>
-                          <Button fx:id="btnLoadContact" layoutX="533.0" layoutY="221.0" mnemonicParsing="false" onAction="#handleLoadContacts" prefHeight="26.0" prefWidth="91.0" text="Load contacts">
-                              <effect>
-                        <DropShadow blurType="ONE_PASS_BOX" color="#02b4f0" />
-                              </effect>
-                          </Button>
-                          <Button fx:id="btnLoad" layoutX="174.0" layoutY="377.0" minWidth="58.0" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="114.0" text="Load children">
-                     <effect>
-                        <DropShadow blurType="ONE_PASS_BOX" color="#09c4f2" />
-                     </effect>
-                  </Button>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="668.0" layoutX="305.0" layoutY="36.0" stroke="BLACK" strokeType="INSIDE" width="6.0" />
+                        <Button fx:id="btnLoadContact" layoutX="533.0" layoutY="221.0" mnemonicParsing="false" onAction="#handleLoadContacts" prefHeight="26.0" prefWidth="91.0" text="Load contacts">
+                            <effect>
+                                <DropShadow blurType="ONE_PASS_BOX" color="#02b4f0" />
+                            </effect>
+                        </Button>
+                        <Button fx:id="btnLoad" layoutX="174.0" layoutY="377.0" minWidth="58.0" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="114.0" text="Load children">
+                            <effect>
+                                <DropShadow blurType="ONE_PASS_BOX" color="#09c4f2" />
+                            </effect>
+                        </Button>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="668.0" layoutX="305.0" layoutY="36.0" stroke="BLACK" strokeType="INSIDE" width="6.0" />
                     </children>
                 </AnchorPane>
             </items>
