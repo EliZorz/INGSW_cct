@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /**
@@ -24,10 +25,10 @@ public class ChildDbDetails implements Serializable{
     private String province;
 
 
+    public ChildDbDetails(){}
+
     //default constructor StringProperty -> String per salvare dati da GUI a DB
     public ChildDbDetails(ChildGuiDetails childguiSp){
-
-
         this.name = childguiSp.getName();
         this.surname = childguiSp.getSurname();
         this.cf = childguiSp.getCf();
