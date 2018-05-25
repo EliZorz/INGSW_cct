@@ -249,9 +249,8 @@ public class TripBeforeController implements Initializable{
                 ArrayList<String> missingParticipantsArrayList = u.findMissingParticipantsOnThisBus(participantOnWrongBusArrayList, selectedChildCfArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);
 
                 //find out if some participants the user selected are already used in a concurrent trip
-                if (participantOnWrongBusArrayList == null || participantOnWrongBusArrayList.isEmpty()){
+                if (participantOnWrongBusArrayList == null){
                     System.out.println("Your selection has been saved.");
-
                     if( missingParticipantsArrayList != null){
                         //load missing table
                         ArrayList<ChildSelectedTripDbDetails> missingDbArrayList = u.loadMissing(missingParticipantsArrayList, selectedBus, selectedTripDepFrom, selectedTripDep, selectedTripCom, selectedTripAccomodation, selectedTripArr, selectedTripArrTo);  //call method in Server Impl

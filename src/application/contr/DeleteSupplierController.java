@@ -147,7 +147,7 @@ public class DeleteSupplierController implements Initializable {
 
         loadNoIngr();
         handleLoad();
-        
+
     }
 
     private void handleLoad() {

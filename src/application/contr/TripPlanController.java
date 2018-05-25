@@ -162,13 +162,15 @@ public class TripPlanController implements Initializable {
 
                 int[] totParticipantsArray = u.addTrip(selectedChild, selectedStaff, dateDep, dateArr, dateCom, departureFrom, arrivalTo, staying);
 
-                int totChildren = totParticipantsArray[0];
-                int totStaff = totParticipantsArray[1];
+                if(totParticipantsArray != null) {
+                    int totChildren = totParticipantsArray[0];
+                    int totStaff = totParticipantsArray[1];
 
-                this.renameLabelTotChildren(totChildren);
-                this.renameLabelTotStaff(totStaff);
-                this.renameLabelStatus("Trip added.");
-
+                    this.renameLabelTotChildren(totChildren);
+                    this.renameLabelTotStaff(totStaff);
+                    this.renameLabelStatus("Trip added.");
+                } else
+                    System.out.println("ERROR during calculus");
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

@@ -1,17 +1,15 @@
 package application.Interfaces;
 
 import application.details.*;
-
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface UserRemote extends Remote {
-    boolean funzLog(String usr, String pwd) throws RemoteException;
+    boolean funzLog(String usr, String pwd) throws RemoteException; //questa funzione controllerà se username e password sono corretti
     boolean logout() throws RemoteException;
 
 
@@ -21,16 +19,16 @@ public interface UserRemote extends Remote {
                     boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
     boolean deleteChild(String cf) throws RemoteException;
     boolean updateChild(String name, String surname, String oldcf, String cf, LocalDate bornOn, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
-    boolean controllCF(String CF) throws RemoteException;
-
+    boolean controllContactCF(String cf) throws RemoteException;
     ArrayList<IngredientsDbDetails> loadIngr() throws RemoteException;
+    boolean controllCF(String CF) throws RemoteException;
 
 
     ArrayList<ContactsDbDetails> loadDataContacts(String cfChild) throws RemoteException;
     boolean addContact(ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException;
     boolean deleteContact (String oldcfContact) throws RemoteException;
     boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException;
-    boolean controllContactCF(String CF) throws RemoteException;
+
 
     ArrayList<StaffDbDetails> loadDataStaff() throws RemoteException;
     boolean addDataStaff(String name, String surname, String cf, String mail, LocalDate birthday, String bornWhere, String residence, String address, String cap, String province, ArrayList<String> selectedAllergy) throws RemoteException;
@@ -46,7 +44,8 @@ public interface UserRemote extends Remote {
     boolean addIngrToDb(String ingr, String selectedSupplier) throws RemoteException;
     ArrayList<DishesDbDetails> loadMenuWithThisSupplier(String selectedSupplier) throws RemoteException;
     ArrayList<IngredientsDbDetails> loadNoIngr (String selectedSupplier) throws RemoteException;
-    boolean controllPiva(String piva) throws RemoteException;
+    boolean controllPiva (String piva) throws RemoteException;
+
 
     ArrayList<SupplierDbDetails> loadDataCoachOperator() throws RemoteException;
     boolean addDataCoachOperator(String name, String piva, String mail, String tel, String address, String cap, String province) throws RemoteException;
@@ -103,6 +102,3 @@ public interface UserRemote extends Remote {
     ArrayList<ChildSelectedTripDbDetails> loadMissing (ArrayList<String> missingArrayList, String selectedBus, String selectedTripDepFrom, String selectedTripDep, String selectedTripCom, String selectedTripAccomodation, String selectedTripArr, String selectedTripArrTo) throws RemoteException;
 
 }
-
-
-

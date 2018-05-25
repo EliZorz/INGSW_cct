@@ -17,7 +17,9 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
 
-
+/**
+ * Created by ELISA on 23/04/2018.
+ */
 public class TripActualParticipantsController implements Initializable {
 
     private ObservableList<TripTableGuiDetails> tripObsList = FXCollections.observableArrayList();
@@ -34,12 +36,12 @@ public class TripActualParticipantsController implements Initializable {
     private ArrayList<String> selectedChildCfArrayList = new ArrayList<>();
     private ArrayList<String> selectedStaffCfArrayList = new ArrayList<>();
     private ArrayList<String> selectedStaff = new ArrayList<>();
-    private String selectedTripDepFrom ;
-    private String selectedTripDep ;
-    private String selectedTripCom ;
-    private String selectedTripAccomodation ;
-    private String selectedTripArrTo ;
-    private String selectedTripArr ;
+    private String selectedTripDepFrom = new String();
+    private String selectedTripDep = new String();
+    private String selectedTripCom = new String();
+    private String selectedTripAccomodation = new String();
+    private String selectedTripArrTo = new String();
+    private String selectedTripArr = new String();
 
     @FXML
     public TableView<ChildSelectedTripGuiDetails> tableActualChildren;
@@ -260,7 +262,7 @@ public class TripActualParticipantsController implements Initializable {
                 ArrayList<CodRifChildDbDetails> notAvailableChildArrayList = u.findNotAvailableChild(selectedChildCfArrayList, selectedTripDep, selectedTripCom);
 
                 //find out if some participants the user selected are already used in a concurrent trip
-                if (notAvailableStaffArrayList.isEmpty() && notAvailableChildArrayList.isEmpty()){
+                if (notAvailableStaffArrayList == null && notAvailableChildArrayList == null){
                     int[] totParticipantsSelectedArray = u.howManyActualParticipants(selectedChildCfArrayList, selectedStaffCfArrayList);
                     totChildren = totParticipantsSelectedArray[0];
                     totStaff = totParticipantsSelectedArray[1];
@@ -274,53 +276,55 @@ public class TripActualParticipantsController implements Initializable {
 
                 } else {
                     //highlight items into arrayList and tell user to reselect
-                    System.out.println("Changing colours for not available children in tableview...");
-                    ArrayList<String> notAvailableChildStrings = new ArrayList<>(notAvailableChildArrayList.size());
-                    for (CodRifChildDbDetails object : notAvailableChildArrayList) {
-                        notAvailableChildStrings.add(Objects.toString(object, null));
-                    }
-                    for(String s : notAvailableChildStrings)
-                        System.out.println("Change colour for: " + s);
+                    if(notAvailableChildArrayList != null) {
+                        System.out.println("Changing colours for not available children in tableview...");
+                        ArrayList<String> notAvailableChildStrings = new ArrayList<>(notAvailableChildArrayList.size());
+                        for (CodRifChildDbDetails object : notAvailableChildArrayList) {
+                            notAvailableChildStrings.add(Objects.toString(object, null));
+                        }
+                        for (String s : notAvailableChildStrings)
+                            System.out.println("Change colour for: " + s);
 
-                    colCfChild.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
-                        @Override
-                        protected void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            setText(empty ? "" : getItem());
-                            setGraphic(null);
-                            TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
-                            for (CodRifChildDbDetails child : notAvailableChildArrayList) {
-                                if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
-                                    currentRow.setStyle("-fx-background-color:lightcoral");
+                        colCfChild.setCellFactory(column -> new TableCell<ChildSelectedTripGuiDetails, String>() {
+                            @Override
+                            protected void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                setText(empty ? "" : getItem());
+                                setGraphic(null);
+                                TableRow<ChildSelectedTripGuiDetails> currentRow = getTableRow();
+                                for (CodRifChildDbDetails child : notAvailableChildArrayList) {
+                                    if (!currentRow.isEmpty() && item.equals(child.getCodRif())) {
+                                        currentRow.setStyle("-fx-background-color:lightcoral");
+                                    }
                                 }
                             }
-                        }
-                    });
-
-
-                    System.out.println("Changing colours for not available staff members in tableview...");
-                    ArrayList<String> notAvailableStaffStrings = new ArrayList<>(notAvailableStaffArrayList.size());
-                    for (CodRifChildDbDetails object : notAvailableStaffArrayList) {
-                        notAvailableStaffStrings.add(Objects.toString(object, null));
+                        });
                     }
-                    for(String s : notAvailableStaffStrings)
-                        System.out.println("Change colour for: " + s);
 
-                    colCfStaff.setCellFactory(column -> new TableCell<StaffSelectedTripGuiDetails, String>() {
-                        @Override
-                        protected void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            setText(empty ? "" : getItem());
-                            setGraphic(null);
-                            TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
-                            for (CodRifChildDbDetails staff : notAvailableStaffArrayList) {
-                                if (!currentRow.isEmpty() && item.equals(staff.getCodRif())) {
-                                    currentRow.setStyle("-fx-background-color:lightcoral");
+                    if(notAvailableStaffArrayList != null) {
+                        System.out.println("Changing colours for not available staff members in tableview...");
+                        ArrayList<String> notAvailableStaffStrings = new ArrayList<>(notAvailableStaffArrayList.size());
+                        for (CodRifChildDbDetails object : notAvailableStaffArrayList) {
+                            notAvailableStaffStrings.add(Objects.toString(object, null));
+                        }
+                        for (String s : notAvailableStaffStrings)
+                            System.out.println("Change colour for: " + s);
+
+                        colCfStaff.setCellFactory(column -> new TableCell<StaffSelectedTripGuiDetails, String>() {
+                            @Override
+                            protected void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                setText(empty ? "" : getItem());
+                                setGraphic(null);
+                                TableRow<StaffSelectedTripGuiDetails> currentRow = getTableRow();
+                                for (CodRifChildDbDetails staff : notAvailableStaffArrayList) {
+                                    if (!currentRow.isEmpty() && item.equals(staff.getCodRif())) {
+                                        currentRow.setStyle("-fx-background-color:lightcoral");
+                                    }
                                 }
                             }
-                        }
-                    });
-
+                        });
+                    }
                     System.out.println("Reselect participants.");
                     this.renameLabel("Red ones are not available during trip period. Exit and redo.");
 //BLOCCA TUTTO TRANNE HOMEPAGE ************************************************************************************************************

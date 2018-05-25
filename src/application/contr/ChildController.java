@@ -207,94 +207,94 @@ public class ChildController implements Initializable {
         tableChild.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         tableChild.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                    if (newSelection != null) {
-                        selectedChild.add(newSelection.getName());
-                        selectedChild.add(newSelection.getSurname());
-                        selectedChild.add(newSelection.getCf());
-                        selectedChild.add(newSelection.getBornOn());
-                        selectedChild.add(newSelection.getBornWhere());
-                        selectedChild.add(newSelection.getResidence());
-                        selectedChild.add(newSelection.getAddress());
-                        selectedChild.add(newSelection.getCap());
-                        selectedChild.add(newSelection.getProvince());
+            if (newSelection != null) {
+                selectedChild.add(newSelection.getName());
+                selectedChild.add(newSelection.getSurname());
+                selectedChild.add(newSelection.getCf());
+                selectedChild.add(newSelection.getBornOn());
+                selectedChild.add(newSelection.getBornWhere());
+                selectedChild.add(newSelection.getResidence());
+                selectedChild.add(newSelection.getAddress());
+                selectedChild.add(newSelection.getCap());
+                selectedChild.add(newSelection.getProvince());
 
-                        btnAdd.setDisable(true);
-                        //PER EVIDENZIARE ALLERGIA QUANDO SELEZIONO RIGA SERVE QUERY CHE CERCHI NEL DB LE ALLERGIE COLLEGATE AL CF DEL SELEZIONATO - per ora lasciamo che riselezioni quelle che vuole
+                btnAdd.setDisable(true);
+                //PER EVIDENZIARE ALLERGIA QUANDO SELEZIONO RIGA SERVE QUERY CHE CERCHI NEL DB LE ALLERGIE COLLEGATE AL CF DEL SELEZIONATO - per ora lasciamo che riselezioni quelle che vuole
 
-                        oldcf = newSelection.getCf();
+                oldcf = newSelection.getCf();
 
 
 
-                        txtName.setText(newSelection.getName());
-                        txtSurname.setText(newSelection.getSurname());
-                        txtCf.setText(newSelection.getCf());
-                        dpBirthday.setValue(LocalDate.parse(newSelection.getBornOn()));
-                        txtBornWhere.setText(newSelection.getBornWhere());
-                        txtResidence.setText(newSelection.getResidence());
-                        txtAddress.setText(newSelection.getAddress());
-                        txtCap.setText(newSelection.getCap());
-                        txtProvince.setText(newSelection.getProvince());
+                txtName.setText(newSelection.getName());
+                txtSurname.setText(newSelection.getSurname());
+                txtCf.setText(newSelection.getCf());
+                dpBirthday.setValue(LocalDate.parse(newSelection.getBornOn()));
+                txtBornWhere.setText(newSelection.getBornWhere());
+                txtResidence.setText(newSelection.getResidence());
+                txtAddress.setText(newSelection.getAddress());
+                txtCap.setText(newSelection.getCap());
+                txtProvince.setText(newSelection.getProvince());
 
-                        //LOAD TABLE CONTACTS
-                        colSurnameContact.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
-                        colCfContact.setCellValueFactory(cellData -> cellData.getValue().cfProperty());
-                        colDoc.setCellValueFactory(cellData -> cellData.getValue().isDocProperty());
-                        colGuardian.setCellValueFactory(cellData -> cellData.getValue().isGuardianProperty());
-                        colContact.setCellValueFactory(cellData -> cellData.getValue().isContactProperty());
+                //LOAD TABLE CONTACTS
+                colSurnameContact.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
+                colCfContact.setCellValueFactory(cellData -> cellData.getValue().cfProperty());
+                colDoc.setCellValueFactory(cellData -> cellData.getValue().isDocProperty());
+                colGuardian.setCellValueFactory(cellData -> cellData.getValue().isGuardianProperty());
+                colContact.setCellValueFactory(cellData -> cellData.getValue().isContactProperty());
 
-                        tableContacts.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-                        tableContacts.getSelectionModel().selectedItemProperty().addListener((obsContact, oldSelectionContact, newSelectionContact) -> {
-                            if (newSelectionContact != null) {
-                                selectedContact.add(newSelectionContact.getName());
-                                selectedContact.add(newSelectionContact.getSurname());
-                                selectedContact.add(newSelectionContact.getCf());
-                                selectedContact.add(newSelectionContact.getMail());
-                                selectedContact.add(newSelectionContact.getTel());
-                                selectedContact.add(newSelectionContact.getBornOn());
-                                selectedContact.add(newSelectionContact.getBornWhere());
-                                selectedContact.add(newSelectionContact.getAddress());
-                                selectedContact.add(newSelectionContact.getCap());
-                                selectedContact.add(newSelectionContact.getProvince());
-                                selectedContact.add(newSelectionContact.getIsDoc());
-                                selectedContact.add(newSelectionContact.getIsGuardian());
-                                selectedContact.add(newSelectionContact.getIsContact());
+                tableContacts.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+                tableContacts.getSelectionModel().selectedItemProperty().addListener((obsContact, oldSelectionContact, newSelectionContact) -> {
+                    if (newSelectionContact != null) {
+                        selectedContact.add(newSelectionContact.getName());
+                        selectedContact.add(newSelectionContact.getSurname());
+                        selectedContact.add(newSelectionContact.getCf());
+                        selectedContact.add(newSelectionContact.getMail());
+                        selectedContact.add(newSelectionContact.getTel());
+                        selectedContact.add(newSelectionContact.getBornOn());
+                        selectedContact.add(newSelectionContact.getBornWhere());
+                        selectedContact.add(newSelectionContact.getAddress());
+                        selectedContact.add(newSelectionContact.getCap());
+                        selectedContact.add(newSelectionContact.getProvince());
+                        selectedContact.add(newSelectionContact.getIsDoc());
+                        selectedContact.add(newSelectionContact.getIsGuardian());
+                        selectedContact.add(newSelectionContact.getIsContact());
 
-                                txtNameContact.setText(newSelectionContact.getName());
-                                txtSurnameContact.setText(newSelectionContact.getSurname());
-                                txtCfContact.setText(newSelectionContact.getCf());
-                                txtMailContact.setText(newSelectionContact.getMail());
-                                txtTelContact.setText(newSelectionContact.getTel());
-                                dpBirthdayContact.setValue(LocalDate.parse(newSelectionContact.getBornOn()));
-                                txtBornWhereContact.setText(newSelectionContact.getBornWhere());
-                                txtAddressContact.setText(newSelectionContact.getAddress());
-                                txtCapContact.setText(newSelectionContact.getCap());
-                                txtProvinceContact.setText(newSelectionContact.getProvince());
-                                if (newSelectionContact.getIsDoc().equals("1")) {
-                                    cbDoc.setSelected(true);
-                                    isDocint = 1;
-                                } else {
-                                    cbDoc.setSelected(false);
-                                    isDocint = 0;
-                                }
-                                if (newSelectionContact.getIsGuardian().equals("1")) {
-                                    cbGuardian.setSelected(true);
-                                    isGuardianint = 1;
-                                } else{
-                                    cbGuardian.setSelected(false);
-                                    isGuardianint = 0;
-                                }
-                                if (newSelectionContact.getIsContact().equals("1")){
-                                    cbContact.setSelected(true);
-                                    isContactint = 1;
-                                }else {
-                                    cbContact.setSelected(false);
-                                    isContactint = 0;
-                                }
-                                oldcfContact = newSelectionContact.getCf();
-                            }
-                        });
-                        tableContacts.getItems().clear();
+                        txtNameContact.setText(newSelectionContact.getName());
+                        txtSurnameContact.setText(newSelectionContact.getSurname());
+                        txtCfContact.setText(newSelectionContact.getCf());
+                        txtMailContact.setText(newSelectionContact.getMail());
+                        txtTelContact.setText(newSelectionContact.getTel());
+                        dpBirthdayContact.setValue(LocalDate.parse(newSelectionContact.getBornOn()));
+                        txtBornWhereContact.setText(newSelectionContact.getBornWhere());
+                        txtAddressContact.setText(newSelectionContact.getAddress());
+                        txtCapContact.setText(newSelectionContact.getCap());
+                        txtProvinceContact.setText(newSelectionContact.getProvince());
+                        if (newSelectionContact.getIsDoc().equals("1")) {
+                            cbDoc.setSelected(true);
+                            isDocint = 1;
+                        } else {
+                            cbDoc.setSelected(false);
+                            isDocint = 0;
+                        }
+                        if (newSelectionContact.getIsGuardian().equals("1")) {
+                            cbGuardian.setSelected(true);
+                            isGuardianint = 1;
+                        } else{
+                            cbGuardian.setSelected(false);
+                            isGuardianint = 0;
+                        }
+                        if (newSelectionContact.getIsContact().equals("1")){
+                            cbContact.setSelected(true);
+                            isContactint = 1;
+                        }else {
+                            cbContact.setSelected(false);
+                            isContactint = 0;
+                        }
+                        oldcfContact = newSelectionContact.getCf();
                     }
+                });
+                tableContacts.getItems().clear();
+            }
         });
         tableChild.getItems().clear();
 
@@ -416,7 +416,7 @@ public class ChildController implements Initializable {
         }else if(!u.controllCF(cf)){
             this.renameLabel("Change child fiscal code");
         }
-            else {
+        else {
             System.out.println("Adding data to database...");
             try {
                 boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy,
@@ -490,31 +490,31 @@ public class ChildController implements Initializable {
 
             this.renameLabel("Insert data.");
         } else if(!oldcf.equals(cf) && !u.controllCF(cf)){
-                this.renameLabel("Change fiscal code");
+            this.renameLabel("Change fiscal code");
         }else {
-                System.out.println("Adding data to database...");
-                try {
-                    boolean isEditOk = u.updateChild(surname, name, oldcf, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
+            System.out.println("Adding data to database...");
+            try {
+                boolean isEditOk = u.updateChild(surname, name, oldcf, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy);  //call method in Server Impl
 
-                    if (isEditOk) {
-                        lblWarning.setText("Congrats! Child edited.");
-                        selectedChild.clear();
-                        txtName.clear();
-                        txtSurname.clear();
-                        txtCf.clear();
-                        dpBirthday.setValue(LocalDate.now());
-                        txtBornWhere.clear();
-                        txtResidence.clear();
-                        txtAddress.clear();
-                        txtCap.clear();
-                        txtProvince.clear();
-                    }
-                    btnAdd.setDisable(false);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+                if (isEditOk) {
+                    lblWarning.setText("Congrats! Child edited.");
+                    selectedChild.clear();
+                    txtName.clear();
+                    txtSurname.clear();
+                    txtCf.clear();
+                    dpBirthday.setValue(LocalDate.now());
+                    txtBornWhere.clear();
+                    txtResidence.clear();
+                    txtAddress.clear();
+                    txtCap.clear();
+                    txtProvince.clear();
                 }
+                btnAdd.setDisable(false);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
+    }
 
 
 
@@ -601,7 +601,7 @@ public class ChildController implements Initializable {
             this.renameLabel("Insert data.");
 
         } else if(!u.controllContactCF(cf)){
-        this.renameLabel("Change contact fiscal code");
+            this.renameLabel("Change contact fiscal code");
         }else {
 
             System.out.println("Adding data to database...");
@@ -820,8 +820,8 @@ public class ChildController implements Initializable {
                     if(x.getCf().contains(searchContact.getText()) || x.getSurname().contains(searchContact.getText()))
                         searchedContacts.add(x);
                 }
-                tableContacts.setItems(null);
-                tableContacts.setItems(searchedContacts);
+            tableContacts.setItems(null);
+            tableContacts.setItems(searchedContacts);
         }
         else{
             tableContacts.setItems(null);
@@ -857,8 +857,8 @@ public class ChildController implements Initializable {
         if(searchCH.getText().trim().length() != 0){
             if(dataObsList != null)
                 for(ChildGuiDetails x : dataObsList){
-                if(x.getAddress().contains(searchCH.getText()) || x.getBornOn().contains(searchCH.getText()) || x.getBornWhere().contains(searchCH.getText()) || x.getCap().contains(searchCH.getText()) || x.getCf().contains(searchCH.getText()) || x.getName().contains(searchCH.getText()) || x.getProvince().contains(searchCH.getText()) || x.getResidence().contains(searchCH.getText() )|| x.getSurname().contains(searchCH.getText()))
-                    searchedChildren.add(x);
+                    if(x.getAddress().contains(searchCH.getText()) || x.getBornOn().contains(searchCH.getText()) || x.getBornWhere().contains(searchCH.getText()) || x.getCap().contains(searchCH.getText()) || x.getCf().contains(searchCH.getText()) || x.getName().contains(searchCH.getText()) || x.getProvince().contains(searchCH.getText()) || x.getResidence().contains(searchCH.getText() )|| x.getSurname().contains(searchCH.getText()))
+                        searchedChildren.add(x);
                 }
             tableChild.setItems(null);
             tableChild.setItems(searchedChildren);

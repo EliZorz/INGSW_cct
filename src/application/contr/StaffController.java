@@ -90,7 +90,7 @@ public class StaffController implements Initializable {
     @FXML
     public TextField txtProvince;
     @FXML
-    public TableView tableIngr;
+    public TableView<IngredientsGuiDetails> tableIngr;
     @FXML
     public Button btnLoadIngredients;
     @FXML

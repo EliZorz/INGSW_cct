@@ -25,7 +25,7 @@ public class SocketThread extends Thread implements Runnable {
     }
 
 
-    private boolean reply = false;
+    boolean reply = false;
 
     @Override
     public void run() {
@@ -43,7 +43,6 @@ public class SocketThread extends Thread implements Runnable {
             for(;;) {
                 System.out.println("Ready to receive a message");
                 String line = (String) inputFromClient.readUnshared();
-
 
                 System.out.println("Received " + line + " from client # " + counter + "");
 
@@ -326,6 +325,7 @@ public class SocketThread extends Thread implements Runnable {
                 return reply;
             }
 
+
             //STAFF -------------------------------------------------------------------------
             case "loadDataStaff": {
                 System.out.println("Loading staff members...");
@@ -429,6 +429,7 @@ public class SocketThread extends Thread implements Runnable {
                 return reply;
             }
 
+
             case "controllPiva": {
                 System.out.println("Controlling supplier...");
                 try {
@@ -450,10 +451,6 @@ public class SocketThread extends Thread implements Runnable {
                 }
                 return reply;
             }
-
-
-
-
 
             //MENU BASE -------------------------------------------------------------------------------
             case "loadMenuBasic": {
@@ -522,6 +519,7 @@ public class SocketThread extends Thread implements Runnable {
                 }
                 return reply;
             }
+
             case "controllDate": {
                 System.out.println("Controlling the date...");
                 try {
@@ -532,6 +530,7 @@ public class SocketThread extends Thread implements Runnable {
                 }
                 return reply;
             }
+
             case "addMenu": {
                 System.out.println("adding the menu...");
                 try {
@@ -1118,7 +1117,7 @@ public class SocketThread extends Thread implements Runnable {
             }
             case "addTrip": {
                 System.out.println("Adding trip...");
-                int[] returnedPart;
+                int[] returnedPart = new int[2];
                 ArrayList<String> childrenArrayList = new ArrayList<>();
                 try {
                     Object loaded = inputFromClient.readUnshared();
@@ -1136,7 +1135,6 @@ public class SocketThread extends Thread implements Runnable {
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
-                    reply = false;
                 }
                 ArrayList<String> staffArrayList = new ArrayList<>();
                 try {
@@ -1155,7 +1153,6 @@ public class SocketThread extends Thread implements Runnable {
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
-                    reply = false;
                 }
                 try {
                     String timeDep = (String) inputFromClient.readUnshared();
@@ -1164,14 +1161,24 @@ public class SocketThread extends Thread implements Runnable {
                     String depFrom = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     String arr = (String) inputFromClient.readUnshared();
+
                     returnedPart = impl.addTrip(childrenArrayList, staffArrayList, timeDep, timeArr, timeCom, depFrom, arrTo, arr);
-                    for (int i = 0; i < 2; i++) {
-                        outputToClient.writeInt(returnedPart[i]);
-                        reply = true;
-                    }
-                } catch (ClassNotFoundException e) {
+                } catch (Exception e){
                     e.printStackTrace();
+                }
+                if(childrenArrayList.isEmpty() || staffArrayList.isEmpty()){
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     reply = false;
+                }
+                else {
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    for (int i = 0; i < 2; i++) {
+                        outputToClient.writeUnshared(returnedPart[i]);
+                        outputToClient.flush();
+                    }
+                    reply = true;
                 }
                 return reply;
             }
@@ -1247,17 +1254,21 @@ public class SocketThread extends Thread implements Runnable {
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                String dep;
+
                 try {
-                    dep = (String) inputFromClient.readUnshared();
+                    String dep = (String) inputFromClient.readUnshared();
                     String com = (String) inputFromClient.readUnshared();
                     ArrayList<CodRifChildDbDetails> loadedAl = impl.findNotAvailableStaff(arrayListToReturn, dep, com);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -1289,12 +1300,16 @@ public class SocketThread extends Thread implements Runnable {
                     dep = (String) inputFromClient.readUnshared();
                     String com = (String) inputFromClient.readUnshared();
                     ArrayList<CodRifChildDbDetails> loadedAl = impl.findNotAvailableChild(arrayListToReturn, dep, com);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -1322,8 +1337,6 @@ public class SocketThread extends Thread implements Runnable {
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                if(childrenArrayList.isEmpty())
-                    reply = false;
                 ArrayList<String> staffArrayList = new ArrayList<>();
                 try {
                     Object loaded = inputFromClient.readUnshared();
@@ -1342,11 +1355,19 @@ public class SocketThread extends Thread implements Runnable {
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                if(staffArrayList.isEmpty())
+                if(childrenArrayList.isEmpty() || staffArrayList.isEmpty()){
+                    outputToClient.writeUnshared(false);
+                    outputToClient.flush();
                     reply = false;
-                returnedPart = impl.howManyActualParticipants(childrenArrayList, staffArrayList);
-                for (int i = 0; i < 2; i++) {
-                    outputToClient.writeInt(returnedPart[i]);
+                }
+                else {
+                    returnedPart = impl.howManyActualParticipants(childrenArrayList, staffArrayList);
+                    outputToClient.writeUnshared(true);
+                    outputToClient.flush();
+                    for (int i = 0; i < 2; i++) {
+                        outputToClient.writeUnshared(returnedPart[i]);
+                        outputToClient.flush();
+                    }
                     reply = true;
                 }
                 return reply;
@@ -1372,7 +1393,6 @@ public class SocketThread extends Thread implements Runnable {
                         outputToClient.flush();
                         reply = true;
                     }
-                    return reply;
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -1399,7 +1419,6 @@ public class SocketThread extends Thread implements Runnable {
                         outputToClient.flush();
                         reply = true;
                     }
-                    return reply;
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -1431,7 +1450,7 @@ public class SocketThread extends Thread implements Runnable {
                 }
                 return reply;
             }
-            case "findParticipantsOnWrongBus": {
+            case "findParticipantOnWrongBus": {
                 System.out.println("Searching for participants on wrong bus...");
                 ArrayList<String> arrayListToReturn = new ArrayList<>();
                 try {
@@ -1451,8 +1470,6 @@ public class SocketThread extends Thread implements Runnable {
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                if(arrayListToReturn.isEmpty())
-                    reply = false;
                 try {
                     String selectedBus = (String) inputFromClient.readUnshared();
                     String depFrom = (String) inputFromClient.readUnshared();
@@ -1462,12 +1479,16 @@ public class SocketThread extends Thread implements Runnable {
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
                     ArrayList<String> loadedAl = impl.findParticipantOnWrongBus(arrayListToReturn, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
+                    if (loadedAl == null) {     //there are NOT participants on wrong bus
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {        //there are participants on wrong bus
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
                         outputToClient.writeUnshared(loadedAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -1512,8 +1533,6 @@ public class SocketThread extends Thread implements Runnable {
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                if(selectedChild.isEmpty())
-                    reply = false;
                 String selectedBus;
                 try {
                     selectedBus = (String) inputFromClient.readUnshared();
@@ -1523,13 +1542,17 @@ public class SocketThread extends Thread implements Runnable {
                     String accomodation = (String) inputFromClient.readUnshared();
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
-                    ArrayList<String> loadedAl = impl.findMissingParticipantsOnThisBus(peopleOnWrongBus, selectedChild, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
-                    if (!loadedAl.isEmpty()) {
-                        outputToClient.writeUnshared(loadedAl);
+                    ArrayList<String> missingAl = impl.findMissingParticipantsOnThisBus(peopleOnWrongBus, selectedChild, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
+                    if (missingAl == null) {    //no missing people
+                        outputToClient.writeUnshared(false);
+                        outputToClient.flush();
+                        reply = false;
+                    } else {        //there are missing people
+                        outputToClient.writeUnshared(true);
+                        outputToClient.flush();
+                        outputToClient.writeUnshared(missingAl);
                         outputToClient.flush();
                         reply = true;
-                    } else {
-                        reply = false;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -1565,15 +1588,15 @@ public class SocketThread extends Thread implements Runnable {
                     String accomodation = (String) inputFromClient.readUnshared();
                     String arr = (String) inputFromClient.readUnshared();
                     String arrTo = (String) inputFromClient.readUnshared();
-                    ArrayList<ChildSelectedTripDbDetails> loadedAl = impl.loadMissing(arrayListToReturn, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
-                    if (loadedAl == null) {
+                    ArrayList<ChildSelectedTripDbDetails> missingAl = impl.loadMissing(arrayListToReturn, selectedBus, depFrom, dep, com, accomodation, arr, arrTo);
+                    if (missingAl == null) { //no missing people
                         outputToClient.writeUnshared(true);
                         outputToClient.flush();
                         reply = false;
-                    } else {
+                    } else {    //there are missing people
                         outputToClient.writeUnshared(false);
                         outputToClient.flush();
-                        outputToClient.writeUnshared(loadedAl);
+                        outputToClient.writeUnshared(missingAl);
                         outputToClient.flush();
                         reply = true;
                     }
