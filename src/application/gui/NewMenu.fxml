@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="582.0" prefWidth="814.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.NewMenuController">
+   <children>
+      <AnchorPane layoutX="30.0" layoutY="30.0" prefHeight="522.0" prefWidth="619.0" style="-fx-border-color: #000080;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0">
+         <children>
+            <TextField fx:id="entreeTF" layoutX="24.0" layoutY="31.0" promptText="Entree" AnchorPane.leftAnchor="24.0" />
+            <TextField fx:id="mainTF" layoutX="24.0" layoutY="77.0" promptText="Main Course" AnchorPane.leftAnchor="24.0" />
+            <TextField fx:id="dessertTF" layoutX="24.0" layoutY="123.0" promptText="Dessert" AnchorPane.leftAnchor="24.0" />
+            <TextField fx:id="drinkTF" layoutX="24.0" layoutY="210.0" promptText="Drink" AnchorPane.leftAnchor="24.0" />
+            <TextField fx:id="sideTF" layoutX="24.0" layoutY="167.0" promptText="Side dish" AnchorPane.leftAnchor="24.0" />
+            <DatePicker fx:id="dayTF" layoutX="24.0" layoutY="254.0" promptText="Date" AnchorPane.leftAnchor="24.0" />
+            <TextField fx:id="numTF" layoutX="26.0" layoutY="299.0" prefHeight="25.0" prefWidth="64.0" promptText="Number" AnchorPane.leftAnchor="25.0" />
+            <Button fx:id="saveIngr" layoutX="366.0" layoutY="368.0" mnemonicParsing="false" onAction="#saveIngredients" prefHeight="36.0" prefWidth="200.0" text="Save ingredients for the plate " />
+            <Button fx:id="deselectIngr" layoutX="366.0" layoutY="415.0" mnemonicParsing="false" onAction="#deselect" prefHeight="36.0" prefWidth="200.0" text="Deselect all ingredients" />
+            <Button fx:id="entreeOk" layoutX="185.0" layoutY="31.0" mnemonicParsing="false" onAction="#entreeIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="mainOk" layoutX="185.0" layoutY="77.0" mnemonicParsing="false" onAction="#mainIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="dessertOk" layoutX="185.0" layoutY="123.0" mnemonicParsing="false" onAction="#dessertIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="sideOk" layoutX="185.0" layoutY="167.0" mnemonicParsing="false" onAction="#sideIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Button fx:id="drinkOk" layoutX="185.0" layoutY="210.0" mnemonicParsing="false" onAction="#drinkIngr" prefHeight="25.0" prefWidth="36.0" text="Ok" />
+            <Label fx:id="label1" layoutX="24.0" layoutY="473.0" prefHeight="35.0" prefWidth="543.0" text="Status" textFill="#f80404">
+               <font>
+                  <Font name="Courier New" size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="searchTF" layoutX="407.0" layoutY="31.0" prefHeight="26.0" prefWidth="149.0" />
+            <Button fx:id="search" layoutX="505.0" layoutY="64.0" mnemonicParsing="false" onAction="#searchIngr" prefHeight="25.0" prefWidth="52.0" text="Search">
+               <effect>
+                  <SepiaTone />
+               </effect></Button>
+            <Button fx:id="back" layoutX="366.0" layoutY="31.0" mnemonicParsing="false" onAction="#reLoad" prefHeight="25.0" prefWidth="30.0">
+               <graphic>
+                  <ImageView fitHeight="17.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@if_back_322419.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <TableView fx:id="tabIng" layoutX="366.0" layoutY="95.0" prefHeight="256.0" prefWidth="200.0">
+               <columns>
+                  <TableColumn fx:id="colIngr" prefWidth="199.0" text="Available ingredients" />
+               </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+      <Button fx:id="save" layoutX="664.0" layoutY="208.0" mnemonicParsing="false" onAction="#saveMenu" prefHeight="36.0" prefWidth="131.0" text="Save menu" />
+      <Button fx:id="backHome" layoutX="708.0" layoutY="347.0" mnemonicParsing="false" onAction="#backHome" prefHeight="36.0" prefWidth="44.0">
+         <graphic>
+            <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@if_House_by_Artdesigner.lv_83154.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+   </children>
+</AnchorPane>

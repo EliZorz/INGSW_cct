@@ -2,8 +2,6 @@ package application.contr;
 
 import com.mysql.jdbc.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -13,10 +11,10 @@ public class Database {
 
     private static final String usrname = "root";
 
-    private static final String pw = "Monali2009!";
+    private static final String pw = "123456"; //"Monali2009!"
 
     //JDBC driver name and DB URL
-    private static final String url ="jdbc:mysql://localhost:3306/Login";
+    private static final String url = "jdbc:mysql://localhost:3306/Project";
 
     private static final String db = "com.mysql.jdbc.Driver";
 
@@ -30,6 +28,8 @@ public class Database {
             Class.forName(db);
             //establish connection
             con = (Connection) DriverManager.getConnection(url, usrname, pw);
+
+
 
             if (con != null) {
                 System.out.println("Connection successful");

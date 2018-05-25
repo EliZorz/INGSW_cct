@@ -1,65 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="894.8359375" minWidth="1295.0" prefHeight="894.8359375" prefWidth="1489.0" style="-fx-background-color:#FEFEE9;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.contr.MenuInizialeController">
-  <children>
-    <AnchorPane layoutX="0.0" layoutY="604.0" prefHeight="290.8359375" prefWidth="1489.0" style="-fx-background-color:#aef9bc;">
-      <children>
-        <Text fill="#3c964d" layoutX="700.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" style="   -fx-font-size: 40px;" text="DAY TRIP">
-          <font>
-            <Font size="40.0" fx:id="x4" />
-          </font>
-        </Text>
-        <Button mnemonicParsing="false" onAction="#GiteDisponibili" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#f0ff35, #a9ff00),&#10;        radial-gradient(center 50% -40%, radius 200%, #b8ee36 45%, #80c800 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: green;&#10;    -fx-font-size: 35px;" text="AVAILABLE TRIP" AnchorPane.bottomAnchor="82.0" AnchorPane.rightAnchor="897.0">
-          <font>
-            <Font size="35.0" fx:id="x2" />
-          </font>
-          <textFill>
-            <Color blue="0.000" green="0.800" red="0.256" fx:id="x3" />
-          </textFill>
-        </Button>
-        <Button font="$x2" mnemonicParsing="false" onAction="#NuovaGita" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#f0ff35, #a9ff00),&#10;        radial-gradient(center 50% -40%, radius 200%, #b8ee36 45%, #80c800 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: green;&#10;    -fx-font-size: 35px;" text="ADD TRIP" textFill="$x3" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="961.0" />
-      </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color:#FEFEE9;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.MenuInizialeController">
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #E0FFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+        <children>
+            <AnchorPane layoutX="381.0" layoutY="31.0" prefHeight="292.0" prefWidth="197.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffd700;" AnchorPane.rightAnchor="59.799999999999955" AnchorPane.topAnchor="31.0">
+                <children>
+                    <ImageView fitHeight="150.0" fitWidth="156.0" layoutX="36.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="121.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="35.599998474121094" AnchorPane.topAnchor="24.0">
+                        <image>
+                            <Image url="@schoolTheme.jpg" />
+                        </image></ImageView>
+                    <Button layoutX="78.0" layoutY="228.0" mnemonicParsing="false" onAction="#logout" AnchorPane.bottomAnchor="28.0" AnchorPane.rightAnchor="75.0">
+                        <graphic>
+                            <ImageView fitHeight="28.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@1211766860.png" />
+                                </image></ImageView>
+                        </graphic>
+                    </Button>
+                </children>
+            </AnchorPane>
+            <AnchorPane layoutX="55.0" layoutY="31.0" prefHeight="407.0" prefWidth="256.0" style="-fx-border-color: #00C1C2; -fx-background-color: #FFFFFF;">
+                <children>
+                    <Button layoutX="71.0" layoutY="40.0" mnemonicParsing="false" onAction="#openInformation" prefHeight="42.0" prefWidth="114.0" text="INFORMATION" AnchorPane.leftAnchor="71.0" AnchorPane.topAnchor="54.0" />
+                    <Button layoutX="71.0" layoutY="162.0" mnemonicParsing="false" onAction="#openMenu" prefHeight="42.0" prefWidth="114.0" text="MENU" AnchorPane.bottomAnchor="182.0" AnchorPane.leftAnchor="71.0" AnchorPane.topAnchor="182.0" />
+                    <Button layoutX="71.0" layoutY="310.0" mnemonicParsing="false" onAction="#openDayTrip" prefHeight="42.0" prefWidth="114.0" text="DAY TRIP" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="71.0" />
+                </children>
+            </AnchorPane>
+        </children>
     </AnchorPane>
-    <AnchorPane layoutY="0.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#a6f9fc;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-      <children>
-        <Text font="$x4" layoutX="625.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" style="   -fx-font-size: 40px;" text="INFORMATIONS">
-          <fill>
-            <Color blue="1.000" green="0.160" red="0.000" fx:id="x1" />
-          </fill>
-        </Text>
-        <Button font="$x2" mnemonicParsing="false" onAction="#fornitore" prefHeight="125.9998779296875" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#02f2de, #0242f2),&#10;        radial-gradient(center 50% -40%, radius 200%, #14e5fc 45%, #07b9f9 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: blue;&#10;    -fx-font-size: 35px;" text="SUPPLIERS" textFill="$x1" AnchorPane.leftAnchor="604.0" AnchorPane.rightAnchor="554.0" AnchorPane.topAnchor="88.0" />
-        <Button font="$x2" mnemonicParsing="false" onAction="#PersonaleInterno" prefHeight="125.9998779296875" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#02f2de, #0242f2),&#10;        radial-gradient(center 50% -40%, radius 200%, #14e5fc 45%, #07b9f9 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: blue;&#10;    -fx-font-size: 35px;" text="STAFF" textFill="$x1" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="88.0" />
-        <Button font="$x2" mnemonicParsing="false" onAction="#bambini" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#02f2de, #0242f2),&#10;        radial-gradient(center 50% -40%, radius 200%, #14e5fc 45%, #07b9f9 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: blue;&#10;    -fx-font-size: 35px;" text="CHILDREN" textFill="$x1" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="88.0" />
-        <Button layoutX="37.0" layoutY="9.0" mnemonicParsing="false" prefWidth="238.0" style="-fx-background-color: linear-gradient(#ff5400, #be1d00);&#10;    -fx-background-radius: 30;&#10;    -fx-background-insets: 0;&#10;    -fx-text-fill: white;" text="LOGOUT" textFill="#990000" underline="true">
-          <effect>
-            <Lighting diffuseConstant="2.0" specularConstant="0.0" specularExponent="40.0" surfaceScale="0.0">
-              <bumpInput>
-                <Shadow />
-              </bumpInput>
-              <light>
-                <javafx.scene.effect.Light.Distant />
-              </light>
-            </Lighting>
-          </effect>
-        </Button>
-      </children>
-    </AnchorPane>
-    <AnchorPane layoutY="302.0" prefHeight="302.0" prefWidth="1489.0" style="-fx-background-color:#ffe8f1;" AnchorPane.leftAnchor="-0.2" AnchorPane.rightAnchor="0.2">
-      <children>
-        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenusSpeciale" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#e20b2b, #e008b1),&#10;        radial-gradient(center 50% -40%, radius 200%, #FADADD 45%, #FFC0CB 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: #f20e67;&#10;    -fx-font-size: 35px;" text="SPECIAL MENU" textFill="RED" AnchorPane.rightAnchor="900.0" />
-        <Button font="$x2" layoutY="88.0" mnemonicParsing="false" onAction="#MenuBase" prefHeight="126.0" prefWidth="331.0" style=" -fx-background-color:&#10;        linear-gradient(#e20b2b, #e008b1),&#10;        radial-gradient(center 50% -40%, radius 200%, #FADADD 45%, #FFC0CB 50%);&#10;    -fx-background-radius: 6, 5;&#10;    -fx-background-insets: 0, 1;&#10;    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );&#10;    -fx-text-fill: #f20e67;&#10;    -fx-font-size: 35px;" text="MAIN MENU" textFill="RED" AnchorPane.leftAnchor="961.0" />
-        <Text fill="#f20e67" font="$x4" layoutX="599.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" style="   -fx-font-size: 40px;&#10;&#10;&#10;" text="CAFETERIA SERVICES" />
-      </children>
-    </AnchorPane>
-  </children>
 </AnchorPane>

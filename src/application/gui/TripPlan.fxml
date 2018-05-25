@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="769.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripPlanController">
+   <children>
+      <TableView fx:id="tableChildren" layoutX="46.0" layoutY="53.0" prefHeight="170.0" prefWidth="313.0">
+         <columns>
+            <TableColumn fx:id="colNameChild" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurnameChild" prefWidth="101.59998321533203" text="Surname" />
+            <TableColumn fx:id="colCfChild" prefWidth="135.199951171875" text="CF" />
+         </columns>
+      </TableView>
+      <Text fill="#ff00e5" layoutX="46.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select participants among children:">
+         <font>
+            <Font name="Courier New" size="18.0" />
+         </font>
+      </Text>
+      <Label fx:id="lblTotChildren" layoutX="424.0" layoutY="73.0" text="Total children" textFill="#1b9225">
+         <font>
+            <Font name="Courier New" size="17.0" />
+         </font>
+      </Label>
+      <Text fill="#ff00ee" layoutX="46.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select participants among staff:">
+         <font>
+            <Font name="Courier New" size="18.0" />
+         </font>
+      </Text>
+      <Label fx:id="lblTotStaff" layoutX="423.0" layoutY="304.0" text="Total staff members" textFill="#1b9225">
+         <font>
+            <Font name="Courier New" size="17.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tableStaff" layoutX="46.0" layoutY="282.0" prefHeight="170.0" prefWidth="314.0">
+         <columns>
+            <TableColumn fx:id="colNameStaff" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurnameStaff" prefWidth="101.59998321533203" text="Surname" />
+            <TableColumn fx:id="colCfStaff" prefWidth="135.199951171875" text="CF" />
+         </columns>
+      </TableView>
+      <DatePicker fx:id="dpDepTime" layoutX="46.0" layoutY="476.0" promptText="Departure date time" />
+      <DatePicker fx:id="dpArrTime" layoutX="249.0" layoutY="476.0" promptText="Arrival date time" />
+      <DatePicker fx:id="dpComTime" layoutX="452.0" layoutY="476.0" promptText="Come back date time" />
+      <TextField fx:id="txtStaying" layoutX="46.0" layoutY="582.0" prefHeight="26.0" prefWidth="231.0" promptText="Staying address" />
+      <Button fx:id="btnAddTrip" layoutX="360.0" layoutY="703.0" mnemonicParsing="false" onAction="#handleAddTrip" prefHeight="38.0" prefWidth="111.0" text="Add trip" />
+      <Label fx:id="lblStatus" layoutX="46.0" layoutY="629.0" prefHeight="28.0" prefWidth="607.0" text="Status" textAlignment="CENTER" textFill="#ea0101">
+         <font>
+            <Font name="Courier New" size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnBack" layoutX="480.0" layoutY="703.0" mnemonicParsing="false" onAction="#handleBackHome" prefHeight="38.0" prefWidth="143.0" text="Homepage" />
+      <TextField fx:id="txtDepFrom" layoutX="46.0" layoutY="529.0" promptText="Departure from" />
+      <TextField fx:id="txtArrTo" layoutX="249.0" layoutY="529.0" promptText="Arrival to" />
+      <Button fx:id="btnLoadChildren" layoutX="374.0" layoutY="196.0" mnemonicParsing="false" onAction="#handleLoadChildren" prefHeight="26.0" prefWidth="83.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00bbff" />
+         </effect>
+      </Button>
+      <Button fx:id="btnLoadStaff" layoutX="374.0" layoutY="425.0" mnemonicParsing="false" onAction="#handleLoadStaff" prefHeight="26.0" prefWidth="83.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#01b7ff" />
+         </effect>
+      </Button>
+      <Label fx:id="lblStatusChildren" layoutX="424.0" layoutY="130.0" text="Status Children" textFill="#0628e5">
+         <font>
+            <Font name="Courier New" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblStatusStaff" layoutX="424.0" layoutY="367.0" text="Status Staff" textFill="#0628e5">
+         <font>
+            <Font name="Courier New" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnDeselect" layoutX="231.0" layoutY="703.0" mnemonicParsing="false" onAction="#handleDeselect" prefHeight="38.0" prefWidth="111.0" text="Deselect all" />
+   </children>
+</AnchorPane>

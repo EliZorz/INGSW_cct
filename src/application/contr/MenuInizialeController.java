@@ -1,17 +1,12 @@
 package application.contr;
 
 
+import application.Interfaces.UserRemote;
+import application.LookupCall;
+import application.gui.GuiNew;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-
-import java.awt.*;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,97 +15,114 @@ public class MenuInizialeController {
 
 
     @FXML
-    void MenuBase(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MenuBasePlates.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p,screenSize.getWidth(),screenSize.getHeight()));
-        stage.show();
-    }
-
-    @FXML
-    void MenusSpeciale(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MenuSpeciale.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p,screenSize.getWidth(),screenSize.getHeight()));
-        stage.show();
-    }
-
-    @FXML
-    void GiteDisponibili(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/GiteDisponibili.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p));
-        stage.show();
-    }
-
-    @FXML
-    void NuovaGita(ActionEvent event)throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/NuovaGita.fxml"));
-        Parent p = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(p));
-        stage.show();
-
-    }
-
-
-    @FXML
-    void fornitore(ActionEvent event)throws Exception{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/Fornitore.fxml"));
-
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene (root1));
-            stage.show();
-
-    }
-@FXML
-    void bambini(ActionEvent event) throws Exception{
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/Bambini.fxml"));
-
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene (root1));
-            stage.show();
-            //stage.close(); // in generale per chiudere una pagina
-            stage.setFullScreen(true);
-
-
-    }
-    @FXML
-
-    void PersonaleInterno(ActionEvent event)throws Exception{
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/PersonaleInterno.fxml"));
-
-        Parent root1 = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene (root1));
-        stage.show();
-           stage.isFullScreen();
-
-
-
-
-    }
-
-
-    @FXML
-    public void ReturnToHomePage(ActionEvent event)throws Exception{
-        //.setOnAction(e -> Platform.exit());
-
-        //System.exit(0);  //in questo modo chiudo tutto
-       // Platform.exit(); altro modo per chiudere tutto
+    void openInformation(ActionEvent event) throws Exception{
         ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Information");
+    }
+
+    @FXML
+    void openMenu(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Menu");
+    }
+
+    @FXML
+    void openChildren(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Children");
+    }
+
+    @FXML
+    void openStaff(ActionEvent event) throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Staff");
+    }
+
+
+    @FXML
+    void openMenuBasePlates (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("MenuBasePlates");
+    }
+
+    @FXML
+    void openSpecialMenu (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("LoadSpecialMenu");
+    }
+
+
+
+    @FXML
+    void openDayTrip(ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripMenu");
 
     }
 
+    @FXML
+    void openTableTrips(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripTable");
+    }
+
+    @FXML
+    void openPlanTrip(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripPlan");
+    }
+
+    @FXML
+    public void openActualParticipants(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripActualParticipants");
+    }
+
+    @FXML
+    void openBeforeTrip(ActionEvent event) throws Exception {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("TripBefore");
+    }
+
+
+    @FXML
+    void openSuppliers (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("Suppliers");
+    }
+
+
+    @FXML
+    void handleOpenCoachOperators (ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("CoachOperators");
+    }
+
+
+    @FXML
+    public void backHome(ActionEvent event)throws Exception{
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+        new GuiNew("MenuIniziale");
+
+    }
+
+    @FXML
+    public void logout(ActionEvent event) throws Exception {
+        if(MainControllerLogin.selected.equals("RMI")) {
+            ((Node) (event.getSource())).getScene().getWindow().hide();
+            new GuiNew("LoginUser");
+        } else {
+            UserRemote u = LookupCall.getInstance().methodSocket();
+            boolean result = u.logout();
+            if (result){
+                ((Node)(event.getSource())).getScene().getWindow().hide();
+                new GuiNew("LoginUser");
+            }else{
+                System.out.println("Something went wrong.");
+            }
+        }
+
+    }
 
     @FXML
     private ResourceBundle resources;
@@ -119,16 +131,4 @@ public class MenuInizialeController {
     private URL location;
 
 
-
-
-    @FXML
-    void initialize() {
-
-
-    }
-
-
-
 }
-
-

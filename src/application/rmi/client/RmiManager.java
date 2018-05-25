@@ -1,7 +1,7 @@
 package application.rmi.client;
 
 import application.Interfaces.ServicesManager;
-import application.Interfaces.UserRemoteInt;
+import application.Interfaces.UserRemote;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,11 +15,10 @@ public class RmiManager implements ServicesManager {
     Registry registry = null;
 
     public RmiManager(){
-        //LOOKUP
+
         try {
             registry = LocateRegistry.getRegistry();
 
-            //String reply = pippo.sendMessage("Client hello");
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -27,8 +26,8 @@ public class RmiManager implements ServicesManager {
 
 
     @Override
-    public UserRemoteInt getUserService() throws Exception {
+    public UserRemote getUserService() throws Exception {
 
-            return (UserRemoteInt) registry.lookup("UserRemote");
+            return (UserRemote) registry.lookup("Inter");
     }
 }

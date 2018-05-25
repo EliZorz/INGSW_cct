@@ -1,22 +1,29 @@
 package application.contr;
 
-import application.Interfaces.ServicesManager;
+import application.LookupCall;
+import application.gui.GuiNew;
 import application.Interfaces.UserRemote;
-import application.rmi.client.RmiManager;
-import application.socket.client.SocketManager;
+
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.sql.ResultSet;
+import java.awt.event.ActionEvent;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
+
 
 /**
  * Created by ELISA on 23/03/2018.
  */
-public class MainControllerLogin {
+public class MainControllerLogin implements Initializable {
 
-    ServicesManager ch = null;
+    public static String selected = null;  //per la scelta tra rmi e socket
 
 
     @FXML
@@ -32,106 +39,69 @@ public class MainControllerLogin {
     private Label lblStatus;
 
 
-    public void handleLogin() throws SQLException {
-
-        String usr = txtUsername.getText().toString();
-        String pwd = txtPassword.getText().toString();
-
-
-
-        try {
-
-            //extract data from dataSet
-            String selected = (String) select.getSelectionModel().getSelectedItem();
-
-            if(selected.equals("RMI")){
-                System.out.println("User chose rmi.\nProceed...");
-
-                //LA CONNESSIONE AL DB DEVE FARLA LA FUNZIONE funzLog
-                ch = new RmiManager();
-
-                //chiamare funzione da scrivere in questa classe che riceve da ServerImpl il ResultSet result e lo analizza
-                //this.isLogged(ch.getUserService().funzLog(usr, pwd));
-
-
-                /* da mettere nel logOut !!!!!!!!!!!!!!!!!!!!!!!!!!
-                if (connectionOK != null) {
-                    try {
-                        connectionOK.close();
-                    } catch (SQLException sqe) {
-                        sqe.printStackTrace();
-                    }
-                }
-                if(result != null){
-                    try{
-                        result.close();
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                */
-
-
-            } else if (selected.equals("SOCKET")){
-                System.out.println("User chose SOCKET.\nProceed...");
-                ch = new SocketManager();
-                UserRemote u = ch.getUserService();
-
-
-                boolean result = u.funzLog(usr, pwd);
-
-                if (result){
-                    this.renameLabel("Loggato");
-                }else{
-                    this.renameLabel("Credenziali sbagliate");
-                }
-
-               // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
-
-
-
-
-
-
-
-
-            } else {
-                lblStatus.setText("RMI or SOCKET?");
-            }
-
-
-        } catch (Exception se) {
-            se.printStackTrace();
-        }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        txtPassword.clear();
+        txtUsername.clear();
 
     }
 
 
-    public void isLogged(ResultSet result){
+    public void handleLogin(Event event) throws SQLException {
+        String usr = txtUsername.getText();
+        String pwd = txtPassword.getText();
 
-        try{
-            if( !result.next() ) {
-                lblStatus.setText("Login failed");
-                System.out.println("No user like that in your database");
+        selected = (String) select.getSelectionModel().getSelectedItem();
+
+        try {
+            if (selected == null){
+                System.out.println("User did not choose.\nRetry...");
+                lblStatus.setText("RMI or SOCKET?");
+            } else
+            if(usr.trim().isEmpty() || pwd.trim().isEmpty()){
+                this.renameLabel("Insert username, password");
+
+            } else if(selected.equals("RMI")){
+                System.out.println("User chose RMI.\nProceed...");
+
+                UserRemote u = LookupCall.getInstance().methodRmi();
+
+                boolean result = u.funzLog(usr, pwd);
+
+                if (result){
+
+                    this.renameLabel("Logged in.");
+
+                    ((Node)(event.getSource())).getScene().getWindow().hide();
+                    new GuiNew("MenuIniziale");
+
+
+                } else{
+                    this.renameLabel("Insert correct data.");
+                }
+
+            } else if (selected.equals("SOCKET")){
+                System.out.println("User chose SOCKET.\nProceed...");
+
+                UserRemote u = LookupCall.getInstance().methodSocket();
+
+                boolean result = u.funzLog(usr, pwd);
+
+                if (result){
+                    this.renameLabel("Logged in.");
+                    new GuiNew("MenuIniziale");
+
+                }else{
+                    this.renameLabel("Wrong data.");
+                }
+                // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
+
             } else {
-                result.beforeFirst();
-                while (result.next()) {
-                    String usrFound = result.getString("Username");
-                    System.out.println("USER: " + usrFound);
-                    String pwdFound = result.getString("Password");
-                    System.out.println("PASSWORD: " + pwdFound);
-                }
-
-                try {
-                    new GuiNew().openFxml("../../gui/MenuIniziale.fxml");
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
+                lblStatus.setText("Something wrong.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        } catch (Exception se) {
+            se.printStackTrace();
         }
 
     }

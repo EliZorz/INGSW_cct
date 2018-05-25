@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="778.0" prefWidth="821.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.TripBeforeController">
+   <children>
+      <Text fill="#f800d2" layoutX="37.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Who's on which bus?">
+         <font>
+            <Font name="Courier New" size="20.0" />
+         </font>
+      </Text>
+      <TableView fx:id="tableBus" layoutX="354.0" layoutY="281.0" prefHeight="203.0" prefWidth="114.0">
+         <columns>
+            <TableColumn fx:id="colPlate" prefWidth="112.80001220703124" text="License plate" />
+         </columns>
+      </TableView>
+      <TableView fx:id="tableWho" layoutX="37.0" layoutY="281.0" prefHeight="203.0" prefWidth="276.0">
+         <columns>
+            <TableColumn fx:id="colName" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurname" prefWidth="75.0" text="Surname" />
+            <TableColumn fx:id="colCf" prefWidth="124.80000305175781" text="CF" />
+         </columns>
+      </TableView>
+      <Button fx:id="btnCheck" layoutX="503.0" layoutY="419.0" mnemonicParsing="false" onAction="#handleCheck" prefHeight="42.0" prefWidth="106.0" text="Check">
+         <effect>
+            <InnerShadow />
+         </effect>
+      </Button>
+      <Button fx:id="btnDeselectWho" layoutX="503.0" layoutY="297.0" mnemonicParsing="false" onAction="#handleDeselectWho" prefHeight="42.0" prefWidth="106.0" text="Deselect who" />
+      <Button fx:id="btnDeselectBus" layoutX="503.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleDeselectBus" prefHeight="42.0" prefWidth="106.0" text="Deselect bus" />
+      <Button fx:id="btnBack" layoutX="735.0" layoutY="656.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="42.0" prefWidth="43.0">
+         <graphic>
+            <ImageView fitHeight="31.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@if_House_by_Artdesigner.lv_83154.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Label fx:id="lblStatus" layoutX="33.0" layoutY="718.0" prefHeight="28.0" prefWidth="755.0" text="Status" textFill="#f00505">
+         <font>
+            <Font name="Courier New" size="20.0" />
+         </font>
+      </Label>
+      <Text fill="#f800d2" layoutX="37.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select your trip:">
+         <font>
+            <Font name="Courier New" size="20.0" />
+         </font>
+      </Text>
+      <TableView fx:id="tableTrip" layoutX="33.0" layoutY="46.0" prefHeight="155.0" prefWidth="755.0">
+         <columns>
+            <TableColumn fx:id="colDepFrom" prefWidth="121.60003662109375" text="Departure from" />
+            <TableColumn fx:id="colDeparture" prefWidth="123.19997882843018" text="Departure date time" />
+            <TableColumn fx:id="colComeback" prefWidth="137.59994506835938" text="Come back date time" />
+            <TableColumn fx:id="colAccomodation" prefWidth="161.5999755859375" text="Accomodation" />
+            <TableColumn fx:id="colArrival" prefWidth="112.0" text="Arrival date time" />
+            <TableColumn fx:id="colArrivalTo" prefWidth="98.39996337890625" text="Arrival to" />
+         </columns>
+      </TableView>
+      <Button fx:id="btnLoadTrip" layoutX="692.0" layoutY="208.0" mnemonicParsing="false" onAction="#handleLoadTrip" prefHeight="19.0" prefWidth="99.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#039aff" />
+         </effect></Button>
+      <Button fx:id="btnSolution" layoutX="646.0" layoutY="419.0" mnemonicParsing="false" onAction="#handleOpenSolutionGui" prefHeight="42.0" prefWidth="141.0" text="View solution">
+         <effect>
+            <InnerShadow />
+         </effect></Button>
+      <Button fx:id="btnLoadWho" layoutX="230.0" layoutY="491.0" mnemonicParsing="false" onAction="#handleLoadWho" prefHeight="26.0" prefWidth="88.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00b7ff" />
+         </effect></Button>
+      <Button fx:id="btnLoadBus" layoutX="380.0" layoutY="491.0" mnemonicParsing="false" onAction="#handleLoadBus" prefHeight="26.0" prefWidth="88.0" text="Load">
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00bbff" />
+         </effect></Button>
+      <TableView fx:id="tableMissing" layoutX="37.0" layoutY="549.0" prefHeight="149.0" prefWidth="276.0">
+         <columns>
+            <TableColumn fx:id="colNameMissing" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colSurnameMissing" prefWidth="75.0" text="Surname" />
+            <TableColumn fx:id="colCfMissing" prefWidth="124.80000305175781" text="CF" />
+         </columns>
+      </TableView>
+      <Text fill="#f800d2" layoutX="42.0" layoutY="543.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Missing:">
+         <font>
+            <Font name="Courier New" size="20.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
