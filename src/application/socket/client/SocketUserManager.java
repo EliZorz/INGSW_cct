@@ -321,7 +321,7 @@ public class SocketUserManager implements UserRemote {
 
     //CONTACT --------------------------------------------------------------------------------
     @Override
-    public boolean addContact (ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+    public boolean addContact (String selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         boolean ok = false;
         try{
             toServer.writeUnshared ("addContact");
@@ -367,7 +367,7 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public boolean deleteContact (String oldcfContact) throws RemoteException{
+    public boolean deleteContact (String oldcfContact, String oldCfChild) throws RemoteException{
         boolean ok =false;
         try{
             toServer.writeUnshared ("deleteContact");
@@ -387,7 +387,7 @@ public class SocketUserManager implements UserRemote {
     }
 
     @Override
-    public boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException{
+    public boolean updateContact(String name, String surname, String oldcf, String cf, String cfChild, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException{
         boolean ok = false;
         try{
             toServer.writeUnshared ("updateContact");
@@ -399,6 +399,8 @@ public class SocketUserManager implements UserRemote {
             toServer.writeUnshared (oldcf);
             toServer.flush();
             toServer.writeUnshared (cf);
+            toServer.flush();
+            toServer.writeUnshared(cfChild);
             toServer.flush();
             toServer.writeUnshared (mail);
             toServer.flush();
@@ -414,11 +416,11 @@ public class SocketUserManager implements UserRemote {
             toServer.flush();
             toServer.writeUnshared (province);
             toServer.flush();
-            toServer.write(isDoc);
+            toServer.writeUnshared(isDoc);
             toServer.flush();
-            toServer.write(isGuardian);
+            toServer.writeUnshared(isGuardian);
             toServer.flush();
-            toServer.write(isContact);
+            toServer.writeUnshared(isContact);
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -484,25 +486,6 @@ public class SocketUserManager implements UserRemote {
         return null;
     }
 
-    @Override
-    public boolean controllContactCF(String CF) throws RemoteException {
-        boolean ok = false;
-        try{
-            toServer.writeObject("controllContactCF");
-            toServer.flush();
-            toServer.writeObject(CF);
-            toServer.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try{
-            ok = (boolean) fromServer.readUnshared();
-            System.out.println("Read reply from server");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ok;
-    }
 
     //STAFF ------------------------------------------------------------------------------------------
     @Override

@@ -223,8 +223,6 @@ public class ChildController implements Initializable {
 
                 oldcf = newSelection.getCf();
 
-
-
                 txtName.setText(newSelection.getName());
                 txtSurname.setText(newSelection.getSurname());
                 txtCf.setText(newSelection.getCf());
@@ -533,6 +531,10 @@ public class ChildController implements Initializable {
         txtAddressContact.clear();
         txtCapContact.clear();
         txtProvinceContact.clear();
+        cbContact.setSelected(false);
+        cbGuardian.setSelected(false);
+        cbDoc.setSelected(false);
+
         try {
             ArrayList<ContactsDbDetails> contactsDbArrayList = u.loadDataContacts(oldcf);
             dataContactObsList.clear();
@@ -600,13 +602,11 @@ public class ChildController implements Initializable {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
-        } else if(!u.controllContactCF(cf)){
-            this.renameLabel("Change contact fiscal code");
         }else {
 
             System.out.println("Adding data to database...");
             try {
-                boolean isAddOk = u.addContact(selectedChild, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+                boolean isAddOk = u.addContact(oldcf, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
 
                 if (isAddOk) {
                     this.renameLabel("Congrats! Contact added.");
@@ -645,12 +645,34 @@ public class ChildController implements Initializable {
         boolean isDoc = cbDoc.isSelected();
         if(cbDoc.isSelected()){ cbDoc.setSelected(true); }
         else { cbDoc.setSelected(false); }
+
+        if(isDoc)
+            isDocint = 1;
+        else
+            isDocint = 0;
+
         boolean isGuardian = cbGuardian.isSelected();
         if(cbGuardian.isSelected()){ cbGuardian.setSelected(true); }
         else { cbGuardian.setSelected(false); }
+
+        if(isGuardian)
+            isGuardianint = 1;
+        else
+            isGuardianint = 0;
+
         boolean isContact = cbContact.isSelected();
         if(cbContact.isSelected()){ cbContact.setSelected(true); }
         else { cbContact.setSelected(false); }
+
+        if(isContact)
+            isContactint = 1;
+        else
+            isContactint = 0;
+
+        System.out.println("doc " +isDocint);
+        System.out.println("contact " +isContactint);
+        System.out.println("guardian " +isGuardianint);
+
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
                 || birthday == null || bornWhere.trim().isEmpty() || address.trim().isEmpty()
@@ -658,17 +680,21 @@ public class ChildController implements Initializable {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
-        } else if(!oldcfContact.equals(cf) && !u.controllContactCF(cf)) {
+        } else if(!oldcfContact.equals(cf)) {
             this.renameLabel("Change Contact fiscal code");
         }else {
             System.out.println("Adding data to database...");
             try {
-                boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, mail, tel, birthday, bornWhere, address, cap, province, isDocint, isGuardianint, isContactint);  //call method in Server Impl
+                System.out.println("UPDATE project.adulto SET Cognome='"+surname+"', Nome='"+name+"', CF='"+cf+"', Mail='"+mail+"', Tel='"+tel+"'," +
+                        " DataNascita='"+birthday+"', CittaNascita='"+bornWhere+"', Indirizzo='"+address+"', CAP='"+cap+"', Provincia='"+province+"'," +
+                                " Pediatra='"+isDoc+"', Tutore='"+isGuardian+"', Contatto='"+isContact+"'" +
+                                " WHERE CF = '" + oldcfContact + "' AND Bambino_CodRif = '"+oldcf+"';");
+                boolean isEditOk = u.updateContact(surname, name, oldcfContact, cf, oldcf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);  //call method in Server Impl
 
                 if (isEditOk) {
                     lblWarning.setText("Congrats! Contact edited.");
                     selectedContact.clear();
-
+                    selectedChild.clear();
                     txtNameContact.clear();
                     txtSurnameContact.clear();
                     txtCfContact.clear();
@@ -680,6 +706,8 @@ public class ChildController implements Initializable {
                     txtCapContact.clear();
                     txtProvinceContact.clear();
                 }
+                else
+                    this.renameLabel("Error editing contact");
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -689,7 +717,7 @@ public class ChildController implements Initializable {
 
     public void handleDeleteContact() {
         try {
-            boolean deleted = u.deleteContact(oldcfContact);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
+            boolean deleted = u.deleteContact(oldcfContact, oldcf);   //PER EVITARE CHE USER MODIFICHI E POI CANCELLI, PASSO IL CF "ORIGINALE"
             if(deleted){
                 this.renameLabel("Deleted.");
                 selectedContact.clear();

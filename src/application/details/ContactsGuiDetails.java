@@ -11,8 +11,8 @@ public class ContactsGuiDetails {
     private StringProperty name;
     private StringProperty surname;
     private StringProperty cf;
-    private StringProperty tel;
     private StringProperty mail;
+    private StringProperty tel;
     private StringProperty bornOn;
     private StringProperty bornWhere;
     private StringProperty address;
@@ -28,8 +28,8 @@ public class ContactsGuiDetails {
         this.name = new SimpleStringProperty(childDb.getName());
         this.surname = new SimpleStringProperty(childDb.getSurname());
         this.cf = new SimpleStringProperty(childDb.getCf());
-        this.tel = new SimpleStringProperty(childDb.getTel());
         this.mail = new SimpleStringProperty(childDb.getMail());
+        this.tel = new SimpleStringProperty(childDb.getTel());
         this.bornOn = new SimpleStringProperty(childDb.getBornOn());
         this.bornWhere = new SimpleStringProperty(childDb.getBornWhere());
         this.address = new SimpleStringProperty(childDb.getAddress());
