@@ -1404,11 +1404,10 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
             }
 
-            Set<DishesDbDetails> set = new HashSet<DishesDbDetails>(menu);
-            return new ArrayList<DishesDbDetails>(set);
-
 
         }
+        Set<DishesDbDetails> set = new HashSet<DishesDbDetails>(menu);
+        return new ArrayList<DishesDbDetails>(set);
     }
 
     @Override
