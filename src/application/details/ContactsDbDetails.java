@@ -10,8 +10,8 @@ public class ContactsDbDetails implements Serializable {
     private String name;
     private String surname;
     private String cf;
-    private String tel;
     private String mail;
+    private String tel;
     private String bornOn;
     private String bornWhere;
     private String address;
@@ -30,8 +30,8 @@ public class ContactsDbDetails implements Serializable {
         this.name = childguiSp.getName();
         this.surname = childguiSp.getSurname();
         this.cf = childguiSp.getCf();
-        this.tel = childguiSp.getTel();
         this.mail = childguiSp.getMail();
+        this.tel = childguiSp.getTel();
         this.bornOn = childguiSp.getBornOn();
         this.bornWhere = childguiSp.getBornWhere();
         this.address = childguiSp.getAddress();
@@ -44,7 +44,7 @@ public class ContactsDbDetails implements Serializable {
     }
 
     //default constructor String -> StringProperty per inserire dati in GUI
-    public ContactsDbDetails(String name, String surname, String cf, String tel, String mail, String bornOn, String bornWhere, String address, String cap, String province, String isDoc, String isGuardian, String isContact){
+    public ContactsDbDetails(String name, String surname, String cf, String mail, String tel, String bornOn, String bornWhere, String address, String cap, String province, String isDoc, String isGuardian, String isContact){
 
         this.name = name;
         this.surname = surname;

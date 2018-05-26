@@ -556,12 +556,12 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
     @Override
-    public boolean addContact(ArrayList<String> selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
+    public boolean addContact(String selectedChild, String surname, String name, String cf, String mail, String tel, LocalDate birthday, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         PreparedStatement st = null;
 
         String querySearchCodRif = "SELECT CodRif" +
                 " FROM bambino" +
-                " WHERE bambino.Interni_CF = '" + selectedChild.get(2) + "';";
+                " WHERE bambino.Interni_CF = '" + selectedChild + "';";
         ResultSet result;
         String prova = null;
 
@@ -620,16 +620,16 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
     @Override
-    public boolean deleteContact(String oldcfContact) throws RemoteException {
+    public boolean deleteContact(String oldcfContact, String cfChild) throws RemoteException {
         PreparedStatement st = null;
 
-        String queryDelete = "DELETE FROM adulto WHERE CF = '" + oldcfContact + "';";
+        String queryDelete = "DELETE FROM project.adulto WHERE CF = '" + oldcfContact + "' AND Bambino_CodRif = '" + cfChild +"';";
         try {
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
             System.out.println("Deleted from adulto.");
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -645,22 +645,58 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
     @Override
-    public boolean updateContact(String name, String surname, String oldcf, String cf, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, int isDoc, int isGuardian, int isContact) throws RemoteException {
+    public boolean updateContact(String name, String surname, String oldcfContact, String cf, String cfChild, String mail, String tel, LocalDate bornOn, String bornWhere, String address, String cap, String province, boolean isDoc, boolean isGuardian, boolean isContact) throws RemoteException {
         PreparedStatement st = null;
+        ResultSet result = null;
+        String codRifChildString = null;
+        String queryFindCodRif = "SELECT Bambino_CodRif FROM adulto INNER JOIN bambino WHERE CF = '"+oldcfContact+"' AND Interni_CF  = '"+ cfChild+"';";
 
-        //NOTA: Bambino_CodRif NON VIENE MODIFICATO IN UPDATE!
-        String queryEdit = "UPDATE adulto SET Cognome ='" + surname + "', Nome ='" + name + "', CF ='" + cf + "', " +
-                "Mail = '" + mail + "', Tel = '" + tel + "', DataNascita ='" + Date.valueOf(bornOn) + "', CittaNascita='" + bornWhere + "', " +
-                "Indirizzo='" + address + "', CAP='" + cap + "', Provincia='" + province + "', Pediatra='" + isDoc + "', " +
-                "Tutore = '" + isGuardian + "', Contatto = '" + isContact + "' " +
-                "WHERE CF = '" + oldcf + "';";
-
-        try {
-            st = this.connHere().prepareStatement(queryEdit);
-            st.executeUpdate();
-
+        try{
+            st = this.connHere().prepareStatement(queryFindCodRif);
+            result = st.executeQuery(queryFindCodRif);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No such child in db");
+                return false;
+            } else {
+                result.beforeFirst();
+                while(result.next()) {
+                    System.out.println("Processing ResultSet");
+                    try {
+                        codRifChildString = result.getString(1);
+                        System.out.println(codRifChildString);
+
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+
+                    int isDocBool = 0;
+                    int isGuardianBool = 0;
+                    int isContactBool = 0;
+                    if(isDoc) isDocBool = 1;
+                    if(isContact) isContactBool = 1;
+                    if(isGuardian) isGuardianBool = 1;
+
+                    String queryEdit = "UPDATE project.adulto SET Cognome='"+surname+"', Nome='"+name+"', CF='"+cf+"', Mail='"+mail+"', Tel='"+tel+"'," +
+                            " DataNascita='"+bornOn+"', CittaNascita='"+bornWhere+"', Indirizzo='"+address+"', CAP='"+cap+"', Provincia='"+province+"'," +
+                            " Pediatra='"+isDocBool+"', Tutore='"+isGuardianBool+"', Contatto='"+isContactBool+"'" +
+                            " WHERE CF = '" + oldcfContact + "' AND Bambino_CodRif = '"+codRifChildString+"';";
+
+                    System.out.println(queryEdit);
+
+                    st = this.connHere().prepareStatement(queryEdit);
+                    st.executeUpdate();
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
         } finally {
             try {
                 if (st != null)
@@ -716,48 +752,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     }
 
 
-    @Override
-    public boolean controllContactCF(String CF) throws RemoteException{
-        ResultSet result = null;
-        PreparedStatement st = null;
-        String queryControll = "SELECT * FROM adulto WHERE CF = '"+ CF+"'";
-        Boolean controll = false;
-
-        try{
-            st = this.connHere().prepareStatement(queryControll);
-            result = st.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try{
-            if(!result.next()){
-                System.out.println("No CF like this in DB");
-                result.close();
-                controll = true;
-            }
-            else
-                controll = false;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null)
-                    result.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return controll;
-
-    }
 
 
     //STAFF---------------------------------------------------------------------------------------

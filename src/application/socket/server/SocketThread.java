@@ -212,24 +212,7 @@ public class SocketThread extends Thread implements Runnable {
             case "addContact": {
                 System.out.println("Adding contact...");
                 try {
-                    ArrayList<String> arrayListToReturn = new ArrayList<>();
-                    try {
-                        Object loaded = inputFromClient.readUnshared();
-                        if (loaded instanceof ArrayList<?>) {
-                            //get list
-                            ArrayList<?> loadedAl = (ArrayList<?>) loaded;
-                            if (loadedAl.size() > 0) {
-                                for (Object element : loadedAl) {
-                                    if (element instanceof String) {
-                                        String myElement = (String) element;
-                                        arrayListToReturn.add(myElement);
-                                    }
-                                }
-                            }
-                        }
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    String cfChild = (String) inputFromClient.readUnshared();
                     String surname = (String) inputFromClient.readUnshared();
                     String name = (String) inputFromClient.readUnshared();
                     String cf = (String) inputFromClient.readUnshared();
@@ -243,7 +226,7 @@ public class SocketThread extends Thread implements Runnable {
                     boolean isDoc = (boolean) inputFromClient.readUnshared();
                     boolean isGuardian = (boolean) inputFromClient.readUnshared();
                     boolean isContact = (boolean) inputFromClient.readUnshared();
-                    reply = impl.addContact(arrayListToReturn, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+                    reply = impl.addContact(cfChild, surname, name, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -252,7 +235,8 @@ public class SocketThread extends Thread implements Runnable {
             case "deleteContact": {
                 try {
                     String oldcf = (String) inputFromClient.readUnshared();
-                    reply = impl.deleteContact(oldcf);
+                    String cfChild = (String) inputFromClient.readUnshared();
+                    reply = impl.deleteContact(oldcf, cfChild);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -264,6 +248,7 @@ public class SocketThread extends Thread implements Runnable {
                     String surname = (String) inputFromClient.readUnshared();
                     String oldcf = (String) inputFromClient.readUnshared();
                     String cf = (String) inputFromClient.readUnshared();
+                    String cfChild = (String) inputFromClient.readUnshared();
                     String mail = (String) inputFromClient.readUnshared();
                     String tel = (String) inputFromClient.readUnshared();
                     LocalDate birthday = LocalDate.parse((CharSequence) inputFromClient.readUnshared());
@@ -271,10 +256,10 @@ public class SocketThread extends Thread implements Runnable {
                     String address = (String) inputFromClient.readUnshared();
                     String cap = (String) inputFromClient.readUnshared();
                     String province = (String) inputFromClient.readUnshared();
-                    int isDoc = inputFromClient.read();
-                    int isGuardian = inputFromClient.read();
-                    int isContact = inputFromClient.read();
-                    reply = impl.updateContact(name, surname, oldcf, cf, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
+                    boolean isDoc = (boolean)inputFromClient.readUnshared();
+                    boolean isGuardian = (boolean)inputFromClient.readUnshared();
+                    boolean isContact = (boolean)inputFromClient.readUnshared();
+                    reply = impl.updateContact(name, surname, oldcf, cf, cfChild, mail, tel, birthday, bornWhere, address, cap, province, isDoc, isGuardian, isContact);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -308,17 +293,6 @@ public class SocketThread extends Thread implements Runnable {
                 try {
                     String cf = (String) inputFromClient.readObject();
                     reply = impl.controllCF(cf);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return reply;
-            }
-
-            case "controllContactCF": {
-                System.out.println("Controlling cf...");
-                try {
-                    String cf = (String) inputFromClient.readObject();
-                    reply = impl.controllContactCF(cf);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
