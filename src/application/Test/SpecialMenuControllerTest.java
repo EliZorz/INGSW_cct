@@ -56,20 +56,17 @@ public class SpecialMenuControllerTest {
         si.deleteSupplier("76", si.loadNoIngr("76"));
     }
 
-    //ADD MENU
-
-    @Test
-    void testNullAddSPecialMenu() throws RemoteException {
-        assertFalse(si.addSpecialMenu(null, null, null, null, null, null, null));
-    }
 
 
-    //LOAD THIS MENU
+
+    //LOAD THIS MENU AND ADD
 
     @Test
     void testLoadThisMenu() throws RemoteException{
         assertNotNull(si.loadThisMenu(LocalDate.parse("2200-11-11")));
         assertNull(si.loadThisMenu(null));
+        assertFalse(si.addSpecialMenu(null, null, null, null, null, null, null));
+
     }
 
 

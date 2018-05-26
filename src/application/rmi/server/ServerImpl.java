@@ -1203,18 +1203,20 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet res = null;
         if(piva == null)
             return false;
-        for(IngredientsDbDetails x : ingrNO){
-            querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
-            try {
-                stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
-                res = stSpecialMenu.executeQuery(querySearchMenu);
-                res.beforeFirst();
-                while(res.next()) {
-                    SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
-                    special.add(sp);
+        if(ingrNO != null) {
+            for (IngredientsDbDetails x : ingrNO) {
+                querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='" + x.getIngr() + "'";
+                try {
+                    stSpecialMenu = this.connHere().prepareStatement(querySearchMenu);
+                    res = stSpecialMenu.executeQuery(querySearchMenu);
+                    res.beforeFirst();
+                    while (res.next()) {
+                        SpecialMenuDbDetails sp = new SpecialMenuDbDetails(res.getString(1), null, null, null, null, null, res.getString(2), res.getString(3));
+                        special.add(sp);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         }
 

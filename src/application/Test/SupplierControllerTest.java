@@ -1,16 +1,11 @@
 package application.Test;
 
 import application.rmi.server.ServerImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.MethodSorters;
-
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
