@@ -12,7 +12,7 @@ import java.rmi.registry.Registry;
  */
 public class RmiManager implements ServicesManager {
 
-    Registry registry = null;
+    private Registry registry = null;
 
     public RmiManager(){
 
