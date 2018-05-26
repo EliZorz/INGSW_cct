@@ -106,7 +106,7 @@ public class MainControllerLogin implements Initializable {
 
     }
 
-    public void renameLabel(String st){
+    private void renameLabel(String st){
         lblStatus.setText(st);
     }
 

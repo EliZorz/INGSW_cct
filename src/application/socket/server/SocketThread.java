@@ -25,7 +25,7 @@ public class SocketThread extends Thread implements Runnable {
     }
 
 
-    boolean reply = false;
+    private boolean reply = false;
 
     @Override
     public void run() {

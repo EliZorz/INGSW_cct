@@ -41,35 +41,32 @@ public class SpecialMenuControllerTest {
         si.addMenu("11", "aa", "bb", "cc", "WWW", "ee", LocalDate.parse("2200-11-11"));
         ArrayList<String> allergies = new ArrayList<>();
         allergies.add("AA");
-        si.addData("AAA", "BBB", "B1", LocalDate.parse("1992-11-11"), "CCC", "DDD", "EEE", "00000", "FF", allergies, "GG", "HH", "1", "II", "1111", LocalDate.parse("1968-11-11"), "LL", "MM", "12345", "NN", true, false, false);
-        SpecialDbDetails special = new SpecialDbDetails("B1", "AA");
+        si.addData("AAA", "BBB", "AB1", LocalDate.parse("1992-11-11"), "CCC", "DDD", "EEE", "00000", "FF", allergies, "GG", "HH", "1", "II", "1111", LocalDate.parse("1968-11-11"), "LL", "MM", "12345", "NN", true, false, false);
+        SpecialDbDetails special = new SpecialDbDetails("AB1", "AA");
         si.addSpecialMenu( "aa", "bb", "cc", null, "WWW", LocalDate.parse("2200-11-11"), special);
 
     }
 
     @AfterEach
     void deleteDetailsForMenu() throws RemoteException{
-        si.deleteSpecialMenu(LocalDate.parse("2200-11-11"),"B1", "AA" );
+        si.deleteSpecialMenu(LocalDate.parse("2200-11-11"),"AB1", "AA" );
         si.deleteMenu(LocalDate.parse("2200-11-11"));
-        si.deleteChild("B1");
-        si.deleteContact("1");
+        si.deleteContact("1", "AB1");
+        si.deleteChild("AB1");
         si.deleteSupplier("76", si.loadNoIngr("76"));
     }
 
-    //ADD MENU
-
-    @Test
-    void testNullAddSPecialMenu() throws RemoteException {
-        assertFalse(si.addSpecialMenu(null, null, null, null, null, null, null));
-    }
 
 
-    //LOAD THIS MENU
+
+    //LOAD THIS MENU AND ADD
 
     @Test
     void testLoadThisMenu() throws RemoteException{
         assertNotNull(si.loadThisMenu(LocalDate.parse("2200-11-11")));
         assertNull(si.loadThisMenu(null));
+        assertFalse(si.addSpecialMenu(null, null, null, null, null, null, null));
+
     }
 
 
@@ -89,7 +86,7 @@ public class SpecialMenuControllerTest {
 
     @Test
     void testUpdateSpecialMenu() throws RemoteException{
-        SpecialDbDetails special = new SpecialDbDetails("B1", "AA");
+        SpecialDbDetails special = new SpecialDbDetails("AB1", "AA");
         assertTrue(si.updateSpecialMenu( "bb", "aa", "cc", null, "WWW", LocalDate.parse("2200-11-11"), special));
         Assertions.assertThrows(NullPointerException.class, () ->{
             si.updateSpecialMenu(null, null, null, null, null, LocalDate.parse(null), null);
@@ -99,10 +96,8 @@ public class SpecialMenuControllerTest {
     //DELETE SPECIAL MENU
 
     @Test
-    void testNullDeleteSpecialMenu() {
-        Assertions.assertThrows(NullPointerException.class,() ->{
-            si.deleteSpecialMenu(LocalDate.parse(null),null, null);
-        });
+    void testNullDeleteSpecialMenu() throws RemoteException {
+       assertFalse(si.deleteSpecialMenu(LocalDate.parse("2200-11-11"),null, null));
     }
 
 

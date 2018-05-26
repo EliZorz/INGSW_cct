@@ -39,7 +39,7 @@ public class TripPlanControllerTest {
     void deleteDetailsForTrip() throws RemoteException{
         si.deleteTrip("CR", "2220-11-11", "2220-11-13", "AOK", "2220-11-12", "ER");
         si.deleteStaff("CCC111");
-        si.deleteContact("1");
+        si.deleteContact("1", "A0");
         si.deleteChild("A0");
     }
 

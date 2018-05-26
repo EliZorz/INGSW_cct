@@ -61,10 +61,6 @@ class StaffControllerTest {
         assertNotNull(si.loadDataStaff());
     }
 
-    @Test
-    void testLoadIngredients() throws RemoteException {
-        assertNotNull(si.loadIngr());
-    }
 
     //UPDATE
 
