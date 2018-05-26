@@ -315,6 +315,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
 
+        if(oldcf == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
@@ -346,6 +348,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet resultPrev = null;
         ArrayList<String> prevAllergies = new ArrayList<>();
         String queryLoadPreviousAllergies = "SELECT Allergie FROM project.interni WHERE CF ='"+oldcf+"';";
+        if(name == null || surname == null || oldcf == null || cf == null || bornOn == null || bornWhere == null || residence == null || address == null || cap == null || province == null )
+            return false;
         try {
             st = this.connHere().prepareStatement(queryLoadPreviousAllergies);
             resultPrev = st.executeQuery(queryLoadPreviousAllergies);
@@ -567,6 +571,11 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryAddContact = "INSERT INTO adulto(Cognome, Nome, CF, Mail, Tel, DataNascita, CittaNascita, Indirizzo, CAP, Provincia, Pediatra, Tutore, Contatto, Bambino_CodRif)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+        if(selectedChild == null)
+            return false;
+        if(!isContact && !isDoc && !isGuardian)
+            return false;
         try {
             //search CodRif of the selected child, to add it to db in Adulto
             st = this.connHere().prepareStatement(querySearchCodRif);
@@ -624,6 +633,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
 
         String queryDelete = "DELETE FROM project.adulto WHERE CF = '" + oldcfContact + "' AND Bambino_CodRif = '" + cfChild +"';";
+        if(oldcfContact == null || cfChild == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
@@ -650,7 +661,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet result = null;
         String codRifChildString = null;
         String queryFindCodRif = "SELECT Bambino_CodRif FROM adulto INNER JOIN bambino WHERE CF = '"+oldcfContact+"' AND Interni_CF  = '"+ cfChild+"';";
-
+        if(oldcfContact == null || cf == null || cfChild == null)
+            return false;
         try{
             st = this.connHere().prepareStatement(queryFindCodRif);
             result = st.executeQuery(queryFindCodRif);
@@ -952,7 +964,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryDeleteCodID = "DELETE FROM personaleint WHERE Interni_CF = '" + cf + "';";
 
         //NOTA: CANCELLANDO CODRIF, NON VANNO RIFORMATTATI I CODRIF SUCCESSIVI (come al Poli le matricole non sono modificate una volta che altri si laureano)
-
+        if(cf == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryDeleteCodID);
             st.executeUpdate(queryDeleteCodID);
@@ -1128,7 +1141,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         String queryAdd = "INSERT INTO fornitore(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
                 " VALUES (?,?,?,?,?,?,?)";
-
+        if(name == null || piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryAdd);
             st.setString(1, name);
@@ -1161,7 +1175,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryEdit = "UPDATE fornitore SET PIVA ='" + piva + "', NomeAzienda ='" + name + "', Mail ='" + mail + "', " +
                 "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
                 "WHERE PIVA = '" + oldPiva + "';";
-
+        if(name == null || oldPiva == null || piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryEdit);
             st.executeUpdate();
@@ -1186,6 +1201,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String querySearchMenu;
         ArrayList<SpecialMenuDbDetails> special = new ArrayList<>();
         ResultSet res = null;
+        if(piva == null)
+            return false;
         for(IngredientsDbDetails x : ingrNO){
             querySearchMenu = "SELECT menu_special_date, menu_special_CF, menu_special_allergie FROM project.menu_special_has_dish_ingredients WHERE dish_ingredients_ingredients_ingredient ='"+x.getIngr()+"'";
             try {
@@ -1277,7 +1294,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "WHERE ingredient = '"+ ingredient +"';";
         String queryAdd = "INSERT INTO ingredients(ingredient, Fornitore_PIVA)" +
                 " VALUES (?,?)";
-
+        if(ingredient == null || selectedSupplier == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryFindDuplicateIngredient);
             resultDuplicate = st.executeQuery();
@@ -1397,6 +1415,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> ingrNo = new ArrayList<>();
+        if(selectedSupplier == null)
+            return null;
         try {
             st = this.connHere().prepareStatement(queryNomePiatto);
             result = st.executeQuery(queryNomePiatto);
@@ -1428,7 +1448,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryControll = "SELECT * FROM fornitore WHERE PIVA = '"+ piva+"'";
         String queryControllNoleggio = "SELECT * FROM noleggio WHERE PIVA = '"+ piva+"'";
         Boolean controll = false;
-
+        if(piva == null)
+            return true;
         try{
             st = this.connHere().prepareStatement(queryControll);
             result = st.executeQuery();
@@ -1537,7 +1558,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         String queryAdd = "INSERT INTO noleggio(NomeAzienda, PIVA, Mail, Tel, Indirizzo, CAP, Provincia)" +
                 " VALUES (?,?,?,?,?,?,?)";
-
+        if(name == null || piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryAdd);
             st.setString(1, name);
@@ -1570,6 +1592,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         String queryEdit = "UPDATE noleggio SET PIVA ='" + piva + "', NomeAzienda ='" + name + "', Mail ='" + mail + "', " +
                 "Tel ='" + tel + "', Indirizzo ='" + address + "', CAP ='" + cap + "', Provincia ='" + province + "'" +
                 "WHERE PIVA = '" + oldPiva + "';";
+        if(name == null ||oldPiva == null|| piva == null || mail == null || tel == null || address == null || cap == null || province == null)
+            return false;
 
         try {
             st = this.connHere().prepareStatement(queryEdit);
@@ -1597,7 +1621,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
          */
         PreparedStatement st = null;
         String queryDeleteBus = "DELETE FROM bus WHERE Targa = '" + plate + "';";
-
+        if(plate == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryDeleteBus);
             st.executeUpdate(queryDeleteBus);
@@ -1864,6 +1889,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st =null;
         String queryDelete = "DELETE FROM noleggio WHERE PIVA = '" + piva + "';";
 
+        if(piva == null)
+            return false;
         try{
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
@@ -1943,7 +1970,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 "WHERE Targa = '"+ plate +"' AND Noleggio_PIVA = '"+ selectedSupplier +"';";
         String queryAdd = "INSERT INTO bus(Targa, capienza, Noleggio_PIVA)" +
                 " VALUES (?,?,?)";
-
+        if(plate == null || capacity == 0 || selectedSupplier == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryFindDuplicateKey);
             resultDuplicate = st.executeQuery();
@@ -2627,7 +2655,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     public boolean deleteSpecialMenu(LocalDate date, String FC, String allergies) throws RemoteException{
         PreparedStatement st = null;
         String queryDelete = "DELETE FROM project.menu_special WHERE date = '" + date + "'and interni_CF ='"+FC+"' and interni_Allergie = '"+ allergies+"'";
-
+        if(date == null || FC == null || allergies == null)
+            return false;
         try{
             st = this.connHere().prepareStatement(queryDelete);
             st.executeUpdate(queryDelete);
@@ -2655,6 +2684,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
         PreparedStatement stDish = null;
         ArrayList<IngredientsDbDetails> ingredients;
+        if(special == null || drink == null || dessert == null)
+            return false;
         try {
             st = this.connHere().prepareStatement(queryAdd);
             st.setString(1, entree);
@@ -2889,6 +2920,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement st = null;
 
         System.out.println("You selected " + dep + "  " + arr + "  " + dateDep +"  "+ dateArr +"  "+ dateCom +"  "+ staying);
+
+        if(dep == null || dateDep == null || dateCom == null || dateArr == null || arr == null)
+            return false;
 
         String queryDelete = "DELETE FROM gita " +
                 "WHERE Partenza ='"+ dep +"' AND DataOraPar ='"+ dateDep +"' AND DataOraRit ='"+ dateCom +"' AND Alloggio ='"+ staying +"' AND DataOraArr ='"+ dateArr +"' AND Destinazione ='"+ arr + "';";
@@ -3180,6 +3214,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         ArrayList<ChildSelectedTripDbDetails> childDbArrayList = new ArrayList<>(3);
         ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
+
+        if(selectedArr == null || selectedCom == null || selectedDepFrom == null || selectedDep == null )
+            return null;
 
         String queryFindNumGita = "SELECT NumGita" +
                 " FROM gita" +
@@ -3809,7 +3846,8 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         ArrayList<ChildSelectedTripDbDetails> participantsArrayList = new ArrayList<>(3);
         ArrayList<NumGitaDbDetails> numGitaFoundArrayList = new ArrayList<>(1);
-
+        if(selectedDep == null || selectedDepFrom == null || selectedArr == null || selectedArrTo == null )
+            return null;
         String queryFindNumGita = "SELECT NumGita" +
                 " FROM gita" +
                 " WHERE Partenza ='"+ selectedDepFrom + "' AND DataOraPar ='"+ selectedDep +"' AND DataOraRit ='"+ selectedCom +"' AND Alloggio ='"+ selectedAccomodation +"' AND DataOraArr ='"+ selectedArr +"' AND Destinazione ='"+ selectedArrTo + "';";
