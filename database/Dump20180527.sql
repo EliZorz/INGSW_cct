@@ -30,11 +30,11 @@ CREATE TABLE `adulto` (
   `CF` char(16) NOT NULL,
   `Mail` varchar(45) NOT NULL,
   `CAP` int(5) NOT NULL,
-  `Provincia` char(2) NOT NULL,
+  `Provincia` varchar(45) NOT NULL,
   `Indirizzo` varchar(45) NOT NULL,
   `DataNascita` date NOT NULL,
   `CittaNascita` char(25) NOT NULL,
-  `Tel` varchar(10) NOT NULL,
+  `Tel` varchar(25) NOT NULL,
   `Pediatra` tinyint(4) NOT NULL DEFAULT '0',
   `Tutore` tinyint(4) NOT NULL DEFAULT '0',
   `Contatto` tinyint(4) NOT NULL DEFAULT '0',
@@ -50,7 +50,7 @@ CREATE TABLE `adulto` (
 
 LOCK TABLES `adulto` WRITE;
 /*!40000 ALTER TABLE `adulto` DISABLE KEYS */;
-INSERT INTO `adulto` VALUES ('Elisa','Domi','DMOLSE76P43R587E','elisa.domi@mailcct.com',26100,'CR','via Montichiari 89','1976-07-08','Mantova','6589475589',1,1,0,'c6'),('Rita','Loserti','LSRRTI70P49D129E','rita.loserti@mailcct.com',20158,'CR','via Fermino 30 Milano','1983-05-06','Milano','6589654123',1,0,0,'c4'),('Rita','Loserti','LSRRTI70P49D129E','rita.loserti@mailcct.com',20158,'CR','via Fermino 30 Milano','1983-05-06','Milano','6589654123',1,0,0,'c5'),('Alessia','Perera','PRRLSS80S47F205O','perera.alessia@mailone.com',20140,'MI','Milano Bovisa','1980-11-07','Milano','3278599655',0,1,0,'c1'),('reggi','r','r','8',6,'CR','rr','2018-03-27','r','m',1,0,0,'c3'),('Daniele','Espera','SPRDNL80L02D150C','espera.daniele@mailone.com',20158,'MI','Milano Bovisa','1980-07-02','Milano','2569875441',0,1,1,'c2'),('w','nonso','w','e',6,'MI','ee','2018-03-26','e','5',1,0,0,'c5');
+INSERT INTO `adulto` VALUES ('Ginevra','Berini','BRNLNR90D23R140O','berini@mailcct.com',26100,'CR','via Fratelli 8','1990-05-17','Verona','0564893652',1,0,1,'b6'),('Virginia','Mori','DMOLSE76P43R587E','elisa.domi@mailcct.com',26100,'CR','via Montichiari 89','1976-07-08','Mantova','6589475589',1,1,0,'b6'),('Eleonora','Federi','FDRLNR90T34R120O','federi@mailcct.com',24100,'CR','via Nobili 4','1990-09-06','Cremona','0256985472',1,0,0,'b3'),('Rita','Loserti','LSRRTI70P49D129E','rita.loserti@mailcct.com',20158,'CR','via Fermino 30 Milano','1983-05-06','Milano','6589654123',1,0,0,'b4'),('Rita','Loserti','LSRRTI70P49D129E','rita.loserti@mailcct.com',20158,'CR','via Fermino 30 Milano','1983-05-06','Milano','6589654123',1,0,1,'b5'),('MariaRosa','Perera','PRRLNE94P56D130S','elena@mailcct.com',26100,'CR','via Mondo 3','1994-08-11','Firenze','0532489656',1,0,0,'b6'),('Alessia','Perera','PRRLSS80S47F205O','perera.alessia@mailone.com',20140,'MI','Milano Bovisa','1980-11-07','Milano','3278599655',0,1,0,'b1'),('Amelia','Rossi','RSSMLA80P56F489O','amelia.rossi@mail.cct.com',26100,'CR','via Cali 34','1980-08-02','Cremona','0256986325',1,1,0,'b5'),('Daniele','Espera','SPRDNL80L02D150C','espera.daniele@mailone.com',20158,'MI','Milano Bovisa','1980-07-02','Milano','2569875441',0,1,1,'b2');
 /*!40000 ALTER TABLE `adulto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,7 +77,7 @@ CREATE TABLE `bambino` (
 
 LOCK TABLES `bambino` WRITE;
 /*!40000 ALTER TABLE `bambino` DISABLE KEYS */;
-INSERT INTO `bambino` VALUES ('c1','PRRLCU09H10F205M'),('c3','VRDNTS10P41D150R'),('c4','LAILEI10O45F130T'),('c5','RDOLAE34F45T578O'),('c6','MGGRSO10I09O987Y');
+INSERT INTO `bambino` VALUES ('b1','PRRLCU09H10F205M'),('b3','VRDNTS10P41D150R'),('b4','LAILEI10O45F130T'),('b5','RDOLAE34F45T578O'),('b6','MGGRSO10I09O987Y');
 /*!40000 ALTER TABLE `bambino` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +104,7 @@ CREATE TABLE `bus` (
 
 LOCK TABLES `bus` WRITE;
 /*!40000 ALTER TABLE `bus` DISABLE KEYS */;
-INSERT INTO `bus` VALUES ('BG456YU',3,456123789),('DB456ER',2,123456789),('FF243RT',5,456231456),('RR786YT',3,456231456),('TR768YU',4,456231456);
+INSERT INTO `bus` VALUES ('AA456YY',2,123456789),('DD345RT',3,456231456),('FE432JH',2,456123789),('FF456TT',3,456231456),('HH456EY',4,123456789),('SS345RT',4,456123789);
 /*!40000 ALTER TABLE `bus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -130,6 +130,7 @@ CREATE TABLE `dish_ingredients` (
 
 LOCK TABLES `dish_ingredients` WRITE;
 /*!40000 ALTER TABLE `dish_ingredients` DISABLE KEYS */;
+INSERT INTO `dish_ingredients` VALUES ('banane','banane'),('Dessert strano','banane'),('Lasagne','carne'),('Pasta al ragù','carne'),('Senzapesce','carne'),('Side','carne'),('Torta fritta e salumi','carne'),('Boh','carote'),('carote','carote'),('Dessert strano','carote'),('Insalata e funghi','carote'),('Lasagne','carote'),('Torta di carote','carote'),('cocacola','cocacola'),('cococola','cocacola'),('Acqua','fragole'),('Entre','fragole'),('Entree','fragole'),('fragole','fragole'),('Senzapesce','fragole'),('Torta di fragole','fragole'),('Vico','fragole'),('Boh','funghi'),('Felicità','funghi'),('Funghetti','funghi'),('Insalata e funghi','funghi'),('pasta','funghi'),('Boh','insalata'),('carne','insalata'),('Felicità','insalata'),('insalata','insalata'),('Insalata e funghi','insalata'),('Lasagne','insalata'),('Dessert','Melone'),('Dessert strano','Melone'),('melone','Melone'),('Nuovo','Melone'),('YesMelone','Melone'),('Mirtilli','mirtilli'),('Pane e mirtilli','mirtilli'),('Torta ai mirtilli','mirtilli'),('Entre','pane'),('Entree','pane'),('Lasagne','pane'),('Pane','pane'),('Pane e mirtilli','pane'),('Pasta al ragù','pane'),('Senzapesce','pane'),('Torta ai mirtilli','pane'),('Torta di carote','pane'),('Torta di fragole','pane'),('Torta fritta e salumi','pane'),('Consommé','pesce'),('Felicità','pesce'),('Main','pesce'),('Pesce','pesce');
 /*!40000 ALTER TABLE `dish_ingredients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,7 +160,7 @@ CREATE TABLE `fornitore` (
 
 LOCK TABLES `fornitore` WRITE;
 /*!40000 ALTER TABLE `fornitore` DISABLE KEYS */;
-INSERT INTO `fornitore` VALUES (152635645,'Pescado Fresco',37689562,'pescadofresco@mail.com','Mantova',46100,'MN'),(156870031,'Las Fresas de Milo',37265485,'fresasdemilo@mail.com','Cavatigozzi',26100,'CR'),(256332641,'Pane e panini Ferruccio',523826548,'panedani@mail.com','Monticelli',29010,'PC'),(256486523,'Solo Carne',1564856,'carnepesce@mail.com','Roma',118,'RO'),(256832647,'PatateFolli',583894548,'solopatate@mail.com','Monticelli',29010,'PC');
+INSERT INTO `fornitore` VALUES (5632225,'Gente de zona',264852366,'gentedepais@mailcct.com','via Monfalcone 25',65422,'CU'),(123456789,'Banane',25698523,'banane@cct.com','via Bg 11',26100,'CR'),(123654789,'bd',2569822,'vgj',' bsuydfgw',2654,'cyhj'),(125698743,'cola',54566,'bkdfcuh','bisdufh',6548,'bujwg'),(152635645,'Pescado Fresco',37689562,'pescadofresco@mail.com','Mantova',46100,'MN'),(156870031,'Las Fresas de Milo',37265485,'fresasdemilo@mail.com','Cavatigozzi',26100,'CR'),(256332641,'Pane e panini Ferruccio',523826548,'panedani@mail.com','Monticelli',29010,'PC'),(256486523,'Solo Carne',1564856,'carnepesce@mail.com','Roma',118,'RO'),(256832647,'PatateFolli',583894548,'solopatate@mail.com','Monticelli',29010,'PC'),(564789321,'mirti',36543,'mirti@mailcct.com','jhfggrf',365,'bkj');
 /*!40000 ALTER TABLE `fornitore` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,12 +172,12 @@ DROP TABLE IF EXISTS `gita`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gita` (
-  `Partenza` varchar(35) NOT NULL,
+  `Partenza` varchar(45) NOT NULL,
   `DataOraPar` date NOT NULL,
   `DataOraRit` date NOT NULL,
   `Alloggio` tinytext,
   `DataOraArr` date NOT NULL,
-  `Destinazione` varchar(35) NOT NULL,
+  `Destinazione` varchar(45) NOT NULL,
   `NumGita` varchar(8) NOT NULL,
   PRIMARY KEY (`NumGita`),
   UNIQUE KEY `NumGita_UNIQUE` (`NumGita`)
@@ -189,7 +190,7 @@ CREATE TABLE `gita` (
 
 LOCK TABLES `gita` WRITE;
 /*!40000 ALTER TABLE `gita` DISABLE KEYS */;
-INSERT INTO `gita` VALUES ('CR','2018-05-17','2018-05-17','','2018-05-17','CR','g1');
+INSERT INTO `gita` VALUES ('CR','2018-05-30','2018-05-30','','2018-05-30','CR','g1'),('CR','2018-05-29','2018-06-02','','2018-05-29','LK','g2');
 /*!40000 ALTER TABLE `gita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,7 +218,7 @@ CREATE TABLE `gita_has_bus` (
 
 LOCK TABLES `gita_has_bus` WRITE;
 /*!40000 ALTER TABLE `gita_has_bus` DISABLE KEYS */;
-INSERT INTO `gita_has_bus` VALUES ('g1','FF243RT'),('g1','TR768YU');
+INSERT INTO `gita_has_bus` VALUES ('g2','DD345RT'),('g1','HH456EY');
 /*!40000 ALTER TABLE `gita_has_bus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -243,7 +244,7 @@ CREATE TABLE `ingredients` (
 
 LOCK TABLES `ingredients` WRITE;
 /*!40000 ALTER TABLE `ingredients` DISABLE KEYS */;
-INSERT INTO `ingredients` VALUES ('pesce',152635645),('fragole',156870031),('pane',256332641),('carne',256486523);
+INSERT INTO `ingredients` VALUES ('Melone',5632225),('banane',123456789),('funghi',123654789),('insalata',123654789),('cocacola',125698743),('pesce',152635645),('carote',156870031),('fragole',156870031),('pane',256332641),('carne',256486523),('mirtilli',564789321);
 /*!40000 ALTER TABLE `ingredients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -263,7 +264,7 @@ CREATE TABLE `interni` (
   `Residenza` varchar(45) NOT NULL,
   `Indirizzo` tinytext NOT NULL,
   `CAP` int(5) NOT NULL,
-  `Provincia` char(2) NOT NULL,
+  `Provincia` varchar(45) NOT NULL,
   `Allergie` varchar(100) NOT NULL,
   PRIMARY KEY (`CF`,`Allergie`),
   UNIQUE KEY `CF_UNIQUE` (`CF`)
@@ -276,7 +277,7 @@ CREATE TABLE `interni` (
 
 LOCK TABLES `interni` WRITE;
 /*!40000 ALTER TABLE `interni` DISABLE KEYS */;
-INSERT INTO `interni` VALUES ('Eli','Ali','LAILEI10O45F130T','2010-05-10','Crema','Cremona','via Ritsa 5',26100,'CR','[pesce], '),('Rosa','Maggiore','MGGRSO10I09O987Y','2009-05-24','Cremona','Cremona','via Buoso 4',26100,'CR','[pesce], '),('Davide','Marini','MRNDVD94G56T586U','1994-05-04','Cremona','Cremona','via Migio 8',26100,'CR','none'),('Perera','Luca','PRRLCU09H10F205M','2009-06-10','Milano','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Ale','Rodi','RDOLAE34F45T578O','2009-10-16','Mantova','Cremona','via Rizzoli 3',26100,'CR','[pesce, pane], [pesce, pane], '),('Matteo','Rossi','RSSMTT32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 4',26100,'CR','none'),('Virginia','Rossi','RSSVRG32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 1',26100,'CR','none'),('Verdi','Anastasia','VRDNTS10P41D150R','2010-09-01','Cremona','Cremona','via Garibaldi 57',26100,'CR','none');
+INSERT INTO `interni` VALUES ('Eli','Alican','LAILEI10O45F130T','2010-05-10','Crema','Cremona','via Rita 5',26100,'CR','none'),('Rosa','Maggiore','MGGRSO10I09O987Y','2009-05-24','Chiuro','Cremona','via Buoso Dovara 4',26100,'CR','none'),('Perera','Luca','PRRLCU09H10F205M','2009-06-10','LK','Milano Bovisa','via Gramsci 10',20140,'MI','none'),('Ale','Rodi','RDOLAE34F45T578O','2009-10-16','Milano Cadorna','Cremona','via Volta 3',26100,'CR','none'),('Matteo','Rossi','RSSMTT32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 4',26100,'CR','none'),('Virginia','Rossi','RSSVRG32R45T465O','1973-05-10','Mantova','Cavatigozzi','via Giuseppina 1',26100,'CR','none'),('Daniele','Viani','VNIDNL80G57F903I','1980-02-15','Cremona','Cremona','via Buoso 34',26100,'CR','none'),('Verdi','Anastasia','VRDNTS10P41D150R','2010-09-01','Genova','Cremona','via Garibaldi 57',26100,'CR','mirtilli, fragole, ');
 /*!40000 ALTER TABLE `interni` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -304,7 +305,7 @@ CREATE TABLE `interni_has_gita` (
 
 LOCK TABLES `interni_has_gita` WRITE;
 /*!40000 ALTER TABLE `interni_has_gita` DISABLE KEYS */;
-INSERT INTO `interni_has_gita` VALUES ('LAILEI10O45F130T','g1',1),('MGGRSO10I09O987Y','g1',1),('PRRLCU09H10F205M','g1',1),('RDOLAE34F45T578O','g1',1),('RSSMTT32R45T465O','g1',1),('RSSVRG32R45T465O','g1',1),('VRDNTS10P41D150R','g1',1);
+INSERT INTO `interni_has_gita` VALUES ('LAILEI10O45F130T','g1',1),('LAILEI10O45F130T','g2',0),('MGGRSO10I09O987Y','g2',1),('PRRLCU09H10F205M','g1',1),('RDOLAE34F45T578O','g2',1),('RSSMTT32R45T465O','g1',1),('RSSMTT32R45T465O','g2',0),('RSSVRG32R45T465O','g2',1),('VRDNTS10P41D150R','g1',1),('VRDNTS10P41D150R','g2',0);
 /*!40000 ALTER TABLE `interni_has_gita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -335,7 +336,7 @@ CREATE TABLE `interni_is_here` (
 
 LOCK TABLES `interni_is_here` WRITE;
 /*!40000 ALTER TABLE `interni_is_here` DISABLE KEYS */;
-INSERT INTO `interni_is_here` VALUES ('RSSMTT32R45T465O','g1','FF243RT',0),('RSSVRG32R45T465O','g1','FF243RT',0),('MGGRSO10I09O987Y','g1','FF243RT',0),('RDOLAE34F45T578O','g1','FF243RT',0),('LAILEI10O45F130T','g1','FF243RT',0),('VRDNTS10P41D150R','g1','TR768YU',0),('PRRLCU09H10F205M','g1','TR768YU',0);
+INSERT INTO `interni_is_here` VALUES ('PRRLCU09H10F205M','g1','HH456EY',1),('VRDNTS10P41D150R','g1','HH456EY',1),('RSSMTT32R45T465O','g1','HH456EY',1),('RDOLAE34F45T578O','g2','DD345RT',1),('MGGRSO10I09O987Y','g2','DD345RT',1),('RSSVRG32R45T465O','g2','DD345RT',1);
 /*!40000 ALTER TABLE `interni_is_here` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -379,7 +380,6 @@ CREATE TABLE `menu_base` (
   `side_dish` text,
   `drink` text,
   `date` date NOT NULL,
-  `num_allergici` int(11) DEFAULT NULL,
   PRIMARY KEY (`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -390,7 +390,7 @@ CREATE TABLE `menu_base` (
 
 LOCK TABLES `menu_base` WRITE;
 /*!40000 ALTER TABLE `menu_base` DISABLE KEYS */;
-INSERT INTO `menu_base` VALUES (4,'pesciolini fritti','pasta_vongole','fragole','carote','acqua','2018-03-04',NULL);
+INSERT INTO `menu_base` VALUES (12,'Melone','Main','Pane e mirtilli','Carote','cocacola','2018-05-30'),(9,'Insalata e funghi','Main','Torta ai mirtilli','','cocacola','2018-06-08');
 /*!40000 ALTER TABLE `menu_base` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -409,7 +409,7 @@ CREATE TABLE `menu_base_has_dish_ingredients` (
   KEY `fk_menu_base_has_dish_ingredients_dish_ingredients1_idx` (`dish_ingredients_Nome_piatto`,`dish_ingredients_ingredients_ingredient`),
   KEY `fk_menu_base_has_dish_ingredients_menu_base1_idx` (`menu_base_date`),
   CONSTRAINT `fk_menu_base_has_dish_ingredients_dish_ingredients1` FOREIGN KEY (`dish_ingredients_Nome_piatto`, `dish_ingredients_ingredients_ingredient`) REFERENCES `dish_ingredients` (`Nome_piatto`, `ingredients_ingredient`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_menu_base_has_dish_ingredients_menu_base1` FOREIGN KEY (`menu_base_date`) REFERENCES `menu_base` (`date`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_menu_base_has_dish_ingredients_menu_base1` FOREIGN KEY (`menu_base_date`) REFERENCES `menu_base` (`date`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -419,6 +419,7 @@ CREATE TABLE `menu_base_has_dish_ingredients` (
 
 LOCK TABLES `menu_base_has_dish_ingredients` WRITE;
 /*!40000 ALTER TABLE `menu_base_has_dish_ingredients` DISABLE KEYS */;
+INSERT INTO `menu_base_has_dish_ingredients` VALUES ('2018-05-30','Carote','carote'),('2018-05-30','cocacola','cocacola'),('2018-05-30','Main','pesce'),('2018-05-30','Melone','Melone'),('2018-05-30','Pane e mirtilli','mirtilli'),('2018-05-30','Pane e mirtilli','pane'),('2018-06-08','cocacola','cocacola'),('2018-06-08','Insalata e funghi','carote'),('2018-06-08','Insalata e funghi','funghi'),('2018-06-08','Insalata e funghi','insalata'),('2018-06-08','Main','pesce'),('2018-06-08','Torta ai mirtilli','mirtilli'),('2018-06-08','Torta ai mirtilli','pane');
 /*!40000 ALTER TABLE `menu_base_has_dish_ingredients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -436,11 +437,11 @@ CREATE TABLE `menu_special` (
   `side_dish` text,
   `drink` text,
   `date` date NOT NULL,
-  `CF` char(16) NOT NULL,
-  `Allergie` varchar(100) NOT NULL,
-  PRIMARY KEY (`date`,`CF`,`Allergie`),
-  KEY `interni_idx` (`CF`,`Allergie`),
-  CONSTRAINT `interni` FOREIGN KEY (`CF`, `Allergie`) REFERENCES `interni` (`CF`, `Allergie`) ON DELETE CASCADE ON UPDATE CASCADE
+  `interni_CF` char(16) NOT NULL,
+  `interni_Allergie` varchar(100) NOT NULL,
+  PRIMARY KEY (`date`,`interni_CF`,`interni_Allergie`),
+  KEY `interni_idx` (`interni_CF`,`interni_Allergie`),
+  CONSTRAINT `interni` FOREIGN KEY (`interni_CF`, `interni_Allergie`) REFERENCES `interni` (`CF`, `Allergie`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -450,6 +451,7 @@ CREATE TABLE `menu_special` (
 
 LOCK TABLES `menu_special` WRITE;
 /*!40000 ALTER TABLE `menu_special` DISABLE KEYS */;
+INSERT INTO `menu_special` VALUES ('Melone','Main','Lasagne','Carote','cocacola','2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, '),('Insalata e funghi','Main','Dessert strano','','cocacola','2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ');
 /*!40000 ALTER TABLE `menu_special` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -462,15 +464,14 @@ DROP TABLE IF EXISTS `menu_special_has_dish_ingredients`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `menu_special_has_dish_ingredients` (
   `menu_special_date` date NOT NULL,
-  `dish_ingredients_Nome_piatto` varchar(45) NOT NULL,
-  `dish_ingredients_ingredients_ingredient` varchar(15) NOT NULL,
   `menu_special_CF` char(16) NOT NULL,
   `menu_special_allergie` varchar(100) NOT NULL,
-  PRIMARY KEY (`menu_special_date`,`menu_special_CF`,`menu_special_allergie`),
+  `dish_ingredients_Nome_piatto` varchar(45) NOT NULL,
+  `dish_ingredients_ingredients_ingredient` varchar(15) NOT NULL,
+  PRIMARY KEY (`menu_special_date`,`menu_special_CF`,`menu_special_allergie`,`dish_ingredients_Nome_piatto`,`dish_ingredients_ingredients_ingredient`),
   KEY `fk_menu_special_has_dish_ingredients_dish_ingredients1_idx` (`dish_ingredients_Nome_piatto`,`dish_ingredients_ingredients_ingredient`),
-  KEY `fk_menu_special_has_dish_ingredients_menu_special1_idx` (`menu_special_date`),
-  CONSTRAINT `fk_menu_special_has_dish_ingredients_dish_ingredients1` FOREIGN KEY (`dish_ingredients_Nome_piatto`, `dish_ingredients_ingredients_ingredient`) REFERENCES `dish_ingredients` (`Nome_piatto`, `ingredients_ingredient`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_menu_special_has_dish_ingredients_menu_special1` FOREIGN KEY (`menu_special_date`, `menu_special_CF`, `menu_special_allergie`) REFERENCES `menu_special` (`date`, `CF`, `Allergie`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_menu_special_has_dish_ingredients_dish_ingredients1` FOREIGN KEY (`dish_ingredients_Nome_piatto`, `dish_ingredients_ingredients_ingredient`) REFERENCES `dish_ingredients` (`Nome_piatto`, `ingredients_ingredient`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_menu_special_has_dish_ingredients_menu_special1` FOREIGN KEY (`menu_special_date`, `menu_special_CF`, `menu_special_allergie`) REFERENCES `menu_special` (`date`, `interni_CF`, `interni_Allergie`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -480,6 +481,7 @@ CREATE TABLE `menu_special_has_dish_ingredients` (
 
 LOCK TABLES `menu_special_has_dish_ingredients` WRITE;
 /*!40000 ALTER TABLE `menu_special_has_dish_ingredients` DISABLE KEYS */;
+INSERT INTO `menu_special_has_dish_ingredients` VALUES ('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','Carote','carote'),('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','cocacola','cocacola'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','cocacola','cocacola'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','Dessert strano','banane'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','Dessert strano','carote'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','Dessert strano','Melone'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','Insalata e funghi','carote'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','Insalata e funghi','funghi'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','Insalata e funghi','insalata'),('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','Lasagne','carne'),('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','Lasagne','carote'),('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','Lasagne','insalata'),('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','Lasagne','pane'),('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','Main','pesce'),('2018-06-08','VRDNTS10P41D150R','mirtilli, fragole, ','Main','pesce'),('2018-05-30','VRDNTS10P41D150R','mirtilli, fragole, ','Melone','Melone');
 /*!40000 ALTER TABLE `menu_special_has_dish_ingredients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -509,7 +511,7 @@ CREATE TABLE `noleggio` (
 
 LOCK TABLES `noleggio` WRITE;
 /*!40000 ALTER TABLE `noleggio` DISABLE KEYS */;
-INSERT INTO `noleggio` VALUES (123456789,'tonino','0213659844','toninobus@mailcct.com','via del Sale 14',26100,'CR'),(456123789,'busRomeo','0214563211','busRomeo@colosseo.com','pzza Roma 1',26100,'CR'),(456231456,'busdomodossola','0214563325','busdomodossola@mailcct.com','via Ghiribella 1',26511,'VCO');
+INSERT INTO `noleggio` VALUES (123456789,'tonino','0213659844','toninobus@mailcct.com','via del Sale 14',26100,'CR'),(456123789,'busRomeoColosseo','0214563211','busRomeo@colosseo.com','pzza Roma 1',26100,'CR'),(456231456,'busdomodossola','0214563325','busdomodossola@mailcct.com','via Ghiribella 1',26511,'VCO');
 /*!40000 ALTER TABLE `noleggio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -537,7 +539,7 @@ CREATE TABLE `personaleint` (
 
 LOCK TABLES `personaleint` WRITE;
 /*!40000 ALTER TABLE `personaleint` DISABLE KEYS */;
-INSERT INTO `personaleint` VALUES ('rossi.virginia@mailunica.com','s2','RSSVRG32R45T465O'),('rossi.matteo@mailunica.com','s3','RSSMTT32R45T465O'),('marini.davide@mailcct.com','s4','MRNDVD94G56T586U');
+INSERT INTO `personaleint` VALUES ('rossi.virginia@mailunica.com','s2','RSSVRG32R45T465O'),('rossi.matteo@mailunica.com','s3','RSSMTT32R45T465O'),('danieleviani@cctmail.com','s5','VNIDNL80G57F903I');
 /*!40000 ALTER TABLE `personaleint` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -575,4 +577,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-11 17:09:47
+-- Dump completed on 2018-05-27  0:06:12

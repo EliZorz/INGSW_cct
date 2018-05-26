@@ -631,17 +631,49 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
     @Override
     public boolean deleteContact(String oldcfContact, String cfChild) throws RemoteException {
         PreparedStatement st = null;
-
-        String queryDelete = "DELETE FROM project.adulto WHERE CF = '" + oldcfContact + "' AND Bambino_CodRif = '" + cfChild +"';";
+        ResultSet result = null;
+        String codRifChildString = null;
+        String queryFindCodRif = "SELECT Bambino_CodRif FROM adulto INNER JOIN bambino WHERE CF = '"+oldcfContact+"' AND Interni_CF  = '"+ cfChild+"';";
         if(oldcfContact == null || cfChild == null)
             return false;
-        try {
-            st = this.connHere().prepareStatement(queryDelete);
-            st.executeUpdate(queryDelete);
-            System.out.println("Deleted from adulto.");
-
-        } catch (Exception e) {
+        try{
+            st = this.connHere().prepareStatement(queryFindCodRif);
+            result = st.executeQuery(queryFindCodRif);
+        } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        try{
+            if(!result.next()){
+                System.out.println("No such child in db");
+                return false;
+            } else {
+                result.beforeFirst();
+                while(result.next()) {
+                    System.out.println("Processing ResultSet");
+                    try {
+                        codRifChildString = result.getString(1);
+                        System.out.println(codRifChildString);
+
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    String queryDelete = "DELETE FROM project.adulto WHERE CF = '" + oldcfContact + "' AND Bambino_CodRif = '" + codRifChildString +"';";
+                    if(oldcfContact == null || cfChild == null)
+                        return false;
+                    try {
+                        st = this.connHere().prepareStatement(queryDelete);
+                        st.executeUpdate(queryDelete);
+                        System.out.println("Deleted from adulto.");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
         } finally {
             try {
                 if (st != null)
@@ -650,7 +682,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 e.printStackTrace();
             }
         }
-
         return true;
     }
 
