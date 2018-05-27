@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="774.0" prefWidth="1373.0" style="" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.ChildController">
+<AnchorPane prefHeight="774.0" prefWidth="1373.0" style="" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.ChildController">
     <children>
         <SplitPane dividerPositions="0.5164113785557987" focusTraversable="true" prefHeight="781.0" prefWidth="1373.0" AnchorPane.bottomAnchor="-7.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -56,21 +56,28 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="805.0" prefWidth="660.0">
                     <children>
-                        <TextField fx:id="txtName" layoutX="45.0" layoutY="72.0" prefHeight="26.0" prefWidth="167.0" promptText="First Name" />
-                        <TextField fx:id="txtSurname" layoutX="45.0" layoutY="109.0" prefHeight="26.0" prefWidth="167.0" promptText="Last name" />
-                        <TextField fx:id="txtCf" layoutX="46.0" layoutY="148.0" prefHeight="26.0" prefWidth="212.0" promptText="Fiscal Code" />
-                        <TextField fx:id="txtBornWhere" layoutX="46.0" layoutY="217.0" prefHeight="26.0" prefWidth="167.0" promptText="Home Town" />
-                        <TextField fx:id="txtResidence" layoutX="46.0" layoutY="255.0" prefHeight="26.0" prefWidth="212.0" promptText="Current city" />
-                        <TextField fx:id="txtAddress" layoutX="46.0" layoutY="291.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" />
-                        <TextField fx:id="txtCap" layoutX="172.0" layoutY="326.0" prefHeight="26.0" prefWidth="86.0" promptText="CAP" />
-                        <TextField fx:id="txtProvince" layoutX="47.0" layoutY="326.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" />
+                        <TextField fx:id="txtName" layoutX="45.0" layoutY="72.0" prefHeight="26.0" prefWidth="167.0" promptText="First Name" AnchorPane.leftAnchor="45.0" />
+                        <TextField fx:id="txtSurname" layoutX="45.0" layoutY="109.0" prefHeight="26.0" prefWidth="167.0" promptText="Last name" AnchorPane.leftAnchor="45.0" />
+                        <TextField fx:id="txtCf" layoutX="46.0" layoutY="148.0" prefHeight="26.0" prefWidth="212.0" promptText="Fiscal Code" AnchorPane.leftAnchor="45.0" />
+                        <TextField fx:id="txtBornWhere" layoutX="46.0" layoutY="217.0" prefHeight="26.0" prefWidth="167.0" promptText="Home Town" AnchorPane.leftAnchor="45.0" />
+                        <TextField fx:id="txtResidence" layoutX="46.0" layoutY="255.0" prefHeight="26.0" prefWidth="212.0" promptText="Current city" AnchorPane.leftAnchor="45.0" />
+                        <TextField fx:id="txtAddress" layoutX="46.0" layoutY="291.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" AnchorPane.leftAnchor="45.0" />
+                        <TextField fx:id="txtCap" layoutX="169.0" layoutY="326.0" prefHeight="26.0" prefWidth="86.0" promptText="CAP" AnchorPane.rightAnchor="405.0" />
+                        <TextField fx:id="txtProvince" layoutX="47.0" layoutY="326.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" AnchorPane.leftAnchor="45.0" />
                         <Label fx:id="lblWarning" alignment="CENTER" layoutX="14.0" layoutY="716.0" prefHeight="25.0" prefWidth="615.0" text="Status" textAlignment="CENTER" textFill="RED">
                             <font>
                                 <Font name="Courier New" size="24.0" />
                             </font>
                         </Label>
-                        <DatePicker fx:id="dpBirthday" layoutX="46.0" layoutY="183.0" prefHeight="31.0" prefWidth="167.0" promptText="Birthday" />
-                        <Button fx:id="btnBack" layoutX="437.0" layoutY="675.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="16.0" prefWidth="190.0" style="-fx-cursor: hand" text="HomePage" />
+                        <DatePicker fx:id="dpBirthday" layoutX="46.0" layoutY="183.0" prefHeight="31.0" prefWidth="167.0" promptText="Birthday" AnchorPane.leftAnchor="45.0" />
+                        <Button fx:id="btnBack" layoutX="569.0" layoutY="681.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="38.0" prefWidth="34.0" style="-fx-cursor: hand" AnchorPane.rightAnchor="44.0">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@if_House_by_Artdesigner.lv_83154.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                         <ButtonBar layoutX="18.0" layoutY="411.0" prefHeight="26.0" prefWidth="258.0">
                             <buttons>
                                 <Button fx:id="btnUpdate" minWidth="62.0" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="26.0" prefWidth="62.0" text="Edit" />
@@ -78,7 +85,7 @@
                                 <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="26.0" prefWidth="62.0" text="Delete" />
                             </buttons>
                         </ButtonBar>
-                        <TableView fx:id="tableIngr" layoutX="61.0" layoutY="513.0" prefHeight="126.0" prefWidth="200.0">
+                        <TableView fx:id="tableIngr" layoutX="61.0" layoutY="513.0" prefHeight="126.0" prefWidth="200.0" AnchorPane.leftAnchor="61.0">
                             <columns>
                                 <TableColumn fx:id="colIngr" prefWidth="198.40007781982422" text="Possible allergies" />
                             </columns>
@@ -108,8 +115,8 @@
                                 <Font name="Century" size="21.0" />
                             </font>
                         </Text>
-                        <TextField fx:id="txtNameContact" layoutX="333.0" layoutY="268.0" prefHeight="26.0" prefWidth="99.0" promptText="First Name" />
-                        <TextField fx:id="txtSurnameContact" layoutX="449.0" layoutY="268.0" prefHeight="26.0" prefWidth="167.0" promptText="Last Name" />
+                        <TextField fx:id="txtNameContact" layoutX="333.0" layoutY="268.0" prefHeight="26.0" prefWidth="99.0" promptText="First Name" AnchorPane.leftAnchor="333.0" />
+                        <TextField fx:id="txtSurnameContact" layoutX="449.0" layoutY="268.0" prefHeight="26.0" prefWidth="167.0" promptText="Last Name" AnchorPane.rightAnchor="44.0" />
                         <TableView fx:id="tableContacts" layoutX="334.0" layoutY="64.0" prefHeight="141.0" prefWidth="290.0">
                             <columns>
                                 <TableColumn fx:id="colSurnameContact" prefWidth="57.60015869140625" text="Surname" />
@@ -119,18 +126,18 @@
                                 <TableColumn fx:id="colContact" prefWidth="56.79990234374998" text="Contact" />
                             </columns>
                         </TableView>
-                        <TextField fx:id="txtCfContact" layoutX="331.0" layoutY="304.0" prefHeight="26.0" prefWidth="212.0" promptText="Fiscal Code" />
-                        <TextField fx:id="txtBornWhereContact" layoutX="334.0" layoutY="377.0" prefHeight="26.0" prefWidth="167.0" promptText="Home Town" />
-                        <DatePicker fx:id="dpBirthdayContact" layoutX="333.0" layoutY="339.0" prefHeight="31.0" prefWidth="167.0" promptText="Birthday" />
-                        <TextField fx:id="txtAddressContact" layoutX="331.0" layoutY="498.0" prefHeight="26.0" prefWidth="212.0" promptText="Address" />
-                        <TextField fx:id="txtProvinceContact" layoutX="333.0" layoutY="538.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" />
-                        <TextField fx:id="txtCapContact" layoutX="447.0" layoutY="538.0" prefHeight="26.0" prefWidth="86.0" promptText="Cap" />
+                        <TextField fx:id="txtCfContact" layoutX="333.0" layoutY="304.0" prefHeight="26.0" prefWidth="185.0" promptText="Fiscal Code" AnchorPane.leftAnchor="333.0" AnchorPane.rightAnchor="142.0" />
+                        <TextField fx:id="txtBornWhereContact" layoutX="334.0" layoutY="377.0" prefHeight="26.0" prefWidth="167.0" promptText="Home Town" AnchorPane.leftAnchor="333.0" AnchorPane.rightAnchor="160.0" />
+                        <DatePicker fx:id="dpBirthdayContact" layoutX="333.0" layoutY="339.0" prefHeight="31.0" prefWidth="167.0" promptText="Birthday" AnchorPane.leftAnchor="333.0" AnchorPane.rightAnchor="160.0" />
+                        <TextField fx:id="txtAddressContact" layoutX="331.0" layoutY="498.0" prefHeight="26.0" prefWidth="200.0" promptText="Address" AnchorPane.leftAnchor="333.0" AnchorPane.rightAnchor="127.0" />
+                        <TextField fx:id="txtProvinceContact" layoutX="333.0" layoutY="538.0" prefHeight="26.0" prefWidth="99.0" promptText="Province" AnchorPane.leftAnchor="333.0" />
+                        <TextField fx:id="txtCapContact" layoutX="447.0" layoutY="538.0" prefHeight="26.0" prefWidth="86.0" promptText="Cap" AnchorPane.rightAnchor="127.0" />
                         <CheckBox fx:id="cbDoc" layoutX="331.0" layoutY="583.0" mnemonicParsing="false" text="is Doc" />
                         <CheckBox fx:id="cbGuardian" layoutX="417.0" layoutY="583.0" mnemonicParsing="false" text="is Guardian" />
                         <CheckBox fx:id="cbContact" layoutX="532.0" layoutY="583.0" mnemonicParsing="false" text="is Contact" />
                         <ButtonBar layoutX="536.0" layoutY="271.0" prefHeight="40.0" prefWidth="86.0" />
-                        <TextField fx:id="txtMailContact" layoutX="335.0" layoutY="419.0" prefHeight="26.0" prefWidth="276.0" promptText="Mail" />
-                        <TextField fx:id="txtTelContact" layoutX="334.0" layoutY="458.0" prefHeight="26.0" prefWidth="167.0" promptText="Phone number" />
+                        <TextField fx:id="txtMailContact" layoutX="335.0" layoutY="419.0" prefHeight="26.0" prefWidth="281.0" promptText="Mail" AnchorPane.leftAnchor="333.0" AnchorPane.rightAnchor="44.0" />
+                        <TextField fx:id="txtTelContact" layoutX="334.0" layoutY="458.0" prefHeight="26.0" prefWidth="167.0" promptText="Phone number" AnchorPane.leftAnchor="333.0" AnchorPane.rightAnchor="160.0" />
                         <ButtonBar layoutX="357.0" layoutY="614.0" prefHeight="40.0" prefWidth="200.0">
                             <buttons>
                                 <Button fx:id="btnAddContact" mnemonicParsing="false" onAction="#handleAddContact" text="Add" />
@@ -138,7 +145,7 @@
                                 <Button fx:id="btnDeleteContact" mnemonicParsing="false" onAction="#handleDeleteContact" text="Delete" />
                             </buttons>
                         </ButtonBar>
-                        <Button fx:id="searchA" layoutX="204.0" layoutY="674.0" mnemonicParsing="false" onAction="#searchAllergies" prefHeight="26.0" prefWidth="54.0" text="Search">
+                        <Button fx:id="searchA" layoutX="204.0" layoutY="674.0" mnemonicParsing="false" onAction="#searchAllergies" prefHeight="26.0" prefWidth="54.0" text="Search" AnchorPane.rightAnchor="402.0">
                             <effect>
                                 <SepiaTone />
                             </effect>
@@ -150,7 +157,7 @@
                                 <SepiaTone />
                             </effect>
                         </Button>
-                        <Button fx:id="backContact" layoutX="338.0" layoutY="221.0" mnemonicParsing="false" onAction="#reloadContact" prefHeight="25.0" prefWidth="29.0">
+                        <Button fx:id="backContact" layoutX="338.0" layoutY="221.0" mnemonicParsing="false" onAction="#reloadContact" prefHeight="25.0" prefWidth="29.0" AnchorPane.leftAnchor="333.0">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -159,7 +166,7 @@
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button fx:id="backAll" layoutX="38.0" layoutY="675.0" mnemonicParsing="false" onAction="#reloadAllergies" prefHeight="25.0" prefWidth="29.0">
+                        <Button fx:id="backAll" layoutX="38.0" layoutY="675.0" mnemonicParsing="false" onAction="#reloadAllergies" prefHeight="25.0" prefWidth="29.0" AnchorPane.leftAnchor="38.0">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -173,7 +180,7 @@
                                 <DropShadow blurType="ONE_PASS_BOX" color="#02b4f0" />
                             </effect>
                         </Button>
-                        <Button fx:id="btnLoad" layoutX="174.0" layoutY="377.0" minWidth="58.0" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="114.0" text="Load children">
+                        <Button fx:id="btnLoad" layoutX="174.0" layoutY="377.0" minWidth="58.0" mnemonicParsing="false" onAction="#handleLoadData" prefHeight="26.0" prefWidth="114.0" text="Load children" AnchorPane.leftAnchor="174.0">
                             <effect>
                                 <DropShadow blurType="ONE_PASS_BOX" color="#09c4f2" />
                             </effect>

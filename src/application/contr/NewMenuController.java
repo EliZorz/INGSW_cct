@@ -324,7 +324,7 @@ public class NewMenuController implements Initializable {
         else if (!controllData(day) && selectedMenu == null) label1.setText("Change the date");
         else if(!controllIngredients && selectedMenu == null)label1.setText("Make sure you have added all the ingredients");
         else if(day.isBefore(LocalDate.now()) && selectedMenu == null) label1.setText("This date is already past");
-        else{
+        else if(!label1.getText().contains("Select the ingredients for")){
             try{
                 if(selectedMenu == null) {
                     boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day);
