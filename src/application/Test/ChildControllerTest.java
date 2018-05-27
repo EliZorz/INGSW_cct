@@ -79,20 +79,6 @@ class ChildControllerTest {
     }
 
 
-    @Test
-    void testFalseAddContact() throws RemoteException{
-        ArrayList<String> children = new ArrayList<>();
-        children.add("AAA");
-        children.add("BBB");
-        children.add("A0");
-        children.add("1992-11-11");
-        children.add("CCC");
-        children.add("EEE");
-        children.add("00000");
-        children.add("FF");
-        assertFalse(si.addContact("A0", "OKOK", "AA", "99", "EEE", "1234", LocalDate.parse("1976-11-11"), "AAA", "AA", "00000", "WE", false, false, false));
-    }
-
     //LOAD CONTACT
 
     @Test
@@ -149,12 +135,6 @@ class ChildControllerTest {
 
 
     //DELETE CONTACT
-
-    @Test
-    void testDeleteContact() throws RemoteException{
-        assertTrue(si.deleteContact("1", "A0"));
-        assertTrue(si.deleteContact("99","A0"));
-    }
 
     @Test
     void testNullDeleteContact() throws RemoteException{
