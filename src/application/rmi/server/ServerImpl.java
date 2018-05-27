@@ -172,12 +172,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergie)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
-        String queryLastCodRif = "SELECT MAX(CodRif) FROM bambino";  //select last CodRif inserted
+        String queryLastCodRif = "SELECT COALESCE(MAX(CodRif), 0) FROM bambino";  //select last CodRif inserted
         String queryAddCf = "INSERT INTO bambino(CodRif, Interni_CF) VALUES (?,?)";
         String queryAddFirstContact = "INSERT INTO adulto(Cognome, Nome, CF, Mail, Tel, DataNascita, CittaNascita, Indirizzo, CAP, Provincia, Pediatra, Tutore, Contatto, Bambino_CodRif)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        String newCod = null;
+
+        String newCod;
         ArrayList<CodRifChildDbDetails> codRifArrayList = new ArrayList<>(1);
 
         ResultSet result = null;
@@ -211,13 +212,6 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (st != null)
-                    st.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         try {
@@ -235,28 +229,53 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
         try {
             if (!result.next()) {
-                System.out.println("No CodRif in DB");
-                //then new child's CodRif is 1
-                newCod = "b1";
-
-                //add to DB
-                st = this.connHere().prepareStatement(queryAddCf);
-                st.setString(1, newCod);
-                st.setString(2, cf);
-                st.executeUpdate();
-
+                System.out.println("Error");
+                return false;
             } else {
                 result.beforeFirst();
-                System.out.println("Processing ResultSet");
-
+                System.out.println("Processing ResultSet to create new Bambino");
                 try {
                     while (result.next()) {
                         CodRifChildDbDetails lastCod = new CodRifChildDbDetails(result.getString(1));
                         codRifArrayList.add(lastCod);
                     }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
+                if (codRifArrayList.get(0).getCodRif().equals("0")) {
+                    System.out.println("First Child in DB");
+                    //then new child's CodRif is 1
+                    newCod = "c1";
+
+                    //add to DB
+                    st = this.connHere().prepareStatement(queryAddCf);
+                    st.setString(1, newCod);
+                    st.setString(2, cf);
+                    st.executeUpdate();
+
+                    //add contact associated
+                    st = this.connHere().prepareStatement(queryAddFirstContact);
+                    st.setString(1, surnameContact);
+                    st.setString(2, nameContact);
+                    st.setString(3, cfContact);
+                    st.setString(4, mailContact);
+                    st.setString(5, telContact);
+                    st.setDate(6, java.sql.Date.valueOf(birthdayContact));
+                    st.setString(7, bornWhereContact);
+                    st.setString(8, addressContact);
+                    st.setString(9, capContact);
+                    st.setString(10, provinceContact);
+                    st.setBoolean(11, isDoc);
+                    st.setBoolean(12, isGuardian);
+                    st.setBoolean(13, isContact);
+                    st.setString(14, newCod);
+                    st.executeUpdate();
+
+
+                } else {
                     String currentLast = codRifArrayList.get(0).getCodRif();
-                    newCod = "b" + (Integer.parseInt(currentLast.substring(1, currentLast.length())) + 1);
+                    newCod = "c" + (Integer.parseInt(currentLast.substring(1, currentLast.length())) + 1);
                     System.out.println("new CodRif");
                     st = this.connHere().prepareStatement(queryAddCf);
                     st.setString(1, newCod);
@@ -280,11 +299,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                     st.setString(14, newCod);
                     st.executeUpdate();
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
                 }
-
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -877,12 +892,14 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         String queryAdd = "INSERT INTO interni(Cognome, Nome, CF, DataNascita, CittaNascita, Residenza, Indirizzo, CAP, Provincia, Allergie)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
-        String queryLastCodRif = "SELECT MAX(CodID) FROM personaleint";  //select last CodRif inserted
+        String queryLastCodRif = "SELECT COALESCE(MAX(CodID), 0) FROM personaleint";  //select last CodRif inserted
         String queryAddCf = "INSERT INTO personaleint(Mail, CodID, Interni_CF) VALUES (?,?,?)";
 
         ArrayList<CodRifChildDbDetails> codRifArrayList = new ArrayList<>(1);
 
         ResultSet result = null;
+
+        String newCod;
 
         //divide items from arraylist selectedAllergy into string to put into database
         StringBuilder allAllergies = new StringBuilder();
@@ -931,40 +948,44 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         }
         try {
             if (!result.next()) {
-                System.out.println("No CodID in DB");
-                //then new CodID is 1
-                String newCod = "s1";
-
-                //add to DB
-                st = this.connHere().prepareStatement(queryAddCf);
-                st.setString(1, mail);
-                st.setString(2, newCod);
-                st.setString(3, cf);
-                st.executeUpdate();
-
+                System.out.println("Error");
+                return false;
             } else {
                 result.beforeFirst();
-                System.out.println("Processing ResultSet");
-
+                System.out.println("Processing ResultSet to create new Staff member");
                 try {
                     while (result.next()) {
                         CodRifChildDbDetails lastCod = new CodRifChildDbDetails(result.getString(1));
                         codRifArrayList.add(lastCod);
                     }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
-                    String currentLast = codRifArrayList.get(0).getCodRif();
-                    String newCod = "s" + (Integer.parseInt(currentLast.substring(1, currentLast.length())) + 1);
+                if (codRifArrayList.get(0).getCodRif().equals("0")) {
+                    System.out.println("First Staff member in DB");
+                    //then new staff's CodRif is 1
+                    newCod = "s1";
+
+                    //add to DB
                     st = this.connHere().prepareStatement(queryAddCf);
                     st.setString(1, mail);
                     st.setString(2, newCod);
                     st.setString(3, cf);
                     st.executeUpdate();
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
+
+                } else {
+                    String currentLast = codRifArrayList.get(0).getCodRif();
+                    newCod = "s" + (Integer.parseInt(currentLast.substring(1, currentLast.length())) + 1);
+                    System.out.println("new CodRif");
+                    st = this.connHere().prepareStatement(queryAddCf);
+                    st.setString(1, mail);
+                    st.setString(2, newCod);
+                    st.setString(3, cf);
+                    st.executeUpdate();
+
                 }
-
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1378,7 +1399,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         ResultSet res = null;
         List<DishesDbDetails> menu = new ArrayList<>();
         ArrayList<PlatesDbDetails> plates = new ArrayList<>();
-        String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.ingredients JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
+        String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.ingredients INNER JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
         String query;
         try {
             st = this.connHere().prepareStatement(queryNomePiatto);
@@ -1407,12 +1428,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                             res.beforeFirst();
                             while(res.next())
                                 menu.add(new DishesDbDetails(res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(7), res.getString(6)));
-
+                                System.out.println(menu);
                         }
                     }
-
-
-
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -1438,13 +1456,13 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         }
         Set<DishesDbDetails> set = new HashSet<DishesDbDetails>(menu);
-        return new ArrayList<DishesDbDetails>(set);
+        return new ArrayList<>(set);
     }
 
     @Override
     public ArrayList<IngredientsDbDetails> loadNoIngr(String selectedSupplier) throws RemoteException {
         String queryNomePiatto = "SELECT ingredient FROM project.ingredients  where fornitore_PIVA = '" + selectedSupplier + "'";
-        PreparedStatement st = null;
+        PreparedStatement st;
         ResultSet result = null;
         ArrayList<IngredientsDbDetails> ingrNo = new ArrayList<>();
         if(selectedSupplier == null)
