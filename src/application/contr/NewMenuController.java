@@ -329,11 +329,11 @@ public class NewMenuController implements Initializable {
                 if(selectedMenu == null) {
                     boolean addSuccess = u.addMenu(num, entree, main, dessert, side, drink, day);
                     if (addSuccess) {
-                        label1.setText("Success!!");
+                        label1.setText("Success!");
                     }
                 }
                 else if(u.updateMenu(num, entree, main, dessert, side, drink, day, LocalDate.parse(selectedMenu[6]))){
-                    label1.setText("success!!");
+                    label1.setText("Success! Delete and redo special menu for this date");
                     selectedMenu = null;
                 }
             } catch (RemoteException e) {
