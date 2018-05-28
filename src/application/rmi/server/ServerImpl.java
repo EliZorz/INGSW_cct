@@ -34,7 +34,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
         PreparedStatement st = null;
         ResultSet result = null;
-        String queryLog = "SELECT * FROM project.UserIn WHERE Username = ? AND Password = ? ";//"SELECT * FROM sys.login WHERE Username = ? AND Password = ? " ;
+        String queryLog = "SELECT * FROM project.UserIn WHERE Username = ? AND Password = ? ";
         boolean res = false;
 
         try {
