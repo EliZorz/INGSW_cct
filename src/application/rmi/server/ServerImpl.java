@@ -246,7 +246,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                 if (codRifArrayList.get(0).getCodRif().equals("0")) {
                     System.out.println("First Child in DB");
                     //then new child's CodRif is 1
-                    newCod = "c1";
+                    newCod = "b1";
 
                     //add to DB
                     st = this.connHere().prepareStatement(queryAddCf);
@@ -275,7 +275,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
                 } else {
                     String currentLast = codRifArrayList.get(0).getCodRif();
-                    newCod = "c" + (Integer.parseInt(currentLast.substring(1, currentLast.length())) + 1);
+                    newCod = "b" + (Integer.parseInt(currentLast.substring(1, currentLast.length())) + 1);
                     System.out.println("new CodRif");
                     st = this.connHere().prepareStatement(queryAddCf);
                     st.setString(1, newCod);
