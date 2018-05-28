@@ -30,7 +30,7 @@ public class TripPartecipantsControllerTest {
         children.add("A0");
         ArrayList<String> staff = new ArrayList<>();
         staff.add("CCC111");
-        si.addTrip(children,staff, "2220-11-11", "2220-11-12", "2220-11-13", "CR", "ER", "AOK" );
+        si.addTrip(children, staff, "2220-11-11", "2220-11-12", "2220-11-13", "CR", "ER", "AOK" );
     }
 
     @AfterEach

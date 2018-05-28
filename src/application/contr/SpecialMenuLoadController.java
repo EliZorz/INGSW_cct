@@ -174,15 +174,16 @@ public class SpecialMenuLoadController implements Initializable{
     }
 
     public void loadMenu() {
-        try{
+        try {
             ArrayList<SpecialMenuDbDetails> specialDbArrayList = u.loadSpecialMenu();
             specialMenu.clear();
-            if(specialDbArrayList != null) {
+            if (specialDbArrayList != null) {
                 for (SpecialMenuDbDetails x : specialDbArrayList) {
                     SpecialMenuGuiDetails tmp = new SpecialMenuGuiDetails(x);
                     specialMenu.add(tmp);
                 }
-                if(specialDbArrayList.isEmpty()) labelStatus.setText("No special menu in the DB");
+
+                if (specialDbArrayList.isEmpty()) labelStatus.setText("No special menu in the DB");
                 else labelStatus.setText("Loaded");
             }
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class TripBusControllerTest {
+class TripBusControllerTest {
     private ServerImpl si;
     private TripBusControllerTest() throws RemoteException{
         si = new ServerImpl();
@@ -29,10 +29,9 @@ public class TripBusControllerTest {
         children.add("A0");
         ArrayList<String> staff = new ArrayList<>();
         staff.add("CCC111");
-        si.addTrip(children,staff, "2220-11-11", "2220-11-12", "2220-11-13", "CR", "ER", "AOK" );
+        si.addTrip(children, staff, "2220-11-11", "2220-11-12", "2220-11-13", "CR", "ER", "AOK" );
         si.addDataCoachOperator("OO", "12", "AS", "1234", "AAAAS", "12345", "AB");
         si.addBusToDb("IO", 10, "12");
-
     }
 
     @AfterEach
@@ -50,7 +49,7 @@ public class TripBusControllerTest {
         ArrayList<String> children = new ArrayList<>();
         children.add("A0");
         ArrayList<String> staff = new ArrayList<>();
-        staff.add("1");
+        staff.add("CCC111");
         assertNotNull(si.associateBusToParticipants(children,1, staff, 1, "CR", "2220-11-11", "2220-11-13", "AOK", "2220-11-12", "ER" ));
         assertNotNull(si.loadBusTrip("CR", "2220-11-11", "2220-11-13", "AOK", "2220-11-12", "ER"));
     }
