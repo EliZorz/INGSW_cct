@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="774.0" prefWidth="1300.0" style="" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.StaffController">
+<AnchorPane prefHeight="774.0" prefWidth="1300.0" style="" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.contr.StaffController">
     <children>
         <SplitPane dividerPositions="0.6956856702619415" focusTraversable="true" prefHeight="774.0" prefWidth="1300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -64,7 +64,14 @@
                         <TextField fx:id="txtProvince" layoutX="148.0" layoutY="294.0" prefHeight="26.0" prefWidth="87.0" promptText="Province" />
                         <TextField fx:id="txtMail" layoutX="28.0" layoutY="121.0" prefHeight="26.0" prefWidth="343.0" promptText="e-mail" />
                         <DatePicker fx:id="dpBirthday" layoutX="28.0" layoutY="157.0" prefHeight="26.0" prefWidth="158.0" promptText="Birthday" />
-                        <Button fx:id="btnBack" layoutX="213.0" layoutY="696.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="26.0" prefWidth="158.0" text="Homepage" />
+                        <Button fx:id="btnBack" layoutX="325.0" layoutY="696.0" mnemonicParsing="false" onAction="#handleBackHomepage" prefHeight="47.0" prefWidth="46.0">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../if_House_by_Artdesigner.lv_83154.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                         <ButtonBar layoutX="23.0" layoutY="330.0" prefHeight="40.0" prefWidth="343.0">
                             <buttons>
                                 <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#handleLoadStaff" prefHeight="26.0" prefWidth="126.0" text="Load staff">
