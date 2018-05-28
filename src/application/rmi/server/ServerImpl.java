@@ -1695,6 +1695,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
     @Override
     public boolean zeroActualParticipants(String plate) throws RemoteException {
+        System.out.println("ZERO ACTUAL PARTICIPANTS IS NOW RUNNING");
         PreparedStatement st = null;
         String queryFindGitaWithBus = "SELECT gita_NumGita FROM gita_has_bus WHERE bus_Targa = '" + plate + "';";
         ResultSet resultNumGita = null;

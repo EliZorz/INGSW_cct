@@ -30,8 +30,8 @@ class CoachOperatorsControllerTest {
 
     @AfterEach
     void testDeleteCoachOperator() throws RemoteException{
-        si.deleteCoachOperator("12");
         si.deleteCoachOperatorBus("AB");
+        si.deleteCoachOperator("12");
     }
 
     //ADD

@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class TestLogin {
 
+    //verifica credenziali non complete dopo aver premuto login
+
      private ServerImpl si;
 
      private TestLogin() throws RemoteException {

@@ -40,7 +40,6 @@ public class MenuBaseControllerTest {
     @AfterEach
     void deleteMenu() throws RemoteException{
         si.deleteMenu(LocalDate.parse("2200-11-11"));
-        si.deleteMenu(LocalDate.parse("2200-12-11"));
 
         si.deleteSupplier("76", si.loadNoIngr("76"));
 
@@ -76,7 +75,7 @@ public class MenuBaseControllerTest {
 
     @Test
     void testUpdatMenu() throws RemoteException{
-        assertTrue(si.updateMenu("11","bb", "aa", "WWW", "cc", "ee", LocalDate.parse("2200-11-11"),LocalDate.parse("2220-12-11") ));
+        assertTrue(si.updateMenu("11","aa", "bb", "WWW", "cc", "ee", LocalDate.parse("2200-11-11"),LocalDate.parse("2220-11-11") ));
     }
 
     @Test
