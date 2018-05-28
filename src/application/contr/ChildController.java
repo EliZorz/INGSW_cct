@@ -411,7 +411,7 @@ public class ChildController implements Initializable {
 
         }else if(!u.controllCF(cf)){
             this.renameLabel("Change child fiscal code");
-        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45) {
+        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45 || cfContact.length() != 16 || nameContact.length()>15 || surname.length()>25 || mailContact.length()>45 || capContact.length() != 5 || provinceContact.length()> 45 || addressContact.length() >45 || bornWhereContact.length()>45 || telContact.length()>25) {
             this.renameLabel("Control length of information");
         }else {
             System.out.println("Adding data to database...");
@@ -483,7 +483,7 @@ public class ChildController implements Initializable {
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday == null
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
-                || cap.trim().isEmpty() || province.trim().isEmpty()|| cf.length() != 16) {
+                || cap.trim().isEmpty() || province.trim().isEmpty()) {
 
             this.renameLabel("Insert data.");
         } else if(!oldcf.equals(cf) && !u.controllCF(cf)){
@@ -602,7 +602,7 @@ public class ChildController implements Initializable {
                 || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
-        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 ||  bornWhere.length() > 45 || cap.length() != 5 || province.length()>45) {
+        }else if(cf.length() != 16 || surname.length()>25 || name.length()>15 ||  bornWhere.length() > 45 || cap.length() != 5 || province.length()>45 || mail.length()>45) {
             this.renameLabel("Control length of information");
         }else {
 
@@ -678,13 +678,13 @@ public class ChildController implements Initializable {
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
                 || birthday == null || bornWhere.trim().isEmpty() || address.trim().isEmpty()
-                || cap.trim().isEmpty() || province.trim().isEmpty() || cf.length() != 16) {
+                || cap.trim().isEmpty() || province.trim().isEmpty() ) {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
         } else if(!oldcfContact.equals(cf)) {
             this.renameLabel("Change Contact fiscal code");
-        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || address.length() > 45 || cap.length() != 5 || province.length()>45) {
+        }else if(cf.length() != 16 || surname.length()>25 || name.length()>15 || bornWhere.length() > 45 || address.length() > 45 || cap.length() != 5 || province.length()>45|| mail.length()>45) {
             this.renameLabel("Control length of information");
         }else {
             System.out.println("Adding data to database...");

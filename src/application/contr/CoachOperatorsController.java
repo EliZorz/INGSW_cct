@@ -251,7 +251,7 @@ public class CoachOperatorsController implements Initializable {
         String province = txtProvince.getText();
 
         if (name.trim().isEmpty() || piva.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
-                || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty() || piva.length() != 11) {
+                || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty() ) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
         } else if(!oldPiva.equals(piva) && !u.controllPiva(piva)){

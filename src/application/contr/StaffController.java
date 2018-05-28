@@ -248,7 +248,7 @@ public class StaffController implements Initializable {
 
         }else if(!u.controllCF(cf)){
             this.renameLabel("Change Staff fiscal code");
-        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45) {
+        }else if(cf.length() != 16 || surname.length()>25 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45) {
             this.renameLabel("Control length of informations");
         } else {
             System.out.println("Adding data to database...");
@@ -349,7 +349,7 @@ public class StaffController implements Initializable {
             this.renameLabel("Insert data.");
         }else if(!oldcf.equals(cf) && !u.controllCF(cf)) {
             this.renameLabel("Change fiscal code");
-        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45) {
+        }else if(cf.length() != 16 || surname.length()>25 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45) {
             this.renameLabel("Control length of informations");
         }else {
             System.out.println("Adding data to database...");
