@@ -2,12 +2,14 @@ package application.contr;
 
 import application.Interfaces.UserRemote;
 import application.LookupCall;
+import application.details.CodRifChildDbDetails;
 import application.details.IngredientsDbDetails;
 import application.details.IngredientsGuiDetails;
 import application.gui.GuiNew;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -306,7 +308,7 @@ public class NewMenuController implements Initializable {
         return false;
     }
 
-    public void saveMenu() {
+    public void saveMenu(Event event) {
         System.out.println("Adding the info to db");
         String num = numTF.getText();
         String entree = entreeTF.getText();
@@ -333,10 +335,12 @@ public class NewMenuController implements Initializable {
                     }
                 }
                 else if(u.updateMenu(num, entree, main, dessert, side, drink, day, LocalDate.parse(selectedMenu[6]))){
+
                     label1.setText("Success! Delete and redo special menu for this date");
+
                     selectedMenu = null;
                 }
-            } catch (RemoteException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
