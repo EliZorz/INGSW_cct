@@ -197,6 +197,8 @@ public class SupplierController implements Initializable{
             this.renameLabel("Insert data.");
         }else if(!u.controllPiva(piva)){
             this.renameLabel("Change piva");
+        }else if(piva.length() != 11 || name.length() >45 || tel.length() >15 || mail.length() >30 || address.length()>45 || cap.length() != 5 || province.length() >45){
+            this.renameLabel("control length of informations");
         } else {
             System.out.println("Adding data to database...");
             try {
@@ -234,6 +236,8 @@ public class SupplierController implements Initializable{
             this.renameLabel("Insert data.");
         } else if(!oldPiva.equals(piva) && !u.controllPiva(piva)){
             this.renameLabel("Change piva");
+        }else if(piva.length() != 11 || name.length() >45 || tel.length() >15 || mail.length() >30 || address.length()>45 || cap.length() != 5 || province.length() >45){
+            this.renameLabel("control length of informations");
         }else {
             System.out.println("Adding data to database...");
             try {

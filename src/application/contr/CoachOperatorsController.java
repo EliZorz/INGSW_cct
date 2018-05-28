@@ -222,9 +222,11 @@ public class CoachOperatorsController implements Initializable {
                 || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
-        }else if(!u.controllPiva(piva)){
+        }else if(!u.controllPiva(piva)) {
             this.renameLabel("Change piva");
-        } else {
+        }else if(piva.length() != 11 || name.length() >45 || tel.length() >15 || mail.length() >30 || address.length() >45 || cap.length() != 5 || province.length() >45){
+            this.renameLabel("Control length of informations");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isAddOk = u.addDataCoachOperator(name, piva, mail, tel, address, cap, province);  //call method in Server Impl
@@ -249,11 +251,13 @@ public class CoachOperatorsController implements Initializable {
         String province = txtProvince.getText();
 
         if (name.trim().isEmpty() || piva.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
-                || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty()) {
+                || address.trim().isEmpty() || cap.trim().isEmpty() || province.trim().isEmpty() || piva.length() != 11) {
             //this verifies there are no void fields
             this.renameLabel("Insert data.");
         } else if(!oldPiva.equals(piva) && !u.controllPiva(piva)){
             this.renameLabel("Change fiscal code");
+        }else if(piva.length() != 11 || name.length() >45 || tel.length() >15 || mail.length() >30 || address.length() >45 || cap.length() != 5 || province.length() >45){
+            this.renameLabel("Control length of informations");
         }else {
             System.out.println("Adding data to database...");
             try {
@@ -375,7 +379,10 @@ public class CoachOperatorsController implements Initializable {
 
         if (plate.trim().isEmpty() || txtCapacity.getText().isEmpty()) {
             this.renameLabel("Insert data.");
-        } else {
+        }else if(plate.length() != 7 ) {
+            this.renameLabel("control length of informations");
+        }else
+         {
             System.out.println("Adding data to database...");
             try {
                 boolean isEditOk = u.addBusToDb(plate, capacity, oldPiva);  //call method in Server Impl

@@ -406,15 +406,14 @@ public class ChildController implements Initializable {
                 || cap.trim().isEmpty() || province.trim().isEmpty()
                 || nameContact.trim().isEmpty() || surnameContact.trim().isEmpty() || cfContact.trim().isEmpty() || mailContact.trim().isEmpty() || telContact.trim().isEmpty()
                 || birthdayContact == null || bornWhereContact.trim().isEmpty() || addressContact.trim().isEmpty()
-                || capContact.trim().isEmpty() || provinceContact.trim().isEmpty() || ! isDoc) {
-
+                || capContact.trim().isEmpty() || provinceContact.trim().isEmpty() || ! isDoc ) {
             this.renameLabel("Insert data.");
-
 
         }else if(!u.controllCF(cf)){
             this.renameLabel("Change child fiscal code");
-        }
-        else {
+        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45) {
+            this.renameLabel("Control length of informations");
+        }else {
             System.out.println("Adding data to database...");
             try {
                 boolean isAddOk = u.addData(surname, name, cf, birthday, bornWhere, residence, address, cap, province, selectedAllergy,
@@ -484,11 +483,13 @@ public class ChildController implements Initializable {
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || birthday == null
                 || bornWhere.trim().isEmpty() || residence.trim().isEmpty() || address.trim().isEmpty()
-                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+                || cap.trim().isEmpty() || province.trim().isEmpty()|| cf.length() != 16) {
 
             this.renameLabel("Insert data.");
         } else if(!oldcf.equals(cf) && !u.controllCF(cf)){
             this.renameLabel("Change fiscal code");
+        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || residence.length() > 45 || cap.length() != 5 || province.length()>45) {
+            this.renameLabel("Control length of informations");
         }else {
             System.out.println("Adding data to database...");
             try {
@@ -598,10 +599,11 @@ public class ChildController implements Initializable {
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
                 || birthday == null || bornWhere.trim().isEmpty() || address.trim().isEmpty()
-                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+                || cap.trim().isEmpty() || province.trim().isEmpty() || cf.length() != 16) {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
-
+        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 ||  bornWhere.length() > 45 || cap.length() != 5 || province.length()>45) {
+            this.renameLabel("Control length of informations");
         }else {
 
             System.out.println("Adding data to database...");
@@ -676,12 +678,14 @@ public class ChildController implements Initializable {
 
         if (name.trim().isEmpty() || surname.trim().isEmpty() || cf.trim().isEmpty() || mail.trim().isEmpty() || tel.trim().isEmpty()
                 || birthday == null || bornWhere.trim().isEmpty() || address.trim().isEmpty()
-                || cap.trim().isEmpty() || province.trim().isEmpty()) {
+                || cap.trim().isEmpty() || province.trim().isEmpty() || cf.length() != 16) {
             //this verifies there are no void fields (isSth are boolean with default value '0')
             this.renameLabel("Insert data.");
 
         } else if(!oldcfContact.equals(cf)) {
             this.renameLabel("Change Contact fiscal code");
+        }else if(cf.length() != 16 || surname.length()>15 || name.length()>15 || bornWhere.length() > 45 || address.length() > 45 || cap.length() != 5 || province.length()>45) {
+            this.renameLabel("Control length of informations");
         }else {
             System.out.println("Adding data to database...");
             try {
