@@ -94,8 +94,7 @@ public class MainControllerLogin implements Initializable {
                 }else{
                     this.renameLabel("Wrong data.");
                 }
-                // this.isLogged(ch.getUserService().funzLog(usr,pwd));  //chiama isLogged se il resultset è true
-
+                
             } else {
                 lblStatus.setText("Something wrong.");
             }
