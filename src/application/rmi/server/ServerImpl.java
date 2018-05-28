@@ -1397,9 +1397,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         PreparedStatement statement = null;
         ResultSet result = null;
         ResultSet res = null;
-        List<DishesDbDetails> menu = new ArrayList<>();
+        ArrayList<DishesDbDetails> menu = new ArrayList<>();
         ArrayList<PlatesDbDetails> plates = new ArrayList<>();
-        String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.ingredients INNER JOIN project.dish_ingredients ON ingredient = ingredients_ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
+        String queryNomePiatto = "SELECT Nome_piatto, ingredients_ingredient FROM project.dish_ingredients JOIN project.ingredients ON ingredients_ingredient = ingredient where fornitore_PIVA = '" + selectedSupplier + "'";
         String query;
         try {
             st = this.connHere().prepareStatement(queryNomePiatto);
@@ -1427,7 +1427,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
                         }else{
                             res.beforeFirst();
                             while(res.next())
-                                menu.add(new DishesDbDetails(res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(7), res.getString(6)));
+                                menu.add(new DishesDbDetails(res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6), res.getString(7)));
                                 System.out.println(menu);
                         }
                     }
@@ -1455,8 +1455,9 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
 
 
         }
-        Set<DishesDbDetails> set = new HashSet<DishesDbDetails>(menu);
-        return new ArrayList<>(set);
+
+
+       return menu;
     }
 
     @Override
