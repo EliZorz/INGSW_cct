@@ -350,7 +350,6 @@ public class ChildController implements Initializable {
                     dataObsList.add(tmp);
                 }
                 tableChild.setItems(null);
-                tableContacts.setItems(null);
                 tableChild.setItems(dataObsList);
 
                 this.renameLabel("Table loaded!");
