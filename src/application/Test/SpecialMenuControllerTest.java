@@ -35,6 +35,8 @@ public class SpecialMenuControllerTest {
         si.saveIngredients("WWW", ingredients);
         si.saveIngredients("aa", ingredients);
         si.saveIngredients("bb", ingredients);
+        ingredients = new ArrayList<>();
+        ingredients.add("AA");
         si.saveIngredients("cc", ingredients);
         si.saveIngredients("ee", ingredients);
 
@@ -42,14 +44,10 @@ public class SpecialMenuControllerTest {
         ArrayList<String> allergies = new ArrayList<>();
         allergies.add("AA");
         si.addData("AAA", "BBB", "AB1", LocalDate.parse("1992-11-11"), "CCC", "DDD", "EEE", "00000", "FF", allergies, "GG", "HH", "1", "II", "1111", LocalDate.parse("1968-11-11"), "LL", "MM", "12345", "NN", true, false, false);
-        SpecialDbDetails special = new SpecialDbDetails("AB1", "AA");
-        si.addSpecialMenu( "aa", "bb", "cc", null, "WWW", LocalDate.parse("2200-11-11"), special);
-
     }
 
     @AfterEach
     void deleteDetailsForMenu() throws RemoteException{
-        si.deleteSpecialMenu(LocalDate.parse("2200-11-11"),"AB1", "AA" );
         si.deleteMenu(LocalDate.parse("2200-11-11"));
         si.deleteContact("1", "AB1");
         si.deleteChild("AB1");
@@ -86,8 +84,6 @@ public class SpecialMenuControllerTest {
 
     @Test
     void testUpdateSpecialMenu() throws RemoteException{
-        SpecialDbDetails special = new SpecialDbDetails("AB1", "AA");
-        assertTrue(si.updateSpecialMenu( "bb", "aa", "cc", null, "WWW", LocalDate.parse("2200-11-11"), special));
         Assertions.assertThrows(NullPointerException.class, () ->{
             si.updateSpecialMenu(null, null, null, null, null, LocalDate.parse(null), null);
         });
