@@ -325,17 +325,32 @@ public class ChildController implements Initializable {
         txtCap.clear();
         txtProvince.clear();
 
+        txtNameContact.clear();
+        txtSurnameContact.clear();
+        txtCfContact.clear();
+        txtMailContact.clear();
+        txtTelContact.clear();
+        dpBirthdayContact.setValue(LocalDate.now());
+        txtBornWhereContact.clear();
+        txtAddressContact.clear();
+        txtCapContact.clear();
+        txtProvinceContact.clear();
+        cbContact.setSelected(false);
+        cbGuardian.setSelected(false);
+        cbDoc.setSelected(false);
+
         System.out.println("Loading data...");
         try {
             ArrayList<ChildDbDetails> childDbArrayList = u.loadData();  //call method in Server Impl
             dataObsList.clear();
-
+            dataContactObsList.clear();
             if (childDbArrayList != null){
                 for(ChildDbDetails c : childDbArrayList){
                     ChildGuiDetails tmp = new ChildGuiDetails(c);
                     dataObsList.add(tmp);
                 }
                 tableChild.setItems(null);
+                tableContacts.setItems(null);
                 tableChild.setItems(dataObsList);
 
                 this.renameLabel("Table loaded!");

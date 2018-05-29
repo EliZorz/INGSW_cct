@@ -302,9 +302,9 @@ public class SocketUserManager implements UserRemote {
     public boolean controllCF(String CF) throws RemoteException {
         boolean ok = false;
         try{
-            toServer.writeObject("controllCF");
+            toServer.writeUnshared("controllCF");
             toServer.flush();
-            toServer.writeObject(CF);
+            toServer.writeUnshared(CF);
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1149,9 +1149,9 @@ public class SocketUserManager implements UserRemote {
     public boolean controllPiva(String piva) throws RemoteException {
         boolean ok = false;
         try{
-            toServer.writeObject("controllPiva");
+            toServer.writeUnshared("controllPiva");
             toServer.flush();
-            toServer.writeObject(piva);
+            toServer.writeUnshared(piva);
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1169,9 +1169,9 @@ public class SocketUserManager implements UserRemote {
     public boolean controllBus(String plate) throws RemoteException {
         boolean ok = false;
         try{
-            toServer.writeObject("controllBus");
+            toServer.writeUnshared("controllBus");
             toServer.flush();
-            toServer.writeObject(plate);
+            toServer.writeUnshared(plate);
             toServer.flush();
         } catch (Exception e) {
             e.printStackTrace();

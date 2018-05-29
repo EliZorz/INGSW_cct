@@ -156,7 +156,7 @@ public class DeleteSupplierController implements Initializable {
             ArrayList<DishesDbDetails> menuDbArray = u.loadMenuWithThisSupplier(selectedSupplier);
             if(menuDbArray != null) {
                 for (int i = 0; i < menuDbArray.size() - 1; i++)
-                    for (int j = 0; j < menuDbArray.size(); j++)
+                    for (int j = 1; j < menuDbArray.size(); j++)
                         if (menuDbArray.get(i).getDay().equals(menuDbArray.get(j).getDay()))
                             menuDbArray.remove(i);
             }

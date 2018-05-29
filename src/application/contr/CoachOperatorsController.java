@@ -257,7 +257,7 @@ public class CoachOperatorsController implements Initializable {
         } else if(!oldPiva.equals(piva) && !u.controllPiva(piva)){
             this.renameLabel("Change fiscal code");
         }else if(piva.length() != 11 || name.length() >45 || tel.length() >15 || mail.length() >30 || address.length() >45 || cap.length() != 5 || province.length() >45){
-            this.renameLabel("Control length of informations");
+            this.renameLabel("Control length of information");
         }else {
             System.out.println("Adding data to database...");
             try {

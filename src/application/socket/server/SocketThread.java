@@ -291,7 +291,7 @@ public class SocketThread extends Thread implements Runnable {
             case "controllCF": {
                 System.out.println("Controlling cf...");
                 try {
-                    String cf = (String) inputFromClient.readObject();
+                    String cf = (String) inputFromClient.readUnshared();
                     reply = impl.controllCF(cf);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -407,7 +407,7 @@ public class SocketThread extends Thread implements Runnable {
             case "controllPiva": {
                 System.out.println("Controlling supplier...");
                 try {
-                    String piva = (String) inputFromClient.readObject();
+                    String piva = (String) inputFromClient.readUnshared();
                     reply = impl.controllPiva(piva);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -418,7 +418,7 @@ public class SocketThread extends Thread implements Runnable {
             case "controllBus": {
                 System.out.println("Controlling supplier...");
                 try {
-                    String plate = (String) inputFromClient.readObject();
+                    String plate = (String) inputFromClient.readUnshared();
                     reply = impl.controllBus(plate);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
