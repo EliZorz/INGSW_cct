@@ -457,6 +457,7 @@ public class ServerImpl extends UnicastRemoteObject implements UserRemote {  //s
         try {
             st = this.connHere().prepareStatement(queryLoad);
             result = st.executeQuery(queryLoad);
+            System.out.println("Allessandro");
 
         } catch (SQLException e) {
             e.printStackTrace();
